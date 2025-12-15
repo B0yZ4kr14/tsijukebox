@@ -268,7 +268,8 @@ export default function Index() {
               
               {/* Connection Status Indicator */}
               <ConnectionIndicator 
-                connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'} 
+                connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'}
+                isSpotifyActive={!!status?.playing && !!status?.track}
               />
             </div>
             
