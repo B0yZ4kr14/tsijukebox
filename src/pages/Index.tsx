@@ -12,8 +12,9 @@ import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { Button } from '@/components/ui/button';
-import { Settings, Music, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { Settings, Music, ChevronLeft, ChevronRight, Download, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 const pageVariants = {
@@ -36,7 +37,17 @@ export default function Index() {
   const { play, pause, next, prev } = usePlayer();
   const { setVolume } = useVolume();
   const { canInstall, install } = usePWAInstall();
+  const { isOnline, wasOffline } = useNetworkStatus();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+
+  // Show toast on network status change
+  useEffect(() => {
+    if (!isOnline) {
+      toast.error('Conexão perdida', { icon: <WifiOff className="w-4 h-4" /> });
+    } else if (wasOffline && isOnline) {
+      toast.success('Conexão restaurada', { icon: <Wifi className="w-4 h-4" /> });
+    }
+  }, [isOnline, wasOffline]);
 
   const handleInstall = async () => {
     const installed = await install();
@@ -234,11 +245,39 @@ export default function Index() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <SystemMonitor 
-              cpu={status?.cpu ?? 0} 
-              memory={status?.memory ?? 0} 
-              temp={status?.temp ?? 0} 
-            />
+            <div className="flex items-center gap-3">
+              <SystemMonitor 
+                cpu={status?.cpu ?? 0} 
+                memory={status?.memory ?? 0} 
+                temp={status?.temp ?? 0} 
+              />
+              
+              {/* Network Status Indicator */}
+              <motion.div
+                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                  isOnline 
+                    ? 'bg-green-500/20 text-green-400' 
+                    : 'bg-red-500/20 text-red-400'
+                }`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                {isOnline ? (
+                  <Wifi className="w-3 h-3" />
+                ) : (
+                  <motion.div
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    <WifiOff className="w-3 h-3" />
+                  </motion.div>
+                )}
+                <span className="hidden sm:inline">
+                  {isOnline ? 'Online' : 'Offline'}
+                </span>
+              </motion.div>
+            </div>
             
             <div className="flex items-center gap-2">
               {/* PWA Install Button */}
