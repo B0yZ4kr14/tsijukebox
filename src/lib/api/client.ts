@@ -229,6 +229,14 @@ class ApiClient {
   async getFeedback(): Promise<Feedback[]> {
     return this.request<Feedback[]>('/admin/feedback');
   }
+
+  // Spotify/playerctl integration - play a Spotify URI via playerctl
+  async playSpotifyUri(uri: string): Promise<{ success: boolean }> {
+    return this.request('/play/uri', {
+      method: 'POST',
+      body: JSON.stringify({ uri }),
+    });
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

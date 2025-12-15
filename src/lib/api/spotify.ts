@@ -26,7 +26,10 @@ export interface SpotifyPlaylist {
   imageUrl: string | null;
   tracksTotal: number;
   owner: string;
+  ownerId: string;
   isPublic: boolean;
+  collaborative: boolean;
+  snapshotId: string;
 }
 
 export interface SpotifyTrack {
@@ -34,10 +37,88 @@ export interface SpotifyTrack {
   uri: string;
   name: string;
   artist: string;
+  artists: SpotifyArtistSimple[];
   album: string;
+  albumId: string;
   albumImageUrl: string | null;
   durationMs: number;
   previewUrl: string | null;
+  popularity: number;
+  explicit: boolean;
+  isLiked?: boolean;
+  addedAt?: string;
+}
+
+export interface SpotifyArtistSimple {
+  id: string;
+  name: string;
+}
+
+export interface SpotifyAlbum {
+  id: string;
+  uri: string;
+  name: string;
+  artist: string;
+  artists: SpotifyArtistSimple[];
+  imageUrl: string | null;
+  releaseDate: string;
+  totalTracks: number;
+  albumType: 'album' | 'single' | 'compilation';
+}
+
+export interface SpotifyArtist {
+  id: string;
+  uri: string;
+  name: string;
+  imageUrl: string | null;
+  followers: number;
+  popularity: number;
+  genres: string[];
+}
+
+export interface SpotifySearchResults {
+  tracks: SpotifyTrack[];
+  albums: SpotifyAlbum[];
+  artists: SpotifyArtist[];
+  playlists: SpotifyPlaylist[];
+}
+
+export interface CreatePlaylistParams {
+  name: string;
+  description?: string;
+  isPublic?: boolean;
+}
+
+export interface SpotifyPagination<T> {
+  items: T[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+}
+
+export interface SpotifyCategory {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+}
+
+export interface SpotifyDevice {
+  id: string;
+  name: string;
+  type: string;
+  isActive: boolean;
+  volumePercent: number;
+}
+
+export interface SpotifyPlaybackState {
+  isPlaying: boolean;
+  progressMs: number;
+  durationMs: number;
+  track: SpotifyTrack | null;
+  device: SpotifyDevice | null;
+  shuffleState: boolean;
+  repeatState: 'off' | 'context' | 'track';
 }
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/spotify-auth`;
@@ -69,7 +150,6 @@ class SpotifyClient {
 
   isTokenExpired(): boolean {
     if (!this.tokens) return true;
-    // Consider token expired 5 minutes before actual expiration
     return Date.now() >= this.tokens.expiresAt - 5 * 60 * 1000;
   }
 
@@ -126,7 +206,6 @@ class SpotifyClient {
   }
 
   async refreshTokens(): Promise<SpotifyTokens> {
-    // Prevent concurrent refresh requests
     if (this.refreshPromise) {
       return this.refreshPromise;
     }
@@ -194,7 +273,6 @@ class SpotifyClient {
       const data = await response.json();
       
       if (!data.valid) {
-        // Try to refresh
         if (this.tokens.refreshToken) {
           await this.refreshTokens();
           return this.validateToken();
@@ -208,84 +286,451 @@ class SpotifyClient {
     }
   }
 
-  // Spotify Web API methods
-  async getPlaylists(): Promise<SpotifyPlaylist[]> {
+  private async apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const token = await this.getValidToken();
     
-    const response = await fetch("https://api.spotify.com/v1/me/playlists?limit=50", {
-      headers: { "Authorization": `Bearer ${token}` },
+    const response = await fetch(`https://api.spotify.com/v1${endpoint}`, {
+      ...options,
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch playlists");
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error?.message || `Spotify API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    if (response.status === 204) {
+      return {} as T;
+    }
+
+    return response.json();
+  }
+
+  // ==================== Playlists ====================
+
+  async getPlaylists(limit = 50, offset = 0): Promise<SpotifyPagination<SpotifyPlaylist>> {
+    const data = await this.apiRequest<any>(`/me/playlists?limit=${limit}&offset=${offset}`);
     
-    return data.items.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      imageUrl: item.images?.[0]?.url || null,
-      tracksTotal: item.tracks.total,
-      owner: item.owner.display_name,
-      isPublic: item.public,
+    return {
+      items: data.items.map(this.mapPlaylist),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async getPlaylist(playlistId: string): Promise<SpotifyPlaylist> {
+    const data = await this.apiRequest<any>(`/playlists/${playlistId}`);
+    return this.mapPlaylist(data);
+  }
+
+  async getPlaylistTracks(playlistId: string, limit = 100, offset = 0): Promise<SpotifyPagination<SpotifyTrack>> {
+    const data = await this.apiRequest<any>(
+      `/playlists/${playlistId}/tracks?limit=${limit}&offset=${offset}`
+    );
+
+    return {
+      items: data.items
+        .filter((item: any) => item.track)
+        .map((item: any) => ({
+          ...this.mapTrack(item.track),
+          addedAt: item.added_at,
+        })),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async createPlaylist(params: CreatePlaylistParams): Promise<SpotifyPlaylist> {
+    const user = await this.validateToken();
+    if (!user) throw new Error("Not authenticated");
+
+    const data = await this.apiRequest<any>(`/users/${user.id}/playlists`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: params.name,
+        description: params.description || "",
+        public: params.isPublic ?? false,
+      }),
+    });
+
+    return this.mapPlaylist(data);
+  }
+
+  async updatePlaylist(playlistId: string, params: Partial<CreatePlaylistParams>): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        name: params.name,
+        description: params.description,
+        public: params.isPublic,
+      }),
+    });
+  }
+
+  async addTracksToPlaylist(playlistId: string, trackUris: string[], position?: number): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}/tracks`, {
+      method: "POST",
+      body: JSON.stringify({
+        uris: trackUris,
+        position,
+      }),
+    });
+  }
+
+  async removeTracksFromPlaylist(playlistId: string, trackUris: string[]): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}/tracks`, {
+      method: "DELETE",
+      body: JSON.stringify({
+        tracks: trackUris.map(uri => ({ uri })),
+      }),
+    });
+  }
+
+  async reorderPlaylistTracks(
+    playlistId: string, 
+    rangeStart: number, 
+    insertBefore: number, 
+    rangeLength = 1
+  ): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}/tracks`, {
+      method: "PUT",
+      body: JSON.stringify({
+        range_start: rangeStart,
+        insert_before: insertBefore,
+        range_length: rangeLength,
+      }),
+    });
+  }
+
+  async followPlaylist(playlistId: string): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}/followers`, {
+      method: "PUT",
+    });
+  }
+
+  async unfollowPlaylist(playlistId: string): Promise<void> {
+    await this.apiRequest(`/playlists/${playlistId}/followers`, {
+      method: "DELETE",
+    });
+  }
+
+  // ==================== Library (Liked Songs) ====================
+
+  async getLikedTracks(limit = 50, offset = 0): Promise<SpotifyPagination<SpotifyTrack>> {
+    const data = await this.apiRequest<any>(`/me/tracks?limit=${limit}&offset=${offset}`);
+
+    return {
+      items: data.items.map((item: any) => ({
+        ...this.mapTrack(item.track),
+        isLiked: true,
+        addedAt: item.added_at,
+      })),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async likeTrack(trackId: string): Promise<void> {
+    await this.apiRequest(`/me/tracks?ids=${trackId}`, {
+      method: "PUT",
+    });
+  }
+
+  async unlikeTrack(trackId: string): Promise<void> {
+    await this.apiRequest(`/me/tracks?ids=${trackId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async checkLikedTracks(trackIds: string[]): Promise<boolean[]> {
+    const data = await this.apiRequest<boolean[]>(`/me/tracks/contains?ids=${trackIds.join(",")}`);
+    return data;
+  }
+
+  // ==================== Albums ====================
+
+  async getSavedAlbums(limit = 50, offset = 0): Promise<SpotifyPagination<SpotifyAlbum>> {
+    const data = await this.apiRequest<any>(`/me/albums?limit=${limit}&offset=${offset}`);
+
+    return {
+      items: data.items.map((item: any) => this.mapAlbum(item.album)),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async getAlbum(albumId: string): Promise<SpotifyAlbum> {
+    const data = await this.apiRequest<any>(`/albums/${albumId}`);
+    return this.mapAlbum(data);
+  }
+
+  async getAlbumTracks(albumId: string, limit = 50, offset = 0): Promise<SpotifyPagination<SpotifyTrack>> {
+    const album = await this.getAlbum(albumId);
+    const data = await this.apiRequest<any>(`/albums/${albumId}/tracks?limit=${limit}&offset=${offset}`);
+
+    return {
+      items: data.items.map((track: any) => ({
+        ...this.mapTrack({ ...track, album: { id: albumId, name: album.name, images: [{ url: album.imageUrl }] } }),
+      })),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async saveAlbum(albumId: string): Promise<void> {
+    await this.apiRequest(`/me/albums?ids=${albumId}`, { method: "PUT" });
+  }
+
+  async removeAlbum(albumId: string): Promise<void> {
+    await this.apiRequest(`/me/albums?ids=${albumId}`, { method: "DELETE" });
+  }
+
+  // ==================== Artists ====================
+
+  async getFollowedArtists(limit = 50, after?: string): Promise<{ items: SpotifyArtist[]; cursors: { after: string | null } }> {
+    const params = new URLSearchParams({ type: "artist", limit: String(limit) });
+    if (after) params.set("after", after);
+
+    const data = await this.apiRequest<any>(`/me/following?${params}`);
+
+    return {
+      items: data.artists.items.map(this.mapArtist),
+      cursors: data.artists.cursors,
+    };
+  }
+
+  async getArtist(artistId: string): Promise<SpotifyArtist> {
+    const data = await this.apiRequest<any>(`/artists/${artistId}`);
+    return this.mapArtist(data);
+  }
+
+  async getArtistTopTracks(artistId: string): Promise<SpotifyTrack[]> {
+    const data = await this.apiRequest<any>(`/artists/${artistId}/top-tracks?market=from_token`);
+    return data.tracks.map(this.mapTrack);
+  }
+
+  async getArtistAlbums(artistId: string, limit = 50, offset = 0): Promise<SpotifyPagination<SpotifyAlbum>> {
+    const data = await this.apiRequest<any>(
+      `/artists/${artistId}/albums?include_groups=album,single&limit=${limit}&offset=${offset}`
+    );
+
+    return {
+      items: data.items.map(this.mapAlbum),
+      total: data.total,
+      limit: data.limit,
+      offset: data.offset,
+      hasMore: data.offset + data.items.length < data.total,
+    };
+  }
+
+  async followArtist(artistId: string): Promise<void> {
+    await this.apiRequest(`/me/following?type=artist&ids=${artistId}`, { method: "PUT" });
+  }
+
+  async unfollowArtist(artistId: string): Promise<void> {
+    await this.apiRequest(`/me/following?type=artist&ids=${artistId}`, { method: "DELETE" });
+  }
+
+  // ==================== Search ====================
+
+  async search(query: string, types: ('track' | 'album' | 'artist' | 'playlist')[] = ["track"], limit = 20): Promise<SpotifySearchResults> {
+    const data = await this.apiRequest<any>(
+      `/search?q=${encodeURIComponent(query)}&type=${types.join(",")}&limit=${limit}`
+    );
+
+    return {
+      tracks: (data.tracks?.items || []).map(this.mapTrack),
+      albums: (data.albums?.items || []).map(this.mapAlbum),
+      artists: (data.artists?.items || []).map(this.mapArtist),
+      playlists: (data.playlists?.items || []).map(this.mapPlaylist),
+    };
+  }
+
+  async searchTracks(query: string, limit = 20, offset = 0): Promise<SpotifyPagination<SpotifyTrack>> {
+    const data = await this.apiRequest<any>(
+      `/search?q=${encodeURIComponent(query)}&type=track&limit=${limit}&offset=${offset}`
+    );
+
+    return {
+      items: data.tracks.items.map(this.mapTrack),
+      total: data.tracks.total,
+      limit: data.tracks.limit,
+      offset: data.tracks.offset,
+      hasMore: data.tracks.offset + data.tracks.items.length < data.tracks.total,
+    };
+  }
+
+  // ==================== Personalization ====================
+
+  async getRecentlyPlayed(limit = 50): Promise<SpotifyTrack[]> {
+    const data = await this.apiRequest<any>(`/me/player/recently-played?limit=${limit}`);
+    return data.items.map((item: any) => this.mapTrack(item.track));
+  }
+
+  async getTopTracks(timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term', limit = 50): Promise<SpotifyTrack[]> {
+    const data = await this.apiRequest<any>(`/me/top/tracks?time_range=${timeRange}&limit=${limit}`);
+    return data.items.map(this.mapTrack);
+  }
+
+  async getTopArtists(timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term', limit = 50): Promise<SpotifyArtist[]> {
+    const data = await this.apiRequest<any>(`/me/top/artists?time_range=${timeRange}&limit=${limit}`);
+    return data.items.map(this.mapArtist);
+  }
+
+  // ==================== Browse ====================
+
+  async getFeaturedPlaylists(limit = 20): Promise<SpotifyPlaylist[]> {
+    const data = await this.apiRequest<any>(`/browse/featured-playlists?limit=${limit}`);
+    return data.playlists.items.map(this.mapPlaylist);
+  }
+
+  async getNewReleases(limit = 20): Promise<SpotifyAlbum[]> {
+    const data = await this.apiRequest<any>(`/browse/new-releases?limit=${limit}`);
+    return data.albums.items.map(this.mapAlbum);
+  }
+
+  async getCategories(limit = 50): Promise<SpotifyCategory[]> {
+    const data = await this.apiRequest<any>(`/browse/categories?limit=${limit}`);
+    return data.categories.items.map((cat: any) => ({
+      id: cat.id,
+      name: cat.name,
+      imageUrl: cat.icons?.[0]?.url || null,
     }));
   }
 
-  async getPlaylistTracks(playlistId: string): Promise<SpotifyTrack[]> {
-    const token = await this.getValidToken();
-    
-    const response = await fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100`,
-      { headers: { "Authorization": `Bearer ${token}` } }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch playlist tracks");
-    }
-
-    const data = await response.json();
-    
-    return data.items
-      .filter((item: any) => item.track)
-      .map((item: any) => ({
-        id: item.track.id,
-        uri: item.track.uri,
-        name: item.track.name,
-        artist: item.track.artists.map((a: any) => a.name).join(", "),
-        album: item.track.album.name,
-        albumImageUrl: item.track.album.images?.[0]?.url || null,
-        durationMs: item.track.duration_ms,
-        previewUrl: item.track.preview_url,
-      }));
+  async getCategoryPlaylists(categoryId: string, limit = 20): Promise<SpotifyPlaylist[]> {
+    const data = await this.apiRequest<any>(`/browse/categories/${categoryId}/playlists?limit=${limit}`);
+    return data.playlists.items.filter(Boolean).map(this.mapPlaylist);
   }
 
-  async search(query: string, types: string[] = ["track"]): Promise<SpotifyTrack[]> {
-    const token = await this.getValidToken();
-    
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${types.join(",")}&limit=20`,
-      { headers: { "Authorization": `Bearer ${token}` } }
-    );
+  // ==================== Player ====================
 
-    if (!response.ok) {
-      throw new Error("Failed to search");
+  async getPlaybackState(): Promise<SpotifyPlaybackState | null> {
+    try {
+      const data = await this.apiRequest<any>("/me/player");
+      if (!data || !data.item) return null;
+
+      return {
+        isPlaying: data.is_playing,
+        progressMs: data.progress_ms,
+        durationMs: data.item.duration_ms,
+        track: this.mapTrack(data.item),
+        device: data.device ? {
+          id: data.device.id,
+          name: data.device.name,
+          type: data.device.type,
+          isActive: data.device.is_active,
+          volumePercent: data.device.volume_percent,
+        } : null,
+        shuffleState: data.shuffle_state,
+        repeatState: data.repeat_state,
+      };
+    } catch {
+      return null;
     }
+  }
 
-    const data = await response.json();
-    
-    return (data.tracks?.items || []).map((track: any) => ({
-      id: track.id,
-      uri: track.uri,
-      name: track.name,
-      artist: track.artists.map((a: any) => a.name).join(", "),
-      album: track.album.name,
-      albumImageUrl: track.album.images?.[0]?.url || null,
-      durationMs: track.duration_ms,
-      previewUrl: track.preview_url,
+  async getDevices(): Promise<SpotifyDevice[]> {
+    const data = await this.apiRequest<any>("/me/player/devices");
+    return data.devices.map((device: any) => ({
+      id: device.id,
+      name: device.name,
+      type: device.type,
+      isActive: device.is_active,
+      volumePercent: device.volume_percent,
     }));
   }
+
+  async transferPlayback(deviceId: string, play = false): Promise<void> {
+    await this.apiRequest("/me/player", {
+      method: "PUT",
+      body: JSON.stringify({ device_ids: [deviceId], play }),
+    });
+  }
+
+  // ==================== Recommendations ====================
+
+  async getRecommendations(params: {
+    seedTracks?: string[];
+    seedArtists?: string[];
+    seedGenres?: string[];
+    limit?: number;
+  }): Promise<SpotifyTrack[]> {
+    const searchParams = new URLSearchParams();
+    if (params.seedTracks?.length) searchParams.set("seed_tracks", params.seedTracks.join(","));
+    if (params.seedArtists?.length) searchParams.set("seed_artists", params.seedArtists.join(","));
+    if (params.seedGenres?.length) searchParams.set("seed_genres", params.seedGenres.join(","));
+    searchParams.set("limit", String(params.limit || 20));
+
+    const data = await this.apiRequest<any>(`/recommendations?${searchParams}`);
+    return data.tracks.map(this.mapTrack);
+  }
+
+  // ==================== Mappers ====================
+
+  private mapTrack = (track: any): SpotifyTrack => ({
+    id: track.id,
+    uri: track.uri,
+    name: track.name,
+    artist: track.artists?.map((a: any) => a.name).join(", ") || "",
+    artists: track.artists?.map((a: any) => ({ id: a.id, name: a.name })) || [],
+    album: track.album?.name || "",
+    albumId: track.album?.id || "",
+    albumImageUrl: track.album?.images?.[0]?.url || null,
+    durationMs: track.duration_ms,
+    previewUrl: track.preview_url,
+    popularity: track.popularity || 0,
+    explicit: track.explicit || false,
+  });
+
+  private mapAlbum = (album: any): SpotifyAlbum => ({
+    id: album.id,
+    uri: album.uri,
+    name: album.name,
+    artist: album.artists?.map((a: any) => a.name).join(", ") || "",
+    artists: album.artists?.map((a: any) => ({ id: a.id, name: a.name })) || [],
+    imageUrl: album.images?.[0]?.url || null,
+    releaseDate: album.release_date || "",
+    totalTracks: album.total_tracks || 0,
+    albumType: album.album_type || "album",
+  });
+
+  private mapArtist = (artist: any): SpotifyArtist => ({
+    id: artist.id,
+    uri: artist.uri,
+    name: artist.name,
+    imageUrl: artist.images?.[0]?.url || null,
+    followers: artist.followers?.total || 0,
+    popularity: artist.popularity || 0,
+    genres: artist.genres || [],
+  });
+
+  private mapPlaylist = (playlist: any): SpotifyPlaylist => ({
+    id: playlist.id,
+    name: playlist.name,
+    description: playlist.description,
+    imageUrl: playlist.images?.[0]?.url || null,
+    tracksTotal: playlist.tracks?.total || 0,
+    owner: playlist.owner?.display_name || "",
+    ownerId: playlist.owner?.id || "",
+    isPublic: playlist.public ?? true,
+    collaborative: playlist.collaborative || false,
+    snapshotId: playlist.snapshot_id || "",
+  });
 }
 
 export const spotifyClient = new SpotifyClient();
