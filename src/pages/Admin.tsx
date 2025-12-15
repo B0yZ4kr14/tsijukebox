@@ -1,0 +1,162 @@
+import { AdminLayout } from '@/components/layout/AdminLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useStatus } from '@/hooks/useStatus';
+import { useLogs } from '@/hooks/useLogs';
+import { Cpu, HardDrive, Thermometer, Music, Play, Pause, AlertCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+function StatCard({ 
+  title, 
+  value, 
+  icon: Icon, 
+  status 
+}: { 
+  title: string; 
+  value: string; 
+  icon: React.ElementType;
+  status?: 'good' | 'warning' | 'danger';
+}) {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className={cn(
+          "h-4 w-4",
+          status === 'good' && "text-green-500",
+          status === 'warning' && "text-yellow-500",
+          status === 'danger' && "text-destructive"
+        )} />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function getStatus(value: number, thresholds: { warning: number; danger: number }) {
+  if (value >= thresholds.danger) return 'danger';
+  if (value >= thresholds.warning) return 'warning';
+  return 'good';
+}
+
+export default function Admin() {
+  const { data: status } = useStatus();
+  const { data: logs } = useLogs(10);
+
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <p className="text-muted-foreground">Visão geral do sistema TSi JUKEBOX</p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            title="CPU"
+            value={`${status?.cpu?.toFixed(1) ?? 0}%`}
+            icon={Cpu}
+            status={getStatus(status?.cpu ?? 0, { warning: 70, danger: 90 })}
+          />
+          <StatCard
+            title="Memória"
+            value={`${status?.memory?.toFixed(1) ?? 0}%`}
+            icon={HardDrive}
+            status={getStatus(status?.memory ?? 0, { warning: 75, danger: 90 })}
+          />
+          <StatCard
+            title="Temperatura"
+            value={`${status?.temp?.toFixed(1) ?? 0}°C`}
+            icon={Thermometer}
+            status={getStatus(status?.temp ?? 0, { warning: 60, danger: 75 })}
+          />
+          <StatCard
+            title="Player"
+            value={status?.playing ? 'Tocando' : 'Parado'}
+            icon={status?.playing ? Play : Pause}
+            status={status?.playing ? 'good' : undefined}
+          />
+        </div>
+
+        {/* Current Track */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Music className="h-5 w-5" />
+              Faixa Atual
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {status?.track ? (
+              <div className="flex items-center gap-4">
+                {status.track.cover ? (
+                  <img 
+                    src={status.track.cover} 
+                    alt="Album cover"
+                    className="w-16 h-16 rounded-md object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center">
+                    <Music className="w-8 h-8 text-muted-foreground" />
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium">{status.track.title}</p>
+                  <p className="text-sm text-muted-foreground">{status.track.artist}</p>
+                  {status.track.album && (
+                    <p className="text-sm text-muted-foreground">{status.track.album}</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted-foreground">Nenhuma faixa em reprodução</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Logs */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              Logs Recentes
+            </CardTitle>
+            <CardDescription>Últimas 10 entradas do sistema</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {logs?.slice(0, 10).map((log) => (
+                <div 
+                  key={log.id}
+                  className={cn(
+                    "flex items-start gap-3 p-2 rounded-md text-sm",
+                    log.level === 'ERROR' && "bg-destructive/10",
+                    log.level === 'WARNING' && "bg-yellow-500/10",
+                    log.level === 'INFO' && "bg-muted"
+                  )}
+                >
+                  <span className={cn(
+                    "font-mono text-xs px-1.5 py-0.5 rounded",
+                    log.level === 'ERROR' && "bg-destructive text-destructive-foreground",
+                    log.level === 'WARNING' && "bg-yellow-500 text-black",
+                    log.level === 'INFO' && "bg-primary text-primary-foreground"
+                  )}>
+                    {log.level}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="truncate">{log.message}</p>
+                    <p className="text-xs text-muted-foreground">{log.module} • {log.timestamp}</p>
+                  </div>
+                </div>
+              )) ?? (
+                <p className="text-muted-foreground">Nenhum log disponível</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </AdminLayout>
+  );
+}
