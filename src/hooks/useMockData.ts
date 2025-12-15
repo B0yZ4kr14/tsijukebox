@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react';
 import type { SystemStatus } from '@/lib/api/types';
 
-// Mock track data for demo mode - expanded playlist with varied covers
-const mockTracks = [
+import type { MusicGenre } from '@/lib/api/types';
+
+// Mock track data for demo mode - expanded playlist with varied covers and genres
+const mockTracks: Array<{
+  title: string;
+  artist: string;
+  album: string;
+  cover: string;
+  duration: number;
+  position: number;
+  genre: MusicGenre;
+}> = [
   {
     title: 'Bohemian Rhapsody',
     artist: 'Queen',
@@ -10,6 +20,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b273ce4f1737bc8a646c8c4bd25a',
     duration: 354,
     position: 0,
+    genre: 'rock',
   },
   {
     title: 'Hotel California',
@@ -18,6 +29,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2734637341b9f507521afa9a778',
     duration: 391,
     position: 0,
+    genre: 'classic-rock',
   },
   {
     title: 'Billie Jean',
@@ -26,6 +38,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b273de437d960dda1ac0a3586d97',
     duration: 294,
     position: 0,
+    genre: 'pop',
   },
   {
     title: 'Smells Like Teen Spirit',
@@ -34,6 +47,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2739b9b36b0e22870b9f542d937',
     duration: 301,
     position: 0,
+    genre: 'rock',
   },
   {
     title: 'Imagine',
@@ -42,6 +56,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b273c9f744b0d62da795bc21d04a',
     duration: 187,
     position: 0,
+    genre: 'ballad',
   },
   {
     title: 'Like a Rolling Stone',
@@ -50,6 +65,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2737d214af8499aa95ad220f573',
     duration: 369,
     position: 0,
+    genre: 'classic-rock',
   },
   {
     title: 'Purple Rain',
@@ -58,6 +74,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2737e8dfd93a57d53f0fb8406ff',
     duration: 520,
     position: 0,
+    genre: 'soul',
   },
   {
     title: 'Hey Jude',
@@ -66,6 +83,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25',
     duration: 431,
     position: 0,
+    genre: 'classic-rock',
   },
   {
     title: 'Wonderwall',
@@ -74,6 +92,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b273b6e7e6bc618eea98a21e8bcf',
     duration: 258,
     position: 0,
+    genre: 'rock',
   },
   {
     title: 'Back in Black',
@@ -82,6 +101,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2730b51f8d91f3a21e8426361ae',
     duration: 255,
     position: 0,
+    genre: 'rock',
   },
   {
     title: 'Lose Yourself',
@@ -90,6 +110,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2736ca5c90113b30c3c43ffb8f4',
     duration: 326,
     position: 0,
+    genre: 'hip-hop',
   },
   {
     title: 'Rolling in the Deep',
@@ -98,6 +119,7 @@ const mockTracks = [
     cover: 'https://i.scdn.co/image/ab67616d0000b2732118bf9b198b05a95ded6300',
     duration: 228,
     position: 0,
+    genre: 'soul',
   },
 ];
 

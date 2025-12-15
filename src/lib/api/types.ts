@@ -1,5 +1,7 @@
 // TypeScript interfaces matching FastAPI backend schemas
 
+export type MusicGenre = 'rock' | 'pop' | 'soul' | 'hip-hop' | 'ballad' | 'classic-rock';
+
 export interface TrackInfo {
   title: string;
   artist: string;
@@ -7,6 +9,7 @@ export interface TrackInfo {
   cover: string | null;
   duration?: number;
   position?: number;
+  genre?: MusicGenre;
 }
 
 export interface SystemStatus {

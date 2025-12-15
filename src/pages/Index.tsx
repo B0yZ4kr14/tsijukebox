@@ -8,6 +8,7 @@ import { VolumeSlider } from '@/components/player/VolumeSlider';
 import { SystemMonitor } from '@/components/player/SystemMonitor';
 import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 import { ConnectionIndicator } from '@/components/player/ConnectionIndicator';
+import { ProgressBar } from '@/components/player/ProgressBar';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
@@ -328,6 +329,21 @@ export default function Index() {
               <AudioVisualizer 
                 isPlaying={status?.playing ?? false} 
                 barCount={48}
+                genre={status?.track?.genre}
+              />
+            </motion.div>
+
+            {/* Progress Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="w-full max-w-md px-4"
+            >
+              <ProgressBar
+                position={status?.track?.position ?? 0}
+                duration={status?.track?.duration ?? 0}
+                genre={status?.track?.genre}
               />
             </motion.div>
             
