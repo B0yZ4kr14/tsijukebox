@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { KioskLayout } from '@/components/layout/KioskLayout';
@@ -9,6 +9,7 @@ import { SystemMonitor } from '@/components/player/SystemMonitor';
 import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
+import { useVolume } from '@/hooks/useVolume';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { Button } from '@/components/ui/button';
 import { Settings, Music, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -31,8 +32,57 @@ const loadingVariants = {
 
 export default function Index() {
   const { data: status, isLoading, error } = useStatus();
-  const { next, prev } = usePlayer();
+  const { play, pause, next, prev } = usePlayer();
+  const { setVolume } = useVolume();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+
+  // Keyboard shortcuts
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    // Prevent default for handled keys
+    const handledKeys = [' ', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '-'];
+    if (handledKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+
+    switch (e.key) {
+      case ' ':
+        if (status?.playing) {
+          pause();
+          toast('Pausado', { icon: '⏸️' });
+        } else {
+          play();
+          toast('Reproduzindo', { icon: '▶️' });
+        }
+        break;
+      case 'ArrowRight':
+        next();
+        showSwipeFeedback('left');
+        toast('Próxima faixa', { icon: '⏭️' });
+        break;
+      case 'ArrowLeft':
+        prev();
+        showSwipeFeedback('right');
+        toast('Faixa anterior', { icon: '⏮️' });
+        break;
+      case 'ArrowUp':
+      case '+':
+        const newVolUp = Math.min((status?.volume ?? 75) + 5, 100);
+        setVolume(newVolUp);
+        toast(`Volume: ${newVolUp}%`, { icon: '🔊' });
+        break;
+      case 'ArrowDown':
+      case '-':
+        const newVolDown = Math.max((status?.volume ?? 75) - 5, 0);
+        setVolume(newVolDown);
+        toast(`Volume: ${newVolDown}%`, { icon: '🔉' });
+        break;
+    }
+  }, [status?.playing, status?.volume, play, pause, next, prev, setVolume]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const showSwipeFeedback = (direction: 'left' | 'right') => {
     setSwipeDirection(direction);
