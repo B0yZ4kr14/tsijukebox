@@ -80,6 +80,14 @@
     --kiosk-surface: 240 10% 15%;
     --kiosk-primary: 346 84% 61%;
     --kiosk-text: 0 0% 93%;
+
+    /* Genre Colors */
+    --genre-rock: 0 85% 55%;
+    --genre-pop: 280 85% 65%;
+    --genre-soul: 35 90% 55%;
+    --genre-hip-hop: 160 80% 45%;
+    --genre-ballad: 210 70% 60%;
+    --genre-classic-rock: 25 80% 50%;
   }
 }
 
