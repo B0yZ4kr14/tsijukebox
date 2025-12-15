@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { Play, Heart, MoreHorizontal, Clock, Plus } from 'lucide-react';
+import { Play, Heart, Plus } from 'lucide-react';
 import { SpotifyTrack } from '@/lib/api/spotify';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -34,14 +33,11 @@ export function TrackItem({
   className,
 }: TrackItemProps) {
   return (
-    <motion.div
+    <div
       className={cn(
         "group flex items-center gap-4 px-4 py-2 rounded-md hover:bg-kiosk-surface/50 transition-colors",
         className
       )}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
     >
       {/* Index / Play button */}
       <div className="w-8 text-center">
@@ -130,6 +126,6 @@ export function TrackItem({
       <span className="text-sm text-kiosk-text/50 w-12 text-right">
         {formatDuration(track.durationMs)}
       </span>
-    </motion.div>
+    </div>
   );
 }
