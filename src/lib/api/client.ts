@@ -33,11 +33,30 @@ function getApiBaseUrl(): string {
 
 export const API_BASE_URL = getApiBaseUrl();
 
+// Default timeout in milliseconds
+const DEFAULT_TIMEOUT = 5000;
+
+export type ApiErrorType = 'network' | 'timeout' | 'server' | 'unknown';
+
+export class ApiError extends Error {
+  type: ApiErrorType;
+  status?: number;
+
+  constructor(message: string, type: ApiErrorType, status?: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.type = type;
+    this.status = status;
+  }
+}
+
 class ApiClient {
   private baseUrl: string;
+  private timeout: number;
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string, timeout: number = DEFAULT_TIMEOUT) {
     this.baseUrl = baseUrl;
+    this.timeout = timeout;
   }
 
   private getAuthHeaders(): HeadersInit {
@@ -47,7 +66,7 @@ class ApiClient {
 
   private async request<T>(
     endpoint: string, 
-    options?: RequestInit
+    options?: RequestInit & { timeout?: number }
   ): Promise<T> {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
@@ -55,17 +74,47 @@ class ApiClient {
       ...options?.headers,
     };
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers,
-    });
+    const controller = new AbortController();
+    const timeoutMs = options?.timeout ?? this.timeout;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || `API Error: ${response.status}`);
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
+        headers,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '');
+        throw new ApiError(
+          errorText || `HTTP ${response.status}: ${response.statusText}`,
+          response.status >= 500 ? 'server' : 'unknown',
+          response.status
+        );
+      }
+
+      return response.json();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new ApiError(`Request timeout after ${timeoutMs}ms`, 'timeout');
+        }
+        if (error.message.includes('fetch') || error.message.includes('network')) {
+          throw new ApiError('Network error - server unreachable', 'network');
+        }
+      }
+      
+      throw new ApiError('Unknown error occurred', 'unknown');
     }
-
-    return response.json();
   }
 
   // Health check endpoint
@@ -75,13 +124,26 @@ class ApiClient {
 
   // Metrics endpoint (Prometheus format - returns text)
   async getMetrics(): Promise<string> {
-    const response = await fetch(`${this.baseUrl}/metrics`, {
-      headers: this.getAuthHeaders(),
-    });
-    if (!response.ok) {
-      throw new Error(`Metrics Error: ${response.status}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    try {
+      const response = await fetch(`${this.baseUrl}/metrics`, {
+        headers: this.getAuthHeaders(),
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new ApiError(`Metrics Error: ${response.status}`, 'server', response.status);
+      }
+      return response.text();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof ApiError) throw error;
+      throw new ApiError('Failed to fetch metrics', 'network');
     }
-    return response.text();
   }
 
   // Public endpoints
@@ -94,6 +156,20 @@ class ApiClient {
     return this.request('/play', { 
       method: 'POST', 
       body: JSON.stringify(action) 
+    });
+  }
+
+  async stop(): Promise<{ success: boolean }> {
+    return this.request('/play', { 
+      method: 'POST', 
+      body: JSON.stringify({ action: 'stop' }) 
+    });
+  }
+
+  async seek(positionSeconds: number): Promise<{ success: boolean }> {
+    return this.request('/seek', { 
+      method: 'POST', 
+      body: JSON.stringify({ position: positionSeconds }) 
     });
   }
 
@@ -125,17 +201,29 @@ class ApiClient {
     const formData = new FormData();
     Array.from(files).forEach(file => formData.append('files', file));
     
-    const response = await fetch(`${this.baseUrl}/admin/upload`, {
-      method: 'POST',
-      headers: this.getAuthHeaders(),
-      body: formData,
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s for uploads
 
-    if (!response.ok) {
-      throw new Error(`Upload failed: ${response.status}`);
+    try {
+      const response = await fetch(`${this.baseUrl}/admin/upload`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: formData,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new ApiError(`Upload failed: ${response.status}`, 'server', response.status);
+      }
+
+      return response.json();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof ApiError) throw error;
+      throw new ApiError('Upload failed - network error', 'network');
     }
-
-    return response.json();
   }
 
   async getFeedback(): Promise<Feedback[]> {
