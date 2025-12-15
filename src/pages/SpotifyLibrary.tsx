@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Heart, Disc3, User, Loader2, Music } from 'lucide-react';
+import { ArrowLeft, Heart, Disc3, User, Loader2 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -23,7 +22,6 @@ export default function SpotifyLibraryPage() {
     artists, 
     isLoading, 
     isConnected,
-    likeTrack,
     unlikeTrack,
   } = useSpotifyLibrary();
   const { playTrack, playAlbum, playArtist } = useSpotifyPlayer();
@@ -34,11 +32,7 @@ export default function SpotifyLibraryPage() {
     return (
       <KioskLayout>
         <div className="min-h-screen flex flex-col items-center justify-center p-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6 max-w-md"
-          >
+          <div className="text-center space-y-6 max-w-md">
             <div className="w-20 h-20 rounded-full bg-[#1DB954]/20 flex items-center justify-center mx-auto">
               <Heart className="w-10 h-10 text-[#1DB954]" />
             </div>
@@ -51,7 +45,7 @@ export default function SpotifyLibraryPage() {
                 Ir para Configurações
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </KioskLayout>
     );
@@ -61,11 +55,7 @@ export default function SpotifyLibraryPage() {
     <KioskLayout>
       <div className="min-h-screen">
         {/* Header */}
-        <motion.header
-          className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <header className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border">
           <div className="flex items-center gap-4 p-4">
             <Link to="/spotify">
               <Button variant="ghost" size="icon" className="text-kiosk-text">
@@ -77,7 +67,7 @@ export default function SpotifyLibraryPage() {
               <h1 className="text-xl font-bold text-kiosk-text">Sua Biblioteca</h1>
             </div>
           </div>
-        </motion.header>
+        </header>
 
         {/* Content */}
         <div className="p-4">
@@ -101,11 +91,7 @@ export default function SpotifyLibraryPage() {
 
               <TabsContent value="liked">
                 {/* Liked songs header */}
-                <motion.div
-                  className="flex items-center gap-4 mb-6 p-4 bg-gradient-to-r from-purple-600/30 to-purple-800/30 rounded-lg"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
+                <div className="flex items-center gap-4 mb-6 p-4 bg-gradient-to-r from-purple-600/30 to-purple-800/30 rounded-lg">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg">
                     <Heart className="w-8 h-8 text-white fill-white" />
                   </div>
@@ -113,7 +99,7 @@ export default function SpotifyLibraryPage() {
                     <h2 className="text-2xl font-bold text-kiosk-text">Músicas Curtidas</h2>
                     <p className="text-kiosk-text/60">{likedTracksTotal} músicas</p>
                   </div>
-                </motion.div>
+                </div>
 
                 {likedTracks.length === 0 ? (
                   <div className="text-center py-12 bg-kiosk-surface/30 rounded-lg">
@@ -130,10 +116,7 @@ export default function SpotifyLibraryPage() {
                         isLiked={true}
                         onPlay={() => playTrack(track.uri)}
                         onLike={() => unlikeTrack(track.id)}
-                        onAddToPlaylist={() => {
-                          setSelectedTrack(track);
-                          setShowAddModal(true);
-                        }}
+                        onAddToPlaylist={() => { setSelectedTrack(track); setShowAddModal(true); }}
                       />
                     ))}
                   </div>
@@ -148,18 +131,8 @@ export default function SpotifyLibraryPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                    {albums.map((album, index) => (
-                      <motion.div
-                        key={album.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                      >
-                        <AlbumCard
-                          album={album}
-                          onPlay={() => playAlbum(album.uri)}
-                        />
-                      </motion.div>
+                    {albums.map((album) => (
+                      <AlbumCard key={album.id} album={album} onPlay={() => playAlbum(album.uri)} />
                     ))}
                   </div>
                 )}
@@ -173,18 +146,8 @@ export default function SpotifyLibraryPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                    {artists.map((artist, index) => (
-                      <motion.div
-                        key={artist.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                      >
-                        <ArtistCard
-                          artist={artist}
-                          onPlay={() => playArtist(artist.uri)}
-                        />
-                      </motion.div>
+                    {artists.map((artist) => (
+                      <ArtistCard key={artist.id} artist={artist} onPlay={() => playArtist(artist.uri)} />
                     ))}
                   </div>
                 )}
@@ -193,18 +156,11 @@ export default function SpotifyLibraryPage() {
           )}
         </div>
 
-        {/* Add to Playlist Modal */}
         <AddToPlaylistModal
           isOpen={showAddModal}
-          onClose={() => {
-            setShowAddModal(false);
-            setSelectedTrack(null);
-          }}
+          onClose={() => { setShowAddModal(false); setSelectedTrack(null); }}
           track={selectedTrack}
-          onAdd={(playlistId) => {
-            setShowAddModal(false);
-            setSelectedTrack(null);
-          }}
+          onAdd={() => { setShowAddModal(false); setSelectedTrack(null); }}
         />
       </div>
     </KioskLayout>

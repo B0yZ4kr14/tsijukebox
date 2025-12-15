@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Play, Disc3 } from 'lucide-react';
 import { SpotifyAlbum } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
@@ -12,13 +11,11 @@ interface AlbumCardProps {
 
 export function AlbumCard({ album, onClick, onPlay, className }: AlbumCardProps) {
   return (
-    <motion.div
+    <div
       className={cn(
-        "group relative bg-kiosk-surface/50 rounded-lg p-4 cursor-pointer transition-all hover:bg-kiosk-surface",
+        "group relative bg-kiosk-surface/50 rounded-lg p-4 cursor-pointer transition-all hover:bg-kiosk-surface hover:scale-[1.02]",
         className
       )}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
       onClick={onClick}
     >
       {/* Album Art */}
@@ -37,25 +34,15 @@ export function AlbumCard({ album, onClick, onPlay, className }: AlbumCardProps)
         )}
         
         {/* Play button overlay */}
-        <motion.button
-          className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl"
-          initial={{ opacity: 0, y: 8 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+        <button
+          className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transition-all hover:scale-110"
           onClick={(e) => {
             e.stopPropagation();
             onPlay?.();
           }}
-          style={{ opacity: 'var(--play-opacity, 0)' }}
         >
           <Play className="w-5 h-5 text-black fill-black ml-0.5" />
-        </motion.button>
-        
-        <style>{`
-          .group:hover {
-            --play-opacity: 1;
-          }
-        `}</style>
+        </button>
       </div>
 
       {/* Info */}
@@ -65,6 +52,6 @@ export function AlbumCard({ album, onClick, onPlay, className }: AlbumCardProps)
           {album.releaseDate.split('-')[0]} • {album.artist}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -14,6 +14,10 @@ import Admin from "./pages/Admin";
 import AdminLibrary from "./pages/AdminLibrary";
 import AdminLogs from "./pages/AdminLogs";
 import AdminFeedback from "./pages/AdminFeedback";
+import SpotifyBrowser from "./pages/SpotifyBrowser";
+import SpotifyPlaylistPage from "./pages/SpotifyPlaylist";
+import SpotifySearchPage from "./pages/SpotifySearch";
+import SpotifyLibraryPage from "./pages/SpotifyLibrary";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -39,6 +43,12 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/install" element={<Install />} />
               <Route path="/settings" element={<Settings />} />
+              
+              {/* Spotify Routes */}
+              <Route path="/spotify" element={<SpotifyBrowser />} />
+              <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
+              <Route path="/spotify/search" element={<SpotifySearchPage />} />
+              <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
               
               {/* Protected Admin Routes */}
               <Route path="/admin" element={

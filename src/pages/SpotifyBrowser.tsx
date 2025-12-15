@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, Plus, Search, Heart, Clock, TrendingUp, Loader2, Music, Disc3 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,7 @@ export default function SpotifyBrowser() {
   const navigate = useNavigate();
   const { spotify } = useSettings();
   const { playlists, isLoading: playlistsLoading, createPlaylist, isCreating } = useSpotifyPlaylists();
-  const { recentlyPlayed, topTracks, likedTracks, likedTracksTotal, isLoading: libraryLoading } = useSpotifyLibrary();
+  const { recentlyPlayed, topTracks, likedTracksTotal, isLoading: libraryLoading } = useSpotifyLibrary();
   const { playTrack, playPlaylist } = useSpotifyPlayer();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -26,11 +25,7 @@ export default function SpotifyBrowser() {
     return (
       <KioskLayout>
         <div className="min-h-screen flex flex-col items-center justify-center p-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6 max-w-md"
-          >
+          <div className="text-center space-y-6 max-w-md">
             <div className="w-20 h-20 rounded-full bg-[#1DB954]/20 flex items-center justify-center mx-auto">
               <Disc3 className="w-10 h-10 text-[#1DB954]" />
             </div>
@@ -43,7 +38,7 @@ export default function SpotifyBrowser() {
                 Ir para Configurações
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </KioskLayout>
     );
@@ -55,11 +50,7 @@ export default function SpotifyBrowser() {
     <KioskLayout>
       <div className="min-h-screen pb-8">
         {/* Header */}
-        <motion.header
-          className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <header className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-4">
               <Link to="/">
@@ -87,7 +78,7 @@ export default function SpotifyBrowser() {
               </Button>
             </div>
           </div>
-        </motion.header>
+        </header>
 
         {isLoading ? (
           <div className="flex items-center justify-center h-64">
@@ -99,52 +90,36 @@ export default function SpotifyBrowser() {
             <section>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
                 <Link to="/spotify/library">
-                  <motion.div
-                    className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600/30 to-purple-800/30 rounded-lg hover:from-purple-600/40 hover:to-purple-800/40 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600/30 to-purple-800/30 rounded-lg hover:from-purple-600/40 hover:to-purple-800/40 transition-colors">
                     <Heart className="w-6 h-6 text-purple-400" />
                     <div>
                       <p className="font-semibold text-kiosk-text">Curtidas</p>
                       <p className="text-xs text-kiosk-text/60">{likedTracksTotal} músicas</p>
                     </div>
-                  </motion.div>
+                  </div>
                 </Link>
-                <motion.div
-                  className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-600/30 to-blue-800/30 rounded-lg cursor-pointer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-600/30 to-blue-800/30 rounded-lg cursor-pointer">
                   <Clock className="w-6 h-6 text-blue-400" />
                   <div>
                     <p className="font-semibold text-kiosk-text">Recentes</p>
                     <p className="text-xs text-kiosk-text/60">{recentlyPlayed.length} músicas</p>
                   </div>
-                </motion.div>
-                <motion.div
-                  className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-600/30 to-green-800/30 rounded-lg cursor-pointer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+                </div>
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-600/30 to-green-800/30 rounded-lg cursor-pointer">
                   <TrendingUp className="w-6 h-6 text-green-400" />
                   <div>
                     <p className="font-semibold text-kiosk-text">Top Músicas</p>
                     <p className="text-xs text-kiosk-text/60">{topTracks.length} músicas</p>
                   </div>
-                </motion.div>
+                </div>
                 <Link to="/spotify/search">
-                  <motion.div
-                    className="flex items-center gap-3 p-4 bg-gradient-to-r from-orange-600/30 to-orange-800/30 rounded-lg hover:from-orange-600/40 hover:to-orange-800/40 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-orange-600/30 to-orange-800/30 rounded-lg hover:from-orange-600/40 hover:to-orange-800/40 transition-colors">
                     <Search className="w-6 h-6 text-orange-400" />
                     <div>
                       <p className="font-semibold text-kiosk-text">Buscar</p>
                       <p className="text-xs text-kiosk-text/60">Músicas e mais</p>
                     </div>
-                  </motion.div>
+                  </div>
                 </Link>
               </div>
             </section>
@@ -169,19 +144,13 @@ export default function SpotifyBrowser() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                  {playlists.map((playlist, index) => (
-                    <motion.div
+                  {playlists.map((playlist) => (
+                    <PlaylistCard
                       key={playlist.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <PlaylistCard
-                        playlist={playlist}
-                        onClick={() => navigate(`/spotify/playlist/${playlist.id}`)}
-                        onPlay={() => playPlaylist(`spotify:playlist:${playlist.id}`)}
-                      />
-                    </motion.div>
+                      playlist={playlist}
+                      onClick={() => navigate(`/spotify/playlist/${playlist.id}`)}
+                      onPlay={() => playPlaylist(`spotify:playlist:${playlist.id}`)}
+                    />
                   ))}
                 </div>
               )}

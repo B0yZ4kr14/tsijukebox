@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, X, Loader2, Music, Disc3, User, ListMusic } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
@@ -15,13 +14,12 @@ import { useSpotifySearch } from '@/hooks/useSpotifySearch';
 import { useSpotifyPlayer } from '@/hooks/useSpotifyPlayer';
 import { useSpotifyLibrary } from '@/hooks/useSpotifyLibrary';
 import { SpotifyTrack } from '@/lib/api/spotify';
-import { useNavigate } from 'react-router-dom';
 
 export default function SpotifySearchPage() {
   const navigate = useNavigate();
   const { query, setQuery, results, hasResults, isSearching, clearSearch, isConnected } = useSpotifySearch();
   const { playTrack, playAlbum, playArtist, playPlaylist } = useSpotifyPlayer();
-  const { likeTrack, unlikeTrack } = useSpotifyLibrary();
+  const { likeTrack } = useSpotifyLibrary();
   const [activeTab, setActiveTab] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<SpotifyTrack | null>(null);
@@ -30,11 +28,7 @@ export default function SpotifySearchPage() {
     return (
       <KioskLayout>
         <div className="min-h-screen flex flex-col items-center justify-center p-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6 max-w-md"
-          >
+          <div className="text-center space-y-6 max-w-md">
             <div className="w-20 h-20 rounded-full bg-[#1DB954]/20 flex items-center justify-center mx-auto">
               <Search className="w-10 h-10 text-[#1DB954]" />
             </div>
@@ -47,7 +41,7 @@ export default function SpotifySearchPage() {
                 Ir para Configurações
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </KioskLayout>
     );
@@ -57,11 +51,7 @@ export default function SpotifySearchPage() {
     <KioskLayout>
       <div className="min-h-screen">
         {/* Header */}
-        <motion.header
-          className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border p-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <header className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border p-4">
           <div className="flex items-center gap-4">
             <Link to="/spotify">
               <Button variant="ghost" size="icon" className="text-kiosk-text">
@@ -88,7 +78,7 @@ export default function SpotifySearchPage() {
               )}
             </div>
           </div>
-        </motion.header>
+        </header>
 
         {/* Content */}
         <div className="p-4">
@@ -131,83 +121,63 @@ export default function SpotifySearchPage() {
               </TabsList>
 
               <TabsContent value="all" className="space-y-8">
-                {/* Top Result + Tracks */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Top Result */}
-                  {results.tracks[0] && (
-                    <section>
-                      <h2 className="text-lg font-bold text-kiosk-text mb-4">Melhor Resultado</h2>
-                      <motion.div
-                        className="p-5 bg-kiosk-surface/50 rounded-lg hover:bg-kiosk-surface transition-colors cursor-pointer group"
-                        whileHover={{ scale: 1.01 }}
-                        onClick={() => playTrack(results.tracks[0].uri)}
-                      >
-                        <img
-                          src={results.tracks[0].albumImageUrl || ''}
-                          alt={results.tracks[0].album}
-                          className="w-24 h-24 rounded-lg mb-4 shadow-lg"
+                {results.tracks[0] && (
+                  <section>
+                    <h2 className="text-lg font-bold text-kiosk-text mb-4">Melhor Resultado</h2>
+                    <div
+                      className="p-5 bg-kiosk-surface/50 rounded-lg hover:bg-kiosk-surface transition-colors cursor-pointer"
+                      onClick={() => playTrack(results.tracks[0].uri)}
+                    >
+                      <img
+                        src={results.tracks[0].albumImageUrl || ''}
+                        alt={results.tracks[0].album}
+                        className="w-24 h-24 rounded-lg mb-4 shadow-lg"
+                      />
+                      <h3 className="text-2xl font-bold text-kiosk-text mb-1">{results.tracks[0].name}</h3>
+                      <p className="text-kiosk-text/60">{results.tracks[0].artist} • Música</p>
+                    </div>
+                  </section>
+                )}
+
+                {results.tracks.length > 0 && (
+                  <section>
+                    <h2 className="text-lg font-bold text-kiosk-text mb-4">Músicas</h2>
+                    <div className="bg-kiosk-surface/30 rounded-lg overflow-hidden">
+                      {results.tracks.slice(0, 4).map((track) => (
+                        <TrackItem
+                          key={track.id}
+                          track={track}
+                          onPlay={() => playTrack(track.uri)}
+                          onLike={() => likeTrack(track.id)}
+                          onAddToPlaylist={() => { setSelectedTrack(track); setShowAddModal(true); }}
                         />
-                        <h3 className="text-2xl font-bold text-kiosk-text mb-1">{results.tracks[0].name}</h3>
-                        <p className="text-kiosk-text/60">{results.tracks[0].artist} • Música</p>
-                      </motion.div>
-                    </section>
-                  )}
+                      ))}
+                    </div>
+                  </section>
+                )}
 
-                  {/* Songs */}
-                  {results.tracks.length > 0 && (
-                    <section>
-                      <h2 className="text-lg font-bold text-kiosk-text mb-4">Músicas</h2>
-                      <div className="bg-kiosk-surface/30 rounded-lg overflow-hidden">
-                        {results.tracks.slice(0, 4).map((track, index) => (
-                          <TrackItem
-                            key={track.id}
-                            track={track}
-                            onPlay={() => playTrack(track.uri)}
-                            onLike={() => likeTrack(track.id)}
-                            onAddToPlaylist={() => {
-                              setSelectedTrack(track);
-                              setShowAddModal(true);
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </section>
-                  )}
-                </div>
-
-                {/* Artists */}
                 {results.artists.length > 0 && (
                   <section>
                     <h2 className="text-lg font-bold text-kiosk-text mb-4">Artistas</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                       {results.artists.slice(0, 6).map((artist) => (
-                        <ArtistCard
-                          key={artist.id}
-                          artist={artist}
-                          onPlay={() => playArtist(artist.uri)}
-                        />
+                        <ArtistCard key={artist.id} artist={artist} onPlay={() => playArtist(artist.uri)} />
                       ))}
                     </div>
                   </section>
                 )}
 
-                {/* Albums */}
                 {results.albums.length > 0 && (
                   <section>
                     <h2 className="text-lg font-bold text-kiosk-text mb-4">Álbuns</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                       {results.albums.slice(0, 6).map((album) => (
-                        <AlbumCard
-                          key={album.id}
-                          album={album}
-                          onPlay={() => playAlbum(album.uri)}
-                        />
+                        <AlbumCard key={album.id} album={album} onPlay={() => playAlbum(album.uri)} />
                       ))}
                     </div>
                   </section>
                 )}
 
-                {/* Playlists */}
                 {results.playlists.length > 0 && (
                   <section>
                     <h2 className="text-lg font-bold text-kiosk-text mb-4">Playlists</h2>
@@ -234,10 +204,7 @@ export default function SpotifySearchPage() {
                       index={index}
                       onPlay={() => playTrack(track.uri)}
                       onLike={() => likeTrack(track.id)}
-                      onAddToPlaylist={() => {
-                        setSelectedTrack(track);
-                        setShowAddModal(true);
-                      }}
+                      onAddToPlaylist={() => { setSelectedTrack(track); setShowAddModal(true); }}
                     />
                   ))}
                 </div>
@@ -246,11 +213,7 @@ export default function SpotifySearchPage() {
               <TabsContent value="albums">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {results.albums.map((album) => (
-                    <AlbumCard
-                      key={album.id}
-                      album={album}
-                      onPlay={() => playAlbum(album.uri)}
-                    />
+                    <AlbumCard key={album.id} album={album} onPlay={() => playAlbum(album.uri)} />
                   ))}
                 </div>
               </TabsContent>
@@ -258,11 +221,7 @@ export default function SpotifySearchPage() {
               <TabsContent value="artists">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {results.artists.map((artist) => (
-                    <ArtistCard
-                      key={artist.id}
-                      artist={artist}
-                      onPlay={() => playArtist(artist.uri)}
-                    />
+                    <ArtistCard key={artist.id} artist={artist} onPlay={() => playArtist(artist.uri)} />
                   ))}
                 </div>
               </TabsContent>
@@ -283,19 +242,11 @@ export default function SpotifySearchPage() {
           )}
         </div>
 
-        {/* Add to Playlist Modal */}
         <AddToPlaylistModal
           isOpen={showAddModal}
-          onClose={() => {
-            setShowAddModal(false);
-            setSelectedTrack(null);
-          }}
+          onClose={() => { setShowAddModal(false); setSelectedTrack(null); }}
           track={selectedTrack}
-          onAdd={(playlistId) => {
-            // TODO: Add to playlist via hook
-            setShowAddModal(false);
-            setSelectedTrack(null);
-          }}
+          onAdd={() => { setShowAddModal(false); setSelectedTrack(null); }}
         />
       </div>
     </KioskLayout>
