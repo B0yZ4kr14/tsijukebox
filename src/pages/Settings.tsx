@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Plug } from 'lucide-react';
+import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Plug, Database } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient } from '@/lib/api/spotify';
 import { toast } from 'sonner';
-import { SettingsSection, CloudConnectionSection, BackendConnectionSection } from '@/components/settings';
+import { SettingsSection, CloudConnectionSection, BackendConnectionSection, DatabaseSection, BackupSection, CloudBackupSection } from '@/components/settings';
 
 export default function Settings() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -164,6 +164,26 @@ export default function Settings() {
 
           {/* Lovable Cloud */}
           <CloudConnectionSection />
+
+          {/* Database Section Header */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center gap-2 text-kiosk-text/70 pt-4"
+          >
+            <Database className="w-4 h-4" />
+            <span className="text-sm font-medium uppercase tracking-wider">Banco de Dados</span>
+          </motion.div>
+
+          {/* Database Configuration */}
+          <DatabaseSection isDemoMode={isDemoMode} />
+
+          {/* Backup Local */}
+          <BackupSection isDemoMode={isDemoMode} />
+
+          {/* Cloud Backup */}
+          <CloudBackupSection isDemoMode={isDemoMode} />
 
           {/* Spotify Integration */}
           <SettingsSection
