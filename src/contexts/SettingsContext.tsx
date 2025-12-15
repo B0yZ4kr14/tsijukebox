@@ -13,10 +13,10 @@ interface SettingsContextType {
 
 const defaultApiUrl = import.meta.env.VITE_API_URL || 'https://midiaserver.local/api';
 const envDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
-
-// Default values for when context is not available (fallback)
+// Enable demo mode by default in development when no backend is configured
+const shouldDefaultToDemo = import.meta.env.DEV || envDemoMode;
 const defaultSettings: SettingsContextType = {
-  isDemoMode: envDemoMode,
+  isDemoMode: shouldDefaultToDemo,
   setDemoMode: () => {},
   apiUrl: defaultApiUrl,
   setApiUrl: () => {},
@@ -58,7 +58,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<StoredSettings>(() => {
     const stored = loadSettings();
     return {
-      isDemoMode: stored.isDemoMode ?? envDemoMode,
+      isDemoMode: stored.isDemoMode ?? shouldDefaultToDemo,
       apiUrl: stored.apiUrl ?? defaultApiUrl,
       useWebSocket: stored.useWebSocket ?? true,
       pollingInterval: stored.pollingInterval ?? 2000,
