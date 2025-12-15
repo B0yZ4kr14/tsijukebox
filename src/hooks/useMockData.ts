@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { SystemStatus } from '@/lib/api/types';
 
-// Check if demo mode is enabled
-export const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
-
 // Mock track data for demo mode
 const mockTracks = [
   {
@@ -30,6 +27,22 @@ const mockTracks = [
     duration: 482,
     position: 200,
   },
+  {
+    title: 'Comfortably Numb',
+    artist: 'Pink Floyd',
+    album: 'The Wall',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2735d48e2f56d691f9a4e4b0bdf',
+    duration: 382,
+    position: 0,
+  },
+  {
+    title: 'Sweet Child O\' Mine',
+    artist: 'Guns N\' Roses',
+    album: 'Appetite for Destruction',
+    cover: 'https://i.scdn.co/image/ab67616d0000b2736c3d1e8e1f4a8e0f5c5c0a5b',
+    duration: 356,
+    position: 0,
+  },
 ];
 
 // Generate random system metrics
@@ -41,7 +54,7 @@ function generateMockMetrics() {
   };
 }
 
-export function useMockStatus() {
+export function useMockStatus(isDemoMode: boolean) {
   const [mockStatus, setMockStatus] = useState<SystemStatus>(() => ({
     ...generateMockMetrics(),
     playing: true,
@@ -61,26 +74,24 @@ export function useMockStatus() {
       setMockStatus(prev => ({
         ...prev,
         ...generateMockMetrics(),
-        track: prev.track ? {
+        track: prev.track && prev.playing ? {
           ...prev.track,
           position: Math.min((prev.track.position ?? 0) + 1, prev.track.duration ?? 300),
-        } : null,
+        } : prev.track,
       }));
     }, 1000);
 
     return () => clearInterval(metricsInterval);
-  }, []);
+  }, [isDemoMode]);
 
-  // Simulate track changes
+  // Auto-advance track when song ends
   useEffect(() => {
-    if (!isDemoMode) return;
+    if (!isDemoMode || !mockStatus.playing) return;
 
-    const trackInterval = setInterval(() => {
+    if (mockStatus.track && mockStatus.track.position >= (mockStatus.track.duration ?? 300)) {
       setTrackIndex(prev => (prev + 1) % mockTracks.length);
-    }, 30000); // Change track every 30s in demo
-
-    return () => clearInterval(trackInterval);
-  }, []);
+    }
+  }, [isDemoMode, mockStatus.playing, mockStatus.track?.position, mockStatus.track?.duration]);
 
   // Update track when index changes
   useEffect(() => {

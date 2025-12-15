@@ -200,10 +200,16 @@ export default function Index() {
             </p>
             <p className="text-sm text-kiosk-text/50">
               {isDev 
-                ? 'Modo desenvolvimento: configure VITE_API_URL ou ative VITE_DEMO_MODE=true'
+                ? 'Acesse as Configurações para ativar o Modo Demo'
                 : 'Verifique se o backend FastAPI está em execução.'
               }
             </p>
+            <Link to="/settings">
+              <Button className="mt-4 bg-kiosk-primary hover:bg-kiosk-primary/90">
+                <Settings className="w-4 h-4 mr-2" />
+                Configurações
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </KioskLayout>
@@ -308,7 +314,7 @@ export default function Index() {
                 )}
               </AnimatePresence>
 
-              <Link to="/login">
+              <Link to="/settings">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}

@@ -1,19 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
-import { isDemoMode, useMockStatus } from '@/hooks/useMockData';
+import { useMockStatus } from '@/hooks/useMockData';
+import { useWebSocketStatus } from '@/hooks/useWebSocketStatus';
+import { useSettings } from '@/contexts/SettingsContext';
 import type { SystemStatus } from '@/lib/api/types';
 
 export function useStatus(enabled: boolean = true) {
-  const mockData = useMockStatus();
+  const { isDemoMode, apiUrl, useWebSocket, pollingInterval } = useSettings();
+  const mockData = useMockStatus(isDemoMode);
 
-  const query = useQuery<SystemStatus>({
-    queryKey: ['status'],
+  // WebSocket connection for real-time updates
+  const wsStatus = useWebSocketStatus({
+    url: apiUrl,
+    enabled: enabled && !isDemoMode && useWebSocket,
+  });
+
+  // Polling fallback when WebSocket is disabled or unavailable
+  const pollingQuery = useQuery<SystemStatus>({
+    queryKey: ['status', apiUrl],
     queryFn: () => api.getStatus(),
-    refetchInterval: isDemoMode ? false : 2000, // Reduced from 1s to 2s for optimization
-    enabled: enabled && !isDemoMode,
+    refetchInterval: pollingInterval,
+    enabled: enabled && !isDemoMode && (!useWebSocket || (useWebSocket && wsStatus.error !== null)),
     retry: 2,
     retryDelay: 1000,
-    staleTime: 1000,
+    staleTime: Math.floor(pollingInterval / 2),
   });
 
   // Return mock data in demo mode
@@ -23,8 +33,24 @@ export function useStatus(enabled: boolean = true) {
       isLoading: false,
       error: null,
       isError: false,
+      connectionType: 'demo' as const,
     };
   }
 
-  return query;
+  // Use WebSocket data if connected
+  if (useWebSocket && wsStatus.isConnected && wsStatus.status) {
+    return {
+      data: wsStatus.status,
+      isLoading: false,
+      error: null,
+      isError: false,
+      connectionType: 'websocket' as const,
+    };
+  }
+
+  // Fallback to polling
+  return {
+    ...pollingQuery,
+    connectionType: (useWebSocket && wsStatus.error) ? 'polling-fallback' as const : 'polling' as const,
+  };
 }
