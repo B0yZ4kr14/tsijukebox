@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import Install from "./pages/Install";
 import Admin from "./pages/Admin";
 import AdminLibrary from "./pages/AdminLibrary";
 import AdminLogs from "./pages/AdminLogs";
@@ -33,6 +34,7 @@ const App = () => (
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/install" element={<Install />} />
             
             {/* Protected Admin Routes */}
             <Route path="/admin" element={
