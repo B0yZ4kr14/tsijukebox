@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { KioskLayout } from '@/components/layout/KioskLayout';
@@ -7,8 +8,11 @@ import { VolumeSlider } from '@/components/player/VolumeSlider';
 import { SystemMonitor } from '@/components/player/SystemMonitor';
 import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 import { useStatus } from '@/hooks/useStatus';
+import { usePlayer } from '@/hooks/usePlayer';
+import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { Button } from '@/components/ui/button';
-import { Settings, Loader2, Music } from 'lucide-react';
+import { Settings, Music, ChevronLeft, ChevronRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -27,6 +31,27 @@ const loadingVariants = {
 
 export default function Index() {
   const { data: status, isLoading, error } = useStatus();
+  const { next, prev } = usePlayer();
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+
+  const showSwipeFeedback = (direction: 'left' | 'right') => {
+    setSwipeDirection(direction);
+    setTimeout(() => setSwipeDirection(null), 300);
+  };
+
+  const touchHandlers = useTouchGestures({
+    onSwipeLeft: () => {
+      next();
+      showSwipeFeedback('left');
+      toast('Próxima faixa', { icon: '⏭️' });
+    },
+    onSwipeRight: () => {
+      prev();
+      showSwipeFeedback('right');
+      toast('Faixa anterior', { icon: '⏮️' });
+    },
+    threshold: 75,
+  });
 
   if (isLoading && !status) {
     return (
@@ -113,12 +138,36 @@ export default function Index() {
     <KioskLayout>
       <AnimatePresence mode="wait">
         <motion.div 
-          className="h-screen flex flex-col"
+          className="h-screen flex flex-col relative"
           variants={pageVariants}
           initial="initial"
           animate="animate"
           exit="exit"
+          {...touchHandlers}
         >
+          {/* Swipe Indicators */}
+          <AnimatePresence>
+            {swipeDirection && (
+              <motion.div
+                className={`absolute top-1/2 -translate-y-1/2 z-50 pointer-events-none ${
+                  swipeDirection === 'left' ? 'right-8' : 'left-8'
+                }`}
+                initial={{ opacity: 0, scale: 0.5, x: swipeDirection === 'left' ? 50 : -50 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              >
+                <div className="w-16 h-16 rounded-full bg-kiosk-primary/20 flex items-center justify-center backdrop-blur-sm">
+                  {swipeDirection === 'left' ? (
+                    <ChevronRight className="w-10 h-10 text-kiosk-primary" />
+                  ) : (
+                    <ChevronLeft className="w-10 h-10 text-kiosk-primary" />
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Header */}
           <motion.header 
             className="flex items-center justify-between p-4"
@@ -148,8 +197,8 @@ export default function Index() {
             </Link>
           </motion.header>
 
-          {/* Main Content */}
-          <main className="flex-1 flex flex-col items-center justify-center gap-6 px-4 pb-8">
+          {/* Main Content - Touch Area */}
+          <main className="flex-1 flex flex-col items-center justify-center gap-6 px-4 pb-8 touch-pan-y">
             <NowPlaying 
               track={status?.track ?? null} 
               isPlaying={status?.playing ?? false} 
@@ -174,6 +223,16 @@ export default function Index() {
               volume={status?.volume ?? 75} 
               muted={status?.muted ?? false} 
             />
+
+            {/* Swipe hint */}
+            <motion.p
+              className="text-xs text-kiosk-text/30 mt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              Deslize para mudar de faixa
+            </motion.p>
           </main>
 
           {/* Footer branding */}
