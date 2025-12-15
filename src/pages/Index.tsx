@@ -13,6 +13,7 @@ import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
+import { api } from '@/lib/api/client';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,15 @@ export default function Index() {
       toast.success('App instalado com sucesso!');
     }
   };
+
+  const handleSeek = useCallback(async (positionSeconds: number) => {
+    try {
+      await api.seek(positionSeconds);
+    } catch (error) {
+      // Silently fail for demo mode or when backend doesn't support seek
+      console.debug('Seek not available:', error);
+    }
+  }, []);
 
   // Keyboard shortcuts
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -345,6 +355,7 @@ export default function Index() {
                 position={status?.track?.position ?? 0}
                 duration={status?.track?.duration ?? 0}
                 genre={status?.track?.genre}
+                onSeek={handleSeek}
               />
             </motion.div>
             
