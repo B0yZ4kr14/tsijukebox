@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Monitor, Wifi, Clock, Server, TestTube, Zap } from 'lucide-react';
+import { ArrowLeft, Monitor, Wifi, Clock, Server, TestTube, Zap, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -10,10 +10,13 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { useSettings } from '@/contexts/SettingsContext';
+import { spotifyClient } from '@/lib/api/spotify';
 import { toast } from 'sonner';
 
 export default function Settings() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const {
     isDemoMode,
     setDemoMode,
@@ -23,9 +26,54 @@ export default function Settings() {
     setUseWebSocket,
     pollingInterval,
     setPollingInterval,
+    spotify,
+    setSpotifyCredentials,
+    setSpotifyTokens,
+    setSpotifyUser,
+    clearSpotifyAuth,
   } = useSettings();
 
   const [localApiUrl, setLocalApiUrl] = useState(apiUrl);
+  const [localClientId, setLocalClientId] = useState(spotify.clientId);
+  const [localClientSecret, setLocalClientSecret] = useState(spotify.clientSecret);
+  const [showClientSecret, setShowClientSecret] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  // Handle OAuth callback
+  useEffect(() => {
+    const code = searchParams.get('spotify_code');
+    const error = searchParams.get('spotify_error');
+
+    if (error) {
+      toast.error(`Erro na autenticação Spotify: ${error}`);
+      setSearchParams({});
+      return;
+    }
+
+    if (code && spotify.clientId && spotify.clientSecret) {
+      handleSpotifyCallback(code);
+    }
+  }, [searchParams, spotify.clientId, spotify.clientSecret]);
+
+  const handleSpotifyCallback = async (code: string) => {
+    setIsConnecting(true);
+    try {
+      const tokens = await spotifyClient.exchangeCode(code);
+      setSpotifyTokens(tokens);
+      
+      const user = await spotifyClient.validateToken();
+      if (user) {
+        setSpotifyUser(user);
+        toast.success(`Conectado como ${user.displayName}`);
+      }
+    } catch (error) {
+      console.error('Failed to exchange code:', error);
+      toast.error('Falha ao conectar com Spotify');
+    } finally {
+      setIsConnecting(false);
+      setSearchParams({});
+    }
+  };
 
   const handleSaveApiUrl = () => {
     setApiUrl(localApiUrl);
@@ -42,10 +90,43 @@ export default function Settings() {
     toast.success(checked ? 'WebSocket ativado' : 'Polling ativado');
   };
 
+  const handleSaveSpotifyCredentials = () => {
+    if (!localClientId.trim() || !localClientSecret.trim()) {
+      toast.error('Preencha Client ID e Client Secret');
+      return;
+    }
+    setSpotifyCredentials(localClientId.trim(), localClientSecret.trim());
+    toast.success('Credenciais Spotify salvas');
+  };
+
+  const handleSpotifyConnect = async () => {
+    if (!spotify.clientId || !spotify.clientSecret) {
+      toast.error('Configure as credenciais primeiro');
+      return;
+    }
+
+    setIsConnecting(true);
+    try {
+      const { authUrl } = await spotifyClient.getAuthUrl();
+      window.location.href = authUrl;
+    } catch (error) {
+      console.error('Failed to get auth URL:', error);
+      toast.error('Falha ao iniciar autenticação');
+      setIsConnecting(false);
+    }
+  };
+
+  const handleSpotifyDisconnect = () => {
+    clearSpotifyAuth();
+    toast.success('Desconectado do Spotify');
+  };
+
+  const credentialsChanged = localClientId !== spotify.clientId || localClientSecret !== spotify.clientSecret;
+
   return (
     <KioskLayout>
       <motion.div
-        className="min-h-screen bg-kiosk-background p-4 md:p-8"
+        className="min-h-screen bg-kiosk-background p-4 md:p-8 overflow-y-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
@@ -70,7 +151,178 @@ export default function Settings() {
           </div>
         </motion.header>
 
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto space-y-6 pb-8">
+          {/* Spotify Integration */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.05 }}
+          >
+            <Card className="bg-kiosk-surface border-kiosk-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-kiosk-text">
+                  <Music className="w-5 h-5 text-[#1DB954]" />
+                  Integração Spotify
+                  {spotify.isConnected && (
+                    <Badge variant="outline" className="ml-2 border-[#1DB954] text-[#1DB954]">
+                      <Check className="w-3 h-3 mr-1" />
+                      Conectado
+                    </Badge>
+                  )}
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Configure as credenciais da API do Spotify para acessar playlists e biblioteca
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Connected User Info */}
+                {spotify.isConnected && spotify.user && (
+                  <motion.div
+                    className="p-4 rounded-lg bg-[#1DB954]/10 border border-[#1DB954]/20"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    <div className="flex items-center gap-3">
+                      {spotify.user.imageUrl ? (
+                        <img
+                          src={spotify.user.imageUrl}
+                          alt={spotify.user.displayName}
+                          className="w-12 h-12 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-[#1DB954]/20 flex items-center justify-center">
+                          <Music className="w-6 h-6 text-[#1DB954]" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <p className="font-medium text-kiosk-text">{spotify.user.displayName}</p>
+                        <p className="text-sm text-kiosk-text/60">{spotify.user.email}</p>
+                        <Badge 
+                          variant="secondary" 
+                          className={`mt-1 ${
+                            spotify.user.product === 'premium' 
+                              ? 'bg-[#1DB954]/20 text-[#1DB954]' 
+                              : 'bg-kiosk-surface text-kiosk-text/60'
+                          }`}
+                        >
+                          {spotify.user.product === 'premium' ? 'Premium' : 'Free'}
+                        </Badge>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSpotifyDisconnect}
+                        className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Desconectar
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Credentials Form */}
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="clientId" className="text-kiosk-text">Client ID</Label>
+                    <Input
+                      id="clientId"
+                      value={localClientId}
+                      onChange={(e) => setLocalClientId(e.target.value)}
+                      placeholder="Cole seu Spotify Client ID"
+                      className="bg-kiosk-background border-kiosk-border text-kiosk-text font-mono text-sm"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="clientSecret" className="text-kiosk-text">Client Secret</Label>
+                    <div className="relative">
+                      <Input
+                        id="clientSecret"
+                        type={showClientSecret ? 'text' : 'password'}
+                        value={localClientSecret}
+                        onChange={(e) => setLocalClientSecret(e.target.value)}
+                        placeholder="Cole seu Spotify Client Secret"
+                        className="bg-kiosk-background border-kiosk-border text-kiosk-text font-mono text-sm pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 text-kiosk-text/50 hover:text-kiosk-text"
+                        onClick={() => setShowClientSecret(!showClientSecret)}
+                      >
+                        {showClientSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {credentialsChanged && (
+                    <Button
+                      onClick={handleSaveSpotifyCredentials}
+                      className="w-full bg-kiosk-primary hover:bg-kiosk-primary/90"
+                    >
+                      Salvar Credenciais
+                    </Button>
+                  )}
+                </div>
+
+                <Separator className="bg-kiosk-border" />
+
+                {/* Connect/Info Section */}
+                {!spotify.isConnected && (
+                  <div className="space-y-3">
+                    <Button
+                      onClick={handleSpotifyConnect}
+                      disabled={!spotify.clientId || !spotify.clientSecret || isConnecting}
+                      className="w-full bg-[#1DB954] hover:bg-[#1DB954]/90 text-white"
+                    >
+                      {isConnecting ? (
+                        <>
+                          <motion.div
+                            className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                          />
+                          Conectando...
+                        </>
+                      ) : (
+                        <>
+                          <Music className="w-4 h-4 mr-2" />
+                          Conectar com Spotify
+                        </>
+                      )}
+                    </Button>
+
+                    {/* Help Info */}
+                    <div className="p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-kiosk-primary mt-0.5 flex-shrink-0" />
+                        <div className="text-xs text-kiosk-text/60 space-y-1">
+                          <p>Para obter as credenciais:</p>
+                          <ol className="list-decimal list-inside space-y-0.5 ml-1">
+                            <li>Acesse o <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-kiosk-primary hover:underline inline-flex items-center gap-1">Spotify Developer Dashboard <ExternalLink className="w-3 h-3" /></a></li>
+                            <li>Crie um novo aplicativo</li>
+                            <li>Adicione <code className="bg-kiosk-surface px-1 rounded">{window.location.origin}/settings</code> como Redirect URI</li>
+                            <li>Copie o Client ID e Client Secret</li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Token Info */}
+                {spotify.tokens && (
+                  <div className="text-xs text-kiosk-text/40 space-y-1">
+                    <p>Token expira em: {new Date(spotify.tokens.expiresAt).toLocaleString()}</p>
+                    <p>Renovação automática ativa ✓</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+
           {/* Demo Mode */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -250,6 +502,18 @@ export default function Settings() {
                     {isDemoMode ? 'Mock Data' : apiUrl}
                   </span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-kiosk-text/60">Spotify</span>
+                  <span className="text-kiosk-text">
+                    {spotify.isConnected ? (
+                      <span className="text-[#1DB954]">Conectado</span>
+                    ) : spotify.clientId ? (
+                      <span className="text-yellow-500">Configurado</span>
+                    ) : (
+                      <span className="text-kiosk-text/40">Não configurado</span>
+                    )}
+                  </span>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
@@ -265,6 +529,7 @@ export default function Settings() {
               variant="outline"
               onClick={() => {
                 localStorage.removeItem('tsi_jukebox_settings');
+                localStorage.removeItem('tsi_jukebox_spotify');
                 window.location.reload();
               }}
               className="border-kiosk-border text-kiosk-text hover:bg-kiosk-surface"
