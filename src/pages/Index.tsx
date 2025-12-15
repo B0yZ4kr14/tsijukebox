@@ -11,8 +11,9 @@ import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { Button } from '@/components/ui/button';
-import { Settings, Music, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Settings, Music, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 const pageVariants = {
@@ -34,7 +35,15 @@ export default function Index() {
   const { data: status, isLoading, error } = useStatus();
   const { play, pause, next, prev } = usePlayer();
   const { setVolume } = useVolume();
+  const { canInstall, install } = usePWAInstall();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+
+  const handleInstall = async () => {
+    const installed = await install();
+    if (installed) {
+      toast.success('App instalado com sucesso!');
+    }
+  };
 
   // Keyboard shortcuts
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -231,20 +240,44 @@ export default function Index() {
               temp={status?.temp ?? 0} 
             />
             
-            <Link to="/login">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-10 h-10 rounded-full bg-kiosk-surface/30 hover:bg-kiosk-surface/50 text-kiosk-text/50 hover:text-kiosk-text transition-colors"
+            <div className="flex items-center gap-2">
+              {/* PWA Install Button */}
+              <AnimatePresence>
+                {canInstall && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, x: 20 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.8, x: 20 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleInstall}
+                      className="w-10 h-10 rounded-full bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
+                    >
+                      <Download className="w-5 h-5" />
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <Link to="/login">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Settings className="w-5 h-5" />
-                </Button>
-              </motion.div>
-            </Link>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-10 h-10 rounded-full bg-kiosk-surface/30 hover:bg-kiosk-surface/50 text-kiosk-text/50 hover:text-kiosk-text transition-colors"
+                  >
+                    <Settings className="w-5 h-5" />
+                  </Button>
+                </motion.div>
+              </Link>
+            </div>
           </motion.header>
 
           {/* Main Content - Touch Area */}
