@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { NowPlaying } from '@/components/player/NowPlaying';
 import { PlayerControls } from '@/components/player/PlayerControls';
@@ -329,11 +330,16 @@ export default function Index() {
           </div>
         </main>
 
-        {/* Visual Divider - Separates Music Area from Admin Controls */}
-        <div className="fixed bottom-[120px] left-0 right-0 z-40 pointer-events-none">
-          <div className="h-px bg-gradient-to-r from-transparent via-kiosk-text/15 to-transparent" />
-          <div className="h-10 bg-gradient-to-t from-kiosk-bg/90 to-transparent" />
-        </div>
+        {/* Visual Divider - Separates Music Area from Admin Controls with fade animation */}
+        <motion.div 
+          className="fixed bottom-[120px] left-0 right-0 z-40 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+        >
+          <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent" />
+          <div className="h-12 bg-gradient-to-t from-kiosk-bg/95 to-transparent" />
+        </motion.div>
 
         {/* Command Deck */}
         <CommandDeck />
