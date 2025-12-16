@@ -31,7 +31,7 @@ const roleConfig: Record<UserRole, { label: string; icon: React.ReactNode; color
 };
 
 export function UserBadge() {
-  const { user, isAuthenticated, logout } = useUser();
+  const { user, isAuthenticated, isDevAutoLogin, logout } = useUser();
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -66,16 +66,26 @@ export function UserBadge() {
           size="sm"
           className="h-8 px-2 rounded-full bg-kiosk-surface/30 hover:bg-kiosk-surface/50"
         >
-          <Badge variant="outline" className={`${config.color} gap-1 text-xs font-medium`}>
-            {config.icon}
-            {config.label}
-          </Badge>
+          <div className="flex items-center gap-1">
+            {isDevAutoLogin && (
+              <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-1">
+                DEV
+              </Badge>
+            )}
+            <Badge variant="outline" className={`${config.color} gap-1 text-xs font-medium`}>
+              {config.icon}
+              {config.label}
+            </Badge>
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <div className="px-2 py-1.5">
           <p className="text-sm font-medium">{user.username || user.email}</p>
           <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+          {isDevAutoLogin && (
+            <p className="text-xs text-amber-400 mt-1">🔐 Auto-login ativo</p>
+          )}
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
