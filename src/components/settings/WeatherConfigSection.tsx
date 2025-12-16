@@ -98,7 +98,7 @@ export function WeatherConfigSection() {
         <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-bg/50 border border-kiosk-surface">
           <div className="space-y-0.5">
             <Label className="text-kiosk-text">Exibir Widget de Clima</Label>
-            <p className="text-xs text-kiosk-text/50">
+            <p className="text-xs text-kiosk-text/70">
               Mostra temperatura e condições na barra superior
             </p>
           </div>
@@ -123,9 +123,9 @@ export function WeatherConfigSection() {
                   <span className="text-2xl font-bold text-kiosk-text">
                     {testWeather.temperature}°C
                   </span>
-                  <span className="text-kiosk-text/60">{testWeather.condition}</span>
+                  <span className="text-kiosk-text/75">{testWeather.condition}</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-kiosk-text/60">
+                <div className="flex items-center gap-1 text-sm text-kiosk-text/75">
                   <MapPin className="w-3 h-3" />
                   <span>{testWeather.location}, {testWeather.region}</span>
                 </div>
@@ -185,7 +185,7 @@ export function WeatherConfigSection() {
             placeholder="Ex: Montes Claros, MG"
             className="input-3d bg-kiosk-bg border-kiosk-surface text-kiosk-text"
           />
-          <p className="text-xs text-kiosk-text/50">
+          <p className="text-xs text-kiosk-text/70">
             Formato: Cidade, Estado ou Cidade, País
           </p>
         </div>
@@ -221,7 +221,7 @@ export function WeatherConfigSection() {
         <div className="p-3 rounded-lg bg-kiosk-bg/50 border border-kiosk-surface">
           <div className="flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-            <div className="text-xs text-kiosk-text/60 space-y-1">
+            <div className="text-xs text-kiosk-text/75 space-y-1">
               <p>Para obter a API Key gratuita:</p>
               <ol className="list-decimal list-inside space-y-0.5 ml-1">
                 <li>Acesse o <a href="https://openweathermap.org/api" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline inline-flex items-center gap-1">OpenWeatherMap <ExternalLink className="w-3 h-3" /></a></li>

@@ -124,7 +124,7 @@ export function DatabaseSection({ isDemoMode }: DatabaseSectionProps) {
               Salvar
             </Button>
           </div>
-          <p className="text-xs text-kiosk-text/50">
+          <p className="text-xs text-kiosk-text/70">
             O banco de dados é gerenciado pelo backend FastAPI
           </p>
         </div>
@@ -132,24 +132,24 @@ export function DatabaseSection({ isDemoMode }: DatabaseSectionProps) {
         {/* Database Info */}
         <div className="p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border">
           <div className="flex items-center gap-2 mb-2">
-            <HardDrive className="w-4 h-4 text-kiosk-text/60" />
+            <HardDrive className="w-4 h-4 text-kiosk-text/80" />
             <span className="text-sm font-medium text-kiosk-text">Informações do Banco</span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-kiosk-text/60">Tamanho:</span>
+              <span className="text-kiosk-text/80">Tamanho:</span>
               <span className="text-kiosk-text">{dbInfo.size}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-kiosk-text/60">Tabelas:</span>
+              <span className="text-kiosk-text/80">Tabelas:</span>
               <span className="text-kiosk-text">{dbInfo.tables}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-kiosk-text/60">Versão:</span>
+              <span className="text-kiosk-text/80">Versão:</span>
               <span className="text-kiosk-text">{dbInfo.version}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-kiosk-text/60">Modificado:</span>
+              <span className="text-kiosk-text/80">Modificado:</span>
               <span className="text-kiosk-text">
                 {new Date(dbInfo.lastModified).toLocaleDateString()}
               </span>
@@ -162,7 +162,7 @@ export function DatabaseSection({ isDemoMode }: DatabaseSectionProps) {
         {/* Maintenance Tools */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Wrench className="w-4 h-4 text-kiosk-text/60" />
+            <Wrench className="w-4 h-4 text-kiosk-text/80" />
             <span className="text-sm font-medium text-kiosk-text">Ferramentas de Manutenção</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -181,7 +181,7 @@ export function DatabaseSection({ isDemoMode }: DatabaseSectionProps) {
                     <Icon className={`w-4 h-4 text-kiosk-primary ${loading ? 'animate-spin' : ''}`} />
                     <span className="text-sm text-kiosk-text">{tool.label}</span>
                   </div>
-                  <span className="text-xs text-kiosk-text/50 text-left">
+                  <span className="text-xs text-kiosk-text/75 text-left">
                     {tool.description}
                   </span>
                 </Button>

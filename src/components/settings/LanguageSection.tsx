@@ -11,7 +11,7 @@ export function LanguageSection() {
 
   return (
     <SettingsSection
-      icon={<Globe className="w-5 h-5" />}
+      icon={<Globe className="w-5 h-5 text-amber-400" />}
       title="Idioma / Language"
       description="Selecione o idioma da interface"
     >

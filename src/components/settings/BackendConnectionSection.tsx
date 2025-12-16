@@ -69,7 +69,7 @@ export function BackendConnectionSection({
             </Button>
           </div>
           {isDemoMode && (
-            <p className="text-xs text-kiosk-text/50">
+            <p className="text-xs text-kiosk-text/70">
               Desative o modo demo para alterar a URL
             </p>
           )}
@@ -84,7 +84,7 @@ export function BackendConnectionSection({
               <Zap className="w-4 h-4" />
               WebSocket
             </Label>
-            <p className="text-xs text-kiosk-text/50">
+            <p className="text-xs text-kiosk-text/70">
               Atualizações em tempo real via WebSocket
             </p>
           </div>
@@ -120,7 +120,7 @@ export function BackendConnectionSection({
               step={500}
               className="w-full"
             />
-            <p className="text-xs text-kiosk-text/50">
+            <p className="text-xs text-kiosk-text/70">
               Menor intervalo = mais responsivo, maior uso de rede
             </p>
           </motion.div>

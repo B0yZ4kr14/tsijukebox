@@ -291,7 +291,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 <p className="text-sm text-kiosk-text">
                   {currentProvider.icon} {currentProvider.name}
                 </p>
-                <p className="text-xs text-kiosk-text/50">
+                <p className="text-xs text-kiosk-text/70">
                   {config.isOAuthConnected ? 'Conectado' : 'Clique para autenticar'}
                 </p>
               </div>

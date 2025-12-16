@@ -136,7 +136,7 @@ export default function Settings() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-kiosk-text">Configurações</h1>
-            <p className="text-kiosk-text/60 text-sm">Ajustes do sistema TSi JUKEBOX</p>
+            <p className="text-kiosk-text/75 text-sm">Ajustes do sistema TSi JUKEBOX</p>
           </div>
         </motion.header>
 
@@ -145,7 +145,7 @@ export default function Settings() {
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="flex items-center gap-2 text-kiosk-text/70"
+            className="flex items-center gap-2 text-kiosk-text/85"
           >
             <Plug className="w-4 h-4" />
             <span className="text-sm font-medium uppercase tracking-wider">Conexões</span>
@@ -173,7 +173,7 @@ export default function Settings() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="flex items-center gap-2 text-kiosk-text/70 pt-4"
+            className="flex items-center gap-2 text-kiosk-text/85 pt-4"
           >
             <Database className="w-4 h-4" />
             <span className="text-sm font-medium uppercase tracking-wider">Banco de Dados</span>
@@ -199,6 +199,9 @@ export default function Settings() {
 
           {/* Weather Configuration */}
           <WeatherConfigSection />
+
+          {/* Language Configuration */}
+          <LanguageSection />
 
           <UserManagementSection />
 
@@ -240,7 +243,7 @@ export default function Settings() {
                     )}
                     <div className="flex-1">
                       <p className="font-medium text-kiosk-text">{spotify.user.displayName}</p>
-                      <p className="text-sm text-kiosk-text/60">{spotify.user.email}</p>
+                      <p className="text-sm text-kiosk-text/75">{spotify.user.email}</p>
                       <Badge 
                         variant="secondary" 
                         className={`mt-1 ${
@@ -342,7 +345,7 @@ export default function Settings() {
                   <div className="p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border">
                     <div className="flex items-start gap-2">
                       <AlertCircle className="w-4 h-4 text-kiosk-primary mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-kiosk-text/60 space-y-1">
+                      <div className="text-xs text-kiosk-text/75 space-y-1">
                         <p>Para obter as credenciais:</p>
                         <ol className="list-decimal list-inside space-y-0.5 ml-1">
                           <li>Acesse o <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-kiosk-primary hover:underline inline-flex items-center gap-1">Spotify Developer Dashboard <ExternalLink className="w-3 h-3" /></a></li>
@@ -371,7 +374,7 @@ export default function Settings() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="flex items-center gap-2 text-kiosk-text/70 pt-4"
+            className="flex items-center gap-2 text-kiosk-text/85 pt-4"
           >
             <TestTube className="w-4 h-4" />
             <span className="text-sm font-medium uppercase tracking-wider">Configurações</span>
@@ -388,7 +391,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label className="text-kiosk-text">Demo Mode</Label>
-                  <p className="text-xs text-kiosk-text/50">
+                  <p className="text-xs text-kiosk-text/70">
                     {isDemoMode ? 'Usando dados mockados' : 'Conectando ao backend real'}
                   </p>
                 </div>

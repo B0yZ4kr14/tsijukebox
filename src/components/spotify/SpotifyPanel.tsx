@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Search, ListMusic, Heart, Clock, Sparkles, Music2, Play, Plus, X, Disc3, Star, Grid3X3, TrendingUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, ListMusic, Heart, Clock, Sparkles, Music2, Play, Plus, X, Disc3, Star, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSpotifyPlaylists } from '@/hooks/useSpotifyPlaylists';
 import { useSpotifyLibrary } from '@/hooks/useSpotifyLibrary';
 import { useSpotifySearch } from '@/hooks/useSpotifySearch';
@@ -49,7 +50,7 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-        <p className="text-xs text-kiosk-text/60 truncate">{track.artist}</p>
+        <p className="text-xs text-kiosk-text/75 truncate">{track.artist}</p>
       </div>
       <Button
         variant="ghost"
@@ -87,7 +88,7 @@ function AlbumCard({ album, onPlay }: { album: SpotifyAlbum; onPlay: () => void 
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{album.name}</p>
-        <p className="text-[10px] text-kiosk-text/60 truncate">{album.artist}</p>
+        <p className="text-[10px] text-kiosk-text/75 truncate">{album.artist}</p>
       </div>
     </button>
   );
@@ -117,7 +118,7 @@ function PlaylistCard({ playlist, onPlay }: { playlist: SpotifyPlaylist; onPlay:
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{playlist.name}</p>
-        <p className="text-[10px] text-kiosk-text/60 truncate">{playlist.tracksTotal} músicas</p>
+        <p className="text-[10px] text-kiosk-text/75 truncate">{playlist.tracksTotal} músicas</p>
       </div>
     </button>
   );
@@ -261,165 +262,192 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
         </TabsList>
 
         <ScrollArea className="flex-1 mt-2">
-          {/* Playlists Tab */}
-          <TabsContent value="playlists" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Suas Playlists</h3>
-            {playlistsLoading ? <LoadingSkeleton /> : (
-              <div className="space-y-1">
-                {playlists.map((playlist) => (
-                  <button
-                    key={playlist.id}
-                    onClick={() => handlePlayPlaylist(playlist.id)}
-                    className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors text-left card-3d"
-                  >
-                    {playlist.imageUrl ? (
-                      <img src={playlist.imageUrl} alt={playlist.name} className="w-10 h-10 object-cover rounded shadow-lg" />
-                    ) : (
-                      <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center">
-                        <ListMusic className="w-4 h-4 text-kiosk-text/50" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-kiosk-text truncate">{playlist.name}</p>
-                      <p className="text-xs text-kiosk-text/60">{playlist.tracksTotal} músicas</p>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="px-4 pb-4"
+            >
+              {/* Playlists Tab */}
+              {activeTab === 'playlists' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Suas Playlists</h3>
+                  {playlistsLoading ? <LoadingSkeleton /> : (
+                    <div className="space-y-1">
+                      {playlists.map((playlist) => (
+                        <button
+                          key={playlist.id}
+                          onClick={() => handlePlayPlaylist(playlist.id)}
+                          className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors text-left card-3d"
+                        >
+                          {playlist.imageUrl ? (
+                            <img src={playlist.imageUrl} alt={playlist.name} className="w-10 h-10 object-cover rounded shadow-lg" />
+                          ) : (
+                            <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center">
+                              <ListMusic className="w-4 h-4 text-kiosk-text/60" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-kiosk-text truncate">{playlist.name}</p>
+                            <p className="text-xs text-kiosk-text/75">{playlist.tracksTotal} músicas</p>
+                          </div>
+                          <Play className="w-4 h-4 text-kiosk-text/60" />
+                        </button>
+                      ))}
                     </div>
-                    <Play className="w-4 h-4 text-kiosk-text/40" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </TabsContent>
+                  )}
+                </>
+              )}
 
-          {/* Liked Songs Tab */}
-          <TabsContent value="liked" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Músicas Curtidas</h3>
-            {libraryLoading ? <LoadingSkeleton /> : (
-              <div className="space-y-1">
-                {likedTracks.slice(0, 30).map((track) => (
-                  <TrackRow
-                    key={track.id}
-                    track={track}
-                    onPlay={() => handlePlayTrack(track)}
-                    onAddToQueue={() => handleAddToQueue(track)}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Recent Tab */}
-          <TabsContent value="recent" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Tocadas Recentemente</h3>
-            {libraryLoading ? <LoadingSkeleton /> : (
-              <div className="space-y-1">
-                {recentlyPlayed.slice(0, 30).map((track, idx) => (
-                  <TrackRow
-                    key={`${track.id}-${idx}`}
-                    track={track}
-                    onPlay={() => handlePlayTrack(track)}
-                    onAddToQueue={() => handleAddToQueue(track)}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Recommendations Tab */}
-          <TabsContent value="recommendations" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Para Você</h3>
-            {!currentTrackId ? (
-              <div className="text-center py-8 text-kiosk-text/60">
-                <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Toque uma música para ver recomendações</p>
-              </div>
-            ) : recommendationsLoading ? <LoadingSkeleton /> : (
-              <div className="space-y-1">
-                {recommendations.map((track) => (
-                  <TrackRow
-                    key={track.id}
-                    track={track}
-                    onPlay={() => handlePlayTrack(track)}
-                    onAddToQueue={() => handleAddToQueue(track)}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* New Releases Tab */}
-          <TabsContent value="releases" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Novos Lançamentos</h3>
-            {browseLoading ? <LoadingSkeleton /> : (
-              <div className="grid grid-cols-2 gap-2">
-                {newReleases.slice(0, 20).map((album) => (
-                  <AlbumCard
-                    key={album.id}
-                    album={album}
-                    onPlay={() => handlePlayAlbum(album.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Featured Playlists Tab */}
-          <TabsContent value="featured" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Playlists em Destaque</h3>
-            {browseLoading ? <LoadingSkeleton /> : (
-              <div className="grid grid-cols-2 gap-2">
-                {featuredPlaylists.slice(0, 20).map((playlist) => (
-                  <PlaylistCard
-                    key={playlist.id}
-                    playlist={playlist}
-                    onPlay={() => handlePlayPlaylist(playlist.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Top Tracks Tab */}
-          <TabsContent value="top" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Suas Top Músicas</h3>
-            {browseLoading ? <LoadingSkeleton /> : (
-              <div className="space-y-1">
-                {topTracks.slice(0, 30).map((track, idx) => (
-                  <div key={track.id} className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-kiosk-primary w-5">{idx + 1}</span>
-                    <div className="flex-1">
-                      <TrackRow
-                        track={track}
-                        onPlay={() => handlePlayTrack(track)}
-                        onAddToQueue={() => handleAddToQueue(track)}
-                      />
+              {/* Liked Songs Tab */}
+              {activeTab === 'liked' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Músicas Curtidas</h3>
+                  {libraryLoading ? <LoadingSkeleton /> : (
+                    <div className="space-y-1">
+                      {likedTracks.slice(0, 30).map((track) => (
+                        <TrackRow
+                          key={track.id}
+                          track={track}
+                          onPlay={() => handlePlayTrack(track)}
+                          onAddToQueue={() => handleAddToQueue(track)}
+                        />
+                      ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
+                  )}
+                </>
+              )}
 
-          {/* Search Results Tab */}
-          <TabsContent value="search" className="px-4 pb-4 mt-0">
-            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Resultados da Busca</h3>
-            {isSearching ? <LoadingSkeleton /> : searchResults.tracks.length > 0 ? (
-              <div className="space-y-1">
-                {searchResults.tracks.slice(0, 30).map((track) => (
-                  <TrackRow
-                    key={track.id}
-                    track={track}
-                    onPlay={() => handlePlayTrack(track)}
-                    onAddToQueue={() => handleAddToQueue(track)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-kiosk-text/60">
-                <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Pesquise por músicas ou artistas</p>
-              </div>
-            )}
-          </TabsContent>
+              {/* Recent Tab */}
+              {activeTab === 'recent' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Tocadas Recentemente</h3>
+                  {libraryLoading ? <LoadingSkeleton /> : (
+                    <div className="space-y-1">
+                      {recentlyPlayed.slice(0, 30).map((track, idx) => (
+                        <TrackRow
+                          key={`${track.id}-${idx}`}
+                          track={track}
+                          onPlay={() => handlePlayTrack(track)}
+                          onAddToQueue={() => handleAddToQueue(track)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Recommendations Tab */}
+              {activeTab === 'recommendations' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Para Você</h3>
+                  {!currentTrackId ? (
+                    <div className="text-center py-8 text-kiosk-text/75">
+                      <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                      <p className="text-sm">Toque uma música para ver recomendações</p>
+                    </div>
+                  ) : recommendationsLoading ? <LoadingSkeleton /> : (
+                    <div className="space-y-1">
+                      {recommendations.map((track) => (
+                        <TrackRow
+                          key={track.id}
+                          track={track}
+                          onPlay={() => handlePlayTrack(track)}
+                          onAddToQueue={() => handleAddToQueue(track)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* New Releases Tab */}
+              {activeTab === 'releases' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Novos Lançamentos</h3>
+                  {browseLoading ? <LoadingSkeleton /> : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {newReleases.slice(0, 20).map((album) => (
+                        <AlbumCard
+                          key={album.id}
+                          album={album}
+                          onPlay={() => handlePlayAlbum(album.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Featured Playlists Tab */}
+              {activeTab === 'featured' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Playlists em Destaque</h3>
+                  {browseLoading ? <LoadingSkeleton /> : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {featuredPlaylists.slice(0, 20).map((playlist) => (
+                        <PlaylistCard
+                          key={playlist.id}
+                          playlist={playlist}
+                          onPlay={() => handlePlayPlaylist(playlist.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Top Tracks Tab */}
+              {activeTab === 'top' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Suas Top Músicas</h3>
+                  {browseLoading ? <LoadingSkeleton /> : (
+                    <div className="space-y-1">
+                      {topTracks.slice(0, 30).map((track, idx) => (
+                        <div key={track.id} className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-kiosk-primary w-5">{idx + 1}</span>
+                          <div className="flex-1">
+                            <TrackRow
+                              track={track}
+                              onPlay={() => handlePlayTrack(track)}
+                              onAddToQueue={() => handleAddToQueue(track)}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Search Results Tab */}
+              {activeTab === 'search' && (
+                <>
+                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Resultados da Busca</h3>
+                  {isSearching ? <LoadingSkeleton /> : searchResults.tracks.length > 0 ? (
+                    <div className="space-y-1">
+                      {searchResults.tracks.slice(0, 30).map((track) => (
+                        <TrackRow
+                          key={track.id}
+                          track={track}
+                          onPlay={() => handlePlayTrack(track)}
+                          onAddToQueue={() => handleAddToQueue(track)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-kiosk-text/75">
+                      <Search className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                      <p className="text-sm">Pesquise por músicas ou artistas</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </ScrollArea>
       </Tabs>
     </div>

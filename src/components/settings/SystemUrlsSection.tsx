@@ -93,7 +93,7 @@ export function SystemUrlsSection() {
               <ExternalLink className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-kiosk-text/50">
+          <p className="text-xs text-kiosk-text/70">
             Painel de visualização de métricas e gráficos
           </p>
         </div>
@@ -124,7 +124,7 @@ export function SystemUrlsSection() {
               <ExternalLink className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-kiosk-text/50">
+          <p className="text-xs text-kiosk-text/70">
             Fonte de dados e métricas do sistema
           </p>
         </div>

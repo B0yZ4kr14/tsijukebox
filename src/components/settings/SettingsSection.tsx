@@ -40,10 +40,10 @@ export function SettingsSection({
                   {title}
                   {badge}
                 </CardTitle>
-                <ChevronDown className="w-5 h-5 text-kiosk-text/50 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+                <ChevronDown className="w-5 h-5 text-kiosk-text/70 transition-transform duration-300 group-data-[state=open]:rotate-180" />
               </div>
               {description && (
-                <CardDescription className="text-kiosk-text/60">
+                <CardDescription className="text-kiosk-text/80">
                   {description}
                 </CardDescription>
               )}

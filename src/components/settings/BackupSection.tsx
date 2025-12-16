@@ -144,14 +144,14 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
         {/* Backup List */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-kiosk-text/60" />
+            <Clock className="w-4 h-4 text-kiosk-text/80" />
             <span className="text-sm font-medium text-kiosk-text">Backups Existentes</span>
           </div>
           
           <ScrollArea className="h-48 rounded-lg border border-kiosk-border bg-kiosk-background/50">
             <div className="p-2 space-y-2">
               {backups.length === 0 ? (
-                <p className="text-sm text-kiosk-text/50 text-center py-4">
+                <p className="text-sm text-kiosk-text/70 text-center py-4">
                   Nenhum backup encontrado
                 </p>
               ) : (
@@ -161,10 +161,10 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                     className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 hover:bg-kiosk-surface transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Archive className="w-4 h-4 text-kiosk-text/60 flex-shrink-0" />
+                      <Archive className="w-4 h-4 text-kiosk-text/80 flex-shrink-0" />
                       <div className="min-w-0">
                         <p className="text-sm text-kiosk-text truncate">{backup.name}</p>
-                        <div className="flex items-center gap-2 text-xs text-kiosk-text/50">
+                        <div className="flex items-center gap-2 text-xs text-kiosk-text/70">
                           <span>{backup.size}</span>
                           <span>•</span>
                           <span>{new Date(backup.date).toLocaleDateString()}</span>
@@ -187,7 +187,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                         size="icon"
                         onClick={() => handleRestore(backup.id)}
                         disabled={isDemoMode || isLoading === `restore-${backup.id}`}
-                        className="w-8 h-8 text-kiosk-text/50 hover:text-kiosk-primary"
+                        className="w-8 h-8 text-kiosk-text/70 hover:text-kiosk-primary"
                         title="Restaurar"
                       >
                         <Upload className="w-4 h-4" />
@@ -197,7 +197,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                         size="icon"
                         onClick={() => handleDelete(backup.id)}
                         disabled={isDemoMode || isLoading === `delete-${backup.id}`}
-                        className="w-8 h-8 text-kiosk-text/50 hover:text-red-500"
+                        className="w-8 h-8 text-kiosk-text/70 hover:text-red-500"
                         title="Excluir"
                       >
                         <Trash2 className="w-4 h-4" />
