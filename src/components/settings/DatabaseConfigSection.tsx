@@ -77,10 +77,10 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
           }`}>
             <RadioGroupItem value="sqlite-local" id="sqlite-local" />
             <Label htmlFor="sqlite-local" className="flex items-center gap-3 cursor-pointer flex-1">
-              <HardDrive className="w-5 h-5 text-muted-foreground" />
+              <HardDrive className="w-5 h-5 text-kiosk-text/80" />
               <div>
-                <p className="font-medium">SQLite Local</p>
-                <p className="text-sm text-muted-foreground">Arquivo no servidor local</p>
+                <p className="font-medium text-kiosk-text">SQLite Local</p>
+                <p className="text-sm text-kiosk-text/75">Arquivo no servidor local</p>
               </div>
             </Label>
           </div>
@@ -91,10 +91,10 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
           }`}>
             <RadioGroupItem value="sqlite-remote" id="sqlite-remote" />
             <Label htmlFor="sqlite-remote" className="flex items-center gap-3 cursor-pointer flex-1">
-              <Server className="w-5 h-5 text-muted-foreground" />
+              <Server className="w-5 h-5 text-kiosk-text/80" />
               <div>
-                <p className="font-medium">SQLite Remoto</p>
-                <p className="text-sm text-muted-foreground">Arquivo em servidor externo via SSH</p>
+                <p className="font-medium text-kiosk-text">SQLite Remoto</p>
+                <p className="text-sm text-kiosk-text/75">Arquivo em servidor externo via SSH</p>
               </div>
             </Label>
           </div>
@@ -105,10 +105,10 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
           }`}>
             <RadioGroupItem value="lovable-cloud" id="lovable-cloud" />
             <Label htmlFor="lovable-cloud" className="flex items-center gap-3 cursor-pointer flex-1">
-              <Cloud className="w-5 h-5 text-muted-foreground" />
+              <Cloud className="w-5 h-5 text-kiosk-text/80" />
               <div>
-                <p className="font-medium">Lovable Cloud</p>
-                <p className="text-sm text-muted-foreground">Banco de dados gerenciado na nuvem</p>
+                <p className="font-medium text-kiosk-text">Lovable Cloud</p>
+                <p className="text-sm text-kiosk-text/75">Banco de dados gerenciado na nuvem</p>
               </div>
             </Label>
           </div>
@@ -126,7 +126,7 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
                 placeholder="/var/lib/jukebox/jukebox.db"
                 disabled={isDemoMode}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-kiosk-text/70">
                 Caminho absoluto para o arquivo SQLite no servidor
               </p>
             </div>
@@ -203,7 +203,7 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
               <CheckCircle2 className="w-5 h-5 text-primary" />
               <div>
                 <p className="font-medium text-primary">Conectado ao Lovable Cloud</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-kiosk-text/75">
                   Banco de dados gerenciado automaticamente. Nenhuma configuração adicional necessária.
                 </p>
               </div>

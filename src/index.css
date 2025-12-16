@@ -56,7 +56,7 @@
     --secondary: 240 10% 15%;
     --secondary-foreground: 0 0% 95%;
     --muted: 240 10% 15%;
-    --muted-foreground: 240 5% 65%;
+    --muted-foreground: 240 5% 78%;
     --accent: 240 10% 15%;
     --accent-foreground: 0 0% 95%;
     --destructive: 0 62.8% 50%;
@@ -101,6 +101,24 @@
   
   .text-low-contrast {
     color: hsl(0 0% 65%);
+  }
+
+  /* Settings page high contrast text */
+  .text-settings-title {
+    color: hsl(0 0% 95%);
+    text-shadow: 0 1px 2px hsl(0 0% 0% / 0.5);
+  }
+
+  .text-settings-label {
+    color: hsl(0 0% 88%);
+  }
+
+  .text-settings-description {
+    color: hsl(0 0% 75%);
+  }
+
+  .text-settings-hint {
+    color: hsl(0 0% 68%);
   }
 }
 
@@ -664,26 +682,26 @@
   /* Next/Prev buttons - Extreme 3D */
   .button-control-extreme-3d {
     box-shadow: 
-      inset 0 4px 8px hsl(0 0% 100% / 0.15),
-      inset 0 -4px 8px hsl(0 0% 0% / 0.3),
-      0 8px 0 hsl(0 0% 0% / 0.25),
-      0 12px 25px hsl(0 0% 0% / 0.5),
-      0 6px 10px hsl(0 0% 0% / 0.3);
-    border: 2px solid hsl(0 0% 100% / 0.1);
-    transform: translateY(-4px);
+      inset 0 4px 8px hsl(0 0% 100% / 0.18),
+      inset 0 -4px 8px hsl(0 0% 0% / 0.35),
+      0 10px 0 hsl(0 0% 0% / 0.3),
+      0 15px 30px hsl(0 0% 0% / 0.55),
+      0 8px 15px hsl(0 0% 0% / 0.35);
+    border: 2px solid hsl(0 0% 100% / 0.12);
+    transform: translateY(-5px);
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: transform, box-shadow;
   }
 
   .button-control-extreme-3d:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px);
     box-shadow: 
-      inset 0 4px 8px hsl(0 0% 100% / 0.2),
-      inset 0 -4px 8px hsl(0 0% 0% / 0.2),
-      0 12px 0 hsl(0 0% 0% / 0.2),
-      0 20px 40px hsl(0 0% 0% / 0.5),
-      0 0 30px hsl(142 71% 45% / 0.3);
-    border-color: hsl(142 71% 45% / 0.5);
+      inset 0 4px 8px hsl(0 0% 100% / 0.22),
+      inset 0 -4px 8px hsl(0 0% 0% / 0.25),
+      0 14px 0 hsl(0 0% 0% / 0.25),
+      0 25px 50px hsl(0 0% 0% / 0.55),
+      0 0 40px hsl(142 71% 45% / 0.4);
+    border-color: hsl(142 71% 45% / 0.6);
   }
 
   .button-control-extreme-3d:active {
@@ -696,14 +714,14 @@
   /* Play/Pause button - Ultra Extreme 3D */
   .button-play-ultra-3d {
     box-shadow: 
-      inset 0 6px 0 hsl(0 0% 100% / 0.35),
+      inset 0 6px 0 hsl(0 0% 100% / 0.38),
       inset 0 -6px 0 hsl(0 0% 0% / 0.5),
-      0 0 60px hsl(142 71% 45% / 0.5),
-      0 0 100px hsl(142 71% 45% / 0.3),
-      0 0 140px hsl(142 71% 45% / 0.15),
-      0 20px 40px -10px hsl(142 71% 45% / 0.7),
-      0 15px 30px -5px hsl(0 0% 0% / 0.5);
-    border: 3px solid hsl(0 0% 100% / 0.25);
+      0 0 80px hsl(142 71% 45% / 0.6),
+      0 0 120px hsl(142 71% 45% / 0.4),
+      0 0 180px hsl(142 71% 45% / 0.2),
+      0 25px 50px -10px hsl(142 71% 45% / 0.75),
+      0 18px 35px -5px hsl(0 0% 0% / 0.55);
+    border: 3px solid hsl(0 0% 100% / 0.28);
     transform: translateY(-6px);
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: transform, box-shadow;
@@ -711,7 +729,7 @@
 
   .button-play-ultra-3d:hover {
     animation: pulse-glow-primary 1.2s ease-in-out infinite;
-    transform: translateY(-10px) scale(1.05);
+    transform: translateY(-12px) scale(1.06);
   }
 
   .button-play-ultra-3d:active {
@@ -719,8 +737,8 @@
     animation: none;
     box-shadow: 
       inset 0 6px 12px hsl(0 0% 0% / 0.5),
-      0 0 30px hsl(142 71% 45% / 0.4),
-      0 5px 15px hsl(0 0% 0% / 0.4);
+      0 0 40px hsl(142 71% 45% / 0.5),
+      0 6px 18px hsl(0 0% 0% / 0.45);
   }
 
   /* Stop button - Extreme 3D */
