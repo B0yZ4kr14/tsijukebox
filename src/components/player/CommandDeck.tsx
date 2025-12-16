@@ -82,42 +82,33 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled, separated 
             onClick={onClick}
             disabled={disabled}
             className={`
+              deck-button-3d deck-button-${color}
               relative flex flex-col items-center justify-center gap-1.5
-              w-20 h-16 rounded-lg
-              ${colors.bg} ${colors.border} border
-              shadow-lg ${colors.glow}
-              ${colors.hover}
-              transition-all duration-200
+              w-20 h-16 rounded-xl
+              ${colors.bg} border-2
+              transition-all duration-150
               disabled:opacity-50 disabled:cursor-not-allowed
-              ${separated ? 'ml-4' : ''}
+              ${separated ? 'ml-6' : ''}
             `}
-            style={{
-              boxShadow: `
-                inset 0 1px 0 rgba(255,255,255,0.1),
-                inset 0 -1px 0 rgba(0,0,0,0.3),
-                0 4px 6px -1px rgba(0,0,0,0.3),
-                0 2px 4px -2px rgba(0,0,0,0.2)
-              `,
-            }}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95, y: 1 }}
+            whileHover={{ scale: 1.08, y: -4 }}
+            whileTap={{ scale: 0.92, y: 2 }}
           >
-            {/* Top highlight */}
-            <div className="absolute inset-x-1 top-0.5 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
+            {/* Top highlight for 3D bevel */}
+            <div className="absolute inset-x-2 top-1 h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full" />
             
-            {/* Icon */}
-            <span className={colors.icon}>{icon}</span>
+            {/* Icon with glow */}
+            <span className={`${colors.icon} relative z-10`}>{icon}</span>
             
             {/* Label */}
-            <span className={`text-[10px] font-medium ${colors.text} uppercase tracking-wider`}>
+            <span className={`text-[10px] font-semibold ${colors.text} uppercase tracking-wider relative z-10`}>
               {label}
             </span>
 
-            {/* Bottom shadow for 3D effect */}
-            <div className="absolute inset-x-1 bottom-0.5 h-px bg-black/40 rounded-full" />
+            {/* Bottom shadow for 3D depth */}
+            <div className="absolute inset-x-2 bottom-1 h-0.5 bg-black/60 rounded-full" />
           </motion.button>
         </TooltipTrigger>
-        <TooltipContent side="top" className="bg-slate-800 border-slate-700 text-white">
+        <TooltipContent side="top" className="bg-slate-900 border-slate-600 text-white shadow-2xl">
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
@@ -198,33 +189,25 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
     <>
       {/* Command Deck Container */}
       <motion.div
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 100 }}
       >
         {/* Admin Badge */}
         <motion.div
-          className="absolute -top-6 left-1/2 -translate-x-1/2"
+          className="absolute -top-8 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <span className="text-[10px] font-medium text-kiosk-text/40 uppercase tracking-widest">
+          <span className="text-[10px] font-semibold text-kiosk-text/50 uppercase tracking-[0.2em] drop-shadow-lg">
             Admin Controls
           </span>
         </motion.div>
 
-        {/* Deck Housing */}
-        <div 
-          className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900/95 backdrop-blur-sm border border-white/10"
-          style={{
-            boxShadow: `
-              0 10px 40px -10px rgba(0,0,0,0.5),
-              inset 0 1px 0 rgba(255,255,255,0.05)
-            `,
-          }}
-        >
+        {/* Deck Housing with extreme 3D */}
+        <div className="command-deck-container-3d flex items-center gap-3 px-5 py-4 rounded-2xl">
           {/* Info Buttons (Cyan) */}
           <DeckButton
             icon={<LineChart className="w-5 h-5" />}

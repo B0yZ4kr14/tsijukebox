@@ -44,8 +44,9 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
           }}
           transition={{ duration: 0.5 }}
         >
-          {/* SOLID dark background - prevents transparency issues */}
-          <div className="absolute inset-0 bg-[#0a0a12]" />
+          {/* Multiple SOLID dark background layers - prevents any transparency */}
+          <div className="absolute inset-0 bg-[#050508]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a12] to-[#000000]" />
           
           <AnimatePresence mode="wait">
             {track?.cover ? (
@@ -62,7 +63,7 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
             ) : (
               <motion.div 
                 key="placeholder"
-                className="w-full h-full bg-gradient-to-br from-kiosk-surface to-[#0a0a12] flex items-center justify-center relative z-10"
+                className="w-full h-full bg-gradient-to-br from-kiosk-surface to-[#050508] flex items-center justify-center relative z-10"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -72,11 +73,11 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
             )}
           </AnimatePresence>
 
-          {/* Overlay gradient for depth - darkening effect */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a12]/50 via-transparent to-[#0a0a12]/30 pointer-events-none z-20" />
+          {/* Overlay gradient for depth - enhanced darkening effect */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/60 via-transparent to-[#050508]/40 pointer-events-none z-20" />
           
           {/* Inner shadow for extreme inset effect */}
-          <div className="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.6)] pointer-events-none rounded-2xl z-20" />
+          <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.7)] pointer-events-none rounded-2xl z-20" />
         </motion.div>
 
         {/* Playing indicator - glowing pulse */}

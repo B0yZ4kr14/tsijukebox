@@ -271,7 +271,7 @@ export default function Index() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col items-center justify-center gap-4 px-4 pb-40 touch-pan-y">
+        <main className="flex-1 flex flex-col items-center justify-center gap-4 px-4 pb-56 touch-pan-y">
           <NowPlaying 
             track={status?.track ?? null} 
             isPlaying={status?.playing ?? false} 
@@ -306,7 +306,10 @@ export default function Index() {
             />
           </div>
 
-          <PlayerControls isPlaying={status?.playing ?? false} />
+          {/* Player Controls with extra spacing from CommandDeck */}
+          <div className="mb-8">
+            <PlayerControls isPlaying={status?.playing ?? false} />
+          </div>
           
           <VolumeSlider 
             volume={status?.volume ?? 75} 
@@ -320,7 +323,7 @@ export default function Index() {
         </main>
 
         {/* Footer branding */}
-        <footer className="pb-32 text-center">
+        <footer className="pb-40 text-center">
           <p className="text-xs text-kiosk-text/40">
             TSi JUKEBOX Enterprise v4.0
           </p>
