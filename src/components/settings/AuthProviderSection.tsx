@@ -51,7 +51,7 @@ export function AuthProviderSection() {
       icon={<Server className="w-5 h-5 text-green-400" />}
     >
       <div className="space-y-4">
-        <Label className="text-sm text-muted-foreground">
+        <Label className="text-sm text-settings-label">
           Selecione o método de autenticação
         </Label>
 
@@ -73,28 +73,28 @@ export function AuthProviderSection() {
                 <div className="flex items-start gap-3">
                   <div className={cn(
                     "p-2 rounded-lg",
-                    isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                    isSelected ? "bg-primary/20 text-primary" : "bg-muted text-kiosk-text/70"
                   )}>
                     {provider.icon}
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-sm">{provider.name}</h4>
+                      <h4 className="font-medium text-sm text-foreground">{provider.name}</h4>
                       {isSelected && (
                         <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
                           <Check className="w-3 h-3 text-primary-foreground" />
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs text-settings-description mt-0.5">
                       {provider.description}
                     </p>
                     
                     <ul className="mt-3 space-y-1">
                       {provider.features.map((feature, i) => (
-                        <li key={i} className="text-xs text-muted-foreground flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+                        <li key={i} className="text-xs text-settings-hint flex items-center gap-1.5">
+                          <span className="w-1 h-1 rounded-full bg-kiosk-text/50" />
                           {feature}
                         </li>
                       ))}
@@ -108,7 +108,7 @@ export function AuthProviderSection() {
 
         {/* Warning when switching */}
         <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-          <p className="text-xs text-amber-300">
+          <p className="text-xs text-amber-400">
             <strong>Atenção:</strong> Alterar o provedor de autenticação irá desconectar 
             o usuário atual. Os dados de usuários são gerenciados separadamente por cada provedor.
           </p>

@@ -119,7 +119,7 @@ export function NtpConfigSection() {
       <div className="space-y-4">
         {/* Server Selection */}
         <div className="space-y-2">
-          <Label className="text-muted-foreground">Servidor NTP</Label>
+          <Label className="text-settings-label">Servidor NTP</Label>
           <Select value={config.server} onValueChange={handleServerChange}>
             <SelectTrigger className="bg-background/50 border-border">
               <SelectValue placeholder="Selecione um servidor" />
@@ -140,7 +140,7 @@ export function NtpConfigSection() {
         {/* Custom Server Input */}
         {config.server === 'custom' && (
           <div className="space-y-2">
-            <Label className="text-muted-foreground">Servidor Customizado</Label>
+            <Label className="text-settings-label">Servidor Customizado</Label>
             <Input
               value={config.customServer}
               onChange={(e) => handleCustomServerChange(e.target.value)}
@@ -153,26 +153,26 @@ export function NtpConfigSection() {
         {/* Status Info */}
         <div className="p-3 rounded-lg bg-background/30 border border-border/50 space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Servidor Ativo:</span>
+            <span className="text-settings-description">Servidor Ativo:</span>
             <span className="font-mono text-foreground">{getActiveServer() || 'Não configurado'}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Última Sincronização:</span>
+            <span className="text-settings-description">Última Sincronização:</span>
             <span className="text-foreground">{formatLastSync()}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Status:</span>
+            <span className="text-settings-description">Status:</span>
             <div className="flex items-center gap-1">
               {config.syncStatus === 'synced' ? (
                 <Check className="w-3 h-3 text-green-400" />
               ) : config.syncStatus === 'error' ? (
                 <AlertCircle className="w-3 h-3 text-destructive" />
               ) : (
-                <Clock className="w-3 h-3 text-muted-foreground" />
+                <Clock className="w-3 h-3 text-settings-hint" />
               )}
               <span className={
                 config.syncStatus === 'synced' ? 'text-green-400' :
-                config.syncStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'
+                config.syncStatus === 'error' ? 'text-destructive' : 'text-settings-hint'
               }>
                 {config.syncStatus === 'synced' ? 'OK' :
                  config.syncStatus === 'error' ? 'Falha' : 'Desconhecido'}
@@ -192,7 +192,7 @@ export function NtpConfigSection() {
         </Button>
 
         {/* Info Text */}
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-settings-hint">
           O NTP.br é o serviço oficial de hora legal brasileira, mantido pelo NIC.br.
           Recomendamos usar <code className="text-primary">pool.ntp.br</code> para melhor disponibilidade.
         </p>
