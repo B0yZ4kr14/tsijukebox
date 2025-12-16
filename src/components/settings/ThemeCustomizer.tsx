@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Palette, Save, Trash2, Check, RotateCcw, Sparkles, Plus } from 'lucide-react';
+import { Palette, Save, Trash2, Check, RotateCcw, Sparkles, Plus, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { ColorPicker } from './ColorPicker';
 import { 
   useThemeCustomizer, 
@@ -50,7 +52,7 @@ export function ThemeCustomizer() {
   const [editingColors, setEditingColors] = useState<CustomThemeColors>(activeColors);
 
   // Sync editingColors with activeColors when it changes
-  const handleColorChange = (key: keyof CustomThemeColors, value: string) => {
+  const handleColorChange = (key: keyof CustomThemeColors, value: string | number | boolean) => {
     const newColors = { ...editingColors, [key]: value };
     setEditingColors(newColors);
     setColors(newColors);
@@ -247,6 +249,78 @@ export function ThemeCustomizer() {
         </div>
       </div>
 
+      {/* Gradient Section */}
+      <div className="space-y-4 p-4 rounded-xl card-option-dark-3d">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Layers className="w-5 h-5 icon-neon-blue" />
+            <Label className="text-label-yellow text-sm font-semibold">
+              Fundo com Degradê
+            </Label>
+          </div>
+          <Switch
+            checked={editingColors.gradientEnabled}
+            onCheckedChange={(checked) => handleColorChange('gradientEnabled', checked)}
+          />
+        </div>
+
+        <AnimatePresence>
+          {editingColors.gradientEnabled && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-4 overflow-hidden"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ColorPicker
+                  label="Cor Inicial"
+                  value={editingColors.gradientStart}
+                  onChange={(v) => handleColorChange('gradientStart', v)}
+                  presets={colorPresets.background}
+                />
+                
+                <ColorPicker
+                  label="Cor Final"
+                  value={editingColors.gradientEnd}
+                  onChange={(v) => handleColorChange('gradientEnd', v)}
+                  presets={colorPresets.background}
+                />
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-settings-label">
+                    Ângulo do Degradê
+                  </Label>
+                  <span className="text-label-orange text-sm font-mono">
+                    {editingColors.gradientAngle}°
+                  </span>
+                </div>
+                <Slider
+                  value={[editingColors.gradientAngle]}
+                  onValueChange={([v]) => handleColorChange('gradientAngle', v)}
+                  min={0}
+                  max={360}
+                  step={5}
+                />
+              </div>
+              
+              {/* Gradient Preview */}
+              <div className="space-y-2">
+                <Label className="text-settings-label text-xs">Preview do Degradê</Label>
+                <div 
+                  className="h-20 rounded-xl border border-white/10"
+                  style={{
+                    background: `linear-gradient(${editingColors.gradientAngle}deg, hsl(${editingColors.gradientStart}), hsl(${editingColors.gradientEnd}))`
+                  }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* Preview */}
       <div className="p-4 rounded-xl card-option-dark-3d">
         <Label className="text-label-yellow text-sm font-semibold mb-4 block">
@@ -255,7 +329,9 @@ export function ThemeCustomizer() {
         <div 
           className="p-4 rounded-xl space-y-3"
           style={{
-            backgroundColor: `hsl(${editingColors.background})`,
+            background: editingColors.gradientEnabled 
+              ? `linear-gradient(${editingColors.gradientAngle}deg, hsl(${editingColors.gradientStart}), hsl(${editingColors.gradientEnd}))`
+              : `hsl(${editingColors.background})`,
           }}
         >
           {/* Preview buttons */}
@@ -326,7 +402,7 @@ export function ThemeCustomizer() {
                   value={presetName}
                   onChange={(e) => setPresetName(e.target.value)}
                   placeholder="Ex: Meu Tema Noturno"
-                  className="input-3d mt-2"
+                  className="mt-2"
                 />
               </div>
               <div className="flex gap-2">

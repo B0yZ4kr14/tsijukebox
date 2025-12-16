@@ -7,6 +7,11 @@ export interface CustomThemeColors {
   background: string;   // HSL: "240 10% 10%"
   surface: string;      // HSL: "240 10% 15%"
   text: string;         // HSL: "0 0% 96%"
+  // Gradient settings
+  gradientEnabled: boolean;
+  gradientStart: string;  // HSL: "240 15% 8%"
+  gradientEnd: string;    // HSL: "280 20% 15%"
+  gradientAngle: number;  // 0-360 degrees
 }
 
 export interface ThemePreset {
@@ -32,6 +37,10 @@ export const builtInPresets: ThemePreset[] = [
       background: '240 10% 10%',
       surface: '240 10% 15%',
       text: '0 0% 96%',
+      gradientEnabled: false,
+      gradientStart: '240 15% 8%',
+      gradientEnd: '220 20% 15%',
+      gradientAngle: 145,
     },
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -46,6 +55,10 @@ export const builtInPresets: ThemePreset[] = [
       background: '240 10% 10%',
       surface: '240 10% 15%',
       text: '0 0% 96%',
+      gradientEnabled: false,
+      gradientStart: '140 15% 8%',
+      gradientEnd: '160 20% 15%',
+      gradientAngle: 145,
     },
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -60,6 +73,10 @@ export const builtInPresets: ThemePreset[] = [
       background: '240 10% 10%',
       surface: '240 10% 15%',
       text: '0 0% 96%',
+      gradientEnabled: false,
+      gradientStart: '280 15% 8%',
+      gradientEnd: '300 20% 15%',
+      gradientAngle: 145,
     },
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -74,6 +91,10 @@ export const builtInPresets: ThemePreset[] = [
       background: '240 10% 10%',
       surface: '240 10% 15%',
       text: '0 0% 96%',
+      gradientEnabled: false,
+      gradientStart: '25 15% 8%',
+      gradientEnd: '35 20% 15%',
+      gradientAngle: 145,
     },
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -88,6 +109,10 @@ export const builtInPresets: ThemePreset[] = [
       background: '240 10% 10%',
       surface: '240 10% 15%',
       text: '0 0% 96%',
+      gradientEnabled: false,
+      gradientStart: '330 15% 8%',
+      gradientEnd: '340 20% 15%',
+      gradientAngle: 145,
     },
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -116,7 +141,19 @@ function saveCustomPresets(presets: ThemePreset[]) {
 function loadActiveCustomColors(): CustomThemeColors | null {
   try {
     const stored = localStorage.getItem(ACTIVE_CUSTOM_COLORS_KEY);
-    return stored ? JSON.parse(stored) : null;
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Ensure gradient properties exist (migration for old data)
+      return {
+        ...defaultColors,
+        ...parsed,
+        gradientEnabled: parsed.gradientEnabled ?? false,
+        gradientStart: parsed.gradientStart ?? '240 15% 8%',
+        gradientEnd: parsed.gradientEnd ?? '220 20% 15%',
+        gradientAngle: parsed.gradientAngle ?? 145,
+      };
+    }
+    return null;
   } catch {
     return null;
   }
@@ -143,6 +180,16 @@ export function applyCustomColors(colors: CustomThemeColors) {
   root.style.setProperty('--custom-surface', colors.surface);
   root.style.setProperty('--custom-text', colors.text);
   root.setAttribute('data-theme', 'custom');
+  
+  // Apply gradient if enabled
+  if (colors.gradientEnabled) {
+    const gradient = `linear-gradient(${colors.gradientAngle}deg, hsl(${colors.gradientStart}), hsl(${colors.gradientEnd}))`;
+    root.style.setProperty('--custom-gradient', gradient);
+    document.body.setAttribute('data-gradient', 'true');
+  } else {
+    root.style.removeProperty('--custom-gradient');
+    document.body.removeAttribute('data-gradient');
+  }
 }
 
 export function clearCustomColors() {
@@ -153,6 +200,8 @@ export function clearCustomColors() {
   root.style.removeProperty('--custom-bg');
   root.style.removeProperty('--custom-surface');
   root.style.removeProperty('--custom-text');
+  root.style.removeProperty('--custom-gradient');
+  document.body.removeAttribute('data-gradient');
 }
 
 // Convert HSL string to HEX
@@ -284,7 +333,7 @@ export function useThemeCustomizer() {
     saveActiveCustomColors(null);
   }, []);
 
-  const updateColor = useCallback((key: keyof CustomThemeColors, value: string) => {
+  const updateColor = useCallback((key: keyof CustomThemeColors, value: string | number | boolean) => {
     const newColors = {
       ...(activeColors || defaultColors),
       [key]: value,
