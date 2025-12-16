@@ -21,12 +21,12 @@ const genreColorClass: Record<MusicGenre, string> = {
 };
 
 const genreGlowClass: Record<MusicGenre, string> = {
-  'rock': 'shadow-[0_0_10px_hsl(var(--genre-rock)/0.5)]',
-  'pop': 'shadow-[0_0_10px_hsl(var(--genre-pop)/0.5)]',
-  'soul': 'shadow-[0_0_10px_hsl(var(--genre-soul)/0.5)]',
-  'hip-hop': 'shadow-[0_0_10px_hsl(var(--genre-hip-hop)/0.5)]',
-  'ballad': 'shadow-[0_0_10px_hsl(var(--genre-ballad)/0.5)]',
-  'classic-rock': 'shadow-[0_0_10px_hsl(var(--genre-classic-rock)/0.5)]',
+  'rock': 'shadow-[0_0_15px_hsl(var(--genre-rock)/0.6)]',
+  'pop': 'shadow-[0_0_15px_hsl(var(--genre-pop)/0.6)]',
+  'soul': 'shadow-[0_0_15px_hsl(var(--genre-soul)/0.6)]',
+  'hip-hop': 'shadow-[0_0_15px_hsl(var(--genre-hip-hop)/0.6)]',
+  'ballad': 'shadow-[0_0_15px_hsl(var(--genre-ballad)/0.6)]',
+  'classic-rock': 'shadow-[0_0_15px_hsl(var(--genre-classic-rock)/0.6)]',
 };
 
 function formatTime(seconds: number): string {
@@ -42,7 +42,7 @@ export function ProgressBar({ position, duration, genre, onSeek, className }: Pr
 
   const progress = duration > 0 ? (position / duration) * 100 : 0;
   const colorClass = genre ? genreColorClass[genre] : 'bg-kiosk-primary';
-  const glowClass = genre ? genreGlowClass[genre] : 'shadow-[0_0_10px_hsl(var(--kiosk-primary)/0.5)]';
+  const glowClass = genre ? genreGlowClass[genre] : 'shadow-[0_0_15px_hsl(var(--kiosk-primary)/0.6)]';
 
   const calculatePosition = useCallback((clientX: number) => {
     if (!progressRef.current || !duration) return null;
@@ -73,23 +73,24 @@ export function ProgressBar({ position, duration, genre, onSeek, className }: Pr
 
   return (
     <div className={cn("w-full max-w-md space-y-2", className)}>
-      {/* Progress track */}
+      {/* Progress track with 3D inset */}
       <div 
         ref={progressRef}
         className={cn(
-          "relative h-2 bg-kiosk-surface rounded-full overflow-hidden group",
-          isInteractive && "cursor-pointer hover:h-3 transition-all duration-200"
+          "relative h-3 rounded-full overflow-hidden group",
+          "progress-track-3d",
+          isInteractive && "cursor-pointer hover:h-4 transition-all duration-200"
         )}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Background glow */}
+        {/* Background highlight */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
         
-        {/* Progress fill with smooth animation */}
+        {/* Progress fill with glow */}
         <motion.div
-          className={cn("absolute inset-y-0 left-0 rounded-full", colorClass)}
+          className={cn("absolute inset-y-0 left-0 rounded-full", colorClass, glowClass)}
           animate={{ width: `${progress}%` }}
           transition={{ 
             duration: isDragging ? 0 : 0.5, 
@@ -97,33 +98,33 @@ export function ProgressBar({ position, duration, genre, onSeek, className }: Pr
           }}
         />
         
-        {/* Glow effect on progress */}
+        {/* Blur glow layer */}
         <motion.div
           className={cn(
-            "absolute inset-y-0 left-0 rounded-full blur-sm opacity-60",
+            "absolute inset-y-0 left-0 rounded-full blur-sm opacity-70",
             colorClass
           )}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: 'linear' }}
         />
 
-        {/* Progress head indicator */}
+        {/* Progress head indicator - 3D ball */}
         {isInteractive && (
           <motion.div
             className={cn(
-              "absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity",
+              "absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity",
               colorClass,
-              glowClass
+              "slider-thumb-3d"
             )}
-            style={{ left: `calc(${progress}% - 8px)` }}
-            animate={{ scale: isDragging ? 1.2 : 1 }}
+            style={{ left: `calc(${progress}% - 10px)` }}
+            animate={{ scale: isDragging ? 1.3 : 1 }}
           />
         )}
 
         {/* Hover preview indicator */}
         {hoverPosition !== null && isInteractive && (
           <motion.div
-            className="absolute top-1/2 -translate-y-1/2 w-1 h-4 bg-white/50 rounded-full"
+            className="absolute top-1/2 -translate-y-1/2 w-1 h-5 bg-white/60 rounded-full"
             style={{ left: `${(hoverPosition / duration) * 100}%` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -131,19 +132,19 @@ export function ProgressBar({ position, duration, genre, onSeek, className }: Pr
         )}
       </div>
 
-      {/* Time display */}
-      <div className="flex justify-between text-xs text-kiosk-text/60">
-        <span className="tabular-nums">{formatTime(position)}</span>
+      {/* Time display with 3D badges */}
+      <div className="flex justify-between text-xs">
+        <span className="tabular-nums text-kiosk-text/70 badge-3d px-2 py-0.5 rounded">{formatTime(position)}</span>
         {hoverPosition !== null && isInteractive && (
           <motion.span 
-            className="text-kiosk-text/80 tabular-nums"
+            className="text-kiosk-text/90 tabular-nums badge-3d px-2 py-0.5 rounded bg-kiosk-primary/20"
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {formatTime(hoverPosition)}
           </motion.span>
         )}
-        <span className="tabular-nums">{formatTime(duration)}</span>
+        <span className="tabular-nums text-kiosk-text/70 badge-3d px-2 py-0.5 rounded">{formatTime(duration)}</span>
       </div>
     </div>
   );

@@ -36,8 +36,9 @@ const LOCAL_USERS: Record<string, { password: string; role: UserRole }> = {
   'guest': { password: 'guest', role: 'newbie' },
 };
 
-// Check for auto-login in development mode
-const DEV_AUTO_LOGIN = import.meta.env.DEV && import.meta.env.VITE_AUTO_LOGIN === 'true';
+// Check for auto-login in development mode or Lovable preview environment
+const isLovablePreview = window.location.hostname.includes('lovable.app') || window.location.hostname.includes('lovableproject.com');
+const DEV_AUTO_LOGIN = (import.meta.env.DEV || isLovablePreview) && import.meta.env.VITE_AUTO_LOGIN !== 'false';
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null);

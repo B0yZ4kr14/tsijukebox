@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DigitalClockProps {
   showSeconds?: boolean;
@@ -38,13 +38,16 @@ export function DigitalClock({
   };
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={cn("flex items-center gap-2 badge-3d px-4 py-2 rounded-xl", className)}>
       <div className="flex flex-col items-end">
-        <span className="text-2xl font-mono font-bold text-kiosk-primary tabular-nums tracking-wider drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
+        <span className={cn(
+          "text-2xl font-mono font-bold tabular-nums tracking-wider",
+          "text-kiosk-primary clock-led"
+        )}>
           {formatTime()}
         </span>
         {showDate && (
-          <span className="text-[10px] text-kiosk-text/60 uppercase tracking-wide">
+          <span className="text-[10px] text-kiosk-text/60 uppercase tracking-wide font-medium">
             {formatDate()}
           </span>
         )}

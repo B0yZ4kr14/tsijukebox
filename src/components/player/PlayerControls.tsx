@@ -10,19 +10,8 @@ interface PlayerControlsProps {
 
 const buttonVariants = {
   idle: { scale: 1 },
-  hover: { scale: 1.1 },
-  tap: { scale: 0.95 },
-};
-
-const iconVariants = {
-  play: { 
-    rotate: 0,
-    transition: { type: 'spring', stiffness: 200 }
-  },
-  pause: { 
-    rotate: 180,
-    transition: { type: 'spring', stiffness: 200 }
-  },
+  hover: { scale: 1.08 },
+  tap: { scale: 0.92 },
 };
 
 export function PlayerControls({ isPlaying }: PlayerControlsProps) {
@@ -49,12 +38,12 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-14 h-14 md:w-16 md:h-16 rounded-full",
-            "bg-kiosk-surface/50 hover:bg-kiosk-surface",
+            "button-control-3d",
             "text-kiosk-text hover:text-kiosk-primary",
-            "transition-colors duration-200"
+            "transition-all duration-200"
           )}
         >
-          <SkipBack className="w-6 h-6 md:w-7 md:h-7" />
+          <SkipBack className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg" />
         </Button>
       </motion.div>
 
@@ -71,11 +60,11 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           <motion.div
             className="absolute inset-0 rounded-full bg-kiosk-primary"
             animate={{
-              scale: [1, 1.2],
-              opacity: [0.3, 0],
+              scale: [1, 1.3],
+              opacity: [0.4, 0],
             }}
             transition={{
-              duration: 1,
+              duration: 1.2,
               repeat: Infinity,
               ease: 'easeOut',
             }}
@@ -91,8 +80,8 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
             "w-20 h-20 md:w-24 md:h-24 rounded-full relative z-10",
             "bg-kiosk-primary hover:bg-kiosk-primary/90",
             "text-kiosk-bg hover:text-kiosk-bg",
-            "shadow-lg shadow-kiosk-primary/30",
-            "transition-colors duration-200"
+            "button-primary-3d",
+            "transition-all duration-200"
           )}
         >
           <motion.div
@@ -103,9 +92,9 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
             {isPlaying ? (
-              <Pause className="w-8 h-8 md:w-10 md:h-10" />
+              <Pause className="w-8 h-8 md:w-10 md:h-10 drop-shadow-lg" />
             ) : (
-              <Play className="w-8 h-8 md:w-10 md:h-10 ml-1" />
+              <Play className="w-8 h-8 md:w-10 md:h-10 ml-1 drop-shadow-lg" />
             )}
           </motion.div>
         </Button>
@@ -125,12 +114,12 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-14 h-14 md:w-16 md:h-16 rounded-full",
-            "bg-kiosk-surface/50 hover:bg-kiosk-surface",
+            "button-control-3d",
             "text-kiosk-text hover:text-kiosk-primary",
-            "transition-colors duration-200"
+            "transition-all duration-200"
           )}
         >
-          <SkipForward className="w-6 h-6 md:w-7 md:h-7" />
+          <SkipForward className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg" />
         </Button>
       </motion.div>
 
@@ -148,12 +137,12 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-12 h-12 rounded-full",
-            "bg-kiosk-surface/30 hover:bg-destructive/20",
+            "button-3d",
             "text-kiosk-text/50 hover:text-destructive",
-            "transition-colors duration-200"
+            "transition-all duration-200"
           )}
         >
-          <Square className="w-5 h-5" />
+          <Square className="w-5 h-5 drop-shadow-md" />
         </Button>
       </motion.div>
     </motion.div>

@@ -150,6 +150,161 @@
     border-color: hsl(var(--primary) / 0.3);
   }
 
+  /* ========== 3D HIGH-RELIEF EFFECTS ========== */
+  
+  /* Button with 3D press effect */
+  .button-3d {
+    box-shadow: 
+      inset 0 2px 0 hsl(0 0% 100% / 0.15),
+      inset 0 -2px 0 hsl(0 0% 0% / 0.25),
+      0 4px 8px -2px hsl(0 0% 0% / 0.4),
+      0 2px 4px -1px hsl(0 0% 0% / 0.2);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+    background: linear-gradient(180deg, 
+      hsl(var(--kiosk-surface) / 1.3) 0%, 
+      hsl(var(--kiosk-surface)) 50%,
+      hsl(var(--kiosk-surface) / 0.8) 100%);
+    transform: translateY(0);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .button-3d:hover {
+    box-shadow: 
+      inset 0 2px 0 hsl(0 0% 100% / 0.2),
+      inset 0 -2px 0 hsl(0 0% 0% / 0.3),
+      0 6px 12px -3px hsl(0 0% 0% / 0.5),
+      0 4px 6px -2px hsl(0 0% 0% / 0.3);
+    transform: translateY(-1px);
+  }
+
+  .button-3d:active {
+    box-shadow: 
+      inset 0 2px 4px hsl(0 0% 0% / 0.3),
+      0 1px 2px hsl(0 0% 0% / 0.2);
+    transform: translateY(1px);
+  }
+
+  /* Deep 3D card with extreme depth */
+  .card-3d-deep {
+    box-shadow: 
+      0 2px 4px hsl(0 0% 0% / 0.1),
+      0 4px 8px hsl(0 0% 0% / 0.1),
+      0 8px 16px hsl(0 0% 0% / 0.15),
+      0 16px 32px hsl(0 0% 0% / 0.15),
+      0 32px 64px hsl(0 0% 0% / 0.2),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    background: linear-gradient(145deg, 
+      hsl(var(--kiosk-surface) / 1.2) 0%, 
+      hsl(var(--kiosk-surface)) 100%);
+  }
+
+  /* Album frame with high-relief border */
+  .album-frame-3d {
+    box-shadow:
+      0 0 0 3px hsl(var(--kiosk-surface)),
+      0 0 0 5px hsl(0 0% 100% / 0.1),
+      0 0 0 6px hsl(0 0% 0% / 0.3),
+      0 25px 50px -12px hsl(0 0% 0% / 0.6),
+      0 12px 24px -8px hsl(var(--kiosk-primary) / 0.15),
+      inset 0 0 30px hsl(0 0% 0% / 0.2);
+  }
+
+  /* Header with frosted glass 3D */
+  .header-3d {
+    background: linear-gradient(180deg,
+      hsl(var(--kiosk-surface) / 0.9) 0%,
+      hsl(var(--kiosk-surface) / 0.6) 100%);
+    box-shadow:
+      0 4px 20px hsl(0 0% 0% / 0.3),
+      0 1px 3px hsl(0 0% 0% / 0.2),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(0 0% 0% / 0.1);
+    border-bottom: 1px solid hsl(0 0% 100% / 0.05);
+  }
+
+  /* Control button circular 3D */
+  .button-control-3d {
+    box-shadow: 
+      inset 0 3px 6px hsl(0 0% 100% / 0.1),
+      inset 0 -3px 6px hsl(0 0% 0% / 0.2),
+      0 4px 12px -2px hsl(0 0% 0% / 0.5),
+      0 2px 4px hsl(0 0% 0% / 0.3);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    background: linear-gradient(180deg, 
+      hsl(var(--kiosk-surface) / 1.4) 0%, 
+      hsl(var(--kiosk-surface)) 40%,
+      hsl(var(--kiosk-surface) / 0.7) 100%);
+  }
+
+  .button-control-3d:active {
+    box-shadow: 
+      inset 0 3px 8px hsl(0 0% 0% / 0.3),
+      0 1px 2px hsl(0 0% 0% / 0.2);
+  }
+
+  /* Primary button with glow */
+  .button-primary-3d {
+    box-shadow: 
+      inset 0 2px 0 hsl(0 0% 100% / 0.2),
+      inset 0 -2px 0 hsl(0 0% 0% / 0.3),
+      0 0 20px hsl(var(--kiosk-primary) / 0.4),
+      0 8px 20px -4px hsl(var(--kiosk-primary) / 0.5),
+      0 4px 8px -2px hsl(0 0% 0% / 0.3);
+    border: 1px solid hsl(0 0% 100% / 0.15);
+  }
+
+  .button-primary-3d:hover {
+    box-shadow: 
+      inset 0 2px 0 hsl(0 0% 100% / 0.25),
+      inset 0 -2px 0 hsl(0 0% 0% / 0.35),
+      0 0 30px hsl(var(--kiosk-primary) / 0.5),
+      0 12px 24px -6px hsl(var(--kiosk-primary) / 0.6),
+      0 6px 12px -3px hsl(0 0% 0% / 0.4);
+  }
+
+  /* Progress bar track 3D */
+  .progress-track-3d {
+    box-shadow: 
+      inset 0 2px 4px hsl(0 0% 0% / 0.3),
+      inset 0 1px 2px hsl(0 0% 0% / 0.2),
+      0 1px 0 hsl(0 0% 100% / 0.05);
+    border: 1px solid hsl(0 0% 0% / 0.3);
+  }
+
+  /* System monitor badge 3D */
+  .badge-3d {
+    box-shadow: 
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(0 0% 0% / 0.2),
+      0 2px 6px -1px hsl(0 0% 0% / 0.3);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    background: linear-gradient(180deg, 
+      hsl(var(--kiosk-surface) / 1.2) 0%, 
+      hsl(var(--kiosk-surface) / 0.8) 100%);
+  }
+
+  /* Digital clock LED effect */
+  .clock-led {
+    text-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 40px currentColor;
+  }
+
+  /* Panel sidebar 3D */
+  .panel-3d {
+    box-shadow: 
+      -8px 0 30px hsl(0 0% 0% / 0.4),
+      -2px 0 8px hsl(0 0% 0% / 0.2),
+      inset 1px 0 0 hsl(0 0% 100% / 0.05);
+    border-left: 1px solid hsl(0 0% 100% / 0.08);
+    background: linear-gradient(90deg,
+      hsl(var(--kiosk-bg) / 0.98) 0%,
+      hsl(var(--kiosk-bg)) 100%);
+  }
+
   /* Glow text effect */
   .text-glow {
     text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
@@ -157,6 +312,27 @@
 
   .text-glow-sm {
     text-shadow: 0 0 5px currentColor;
+  }
+
+  /* Slider thumb 3D */
+  .slider-thumb-3d {
+    box-shadow: 
+      inset 0 2px 0 hsl(0 0% 100% / 0.3),
+      inset 0 -2px 0 hsl(0 0% 0% / 0.2),
+      0 2px 8px hsl(0 0% 0% / 0.4),
+      0 0 12px hsl(var(--kiosk-primary) / 0.4);
+  }
+
+  /* Volume track 3D inset */
+  .volume-track-3d {
+    box-shadow: 
+      inset 0 2px 6px hsl(0 0% 0% / 0.4),
+      inset 0 1px 2px hsl(0 0% 0% / 0.3),
+      0 1px 0 hsl(0 0% 100% / 0.05);
+    border: 1px solid hsl(0 0% 0% / 0.4);
+    background: linear-gradient(180deg,
+      hsl(var(--kiosk-surface) / 0.5) 0%,
+      hsl(var(--kiosk-surface) / 0.8) 100%);
   }
 }
 

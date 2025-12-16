@@ -206,8 +206,8 @@ export default function Index() {
           </div>
         )}
 
-        {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-kiosk-surface/30 backdrop-blur-sm border-b border-kiosk-text/10">
+        {/* Header with 3D effect */}
+        <header className="flex items-center justify-between p-4 header-3d backdrop-blur-sm">
           {/* Left: System Info */}
           <div className="flex items-center gap-4">
             <SystemMonitor 
@@ -249,7 +249,7 @@ export default function Index() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="w-10 h-10 rounded-full bg-kiosk-surface/30 hover:bg-kiosk-surface/50 text-kiosk-text/50 hover:text-kiosk-text transition-colors"
+                  className="w-10 h-10 rounded-full button-3d text-kiosk-text/50 hover:text-kiosk-text transition-colors"
                 >
                   <Disc3 className="w-5 h-5" />
                 </Button>
@@ -262,7 +262,7 @@ export default function Index() {
                 variant="ghost"
                 size="icon"
                 onClick={handleInstall}
-                className="w-10 h-10 rounded-full bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
+                className="w-10 h-10 rounded-full button-primary-3d bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
               >
                 <Download className="w-5 h-5" />
               </Button>
