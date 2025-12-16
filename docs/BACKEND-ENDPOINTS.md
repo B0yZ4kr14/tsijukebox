@@ -692,4 +692,178 @@ class RestoreRequest(BaseModel):
 
 class CloudDownloadRequest(BaseModel):
     fileName: str
+
+---
+
+## Endpoints de Sistema - NTP
+
+### POST `/api/system/ntp/sync`
+
+Sincroniza o relógio do sistema com um servidor NTP.
+
+**Request Body:**
+```json
+{
+  "server": "pool.ntp.br"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "server": "pool.ntp.br",
+  "previousTime": "2024-12-16T10:30:00Z",
+  "newTime": "2024-12-16T10:30:02Z",
+  "offset": "+2.345s",
+  "message": "Time synchronized successfully"
+}
+```
+
+**Implementação sugerida:**
+```python
+from fastapi import APIRouter
+from pydantic import BaseModel
+from datetime import datetime
+import subprocess
+
+router = APIRouter()
+
+class NtpSyncRequest(BaseModel):
+    server: str = "pool.ntp.br"
+
+class NtpSyncResponse(BaseModel):
+    success: bool
+    server: str
+    previousTime: str
+    newTime: str
+    offset: str
+    message: str
+
+@router.post("/api/system/ntp/sync")
+async def sync_ntp(data: NtpSyncRequest) -> NtpSyncResponse:
+    try:
+        previous_time = datetime.utcnow().isoformat() + "Z"
+        
+        # Parar serviço de sincronização automática
+        subprocess.run(["sudo", "systemctl", "stop", "systemd-timesyncd"], check=False)
+        
+        # Sincronizar com servidor NTP
+        result = subprocess.run(
+            ["sudo", "ntpdate", "-u", data.server],
+            capture_output=True,
+            text=True
+        )
+        
+        # Reiniciar serviço de sincronização
+        subprocess.run(["sudo", "systemctl", "start", "systemd-timesyncd"], check=False)
+        
+        new_time = datetime.utcnow().isoformat() + "Z"
+        
+        # Extrair offset da saída do ntpdate
+        offset = "0.000s"
+        if result.stdout:
+            # Formato típico: "16 Dec 10:30:02 ntpdate[1234]: adjust time server ... offset 0.123456 sec"
+            import re
+            match = re.search(r'offset ([+-]?\d+\.\d+)', result.stdout)
+            if match:
+                offset = f"{float(match.group(1)):+.3f}s"
+        
+        return NtpSyncResponse(
+            success=result.returncode == 0,
+            server=data.server,
+            previousTime=previous_time,
+            newTime=new_time,
+            offset=offset,
+            message="Time synchronized successfully" if result.returncode == 0 else f"Sync failed: {result.stderr}"
+        )
+    except Exception as e:
+        return NtpSyncResponse(
+            success=False,
+            server=data.server,
+            previousTime="",
+            newTime="",
+            offset="",
+            message=str(e)
+        )
+```
+
+### GET `/api/system/ntp/config`
+
+Retorna a configuração atual de NTP do sistema.
+
+**Response:**
+```json
+{
+  "server": "pool.ntp.br",
+  "enabled": true,
+  "lastSync": "2024-12-16T10:30:00Z",
+  "status": "synchronized"
+}
+```
+
+---
+
+## Configuração de Cron Job para Sincronização Automática
+
+### Via Crontab
+
+```bash
+# Editar crontab do root
+sudo crontab -e
+
+# Adicionar linha para sincronização a cada 6 horas
+0 */6 * * * /usr/bin/ntpdate pool.ntp.br >> /var/log/ntp-sync.log 2>&1
+```
+
+### Via Systemd Timer (Recomendado)
+
+**Criar arquivo `/etc/systemd/system/ntp-sync.service`:**
+```ini
+[Unit]
+Description=NTP Time Synchronization
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ntpdate -u pool.ntp.br
+```
+
+**Criar arquivo `/etc/systemd/system/ntp-sync.timer`:**
+```ini
+[Unit]
+Description=NTP Sync Timer - Runs every 6 hours
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=6h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+**Ativar timer:**
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable ntp-sync.timer
+sudo systemctl start ntp-sync.timer
+
+# Verificar status
+sudo systemctl list-timers --all | grep ntp
+```
+
+---
+
+## Servidores NTP Recomendados (Brasil)
+
+| Servidor | Descrição |
+|----------|-----------|
+| `pool.ntp.br` | Pool brasileiro (recomendado) |
+| `a.ntp.br` | Servidor primário NTP.br |
+| `b.ntp.br` | Servidor secundário NTP.br |
+| `c.ntp.br` | Servidor terciário NTP.br |
+| `gps.ntp.br` | Servidor com GPS |
+| `a.st1.ntp.br` | Stratum 1 - maior precisão |
 ```

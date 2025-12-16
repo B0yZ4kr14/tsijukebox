@@ -205,26 +205,33 @@ export default function Index() {
         )}
 
         {/* Header */}
-        <header className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
+        <header className="flex items-center justify-between p-4 bg-kiosk-surface/30 backdrop-blur-sm border-b border-kiosk-text/10">
+          {/* Left: System Info */}
+          <div className="flex items-center gap-4">
             <SystemMonitor 
               cpu={status?.cpu ?? 0} 
               memory={status?.memory ?? 0} 
               temp={status?.temp ?? 0} 
             />
             
+            <div className="w-px h-8 bg-kiosk-text/20" />
+            
             <ConnectionIndicator 
               connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'}
               isSpotifyActive={!!status?.playing && !!status?.track}
             />
           </div>
-          
-          <div className="flex items-center gap-3">
-            {/* Digital Clock */}
-            <DigitalClock showDate={true} />
 
-            {/* User Badge */}
+          {/* Center: Digital Clock */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <DigitalClock showDate={true} showSeconds={false} />
+          </div>
+          
+          {/* Right: User & Actions */}
+          <div className="flex items-center gap-3">
             <UserBadge />
+
+            <div className="w-px h-8 bg-kiosk-text/20" />
 
             {/* Spotify Button */}
             <Link to="/spotify">

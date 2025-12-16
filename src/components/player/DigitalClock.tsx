@@ -40,11 +40,11 @@ export function DigitalClock({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <div className="flex flex-col items-end">
-        <span className="text-xl font-mono font-bold text-primary tabular-nums tracking-wider text-glow-sm">
+        <span className="text-2xl font-mono font-bold text-kiosk-primary tabular-nums tracking-wider drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
           {formatTime()}
         </span>
         {showDate && (
-          <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
+          <span className="text-[10px] text-kiosk-text/60 uppercase tracking-wide">
             {formatDate()}
           </span>
         )}
