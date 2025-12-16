@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Palette, Check, Sun, Moon, Eye, Zap } from 'lucide-react';
+import { ArrowLeft, Palette, Check, Sun, Moon, Eye, Zap, Sparkles } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,58 +11,72 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useSettings, ThemeColor } from '@/contexts/SettingsContext';
+import { builtInPresets, applyCustomColors, type ThemePreset } from '@/hooks/useThemeCustomizer';
 import { toast } from 'sonner';
-
-const themes: { id: ThemeColor; name: string; description: string; color: string; gradient: string }[] = [
-  { 
-    id: 'blue', 
-    name: 'Neon Azul',
-    description: 'Tecnológico e moderno',
-    color: 'hsl(195 100% 50%)',
-    gradient: 'from-cyan-500 to-blue-600'
-  },
-  { 
-    id: 'green', 
-    name: 'Neon Verde',
-    description: 'Vibrante e energético',
-    color: 'hsl(145 100% 45%)',
-    gradient: 'from-emerald-500 to-green-600'
-  },
-  { 
-    id: 'purple', 
-    name: 'Neon Roxo',
-    description: 'Elegante e sofisticado',
-    color: 'hsl(280 100% 60%)',
-    gradient: 'from-purple-500 to-violet-600'
-  },
-];
 
 export default function ThemePreview() {
   const navigate = useNavigate();
   const { theme, setTheme } = useSettings();
-  const [previewTheme, setPreviewTheme] = useState<ThemeColor>(theme);
-  const [previewHighContrast, setPreviewHighContrast] = useState(false);
-  const [previewFontSize, setPreviewFontSize] = useState(100);
+  const [previewPreset, setPreviewPreset] = useState<ThemePreset | null>(null);
 
-  const applyTheme = (newTheme: ThemeColor) => {
+  // Separate solid and gradient themes
+  const solidThemes = useMemo(() => builtInPresets.filter(t => !t.colors.gradientEnabled), []);
+  const gradientThemes = useMemo(() => builtInPresets.filter(t => t.colors.gradientEnabled), []);
+
+  const applyTheme = (preset: ThemePreset) => {
     document.documentElement.classList.add('theme-transitioning');
-    setTheme(newTheme);
-    setPreviewTheme(newTheme);
+    
+    // Apply colors
+    applyCustomColors(preset.colors);
+    
+    // Also set base theme
+    if (preset.id === 'blue' || preset.id === 'green' || preset.id === 'purple') {
+      setTheme(preset.id as ThemeColor);
+    }
+    
+    setPreviewPreset(preset);
+    
     setTimeout(() => {
       document.documentElement.classList.remove('theme-transitioning');
     }, 600);
-    toast.success(`Tema "${themes.find(t => t.id === newTheme)?.name}" aplicado!`);
+    
+    toast.success(`Tema "${preset.name}" aplicado!`);
   };
 
-  // Apply preview theme to document temporarily
+  // Apply preview on mount
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', previewTheme);
-    return () => {
-      document.documentElement.setAttribute('data-theme', theme);
-    };
-  }, [previewTheme]);
+    const initialPreset = builtInPresets.find(p => p.id === theme) || builtInPresets[0];
+    setPreviewPreset(initialPreset);
+  }, []);
 
-  const currentThemeData = themes.find(t => t.id === previewTheme)!;
+  // Apply preview colors when preset changes
+  useEffect(() => {
+    if (previewPreset) {
+      applyCustomColors(previewPreset.colors);
+    }
+    return () => {
+      // Restore original theme on unmount
+      const originalPreset = builtInPresets.find(p => p.id === theme);
+      if (originalPreset) {
+        applyCustomColors(originalPreset.colors);
+      }
+    };
+  }, [previewPreset]);
+
+  const currentPreset = previewPreset || builtInPresets[0];
+
+  // Generate gradient CSS for preview
+  const getGradientStyle = (preset: ThemePreset) => {
+    if (!preset.colors.gradientEnabled) return {};
+    return {
+      background: `linear-gradient(${preset.colors.gradientAngle}deg, hsl(${preset.colors.gradientStart}), hsl(${preset.colors.gradientEnd}))`
+    };
+  };
+
+  // Get primary color for solid theme preview
+  const getPrimaryColor = (preset: ThemePreset) => {
+    return `hsl(${preset.colors.primary})`;
+  };
 
   return (
     <KioskLayout>
@@ -97,68 +111,229 @@ export default function ThemePreview() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gold-neon">Preview de Temas</h1>
-            <p className="text-kiosk-text/75 text-sm">Visualize todas as cores e efeitos antes de aplicar</p>
+            <p className="text-kiosk-text/75 text-sm">
+              {builtInPresets.length} presets disponíveis • {solidThemes.length} sólidos + {gradientThemes.length} gradientes
+            </p>
           </div>
         </motion.header>
 
         <div className="max-w-6xl mx-auto space-y-8 pb-8">
-          {/* Theme Selector */}
+          {/* Solid Themes Section */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-3 gap-4"
           >
-            {themes.map((themeOption) => (
-              <motion.button
-                key={themeOption.id}
-                onClick={() => setPreviewTheme(themeOption.id)}
-                className={`
-                  relative flex flex-col items-center justify-center gap-3 p-6 rounded-2xl
-                  transition-all duration-300 ripple-effect
-                  ${previewTheme === themeOption.id ? 'card-option-selected-3d' : 'card-option-dark-3d'}
-                `}
-                whileHover={{ scale: 1.02, y: -4 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div 
-                  className={`w-16 h-16 rounded-full bg-gradient-to-br ${themeOption.gradient} shadow-2xl`}
-                  style={{
-                    boxShadow: previewTheme === themeOption.id 
-                      ? `0 0 40px ${themeOption.color}, 0 0 80px ${themeOption.color}50`
-                      : `0 0 20px ${themeOption.color}40`
-                  }}
-                />
-                <div className="text-center">
-                  <p className={`font-semibold ${previewTheme === themeOption.id ? 'text-label-yellow' : 'text-kiosk-text'}`}>
-                    {themeOption.name}
-                  </p>
-                  <p className="text-xs text-kiosk-text/60 mt-1">{themeOption.description}</p>
-                </div>
-                {previewTheme === themeOption.id && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute top-3 right-3 w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center"
-                  >
-                    <Check className="w-4 h-4 text-black" />
-                  </motion.div>
-                )}
-              </motion.button>
-            ))}
+            <h2 className="text-label-yellow font-semibold mb-4 flex items-center gap-2">
+              <Palette className="w-5 h-5 icon-neon-blue" />
+              Temas Sólidos ({solidThemes.length})
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {solidThemes.map((preset) => (
+                <motion.button
+                  key={preset.id}
+                  onClick={() => setPreviewPreset(preset)}
+                  className={`
+                    relative flex flex-col items-center justify-center gap-3 p-4 rounded-2xl
+                    transition-all duration-300 ripple-effect
+                    ${previewPreset?.id === preset.id ? 'card-option-selected-3d' : 'card-option-dark-3d'}
+                  `}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div 
+                    className="w-14 h-14 rounded-full shadow-2xl"
+                    style={{
+                      background: getPrimaryColor(preset),
+                      boxShadow: previewPreset?.id === preset.id 
+                        ? `0 0 40px ${getPrimaryColor(preset)}, 0 0 80px ${getPrimaryColor(preset)}50`
+                        : `0 0 20px ${getPrimaryColor(preset)}40`
+                    }}
+                  />
+                  <div className="text-center">
+                    <p className={`font-semibold text-sm ${previewPreset?.id === preset.id ? 'text-label-yellow' : 'text-kiosk-text'}`}>
+                      {preset.name}
+                    </p>
+                  </div>
+                  {previewPreset?.id === preset.id && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-2 right-2 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center"
+                    >
+                      <Check className="w-3 h-3 text-black" />
+                    </motion.div>
+                  )}
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
+
+          {/* Gradient Themes Section */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.15 }}
+          >
+            <h2 className="text-label-yellow font-semibold mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 icon-neon-blue" />
+              Temas com Gradiente ({gradientThemes.length})
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {gradientThemes.map((preset) => (
+                <motion.button
+                  key={preset.id}
+                  onClick={() => setPreviewPreset(preset)}
+                  className={`
+                    relative flex flex-col items-center gap-3 p-4 rounded-2xl
+                    transition-all duration-300 ripple-effect
+                    ${previewPreset?.id === preset.id ? 'card-option-selected-3d' : 'card-option-dark-3d'}
+                  `}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {/* Gradient Preview */}
+                  <div 
+                    className="w-full h-20 rounded-lg relative overflow-hidden"
+                    style={getGradientStyle(preset)}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Badge variant="secondary" className="bg-black/40 text-white border-none">
+                        {preset.colors.gradientAngle}°
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Color Pills */}
+                  <div className="flex gap-2">
+                    <div 
+                      className="w-6 h-6 rounded-full shadow-lg"
+                      style={{ background: `hsl(${preset.colors.gradientStart})` }}
+                      title="Cor inicial"
+                    />
+                    <span className="text-kiosk-text/50 text-xs">→</span>
+                    <div 
+                      className="w-6 h-6 rounded-full shadow-lg"
+                      style={{ background: `hsl(${preset.colors.gradientEnd})` }}
+                      title="Cor final"
+                    />
+                  </div>
+                  
+                  <div className="text-center">
+                    <p className={`font-semibold ${previewPreset?.id === preset.id ? 'text-label-yellow' : 'text-kiosk-text'}`}>
+                      {preset.name}
+                    </p>
+                    <Badge variant="outline" className="mt-1 text-xs border-primary/50 text-primary">
+                      GRADIENT
+                    </Badge>
+                  </div>
+                  
+                  {previewPreset?.id === preset.id && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-2 right-2 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center"
+                    >
+                      <Check className="w-3 h-3 text-black" />
+                    </motion.div>
+                  )}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Current Theme Info */}
+          {currentPreset && (
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="card-neon-border bg-kiosk-surface/80">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-gold-neon text-lg flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Eye className="w-5 h-5 icon-neon-blue" />
+                      Pré-visualizando: {currentPreset.name}
+                    </span>
+                    {currentPreset.colors.gradientEnabled && (
+                      <Badge className="bg-primary/20 text-primary border-primary/50">
+                        GRADIENT • {currentPreset.colors.gradientAngle}°
+                      </Badge>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-6 gap-3">
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg"
+                        style={{ background: `hsl(${currentPreset.colors.primary})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Primary</span>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg"
+                        style={{ background: `hsl(${currentPreset.colors.primaryGlow})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Glow</span>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg"
+                        style={{ background: `hsl(${currentPreset.colors.accent})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Accent</span>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg border border-white/10"
+                        style={{ background: `hsl(${currentPreset.colors.background})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Background</span>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg border border-white/10"
+                        style={{ background: `hsl(${currentPreset.colors.surface})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Surface</span>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="w-full h-10 rounded-lg mb-1 shadow-lg border border-white/10"
+                        style={{ background: `hsl(${currentPreset.colors.text})` }}
+                      />
+                      <span className="text-xs text-kiosk-text/60">Text</span>
+                    </div>
+                  </div>
+                  
+                  {currentPreset.colors.gradientEnabled && (
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <p className="text-sm text-label-yellow mb-2">Preview do Gradiente</p>
+                      <div 
+                        className="w-full h-16 rounded-lg"
+                        style={getGradientStyle(currentPreset)}
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Component Showcase */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.25 }}
           >
             <Card className="card-admin-extreme-3d bg-kiosk-surface/90">
               <CardHeader>
                 <CardTitle className="text-gold-neon flex items-center gap-2">
                   <Palette className="w-5 h-5 icon-neon-blue" />
-                  Demonstração de Componentes - {currentThemeData.name}
+                  Demonstração de Componentes
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-8">
@@ -274,12 +449,11 @@ export default function ThemePreview() {
             className="flex gap-4"
           >
             <Button
-              onClick={() => applyTheme(previewTheme)}
-              disabled={previewTheme === theme}
+              onClick={() => currentPreset && applyTheme(currentPreset)}
               className="flex-1 button-primary-glow-3d ripple-effect h-14 text-lg"
             >
               <Check className="w-5 h-5 mr-2" />
-              {previewTheme === theme ? 'Tema Atual' : `Aplicar Tema ${currentThemeData.name}`}
+              Aplicar Tema {currentPreset?.name}
             </Button>
             <Link to="/settings" className="flex-shrink-0">
               <Button variant="outline" className="button-outline-neon h-14 px-8">
