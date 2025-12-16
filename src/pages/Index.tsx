@@ -13,6 +13,7 @@ import { ProgressBar } from '@/components/player/ProgressBar';
 import { CommandDeck } from '@/components/player/CommandDeck';
 import { UserBadge } from '@/components/player/UserBadge';
 import { DigitalClock } from '@/components/player/DigitalClock';
+import { SpotifyPanel, SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
@@ -36,6 +37,7 @@ export default function Index() {
   const { shuffle, repeat, queue, toggleShuffle, toggleRepeat, removeFromQueue, clearQueue } = usePlaybackControls();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [showQueue, setShowQueue] = useState(false);
+  const [showSpotifyPanel, setShowSpotifyPanel] = useState(false);
 
   // Show toast on network status change
   useEffect(() => {
@@ -233,20 +235,26 @@ export default function Index() {
 
             <div className="w-px h-8 bg-kiosk-text/20" />
 
-            {/* Spotify Button */}
-            <Link to="/spotify">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`w-10 h-10 rounded-full transition-colors ${
-                  spotify.isConnected 
-                    ? 'bg-[#1DB954]/20 hover:bg-[#1DB954]/30 text-[#1DB954]' 
-                    : 'bg-kiosk-surface/30 hover:bg-kiosk-surface/50 text-kiosk-text/50 hover:text-kiosk-text'
-                }`}
-              >
-                <Disc3 className="w-5 h-5" />
-              </Button>
-            </Link>
+            {/* Spotify Panel Toggle */}
+            {spotify.isConnected && (
+              <SpotifyPanelToggle 
+                onClick={() => setShowSpotifyPanel(!showSpotifyPanel)} 
+                isOpen={showSpotifyPanel}
+              />
+            )}
+
+            {/* Spotify Browser Link (when not connected) */}
+            {!spotify.isConnected && (
+              <Link to="/spotify">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-10 h-10 rounded-full bg-kiosk-surface/30 hover:bg-kiosk-surface/50 text-kiosk-text/50 hover:text-kiosk-text transition-colors"
+                >
+                  <Disc3 className="w-5 h-5" />
+                </Button>
+              </Link>
+            )}
 
             {/* PWA Install Button */}
             {canInstall && (
@@ -329,6 +337,12 @@ export default function Index() {
           onPlayItem={(uri) => api.playSpotifyUri(uri)}
           onRemoveItem={removeFromQueue}
           onClearQueue={clearQueue}
+        />
+
+        {/* Spotify Panel */}
+        <SpotifyPanel
+          isOpen={showSpotifyPanel}
+          onClose={() => setShowSpotifyPanel(false)}
         />
       </div>
     </KioskLayout>

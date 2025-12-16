@@ -8,6 +8,7 @@ interface UserContextType {
   permissions: UserPermissions;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isDevAutoLogin: boolean;
   authConfig: AuthConfig;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
@@ -35,9 +36,13 @@ const LOCAL_USERS: Record<string, { password: string; role: UserRole }> = {
   'guest': { password: 'guest', role: 'newbie' },
 };
 
+// Check for auto-login in development mode
+const DEV_AUTO_LOGIN = import.meta.env.DEV && import.meta.env.VITE_AUTO_LOGIN === 'true';
+
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDevAutoLogin, setIsDevAutoLogin] = useState(false);
   const [authConfig, setAuthConfig] = useState<AuthConfig>(() => {
     const saved = localStorage.getItem('auth_config');
     return saved ? JSON.parse(saved) : { provider: 'local' as AuthProvider };
@@ -72,6 +77,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const initAuth = async () => {
       if (authConfig.provider === 'local') {
+        // Check for dev auto-login first
+        if (DEV_AUTO_LOGIN) {
+          const devUser: AppUser = {
+            id: 'dev_admin',
+            username: 'tsi',
+            role: 'admin',
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+          };
+          setUser(devUser);
+          setIsDevAutoLogin(true);
+          console.log('🔐 Auto-login dev ativado (tsi/admin)');
+          setIsLoading(false);
+          return;
+        }
+
         // Check sessionStorage for local auth
         const savedUser = sessionStorage.getItem('current_user');
         if (savedUser) {
@@ -219,6 +240,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         permissions,
         isAuthenticated,
         isLoading,
+        isDevAutoLogin,
         authConfig,
         login,
         logout,
