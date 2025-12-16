@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -22,9 +22,8 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useSettings } from '@/contexts/SettingsContext';
+import { STORAGE_KEYS } from '@/lib/constants';
 import { toast } from 'sonner';
-
-const SETUP_COMPLETE_KEY = 'tsi_jukebox_setup_complete';
 
 type ThemeColor = 'blue' | 'green' | 'purple';
 
@@ -153,7 +152,7 @@ export default function SetupWizard() {
     // Apply accessibility
     document.documentElement.setAttribute('data-high-contrast', String(wizardData.highContrast));
     document.documentElement.style.fontSize = `${wizardData.fontSize}%`;
-    localStorage.setItem('tsi_jukebox_accessibility', JSON.stringify({
+    localStorage.setItem(STORAGE_KEYS.ACCESSIBILITY, JSON.stringify({
       highContrast: wizardData.highContrast,
       fontSize: wizardData.fontSize,
       reducedMotion: false,
@@ -169,17 +168,17 @@ export default function SetupWizard() {
     }
 
     // Save achievements
-    localStorage.setItem('tsi_jukebox_achievements', JSON.stringify(achievements));
+    localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(achievements));
 
     // Mark setup as complete
-    localStorage.setItem(SETUP_COMPLETE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEYS.SETUP_COMPLETE, 'true');
     
     toast.success('🏆 Configuração concluída com sucesso!');
     navigate('/');
   };
 
   const skipSetup = () => {
-    localStorage.setItem(SETUP_COMPLETE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEYS.SETUP_COMPLETE, 'true');
     navigate('/');
   };
 

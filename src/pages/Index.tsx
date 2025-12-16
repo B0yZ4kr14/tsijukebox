@@ -17,6 +17,7 @@ import { DigitalClock } from '@/components/player/DigitalClock';
 import { WeatherWidget } from '@/components/player/WeatherWidget';
 import { SpotifyPanel, SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { GuidedTour, useTourSteps, isTourComplete } from '@/components/tour/GuidedTour';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
@@ -29,7 +30,7 @@ import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Download, Wifi, WifiOff, Disc3, Music, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Wifi, WifiOff, Music, Settings } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Index() {
@@ -46,6 +47,8 @@ export default function Index() {
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [showQueue, setShowQueue] = useState(false);
   const [showSpotifyPanel, setShowSpotifyPanel] = useState(false);
+  const [showTour, setShowTour] = useState(() => !isTourComplete());
+  const tourSteps = useTourSteps();
 
   // Redirect to setup wizard on first access
   useEffect(() => {
@@ -378,6 +381,14 @@ export default function Index() {
         <SpotifyPanel
           isOpen={showSpotifyPanel}
           onClose={() => setShowSpotifyPanel(false)}
+        />
+
+        {/* Guided Tour for new users */}
+        <GuidedTour
+          steps={tourSteps}
+          isOpen={showTour && !isFirstAccess}
+          onClose={() => setShowTour(false)}
+          onComplete={() => setShowTour(false)}
         />
       </div>
     </KioskLayout>

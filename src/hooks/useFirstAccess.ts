@@ -1,14 +1,14 @@
-const SETUP_COMPLETE_KEY = 'tsi_jukebox_setup_complete';
+import { STORAGE_KEYS } from '@/lib/constants';
 
 export function useFirstAccess() {
-  const isFirstAccess = !localStorage.getItem(SETUP_COMPLETE_KEY);
+  const isFirstAccess = !localStorage.getItem(STORAGE_KEYS.SETUP_COMPLETE);
   
   const markSetupComplete = () => {
-    localStorage.setItem(SETUP_COMPLETE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEYS.SETUP_COMPLETE, 'true');
   };
   
   const resetSetup = () => {
-    localStorage.removeItem(SETUP_COMPLETE_KEY);
+    localStorage.removeItem(STORAGE_KEYS.SETUP_COMPLETE);
   };
 
   return { isFirstAccess, markSetupComplete, resetSetup };

@@ -786,45 +786,39 @@
     user-drag: none;
   }
 
-  /* 3D Card Effects */
+  /* ========== 3D BASE SYSTEM ========== */
+  /* Base 3D variables - reduces redundancy across classes */
+  
+  /* Standard 3D card effect - use this as primary */
   .card-3d {
     box-shadow: 
-      0 1px 1px hsl(var(--foreground) / 0.02),
-      0 2px 2px hsl(var(--foreground) / 0.02),
-      0 4px 4px hsl(var(--foreground) / 0.02),
-      0 8px 8px hsl(var(--foreground) / 0.03),
-      0 16px 16px hsl(var(--foreground) / 0.03),
-      inset 0 1px 0 hsl(var(--foreground) / 0.05);
-    transform: translateZ(0);
+      0 4px 6px hsl(0 0% 0% / 0.2),
+      0 8px 15px hsl(0 0% 0% / 0.25),
+      0 16px 30px hsl(0 0% 0% / 0.3),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(0 0% 0% / 0.2);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    background: linear-gradient(145deg, 
+      hsl(var(--kiosk-surface) / 1.2) 0%, 
+      hsl(var(--kiosk-surface)) 100%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid hsl(var(--border) / 0.5);
-    background: linear-gradient(
-      145deg,
-      hsl(var(--card)) 0%,
-      hsl(var(--card) / 0.8) 100%
-    );
   }
 
   .card-3d:hover {
     box-shadow: 
-      0 2px 2px hsl(var(--foreground) / 0.03),
-      0 4px 4px hsl(var(--foreground) / 0.03),
-      0 8px 8px hsl(var(--foreground) / 0.04),
-      0 16px 16px hsl(var(--foreground) / 0.04),
-      0 32px 32px hsl(var(--foreground) / 0.05),
-      inset 0 1px 0 hsl(var(--foreground) / 0.08);
-    border-color: hsl(var(--primary) / 0.3);
+      0 6px 10px hsl(0 0% 0% / 0.25),
+      0 12px 20px hsl(0 0% 0% / 0.3),
+      0 24px 40px hsl(0 0% 0% / 0.35),
+      inset 0 1px 0 hsl(0 0% 100% / 0.15);
+    transform: translateY(-2px);
   }
 
-  /* ========== 3D HIGH-RELIEF EFFECTS ========== */
-  
-  /* Button with 3D press effect */
+  /* Button 3D effect - standard press feel */
   .button-3d {
     box-shadow: 
       inset 0 2px 0 hsl(0 0% 100% / 0.15),
       inset 0 -2px 0 hsl(0 0% 0% / 0.25),
-      0 4px 8px -2px hsl(0 0% 0% / 0.4),
-      0 2px 4px -1px hsl(0 0% 0% / 0.2);
+      0 4px 8px -2px hsl(0 0% 0% / 0.4);
     border: 1px solid hsl(0 0% 100% / 0.1);
     background: linear-gradient(180deg, 
       hsl(var(--kiosk-surface) / 1.3) 0%, 
@@ -835,34 +829,18 @@
   }
 
   .button-3d:hover {
+    transform: translateY(-2px);
     box-shadow: 
       inset 0 2px 0 hsl(0 0% 100% / 0.2),
       inset 0 -2px 0 hsl(0 0% 0% / 0.3),
-      0 6px 12px -3px hsl(0 0% 0% / 0.5),
-      0 4px 6px -2px hsl(0 0% 0% / 0.3);
-    transform: translateY(-1px);
+      0 6px 12px -3px hsl(0 0% 0% / 0.5);
   }
 
   .button-3d:active {
+    transform: translateY(1px);
     box-shadow: 
       inset 0 2px 4px hsl(0 0% 0% / 0.3),
       0 1px 2px hsl(0 0% 0% / 0.2);
-    transform: translateY(1px);
-  }
-
-  /* Deep 3D card with extreme depth */
-  .card-3d-deep {
-    box-shadow: 
-      0 2px 4px hsl(0 0% 0% / 0.1),
-      0 4px 8px hsl(0 0% 0% / 0.1),
-      0 8px 16px hsl(0 0% 0% / 0.15),
-      0 16px 32px hsl(0 0% 0% / 0.15),
-      0 32px 64px hsl(0 0% 0% / 0.2),
-      inset 0 1px 0 hsl(0 0% 100% / 0.1);
-    border: 1px solid hsl(0 0% 100% / 0.08);
-    background: linear-gradient(145deg, 
-      hsl(var(--kiosk-surface) / 1.2) 0%, 
-      hsl(var(--kiosk-surface)) 100%);
   }
 
   /* Album frame with high-relief border */
@@ -878,28 +856,25 @@
 
   /* ========== EXTREME 3D EFFECTS ========== */
 
-  /* Album frame with EXTREME depth and moldura */
+  /* Album frame with EXTREME depth - hero display */
   .album-frame-extreme-3d {
     box-shadow:
       0 0 0 4px hsl(var(--kiosk-surface)),
       0 0 0 6px hsl(0 0% 100% / 0.15),
       0 0 0 8px hsl(0 0% 0% / 0.5),
-      0 0 0 12px hsl(var(--kiosk-bg)),
       0 40px 80px -20px hsl(0 0% 0% / 0.8),
       0 20px 40px -10px hsl(var(--kiosk-primary) / 0.25),
-      0 60px 120px -30px hsl(0 0% 0% / 0.6),
       inset 0 0 60px hsl(0 0% 0% / 0.4);
     border: 2px solid hsl(0 0% 100% / 0.1);
   }
 
-  /* Card with EXTREME depth */
+  /* Card with EXTREME depth - extends card-3d */
   .card-extreme-3d {
     box-shadow: 
       0 4px 6px hsl(0 0% 0% / 0.3),
       0 8px 15px hsl(0 0% 0% / 0.3),
       0 16px 30px hsl(0 0% 0% / 0.35),
       0 32px 60px hsl(0 0% 0% / 0.4),
-      0 64px 120px hsl(0 0% 0% / 0.3),
       inset 0 1px 0 hsl(0 0% 100% / 0.15),
       inset 0 -1px 0 hsl(0 0% 0% / 0.3);
     border: 1px solid hsl(0 0% 100% / 0.1);
@@ -909,75 +884,79 @@
       hsl(var(--kiosk-bg)) 100%);
   }
 
-  /* Button with PHYSICAL press effect */
+  /* Button with PHYSICAL press effect - extends button-3d */
   .button-physical-3d {
     box-shadow: 
       inset 0 3px 0 hsl(0 0% 100% / 0.25),
       inset 0 -4px 0 hsl(0 0% 0% / 0.4),
       0 6px 0 hsl(0 0% 0% / 0.3),
-      0 8px 20px hsl(0 0% 0% / 0.5),
-      0 4px 8px hsl(0 0% 0% / 0.3);
+      0 8px 20px hsl(0 0% 0% / 0.5);
     transform: translateY(-2px);
     transition: all 0.1s ease-out;
   }
 
   .button-physical-3d:hover {
+    transform: translateY(-4px);
     box-shadow: 
       inset 0 3px 0 hsl(0 0% 100% / 0.3),
       inset 0 -4px 0 hsl(0 0% 0% / 0.45),
       0 8px 0 hsl(0 0% 0% / 0.35),
-      0 12px 25px hsl(0 0% 0% / 0.55),
-      0 6px 12px hsl(0 0% 0% / 0.35);
-    transform: translateY(-3px);
+      0 12px 25px hsl(0 0% 0% / 0.55);
   }
 
   .button-physical-3d:active {
+    transform: translateY(2px);
     box-shadow: 
       inset 0 3px 6px hsl(0 0% 0% / 0.4),
       0 1px 2px hsl(0 0% 0% / 0.2);
-    transform: translateY(2px);
   }
 
-  /* Play button with EXTREME glow */
-  .button-play-extreme-3d {
+  /* Play button with glow */
+  .button-play-3d {
     box-shadow: 
       inset 0 4px 0 hsl(0 0% 100% / 0.3),
       inset 0 -4px 0 hsl(0 0% 0% / 0.4),
       0 0 50px hsl(var(--kiosk-primary) / 0.6),
       0 0 100px hsl(var(--kiosk-primary) / 0.4),
-      0 20px 40px -10px hsl(var(--kiosk-primary) / 0.7),
-      0 10px 20px -5px hsl(0 0% 0% / 0.6);
+      0 20px 40px -10px hsl(var(--kiosk-primary) / 0.7);
     border: 2px solid hsl(0 0% 100% / 0.2);
   }
 
-  .button-play-extreme-3d:hover {
+  .button-play-3d:hover {
     box-shadow: 
       inset 0 4px 0 hsl(0 0% 100% / 0.35),
       inset 0 -4px 0 hsl(0 0% 0% / 0.45),
       0 0 70px hsl(var(--kiosk-primary) / 0.7),
       0 0 140px hsl(var(--kiosk-primary) / 0.5),
-      0 25px 50px -12px hsl(var(--kiosk-primary) / 0.8),
-      0 15px 30px -8px hsl(0 0% 0% / 0.7);
+      0 25px 50px -12px hsl(var(--kiosk-primary) / 0.8);
   }
 
-  /* Badge with EXTREME glow */
-  .badge-extreme-glow {
+  /* Badge with glow effect */
+  .badge-glow-3d {
     box-shadow: 
       inset 0 1px 0 hsl(0 0% 100% / 0.3),
       inset 0 -1px 0 hsl(0 0% 0% / 0.3),
       0 0 15px currentColor,
-      0 0 30px currentColor,
       0 4px 10px hsl(0 0% 0% / 0.4);
   }
 
-  /* Input with EXTREME inner depth */
-  .input-extreme-3d {
+  /* Input with inner depth */
+  .input-3d {
     box-shadow: 
-      inset 0 4px 8px hsl(0 0% 0% / 0.5),
       inset 0 2px 4px hsl(0 0% 0% / 0.3),
-      inset 0 0 20px hsl(0 0% 0% / 0.2),
-      0 1px 0 hsl(0 0% 100% / 0.08);
-    border: 1px solid hsl(0 0% 0% / 0.5);
+      inset 0 1px 2px hsl(0 0% 0% / 0.2),
+      0 1px 0 hsl(0 0% 100% / 0.05);
+    border: 1px solid hsl(0 0% 0% / 0.4);
+    background: linear-gradient(180deg,
+      hsl(var(--kiosk-bg) / 0.8) 0%,
+      hsl(var(--kiosk-bg)) 100%);
+  }
+
+  .input-3d:focus {
+    box-shadow: 
+      inset 0 2px 4px hsl(0 0% 0% / 0.3),
+      0 0 0 2px hsl(var(--kiosk-primary) / 0.3),
+      0 0 12px hsl(var(--kiosk-primary) / 0.2);
   }
 
   /* Text with high readability */

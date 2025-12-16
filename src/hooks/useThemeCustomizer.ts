@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
+import { STORAGE_KEYS } from '@/lib/constants';
+import { applyThemeWithTransition } from '@/lib/theme-utils';
 
 export interface CustomThemeColors {
   primary: string;      // HSL: "195 100% 50%"
@@ -21,9 +23,6 @@ export interface ThemePreset {
   isBuiltIn: boolean;
   createdAt: string;
 }
-
-const CUSTOM_THEMES_KEY = 'tsi_jukebox_custom_themes';
-const ACTIVE_CUSTOM_COLORS_KEY = 'tsi_jukebox_custom_colors';
 
 // Built-in presets
 export const builtInPresets: ThemePreset[] = [
@@ -123,7 +122,7 @@ export const defaultColors: CustomThemeColors = builtInPresets[0].colors;
 
 function loadCustomPresets(): ThemePreset[] {
   try {
-    const stored = localStorage.getItem(CUSTOM_THEMES_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_THEMES);
     return stored ? JSON.parse(stored) : [];
   } catch {
     return [];
@@ -132,18 +131,17 @@ function loadCustomPresets(): ThemePreset[] {
 
 function saveCustomPresets(presets: ThemePreset[]) {
   try {
-    localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(presets));
+    localStorage.setItem(STORAGE_KEYS.CUSTOM_THEMES, JSON.stringify(presets));
   } catch (e) {
-    console.error('Failed to save custom presets:', e);
+    if (import.meta.env.DEV) console.error('Failed to save custom presets:', e);
   }
 }
 
 function loadActiveCustomColors(): CustomThemeColors | null {
   try {
-    const stored = localStorage.getItem(ACTIVE_CUSTOM_COLORS_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_COLORS);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Ensure gradient properties exist (migration for old data)
       return {
         ...defaultColors,
         ...parsed,
@@ -162,12 +160,12 @@ function loadActiveCustomColors(): CustomThemeColors | null {
 function saveActiveCustomColors(colors: CustomThemeColors | null) {
   try {
     if (colors) {
-      localStorage.setItem(ACTIVE_CUSTOM_COLORS_KEY, JSON.stringify(colors));
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_COLORS, JSON.stringify(colors));
     } else {
-      localStorage.removeItem(ACTIVE_CUSTOM_COLORS_KEY);
+      localStorage.removeItem(STORAGE_KEYS.CUSTOM_COLORS);
     }
   } catch (e) {
-    console.error('Failed to save custom colors:', e);
+    if (import.meta.env.DEV) console.error('Failed to save custom colors:', e);
   }
 }
 
@@ -291,10 +289,16 @@ export function useThemeCustomizer() {
     }
   }, []);
 
-  const setColors = useCallback((colors: CustomThemeColors) => {
+  const setColors = useCallback((colors: CustomThemeColors, withTransition = true) => {
+    if (withTransition) {
+      applyThemeWithTransition('custom', () => {
+        applyCustomColors(colors);
+      });
+    } else {
+      applyCustomColors(colors);
+    }
     setActiveColors(colors);
     setIsCustomMode(true);
-    applyCustomColors(colors);
     saveActiveCustomColors(colors);
   }, []);
 

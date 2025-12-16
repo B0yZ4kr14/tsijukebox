@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { STORAGE_KEYS } from '@/lib/constants';
 
 export interface TourStep {
   target: string;
@@ -16,8 +17,6 @@ interface GuidedTourProps {
   onClose: () => void;
   onComplete: () => void;
 }
-
-const TOUR_COMPLETE_KEY = 'tsi_jukebox_tour_complete';
 
 export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -60,13 +59,13 @@ export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourPro
   };
 
   const handleComplete = () => {
-    localStorage.setItem(TOUR_COMPLETE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEYS.TOUR_COMPLETE, 'true');
     setCurrentStep(0);
     onComplete();
   };
 
   const handleSkip = () => {
-    localStorage.setItem(TOUR_COMPLETE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEYS.TOUR_COMPLETE, 'true');
     setCurrentStep(0);
     onClose();
   };
@@ -257,9 +256,9 @@ export function useTourSteps(): TourStep[] {
 }
 
 export function isTourComplete(): boolean {
-  return localStorage.getItem(TOUR_COMPLETE_KEY) === 'true';
+  return localStorage.getItem(STORAGE_KEYS.TOUR_COMPLETE) === 'true';
 }
 
 export function resetTour(): void {
-  localStorage.removeItem(TOUR_COMPLETE_KEY);
+  localStorage.removeItem(STORAGE_KEYS.TOUR_COMPLETE);
 }
