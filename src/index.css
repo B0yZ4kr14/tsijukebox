@@ -121,6 +121,44 @@
     color: hsl(0 0% 68%);
   }
 
+  /* Labels com alta visibilidade - Amarelo/Laranja */
+  .text-label-yellow {
+    color: hsl(45 100% 65%);
+    text-shadow: 0 0 8px hsl(45 100% 50% / 0.3);
+  }
+
+  .text-label-orange {
+    color: hsl(30 100% 60%);
+    text-shadow: 0 0 8px hsl(30 100% 50% / 0.3);
+  }
+
+  /* Neon azul brilhante para ícones */
+  .icon-neon-blue {
+    color: hsl(195 100% 60%);
+    filter: drop-shadow(0 0 4px hsl(195 100% 60%)) drop-shadow(0 0 8px hsl(195 100% 50% / 0.5));
+  }
+
+  /* Contornos de cards com neon azul */
+  .card-neon-border {
+    border: 1px solid hsl(195 100% 50% / 0.4);
+    box-shadow: 
+      0 0 15px hsl(195 100% 50% / 0.15),
+      inset 0 0 15px hsl(195 100% 50% / 0.05);
+  }
+
+  /* Títulos com brilho azul neon */
+  .title-neon-blue {
+    color: hsl(195 100% 75%);
+    text-shadow: 0 0 10px hsl(195 100% 60% / 0.5);
+  }
+
+  /* Placeholder com melhor visibilidade */
+  input::placeholder,
+  .input-3d::placeholder {
+    color: hsl(0 0% 55%) !important;
+    opacity: 1 !important;
+  }
+
   * {
     @apply border-border;
   }
