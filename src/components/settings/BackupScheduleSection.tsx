@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { SettingsSection } from './SettingsSection';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface BackupSchedule {
   enabled: boolean;
@@ -25,19 +26,20 @@ const defaultSchedule: BackupSchedule = {
   retention: 7,
 };
 
-const daysOfWeek = [
-  { value: '0', label: 'Domingo' },
-  { value: '1', label: 'Segunda' },
-  { value: '2', label: 'Terça' },
-  { value: '3', label: 'Quarta' },
-  { value: '4', label: 'Quinta' },
-  { value: '5', label: 'Sexta' },
-  { value: '6', label: 'Sábado' },
-];
-
 export function BackupScheduleSection() {
+  const { t } = useTranslation();
   const [schedule, setSchedule] = useState<BackupSchedule>(defaultSchedule);
   const [isSaving, setIsSaving] = useState(false);
+
+  const daysOfWeek = [
+    { value: '0', label: t('backup.days.sunday') },
+    { value: '1', label: t('backup.days.monday') },
+    { value: '2', label: t('backup.days.tuesday') },
+    { value: '3', label: t('backup.days.wednesday') },
+    { value: '4', label: t('backup.days.thursday') },
+    { value: '5', label: t('backup.days.friday') },
+    { value: '6', label: t('backup.days.saturday') },
+  ];
 
   useEffect(() => {
     const saved = localStorage.getItem('backup_schedule');
@@ -60,11 +62,11 @@ export function BackupScheduleSection() {
         retention: schedule.retention,
       });
       
-      toast.success('Agendamento salvo com sucesso');
+      toast.success(t('backup.savedSuccess'));
     } catch (error) {
       // Silently fail in demo mode, still save to localStorage
       if (import.meta.env.DEV) console.error('Failed to save backup schedule to API:', error);
-      toast.success('Agendamento salvo localmente');
+      toast.success(t('backup.savedLocal'));
     } finally {
       setIsSaving(false);
     }
@@ -73,20 +75,34 @@ export function BackupScheduleSection() {
   const handleReset = () => {
     setSchedule(defaultSchedule);
     localStorage.removeItem('backup_schedule');
-    toast.info('Agendamento resetado');
+    toast.info(t('backup.reset'));
+  };
+
+  const getScheduleSummary = () => {
+    if (schedule.frequency === 'daily') {
+      return t('backup.summaryDaily').replace('{time}', schedule.time);
+    }
+    if (schedule.frequency === 'weekly') {
+      const day = daysOfWeek[schedule.dayOfWeek ?? 0]?.label;
+      return t('backup.summaryWeekly').replace('{day}', day).replace('{time}', schedule.time);
+    }
+    if (schedule.frequency === 'monthly') {
+      return t('backup.summaryMonthly').replace('{day}', String(schedule.dayOfMonth)).replace('{time}', schedule.time);
+    }
+    return '';
   };
 
   return (
     <SettingsSection
-      title="Agendamento de Backup"
-      description="Configure backups automáticos periódicos"
+      title={t('backup.title')}
+      description={t('backup.description')}
       icon={<Calendar className="w-5 h-5 text-purple-400" />}
     >
       <div className="space-y-4">
         {/* Enable Toggle */}
         <div className="flex items-center justify-between">
-          <Label htmlFor="schedule-enabled" className="text-sm text-muted-foreground">
-            Backup Automático
+          <Label htmlFor="schedule-enabled" className="text-sm text-settings-label">
+            {t('backup.automatic')}
           </Label>
           <Switch
             id="schedule-enabled"
@@ -99,7 +115,7 @@ export function BackupScheduleSection() {
           <>
             {/* Frequency */}
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Frequência</Label>
+              <Label className="text-sm text-settings-label">{t('backup.frequency')}</Label>
               <Select
                 value={schedule.frequency}
                 onValueChange={(value: 'daily' | 'weekly' | 'monthly') => 
@@ -110,9 +126,9 @@ export function BackupScheduleSection() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="daily">Diário</SelectItem>
-                  <SelectItem value="weekly">Semanal</SelectItem>
-                  <SelectItem value="monthly">Mensal</SelectItem>
+                  <SelectItem value="daily">{t('backup.daily')}</SelectItem>
+                  <SelectItem value="weekly">{t('backup.weekly')}</SelectItem>
+                  <SelectItem value="monthly">{t('backup.monthly')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -120,7 +136,7 @@ export function BackupScheduleSection() {
             {/* Day of Week (for weekly) */}
             {schedule.frequency === 'weekly' && (
               <div className="space-y-2">
-                <Label className="text-sm text-muted-foreground">Dia da Semana</Label>
+                <Label className="text-sm text-settings-label">{t('backup.dayOfWeek')}</Label>
                 <Select
                   value={String(schedule.dayOfWeek ?? 0)}
                   onValueChange={(value) => 
@@ -144,7 +160,7 @@ export function BackupScheduleSection() {
             {/* Day of Month (for monthly) */}
             {schedule.frequency === 'monthly' && (
               <div className="space-y-2">
-                <Label className="text-sm text-muted-foreground">Dia do Mês</Label>
+                <Label className="text-sm text-settings-label">{t('backup.dayOfMonth')}</Label>
                 <Select
                   value={String(schedule.dayOfMonth ?? 1)}
                   onValueChange={(value) => 
@@ -157,7 +173,7 @@ export function BackupScheduleSection() {
                   <SelectContent>
                     {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
                       <SelectItem key={day} value={String(day)}>
-                        Dia {day}
+                        {t('backup.day')} {day}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -167,9 +183,9 @@ export function BackupScheduleSection() {
 
             {/* Time */}
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground flex items-center gap-2">
+              <Label className="text-sm text-settings-label flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                Horário
+                {t('backup.time')}
               </Label>
               <Input
                 type="time"
@@ -181,8 +197,8 @@ export function BackupScheduleSection() {
 
             {/* Retention */}
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">
-                Backups a Reter
+              <Label className="text-sm text-settings-label">
+                {t('backup.retention')}
               </Label>
               <Select
                 value={String(schedule.retention)}
@@ -194,15 +210,15 @@ export function BackupScheduleSection() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="3">3 backups</SelectItem>
-                  <SelectItem value="5">5 backups</SelectItem>
-                  <SelectItem value="7">7 backups</SelectItem>
-                  <SelectItem value="14">14 backups</SelectItem>
-                  <SelectItem value="30">30 backups</SelectItem>
+                  <SelectItem value="3">3 {t('backup.backups')}</SelectItem>
+                  <SelectItem value="5">5 {t('backup.backups')}</SelectItem>
+                  <SelectItem value="7">7 {t('backup.backups')}</SelectItem>
+                  <SelectItem value="14">14 {t('backup.backups')}</SelectItem>
+                  <SelectItem value="30">30 {t('backup.backups')}</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
-                Backups mais antigos serão removidos automaticamente
+              <p className="text-xs text-settings-hint">
+                {t('backup.retentionHint')}
               </p>
             </div>
           </>
@@ -216,7 +232,7 @@ export function BackupScheduleSection() {
             className="flex-1"
           >
             <Save className="w-4 h-4 mr-2" />
-            {isSaving ? 'Salvando...' : 'Salvar'}
+            {isSaving ? t('common.saving') : t('common.save')}
           </Button>
           <Button
             variant="outline"
@@ -230,13 +246,7 @@ export function BackupScheduleSection() {
         {schedule.enabled && (
           <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
             <p className="text-sm text-purple-300">
-              {schedule.frequency === 'daily' && `Backup diário às ${schedule.time}`}
-              {schedule.frequency === 'weekly' && 
-                `Backup semanal às ${daysOfWeek[schedule.dayOfWeek ?? 0]?.label} às ${schedule.time}`
-              }
-              {schedule.frequency === 'monthly' && 
-                `Backup mensal no dia ${schedule.dayOfMonth} às ${schedule.time}`
-              }
+              {getScheduleSummary()}
             </p>
           </div>
         )}

@@ -24,7 +24,10 @@
     "connected": "Connected",
     "disconnected": "Disconnected",
     "test": "Test",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "saving": "Saving...",
+    "remove": "Remove",
+    "create": "Create"
   },
   "player": {
     "nowPlaying": "Now Playing",
@@ -42,7 +45,12 @@
     "clearQueue": "Clear Queue",
     "noTrackPlaying": "No track playing",
     "trackAdded": "Track added to queue",
-    "trackRemoved": "Track removed from queue"
+    "trackRemoved": "Track removed from queue",
+    "swipeHint": "Swipe to change track",
+    "nextTrack": "Next track",
+    "prevTrack": "Previous track",
+    "paused": "Paused",
+    "playing": "Playing"
   },
   "settings": {
     "title": "Settings",
@@ -103,7 +111,8 @@
     "connectFirst": "Connect Spotify in settings",
     "clientId": "Client ID",
     "clientSecret": "Client Secret",
-    "howToGet": "How to get?"
+    "howToGet": "How to get?",
+    "configureInSettings": "Configure Spotify in settings"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -141,12 +150,110 @@
     "datasource": "Datasource",
     "reload": "Reload",
     "setup": "Setup",
-    "reboot": "Reboot"
+    "reboot": "Reboot",
+    "admin": "Admin",
+    "tooltips": {
+      "dashboard": "Open metrics panel",
+      "datasource": "Open data source",
+      "reload": "Restart services (soft restart)",
+      "setup": "System settings",
+      "reboot": "Restart system (reboot)"
+    },
+    "rebootDialog": {
+      "title": "Confirm Restart",
+      "description": "The system will be restarted. All connections will be temporarily lost. This action cannot be undone.",
+      "confirm": "Restart System"
+    },
+    "messages": {
+      "reloadSuccess": "Services restarted successfully",
+      "reloadError": "Error restarting services",
+      "rebootSuccess": "System restarting...",
+      "rebootError": "Error restarting system"
+    }
   },
   "system": {
     "version": "Version",
     "mode": "Mode",
     "connectionType": "Connection Type",
     "apiUrl": "API URL"
+  },
+  "backup": {
+    "title": "Backup Schedule",
+    "description": "Configure automatic periodic backups",
+    "automatic": "Automatic Backup",
+    "frequency": "Frequency",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "dayOfWeek": "Day of Week",
+    "dayOfMonth": "Day of Month",
+    "time": "Time",
+    "retention": "Backups to Retain",
+    "retentionHint": "Older backups will be automatically removed",
+    "savedSuccess": "Schedule saved successfully",
+    "savedLocal": "Schedule saved locally",
+    "reset": "Schedule reset",
+    "summaryDaily": "Daily backup at {time}",
+    "summaryWeekly": "Weekly backup on {day} at {time}",
+    "summaryMonthly": "Monthly backup on day {day} at {time}",
+    "day": "Day",
+    "backups": "backups",
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "description": "Register and configure access permissions",
+    "addUser": "Add User",
+    "createUser": "Create User",
+    "editUser": "Edit User",
+    "deleteUser": "Remove User",
+    "username": "Username",
+    "password": "Password",
+    "accessLevel": "Access Level",
+    "permissionLevels": "Permission Levels",
+    "fillAllFields": "Fill in all fields",
+    "userExists": "User already exists",
+    "userCreated": "User created successfully",
+    "userUpdated": "User updated",
+    "userRemoved": "User removed",
+    "cannotRemoveLastAdmin": "Cannot remove the last administrator",
+    "confirmDeleteTitle": "Remove User",
+    "confirmDeleteDescription": "Are you sure you want to remove the user \"{username}\"? This action cannot be undone.",
+    "addDialogTitle": "Add User",
+    "addDialogDescription": "Create a new user with the desired permissions.",
+    "editDialogTitle": "Edit User",
+    "editDialogDescription": "Change the access level of user {username}.",
+    "roles": {
+      "newbie": "Newbie",
+      "user": "User",
+      "admin": "Admin"
+    },
+    "roleDescriptions": {
+      "newbie": "View only. Cannot add or remove music.",
+      "user": "Can manage queue and playlists. No access to settings.",
+      "admin": "Full system access, including settings and users."
+    },
+    "roleOptions": {
+      "newbie": "Newbie - View only",
+      "user": "User - Manages queue/playlists",
+      "admin": "Admin - Full access"
+    }
+  },
+  "notifications": {
+    "connectionLost": "Connection lost",
+    "connectionRestored": "Connection restored",
+    "connecting": "Connecting to server...",
+    "connectionError": "Connection Error",
+    "backendNotRunning": "Check if the FastAPI backend is running.",
+    "enableDemoMode": "Go to Settings to enable Demo Mode",
+    "appInstalled": "App installed successfully!"
   }
 }

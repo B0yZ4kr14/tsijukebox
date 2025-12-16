@@ -20,6 +20,7 @@ import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
 import { usePlaybackControls } from '@/hooks/usePlaybackControls';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
+import { useTranslation } from '@/hooks/useTranslation';
 import { api } from '@/lib/api/client';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
@@ -30,6 +31,7 @@ import { toast } from 'sonner';
 
 export default function Index() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data: status, isLoading, error, connectionType } = useStatus();
   const { play, pause, next, prev } = usePlayer();
   const { setVolume } = useVolume();
@@ -44,16 +46,16 @@ export default function Index() {
   // Show toast on network status change
   useEffect(() => {
     if (!isOnline) {
-      toast.error('Conexão perdida', { icon: <WifiOff className="w-4 h-4" /> });
+      toast.error(t('notifications.connectionLost'), { icon: <WifiOff className="w-4 h-4" /> });
     } else if (wasOffline && isOnline) {
-      toast.success('Conexão restaurada', { icon: <Wifi className="w-4 h-4" /> });
+      toast.success(t('notifications.connectionRestored'), { icon: <Wifi className="w-4 h-4" /> });
     }
-  }, [isOnline, wasOffline]);
+  }, [isOnline, wasOffline, t]);
 
   const handleInstall = async () => {
     const installed = await install();
     if (installed) {
-      toast.success('App instalado com sucesso!');
+      toast.success(t('notifications.appInstalled'));
     }
   };
 
@@ -76,36 +78,36 @@ export default function Index() {
       case ' ':
         if (status?.playing) {
           pause();
-          toast('Pausado', { icon: '⏸️' });
+          toast(t('player.paused'), { icon: '⏸️' });
         } else {
           play();
-          toast('Reproduzindo', { icon: '▶️' });
+          toast(t('player.playing'), { icon: '▶️' });
         }
         break;
       case 'ArrowRight':
         next();
         showSwipeFeedback('left');
-        toast('Próxima faixa', { icon: '⏭️' });
+        toast(t('player.nextTrack'), { icon: '⏭️' });
         break;
       case 'ArrowLeft':
         prev();
         showSwipeFeedback('right');
-        toast('Faixa anterior', { icon: '⏮️' });
+        toast(t('player.prevTrack'), { icon: '⏮️' });
         break;
       case 'ArrowUp':
       case '+':
         const newVolUp = Math.min((status?.volume ?? 75) + 5, 100);
         setVolume(newVolUp);
-        toast(`Volume: ${newVolUp}%`, { icon: '🔊' });
+        toast(`${t('player.volume')}: ${newVolUp}%`, { icon: '🔊' });
         break;
       case 'ArrowDown':
       case '-':
         const newVolDown = Math.max((status?.volume ?? 75) - 5, 0);
         setVolume(newVolDown);
-        toast(`Volume: ${newVolDown}%`, { icon: '🔉' });
+        toast(`${t('player.volume')}: ${newVolDown}%`, { icon: '🔉' });
         break;
     }
-  }, [status?.playing, status?.volume, play, pause, next, prev, setVolume]);
+  }, [status?.playing, status?.volume, play, pause, next, prev, setVolume, t]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -121,12 +123,12 @@ export default function Index() {
     onSwipeLeft: () => {
       next();
       showSwipeFeedback('left');
-      toast('Próxima faixa', { icon: '⏭️' });
+      toast(t('player.nextTrack'), { icon: '⏭️' });
     },
     onSwipeRight: () => {
       prev();
       showSwipeFeedback('right');
-      toast('Faixa anterior', { icon: '⏮️' });
+      toast(t('player.prevTrack'), { icon: '⏮️' });
     },
     threshold: 75,
   });
@@ -143,7 +145,7 @@ export default function Index() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-kiosk-text mb-2">TSi JUKEBOX</h1>
-              <p className="text-kiosk-text/70">Conectando ao servidor...</p>
+              <p className="text-kiosk-text/70">{t('notifications.connecting')}</p>
             </div>
           </div>
         </div>
@@ -162,21 +164,21 @@ export default function Index() {
             <div className="w-20 h-20 rounded-full bg-destructive/20 flex items-center justify-center mx-auto">
               <span className="text-4xl">⚠️</span>
             </div>
-            <h2 className="text-2xl font-bold text-kiosk-text">Erro de Conexão</h2>
+            <h2 className="text-2xl font-bold text-kiosk-text">{t('notifications.connectionError')}</h2>
             <p className="text-kiosk-text/70">
-              Não foi possível conectar ao servidor em <br />
+              {t('notifications.backendNotRunning')} <br />
               <code className="text-kiosk-primary">{apiUrl}</code>
             </p>
             <p className="text-sm text-kiosk-text/50">
               {isDev 
-                ? 'Acesse as Configurações para ativar o Modo Demo'
-                : 'Verifique se o backend FastAPI está em execução.'
+                ? t('notifications.enableDemoMode')
+                : t('notifications.backendNotRunning')
               }
             </p>
             <Link to="/settings">
               <Button className="mt-4 bg-kiosk-primary hover:bg-kiosk-primary/90">
                 <Settings className="w-4 h-4 mr-2" />
-                Configurações
+                {t('settings.title')}
               </Button>
             </Link>
           </div>
@@ -249,7 +251,7 @@ export default function Index() {
                   setShowSpotifyPanel(!showSpotifyPanel);
                 } else {
                   navigate('/settings');
-                  toast.info('Configure o Spotify nas configurações');
+                  toast.info(t('spotify.configureInSettings'));
                 }
               }} 
               isOpen={showSpotifyPanel}
@@ -271,7 +273,7 @@ export default function Index() {
         </header>
 
         {/* Main Content - increased padding to prevent CommandDeck overlap */}
-        <main className="flex-1 flex flex-col items-center justify-center gap-3 px-4 pb-44 touch-pan-y">
+        <main className="flex-1 flex flex-col items-center justify-center gap-3 px-4 pb-52 touch-pan-y">
           <NowPlaying 
             track={status?.track ?? null} 
             isPlaying={status?.playing ?? false} 
@@ -307,7 +309,7 @@ export default function Index() {
           </div>
 
           {/* Player Controls - clear separation from CommandDeck */}
-          <div className="mb-16">
+          <div className="mb-20">
             <PlayerControls isPlaying={status?.playing ?? false} />
           </div>
           
@@ -319,13 +321,19 @@ export default function Index() {
           {/* Branding and hint integrated */}
           <div className="text-center mt-2">
             <p className="text-xs text-kiosk-text/40">
-              Deslize para mudar de faixa
+              {t('player.swipeHint')}
             </p>
             <p className="text-[10px] text-kiosk-text/30 mt-1">
               TSi JUKEBOX Enterprise v4.0
             </p>
           </div>
         </main>
+
+        {/* Visual Divider - Separates Music Area from Admin Controls */}
+        <div className="fixed bottom-[120px] left-0 right-0 z-40 pointer-events-none">
+          <div className="h-px bg-gradient-to-r from-transparent via-kiosk-text/15 to-transparent" />
+          <div className="h-10 bg-gradient-to-t from-kiosk-bg/90 to-transparent" />
+        </div>
 
         {/* Command Deck */}
         <CommandDeck />

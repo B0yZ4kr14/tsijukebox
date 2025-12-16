@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -123,6 +124,7 @@ interface SystemUrls {
 
 export function CommandDeck({ disabled = false }: CommandDeckProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { hasPermission, isAuthenticated, user } = useUser();
   const [showRebootDialog, setShowRebootDialog] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
@@ -158,9 +160,9 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
     setIsReloading(true);
     try {
       await api.reloadServices();
-      toast.success('Serviços reiniciados com sucesso');
+      toast.success(t('commandDeck.messages.reloadSuccess'));
     } catch (error) {
-      toast.error('Erro ao reiniciar serviços');
+      toast.error(t('commandDeck.messages.reloadError'));
     } finally {
       setIsReloading(false);
     }
@@ -173,9 +175,9 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
   const handleReboot = async () => {
     try {
       await api.rebootSystem();
-      toast.success('Sistema reiniciando...');
+      toast.success(t('commandDeck.messages.rebootSuccess'));
     } catch (error) {
-      toast.error('Erro ao reiniciar sistema');
+      toast.error(t('commandDeck.messages.rebootError'));
     }
     setShowRebootDialog(false);
   };
@@ -202,7 +204,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           transition={{ delay: 0.7 }}
         >
           <span className="text-[9px] font-medium text-kiosk-text/40 uppercase tracking-[0.15em]">
-            Admin
+            {t('commandDeck.admin')}
           </span>
         </motion.div>
 
@@ -211,16 +213,16 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           {/* Info Buttons (Cyan) */}
           <DeckButton
             icon={<LineChart className="w-5 h-5" />}
-            label="Dashboard"
-            tooltip="Abrir painel de métricas"
+            label={t('commandDeck.dashboard')}
+            tooltip={t('commandDeck.tooltips.dashboard')}
             onClick={handleDashboard}
             color="cyan"
             disabled={disabled}
           />
           <DeckButton
             icon={<Activity className="w-5 h-5" />}
-            label="Datasource"
-            tooltip="Abrir fonte de dados"
+            label={t('commandDeck.datasource')}
+            tooltip={t('commandDeck.tooltips.datasource')}
             onClick={handleDatasource}
             color="cyan"
             disabled={disabled}
@@ -229,8 +231,8 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           {/* Action Button (Amber) */}
           <DeckButton
             icon={<RefreshCw className={`w-5 h-5 ${isReloading ? 'animate-spin' : ''}`} />}
-            label="Reload"
-            tooltip="Reiniciar serviços (soft restart)"
+            label={t('commandDeck.reload')}
+            tooltip={t('commandDeck.tooltips.reload')}
             onClick={handleReload}
             color="amber"
             disabled={disabled || isReloading}
@@ -239,8 +241,8 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           {/* Setup Button (White) */}
           <DeckButton
             icon={<SlidersHorizontal className="w-5 h-5" />}
-            label="Setup"
-            tooltip="Configurações do sistema"
+            label={t('commandDeck.setup')}
+            tooltip={t('commandDeck.tooltips.setup')}
             onClick={handleSetup}
             color="white"
             disabled={disabled}
@@ -249,8 +251,8 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           {/* Critical Button (Red) - Separated */}
           <DeckButton
             icon={<Power className="w-5 h-5" />}
-            label="Reboot"
-            tooltip="Reiniciar sistema (reboot)"
+            label={t('commandDeck.reboot')}
+            tooltip={t('commandDeck.tooltips.reboot')}
             onClick={() => setShowRebootDialog(true)}
             color="red"
             disabled={disabled}
@@ -265,22 +267,21 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-400 flex items-center gap-2">
               <Power className="w-5 h-5" />
-              Confirmar Reinicialização
+              {t('commandDeck.rebootDialog.title')}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-kiosk-text/75">
-              O sistema será reiniciado. Todas as conexões serão perdidas temporariamente.
-              Esta ação não pode ser desfeita.
+              {t('commandDeck.rebootDialog.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="bg-slate-800 hover:bg-slate-700">
-              Cancelar
+              {t('common.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleReboot}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
-              Reiniciar Sistema
+              {t('commandDeck.rebootDialog.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

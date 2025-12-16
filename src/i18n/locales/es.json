@@ -24,7 +24,10 @@
     "connected": "Conectado",
     "disconnected": "Desconectado",
     "test": "Probar",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "saving": "Guardando...",
+    "remove": "Quitar",
+    "create": "Crear"
   },
   "player": {
     "nowPlaying": "Reproduciendo",
@@ -42,7 +45,12 @@
     "clearQueue": "Limpiar Cola",
     "noTrackPlaying": "Sin música reproduciendo",
     "trackAdded": "Canción agregada a la cola",
-    "trackRemoved": "Canción quitada de la cola"
+    "trackRemoved": "Canción quitada de la cola",
+    "swipeHint": "Desliza para cambiar de pista",
+    "nextTrack": "Siguiente pista",
+    "prevTrack": "Pista anterior",
+    "paused": "Pausado",
+    "playing": "Reproduciendo"
   },
   "settings": {
     "title": "Configuración",
@@ -103,7 +111,8 @@
     "connectFirst": "Conecta Spotify en configuración",
     "clientId": "Client ID",
     "clientSecret": "Client Secret",
-    "howToGet": "¿Cómo obtener?"
+    "howToGet": "¿Cómo obtener?",
+    "configureInSettings": "Configura Spotify en configuración"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -141,12 +150,110 @@
     "datasource": "Datasource",
     "reload": "Recargar",
     "setup": "Configuración",
-    "reboot": "Reiniciar"
+    "reboot": "Reiniciar",
+    "admin": "Admin",
+    "tooltips": {
+      "dashboard": "Abrir panel de métricas",
+      "datasource": "Abrir fuente de datos",
+      "reload": "Reiniciar servicios (soft restart)",
+      "setup": "Configuración del sistema",
+      "reboot": "Reiniciar sistema (reboot)"
+    },
+    "rebootDialog": {
+      "title": "Confirmar Reinicio",
+      "description": "El sistema se reiniciará. Todas las conexiones se perderán temporalmente. Esta acción no se puede deshacer.",
+      "confirm": "Reiniciar Sistema"
+    },
+    "messages": {
+      "reloadSuccess": "Servicios reiniciados con éxito",
+      "reloadError": "Error al reiniciar servicios",
+      "rebootSuccess": "Sistema reiniciando...",
+      "rebootError": "Error al reiniciar sistema"
+    }
   },
   "system": {
     "version": "Versión",
     "mode": "Modo",
     "connectionType": "Tipo de Conexión",
     "apiUrl": "URL de API"
+  },
+  "backup": {
+    "title": "Programación de Respaldo",
+    "description": "Configure respaldos automáticos periódicos",
+    "automatic": "Respaldo Automático",
+    "frequency": "Frecuencia",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "dayOfWeek": "Día de la Semana",
+    "dayOfMonth": "Día del Mes",
+    "time": "Hora",
+    "retention": "Respaldos a Retener",
+    "retentionHint": "Los respaldos más antiguos serán eliminados automáticamente",
+    "savedSuccess": "Programación guardada con éxito",
+    "savedLocal": "Programación guardada localmente",
+    "reset": "Programación reiniciada",
+    "summaryDaily": "Respaldo diario a las {time}",
+    "summaryWeekly": "Respaldo semanal los {day} a las {time}",
+    "summaryMonthly": "Respaldo mensual el día {day} a las {time}",
+    "day": "Día",
+    "backups": "respaldos",
+    "days": {
+      "sunday": "Domingo",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado"
+    }
+  },
+  "users": {
+    "title": "Gestión de Usuarios",
+    "description": "Registre y configure permisos de acceso",
+    "addUser": "Agregar Usuario",
+    "createUser": "Crear Usuario",
+    "editUser": "Editar Usuario",
+    "deleteUser": "Eliminar Usuario",
+    "username": "Nombre de Usuario",
+    "password": "Contraseña",
+    "accessLevel": "Nivel de Acceso",
+    "permissionLevels": "Niveles de Permiso",
+    "fillAllFields": "Complete todos los campos",
+    "userExists": "El usuario ya existe",
+    "userCreated": "Usuario creado con éxito",
+    "userUpdated": "Usuario actualizado",
+    "userRemoved": "Usuario eliminado",
+    "cannotRemoveLastAdmin": "No se puede eliminar al último administrador",
+    "confirmDeleteTitle": "Eliminar Usuario",
+    "confirmDeleteDescription": "¿Está seguro de que desea eliminar al usuario \"{username}\"? Esta acción no se puede deshacer.",
+    "addDialogTitle": "Agregar Usuario",
+    "addDialogDescription": "Cree un nuevo usuario con los permisos deseados.",
+    "editDialogTitle": "Editar Usuario",
+    "editDialogDescription": "Cambie el nivel de acceso del usuario {username}.",
+    "roles": {
+      "newbie": "Newbie",
+      "user": "Usuario",
+      "admin": "Admin"
+    },
+    "roleDescriptions": {
+      "newbie": "Solo visualización. No puede agregar ni quitar música.",
+      "user": "Puede gestionar cola y playlists. Sin acceso a configuración.",
+      "admin": "Acceso total al sistema, incluyendo configuración y usuarios."
+    },
+    "roleOptions": {
+      "newbie": "Newbie - Solo visualización",
+      "user": "Usuario - Gestiona cola/playlists",
+      "admin": "Admin - Acceso total"
+    }
+  },
+  "notifications": {
+    "connectionLost": "Conexión perdida",
+    "connectionRestored": "Conexión restaurada",
+    "connecting": "Conectando al servidor...",
+    "connectionError": "Error de Conexión",
+    "backendNotRunning": "Verifique si el backend FastAPI está en ejecución.",
+    "enableDemoMode": "Acceda a Configuración para activar el Modo Demo",
+    "appInstalled": "¡App instalada con éxito!"
   }
 }
