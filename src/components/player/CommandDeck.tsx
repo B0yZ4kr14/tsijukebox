@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 import { useUser } from '@/contexts/UserContext';
@@ -34,45 +34,44 @@ interface DeckButtonProps {
   onClick: () => void;
   color: 'cyan' | 'amber' | 'white' | 'red';
   disabled?: boolean;
-  separated?: boolean;
 }
 
 const colorClasses = {
   cyan: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
-    border: 'border-cyan-500/30',
+    border: 'border-cyan-500/40',
     text: 'text-cyan-400',
-    glow: 'shadow-cyan-500/20',
-    hover: 'hover:border-cyan-400/50 hover:shadow-cyan-500/30',
-    icon: 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]',
+    glow: 'shadow-cyan-500/30',
+    hover: 'hover:border-cyan-400/60 hover:shadow-cyan-500/40',
+    icon: 'text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]',
   },
   amber: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
-    border: 'border-amber-500/30',
+    border: 'border-amber-500/40',
     text: 'text-amber-400',
-    glow: 'shadow-amber-500/20',
-    hover: 'hover:border-amber-400/50 hover:shadow-amber-500/30',
-    icon: 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]',
+    glow: 'shadow-amber-500/30',
+    hover: 'hover:border-amber-400/60 hover:shadow-amber-500/40',
+    icon: 'text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]',
   },
   white: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
-    border: 'border-white/20',
+    border: 'border-white/30',
     text: 'text-white',
-    glow: 'shadow-white/10',
-    hover: 'hover:border-white/40 hover:shadow-white/20',
-    icon: 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]',
+    glow: 'shadow-white/20',
+    hover: 'hover:border-white/50 hover:shadow-white/30',
+    icon: 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]',
   },
   red: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
-    border: 'border-red-500/30',
+    border: 'border-red-500/40',
     text: 'text-red-400',
-    glow: 'shadow-red-500/20',
-    hover: 'hover:border-red-400/50 hover:shadow-red-500/30',
-    icon: 'text-red-400 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]',
+    glow: 'shadow-red-500/30',
+    hover: 'hover:border-red-400/60 hover:shadow-red-500/40',
+    icon: 'text-red-400 drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]',
   },
 };
 
-function DeckButton({ icon, label, tooltip, onClick, color, disabled, separated }: DeckButtonProps) {
+function DeckButton({ icon, label, tooltip, onClick, color, disabled }: DeckButtonProps) {
   const colors = colorClasses[color];
 
   return (
@@ -83,16 +82,15 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled, separated 
             onClick={onClick}
             disabled={disabled}
             className={`
-              deck-button-3d deck-button-${color}
               relative flex flex-col items-center justify-center gap-1.5
-              w-20 h-16 rounded-xl
-              ${colors.bg} border-2
+              w-14 h-14 rounded-xl ripple-effect
+              ${colors.bg} border-2 ${colors.border}
               transition-all duration-150
               disabled:opacity-50 disabled:cursor-not-allowed
-              ${separated ? 'ml-6' : ''}
+              shadow-lg ${colors.glow} ${colors.hover}
             `}
-            whileHover={{ scale: 1.08, y: -4 }}
-            whileTap={{ scale: 0.92, y: 2 }}
+            whileHover={{ scale: 1.1, x: 4 }}
+            whileTap={{ scale: 0.9 }}
           >
             {/* Top highlight for 3D bevel */}
             <div className="absolute inset-x-2 top-1 h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full" />
@@ -101,7 +99,7 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled, separated 
             <span className={`${colors.icon} relative z-10`}>{icon}</span>
             
             {/* Label */}
-            <span className={`text-[10px] font-semibold ${colors.text} uppercase tracking-wider relative z-10`}>
+            <span className={`text-[8px] font-bold ${colors.text} uppercase tracking-wider relative z-10`}>
               {label}
             </span>
 
@@ -109,7 +107,7 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled, separated 
             <div className="absolute inset-x-2 bottom-1 h-0.5 bg-black/60 rounded-full" />
           </motion.button>
         </TooltipTrigger>
-        <TooltipContent side="top" className="bg-slate-900 border-slate-600 text-white shadow-2xl">
+        <TooltipContent side="right" className="bg-slate-900 border-slate-600 text-white shadow-2xl">
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
@@ -125,9 +123,10 @@ interface SystemUrls {
 export function CommandDeck({ disabled = false }: CommandDeckProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { hasPermission, isAuthenticated, user } = useUser();
+  const { hasPermission } = useUser();
   const [showRebootDialog, setShowRebootDialog] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [urls, setUrls] = useState<SystemUrls>({
     dashboardUrl: 'http://localhost:3000',
     datasourceUrl: 'http://localhost:9090',
@@ -189,30 +188,25 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
 
   return (
     <>
-      {/* Command Deck Container */}
+      {/* Vertical Command Deck - Left Side */}
       <motion.div
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, type: 'spring', stiffness: 100 }}
+        className="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center"
+        initial={{ x: -100 }}
+        animate={{ x: isExpanded ? 0 : -72 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        {/* Admin Badge - golden neon */}
-        <motion.div
-          className="absolute -top-6 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <span className="text-[9px] font-medium text-gold-neon uppercase tracking-[0.15em]">
-            {t('commandDeck.admin')}
-          </span>
-        </motion.div>
+        {/* Deck Container */}
+        <div className="command-deck-vertical flex flex-col gap-2 p-3 rounded-r-2xl">
+          {/* Admin Badge */}
+          <div className="text-center mb-1">
+            <span className="text-[8px] font-semibold text-label-yellow uppercase tracking-[0.2em]">
+              {t('commandDeck.admin')}
+            </span>
+          </div>
 
-        {/* Deck Housing with extreme 3D */}
-        <div className="command-deck-container-3d flex items-center gap-3 px-5 py-4 rounded-2xl">
           {/* Info Buttons (Cyan) */}
           <DeckButton
-            icon={<LineChart className="w-5 h-5" />}
+            icon={<LineChart className="w-4 h-4" />}
             label={t('commandDeck.dashboard')}
             tooltip={t('commandDeck.tooltips.dashboard')}
             onClick={handleDashboard}
@@ -220,7 +214,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             disabled={disabled}
           />
           <DeckButton
-            icon={<Activity className="w-5 h-5" />}
+            icon={<Activity className="w-4 h-4" />}
             label={t('commandDeck.datasource')}
             tooltip={t('commandDeck.tooltips.datasource')}
             onClick={handleDatasource}
@@ -228,9 +222,12 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             disabled={disabled}
           />
 
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent my-1" />
+
           {/* Action Button (Amber) */}
           <DeckButton
-            icon={<RefreshCw className={`w-5 h-5 ${isReloading ? 'animate-spin' : ''}`} />}
+            icon={<RefreshCw className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />}
             label={t('commandDeck.reload')}
             tooltip={t('commandDeck.tooltips.reload')}
             onClick={handleReload}
@@ -240,7 +237,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
 
           {/* Setup Button (White) */}
           <DeckButton
-            icon={<SlidersHorizontal className="w-5 h-5" />}
+            icon={<SlidersHorizontal className="w-4 h-4" />}
             label={t('commandDeck.setup')}
             tooltip={t('commandDeck.tooltips.setup')}
             onClick={handleSetup}
@@ -248,17 +245,34 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             disabled={disabled}
           />
 
-          {/* Critical Button (Red) - Separated */}
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent my-1" />
+
+          {/* Critical Button (Red) */}
           <DeckButton
-            icon={<Power className="w-5 h-5" />}
+            icon={<Power className="w-4 h-4" />}
             label={t('commandDeck.reboot')}
             tooltip={t('commandDeck.tooltips.reboot')}
             onClick={() => setShowRebootDialog(true)}
             color="red"
             disabled={disabled}
-            separated
           />
         </div>
+
+        {/* Toggle Tab */}
+        <motion.button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="command-deck-tab flex items-center justify-center w-6 h-16 rounded-r-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ChevronRight className="w-4 h-4 text-cyan-400" />
+          </motion.div>
+        </motion.button>
       </motion.div>
 
       {/* Reboot Confirmation Dialog */}
@@ -274,12 +288,12 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-slate-800 hover:bg-slate-700">
+            <AlertDialogCancel className="bg-slate-800 hover:bg-slate-700 button-outline-neon">
               {t('common.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleReboot}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 hover:bg-red-700 text-white button-destructive-neon"
             >
               {t('commandDeck.rebootDialog.confirm')}
             </AlertDialogAction>

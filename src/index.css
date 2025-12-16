@@ -543,6 +543,154 @@
       0 0 25px hsl(45 100% 50% / 0.06),
       inset 0 1px 0 hsl(45 100% 60% / 0.08);
   }
+
+  /* ========== RIPPLE EFFECT FOR TOUCH FEEDBACK ========== */
+  
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, hsl(var(--neon-primary, 195 100% 50%) / 0.35) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 1s;
+  }
+
+  .ripple-effect:active::after {
+    transform: scale(0, 0);
+    opacity: 1;
+    transition: 0s;
+  }
+
+  /* ========== THEME SYSTEM ========== */
+  
+  /* Default theme - Neon Blue */
+  :root, [data-theme="blue"] {
+    --neon-primary: 195 100% 50%;
+    --neon-primary-glow: 195 100% 60%;
+    --neon-accent: 210 100% 55%;
+  }
+
+  [data-theme="green"] {
+    --neon-primary: 145 100% 45%;
+    --neon-primary-glow: 145 100% 55%;
+    --neon-accent: 160 100% 50%;
+  }
+
+  [data-theme="purple"] {
+    --neon-primary: 280 100% 60%;
+    --neon-primary-glow: 280 100% 70%;
+    --neon-accent: 300 100% 65%;
+  }
+
+  /* ========== SWITCH NEON 3D ========== */
+  
+  .switch-neon {
+    background: linear-gradient(145deg, hsl(220 30% 18%) 0%, hsl(220 25% 12%) 100%) !important;
+    border: 1px solid hsl(var(--neon-primary) / 0.4) !important;
+    box-shadow: 
+      inset 0 2px 4px hsl(0 0% 0% / 0.5),
+      0 0 12px hsl(var(--neon-primary) / 0.15) !important;
+  }
+
+  .switch-neon[data-state="checked"] {
+    background: linear-gradient(145deg, hsl(var(--neon-primary) / 0.6) 0%, hsl(var(--neon-primary) / 0.4) 100%) !important;
+    border-color: hsl(var(--neon-primary-glow) / 0.7) !important;
+    box-shadow: 
+      0 0 25px hsl(var(--neon-primary) / 0.5),
+      0 0 50px hsl(var(--neon-primary) / 0.25),
+      inset 0 1px 0 hsl(0 0% 100% / 0.2) !important;
+  }
+
+  /* ========== BUTTON OUTLINE NEON ========== */
+  
+  .button-outline-neon {
+    background: linear-gradient(145deg, hsl(220 25% 15%) 0%, hsl(220 30% 10%) 100%);
+    border: 1px solid hsl(var(--neon-primary) / 0.5);
+    color: hsl(var(--neon-primary-glow));
+    box-shadow: 
+      0 0 18px hsl(var(--neon-primary) / 0.2),
+      0 4px 10px hsl(0 0% 0% / 0.4),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .button-outline-neon:hover {
+    background: linear-gradient(145deg, hsl(var(--neon-primary) / 0.15) 0%, hsl(var(--neon-primary) / 0.08) 100%);
+    border-color: hsl(var(--neon-primary) / 0.7);
+    box-shadow: 
+      0 0 30px hsl(var(--neon-primary) / 0.35),
+      0 6px 15px hsl(0 0% 0% / 0.5);
+    transform: translateY(-1px);
+  }
+
+  /* ========== COMMAND DECK VERTICAL ========== */
+  
+  .command-deck-vertical {
+    background: linear-gradient(180deg, 
+      hsl(220 20% 14%) 0%, 
+      hsl(220 25% 10%) 50%,
+      hsl(220 30% 8%) 100%);
+    border: 1px solid hsl(var(--neon-primary) / 0.35);
+    box-shadow: 
+      4px 0 30px hsl(0 0% 0% / 0.6),
+      0 0 40px hsl(var(--neon-primary) / 0.15),
+      inset -1px 0 0 hsl(0 0% 100% / 0.05),
+      inset 1px 0 0 hsl(0 0% 0% / 0.3);
+  }
+
+  .command-deck-tab {
+    background: linear-gradient(90deg,
+      hsl(var(--neon-primary) / 0.3) 0%,
+      hsl(var(--neon-primary) / 0.15) 100%);
+    border: 1px solid hsl(var(--neon-primary) / 0.5);
+    border-left: none;
+    box-shadow: 
+      4px 0 15px hsl(0 0% 0% / 0.5),
+      0 0 20px hsl(var(--neon-primary) / 0.2);
+  }
+
+  .command-deck-tab:hover {
+    background: linear-gradient(90deg,
+      hsl(var(--neon-primary) / 0.5) 0%,
+      hsl(var(--neon-primary) / 0.25) 100%);
+    box-shadow: 
+      6px 0 25px hsl(0 0% 0% / 0.6),
+      0 0 35px hsl(var(--neon-primary) / 0.35);
+  }
+
+  /* Theme-aware classes that use CSS variables */
+  .neon-border-themed {
+    border-color: hsl(var(--neon-primary) / 0.4);
+    box-shadow: 0 0 20px hsl(var(--neon-primary) / 0.15);
+  }
+
+  .neon-glow-themed {
+    box-shadow: 
+      0 0 25px hsl(var(--neon-primary) / 0.4),
+      0 0 50px hsl(var(--neon-primary) / 0.2);
+  }
+
+  .text-neon-themed {
+    color: hsl(var(--neon-primary-glow));
+    text-shadow: 0 0 15px hsl(var(--neon-primary) / 0.6);
+  }
+
+  .icon-neon-themed {
+    color: hsl(var(--neon-primary-glow));
+    filter: drop-shadow(0 0 8px hsl(var(--neon-primary))) drop-shadow(0 0 15px hsl(var(--neon-primary) / 0.6));
+  }
 }
 
 @layer utilities {

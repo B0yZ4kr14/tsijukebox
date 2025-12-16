@@ -119,7 +119,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
           <Button
             onClick={() => handleBackup('full')}
             disabled={isDemoMode || isLoading === 'full'}
-            className="flex-1 bg-kiosk-primary hover:bg-kiosk-primary/90"
+            className="flex-1 button-primary-glow-3d ripple-effect"
           >
             {isLoading === 'full' ? (
               <HardDrive className="w-4 h-4 mr-2 animate-spin" />
@@ -131,8 +131,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
           <Button
             onClick={() => handleBackup('incremental')}
             disabled={isDemoMode || isLoading === 'incremental'}
-            variant="outline"
-            className="flex-1 border-kiosk-border hover:bg-kiosk-surface/80"
+            className="flex-1 button-outline-neon ripple-effect"
           >
             {isLoading === 'incremental' ? (
               <HardDrive className="w-4 h-4 mr-2 animate-spin" />
@@ -150,7 +149,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
             <span className="text-sm font-medium text-label-yellow">{t('backupLocal.existingBackups')}</span>
           </div>
           
-          <ScrollArea className="h-48 rounded-lg border border-kiosk-border bg-kiosk-background/50 card-option-neon">
+          <ScrollArea className="h-48 rounded-lg card-option-dark-3d">
             <div className="p-2 space-y-2">
               {backups.length === 0 ? (
                 <p className="text-sm text-kiosk-text/80 text-center py-4">
@@ -160,7 +159,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                 backups.map((backup) => (
                   <div
                     key={backup.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 hover:bg-kiosk-surface transition-colors"
+                    className="flex items-center justify-between p-3 rounded-lg card-option-dark-3d"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Archive className="w-4 h-4 icon-neon-blue flex-shrink-0" />
@@ -185,21 +184,19 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0 ml-2">
                       <Button
-                        variant="ghost"
                         size="icon"
                         onClick={() => handleRestore(backup.id)}
                         disabled={isDemoMode || isLoading === `restore-${backup.id}`}
-                        className="w-8 h-8 text-kiosk-text/80 hover:text-kiosk-primary"
+                        className="w-8 h-8 button-action-neon"
                         title={t('backupLocal.restore')}
                       >
                         <Upload className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant="ghost"
                         size="icon"
                         onClick={() => handleDelete(backup.id)}
                         disabled={isDemoMode || isLoading === `delete-${backup.id}`}
-                        className="w-8 h-8 text-kiosk-text/80 hover:text-red-500"
+                        className="w-8 h-8 button-destructive-neon"
                         title={t('backupLocal.deleteBackup')}
                       >
                         <Trash2 className="w-4 h-4" />

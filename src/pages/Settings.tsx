@@ -14,7 +14,7 @@ import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient } from '@/lib/api/spotify';
 import { toast } from 'sonner';
-import { SettingsSection, CloudConnectionSection, BackendConnectionSection, DatabaseSection, DatabaseConfigSection, BackupSection, CloudBackupSection, BackupScheduleSection, UserManagementSection, AuthProviderSection, SystemUrlsSection, NtpConfigSection, WeatherConfigSection, LanguageSection } from '@/components/settings';
+import { SettingsSection, ThemeSection, CloudConnectionSection, BackendConnectionSection, DatabaseSection, DatabaseConfigSection, BackupSection, CloudBackupSection, BackupScheduleSection, UserManagementSection, AuthProviderSection, SystemUrlsSection, NtpConfigSection, WeatherConfigSection, LanguageSection } from '@/components/settings';
 
 export default function Settings() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -211,6 +211,9 @@ export default function Settings() {
 
           {/* Weather Configuration */}
           <WeatherConfigSection />
+
+          {/* Theme Selection */}
+          <ThemeSection />
 
           {/* Language Configuration */}
           <LanguageSection />
