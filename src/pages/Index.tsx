@@ -270,8 +270,8 @@ export default function Index() {
           </div>
         </header>
 
-        {/* Main Content */}
-        <main className="flex-1 flex flex-col items-center justify-center gap-4 px-4 pb-56 touch-pan-y">
+        {/* Main Content - increased padding to prevent CommandDeck overlap */}
+        <main className="flex-1 flex flex-col items-center justify-center gap-3 px-4 pb-44 touch-pan-y">
           <NowPlaying 
             track={status?.track ?? null} 
             isPlaying={status?.playing ?? false} 
@@ -306,8 +306,8 @@ export default function Index() {
             />
           </div>
 
-          {/* Player Controls with extra spacing from CommandDeck */}
-          <div className="mb-8">
+          {/* Player Controls - clear separation from CommandDeck */}
+          <div className="mb-16">
             <PlayerControls isPlaying={status?.playing ?? false} />
           </div>
           
@@ -316,18 +316,16 @@ export default function Index() {
             muted={status?.muted ?? false} 
           />
 
-          {/* Swipe hint */}
-          <p className="text-xs text-kiosk-text/40 mt-1">
-            Deslize para mudar de faixa
-          </p>
+          {/* Branding and hint integrated */}
+          <div className="text-center mt-2">
+            <p className="text-xs text-kiosk-text/40">
+              Deslize para mudar de faixa
+            </p>
+            <p className="text-[10px] text-kiosk-text/30 mt-1">
+              TSi JUKEBOX Enterprise v4.0
+            </p>
+          </div>
         </main>
-
-        {/* Footer branding */}
-        <footer className="pb-40 text-center">
-          <p className="text-xs text-kiosk-text/40">
-            TSi JUKEBOX Enterprise v4.0
-          </p>
-        </footer>
 
         {/* Command Deck */}
         <CommandDeck />

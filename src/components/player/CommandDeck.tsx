@@ -189,20 +189,20 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
     <>
       {/* Command Deck Container */}
       <motion.div
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 100 }}
       >
-        {/* Admin Badge */}
+        {/* Admin Badge - more compact */}
         <motion.div
-          className="absolute -top-8 left-1/2 -translate-x-1/2"
+          className="absolute -top-6 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <span className="text-[10px] font-semibold text-kiosk-text/50 uppercase tracking-[0.2em] drop-shadow-lg">
-            Admin Controls
+          <span className="text-[9px] font-medium text-kiosk-text/40 uppercase tracking-[0.15em]">
+            Admin
           </span>
         </motion.div>
 
@@ -267,7 +267,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
               <Power className="w-5 h-5" />
               Confirmar Reinicialização
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground">
+            <AlertDialogDescription className="text-kiosk-text/75">
               O sistema será reiniciado. Todas as conexões serão perdidas temporariamente.
               Esta ação não pode ser desfeita.
             </AlertDialogDescription>
