@@ -96,12 +96,12 @@ export function BackupScheduleSection() {
     <SettingsSection
       title={t('backup.title')}
       description={t('backup.description')}
-      icon={<Calendar className="w-5 h-5 text-purple-400" />}
+      icon={<Calendar className="w-5 h-5 icon-neon-blue" />}
     >
       <div className="space-y-4">
         {/* Enable Toggle */}
-        <div className="flex items-center justify-between">
-          <Label htmlFor="schedule-enabled" className="text-sm text-settings-label">
+        <div className="flex items-center justify-between p-3 rounded-lg card-option-dark-3d">
+          <Label htmlFor="schedule-enabled" className="text-sm text-label-yellow">
             {t('backup.automatic')}
           </Label>
           <Switch
@@ -112,20 +112,20 @@ export function BackupScheduleSection() {
         </div>
 
         {schedule.enabled && (
-          <>
+          <div className="space-y-4 p-3 rounded-lg card-option-dark-3d">
             {/* Frequency */}
             <div className="space-y-2">
-              <Label className="text-sm text-settings-label">{t('backup.frequency')}</Label>
+              <Label className="text-sm text-label-yellow">{t('backup.frequency')}</Label>
               <Select
                 value={schedule.frequency}
                 onValueChange={(value: 'daily' | 'weekly' | 'monthly') => 
                   setSchedule({ ...schedule, frequency: value })
                 }
               >
-                <SelectTrigger className="bg-background/50">
+                <SelectTrigger className="input-3d bg-kiosk-bg">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-kiosk-surface border-kiosk-border">
                   <SelectItem value="daily">{t('backup.daily')}</SelectItem>
                   <SelectItem value="weekly">{t('backup.weekly')}</SelectItem>
                   <SelectItem value="monthly">{t('backup.monthly')}</SelectItem>
@@ -136,17 +136,17 @@ export function BackupScheduleSection() {
             {/* Day of Week (for weekly) */}
             {schedule.frequency === 'weekly' && (
               <div className="space-y-2">
-                <Label className="text-sm text-settings-label">{t('backup.dayOfWeek')}</Label>
+                <Label className="text-sm text-label-yellow">{t('backup.dayOfWeek')}</Label>
                 <Select
                   value={String(schedule.dayOfWeek ?? 0)}
                   onValueChange={(value) => 
                     setSchedule({ ...schedule, dayOfWeek: parseInt(value) })
                   }
                 >
-                  <SelectTrigger className="bg-background/50">
+                  <SelectTrigger className="input-3d bg-kiosk-bg">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-kiosk-surface border-kiosk-border">
                     {daysOfWeek.map((day) => (
                       <SelectItem key={day.value} value={day.value}>
                         {day.label}
@@ -160,17 +160,17 @@ export function BackupScheduleSection() {
             {/* Day of Month (for monthly) */}
             {schedule.frequency === 'monthly' && (
               <div className="space-y-2">
-                <Label className="text-sm text-settings-label">{t('backup.dayOfMonth')}</Label>
+                <Label className="text-sm text-label-yellow">{t('backup.dayOfMonth')}</Label>
                 <Select
                   value={String(schedule.dayOfMonth ?? 1)}
                   onValueChange={(value) => 
                     setSchedule({ ...schedule, dayOfMonth: parseInt(value) })
                   }
                 >
-                  <SelectTrigger className="bg-background/50">
+                  <SelectTrigger className="input-3d bg-kiosk-bg">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-kiosk-surface border-kiosk-border">
                     {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
                       <SelectItem key={day} value={String(day)}>
                         {t('backup.day')} {day}
@@ -183,21 +183,21 @@ export function BackupScheduleSection() {
 
             {/* Time */}
             <div className="space-y-2">
-              <Label className="text-sm text-settings-label flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+              <Label className="text-sm text-label-yellow flex items-center gap-2">
+                <Clock className="w-4 h-4 icon-neon-blue" />
                 {t('backup.time')}
               </Label>
               <Input
                 type="time"
                 value={schedule.time}
                 onChange={(e) => setSchedule({ ...schedule, time: e.target.value })}
-                className="bg-background/50"
+                className="input-3d bg-kiosk-bg"
               />
             </div>
 
             {/* Retention */}
             <div className="space-y-2">
-              <Label className="text-sm text-settings-label">
+              <Label className="text-sm text-label-yellow">
                 {t('backup.retention')}
               </Label>
               <Select
@@ -206,10 +206,10 @@ export function BackupScheduleSection() {
                   setSchedule({ ...schedule, retention: parseInt(value) })
                 }
               >
-                <SelectTrigger className="bg-background/50">
+                <SelectTrigger className="input-3d bg-kiosk-bg">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-kiosk-surface border-kiosk-border">
                   <SelectItem value="3">3 {t('backup.backups')}</SelectItem>
                   <SelectItem value="5">5 {t('backup.backups')}</SelectItem>
                   <SelectItem value="7">7 {t('backup.backups')}</SelectItem>
@@ -221,7 +221,7 @@ export function BackupScheduleSection() {
                 {t('backup.retentionHint')}
               </p>
             </div>
-          </>
+          </div>
         )}
 
         {/* Actions */}
@@ -229,14 +229,14 @@ export function BackupScheduleSection() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex-1"
+            className="flex-1 button-primary-glow-3d ripple-effect"
           >
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? t('common.saving') : t('common.save')}
           </Button>
           <Button
-            variant="outline"
             onClick={handleReset}
+            className="button-outline-neon ripple-effect"
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -244,8 +244,8 @@ export function BackupScheduleSection() {
 
         {/* Schedule Summary */}
         {schedule.enabled && (
-          <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
-            <p className="text-sm text-purple-300">
+          <div className="p-3 rounded-lg card-option-dark-3d border-l-4 border-l-cyan-500/50">
+            <p className="text-sm text-cyan-300">
               {getScheduleSummary()}
             </p>
           </div>

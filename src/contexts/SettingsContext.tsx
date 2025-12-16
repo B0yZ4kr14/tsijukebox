@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { spotifyClient, SpotifyTokens, SpotifyUser } from '@/lib/api/spotify';
 import type { Language } from '@/i18n';
 
+export type ThemeColor = 'blue' | 'green' | 'purple';
+
 interface SpotifySettings {
   clientId: string;
   clientSecret: string;
@@ -37,6 +39,9 @@ interface SettingsContextType {
   // Language settings
   language: Language;
   setLanguage: (lang: Language) => void;
+  // Theme settings
+  theme: ThemeColor;
+  setTheme: (theme: ThemeColor) => void;
 }
 
 const defaultApiUrl = import.meta.env.VITE_API_URL || 'https://midiaserver.local/api';
@@ -76,6 +81,8 @@ const defaultSettings: SettingsContextType = {
   setWeatherConfig: () => {},
   language: 'pt-BR',
   setLanguage: () => {},
+  theme: 'blue',
+  setTheme: () => {},
 };
 
 const SettingsContext = createContext<SettingsContextType>(defaultSettings);
@@ -84,6 +91,7 @@ const STORAGE_KEY = 'tsi_jukebox_settings';
 const SPOTIFY_STORAGE_KEY = 'tsi_jukebox_spotify';
 const WEATHER_STORAGE_KEY = 'tsi_jukebox_weather';
 const LANGUAGE_STORAGE_KEY = 'tsi_jukebox_language';
+const THEME_STORAGE_KEY = 'tsi_jukebox_theme';
 
 interface StoredSettings {
   isDemoMode?: boolean;
@@ -194,6 +202,19 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       return 'pt-BR';
     }
   });
+  const [theme, setThemeState] = useState<ThemeColor>(() => {
+    try {
+      const stored = localStorage.getItem(THEME_STORAGE_KEY);
+      return (stored as ThemeColor) || 'blue';
+    } catch {
+      return 'blue';
+    }
+  });
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   // Validate stored token on mount
   useEffect(() => {
@@ -297,6 +318,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const setTheme = useCallback((newTheme: ThemeColor) => {
+    setThemeState(newTheme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+    } catch (e) {
+      console.error('Failed to save theme:', e);
+    }
+  }, []);
+
   const setWeatherConfig = useCallback((config: Partial<WeatherSettings>) => {
     setWeatherSettings(prev => {
       const updated = { ...prev, ...config };
@@ -323,6 +353,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setWeatherConfig,
     language,
     setLanguage,
+    theme,
+    setTheme,
   };
 
   return (

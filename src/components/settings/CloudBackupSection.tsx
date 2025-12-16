@@ -130,7 +130,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
       description={t('cloudBackup.description')}
       badge={
         config.provider ? (
-          <Badge variant="outline" className="ml-2 border-kiosk-primary/50 text-kiosk-primary">
+          <Badge variant="outline" className="ml-2 border-cyan-500/50 text-cyan-400">
             {currentProvider?.name}
           </Badge>
         ) : null
@@ -142,10 +142,10 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         <div className="space-y-2">
           <Label className="text-label-yellow">{t('cloudBackup.provider')}</Label>
           <Select value={config.provider} onValueChange={handleProviderChange}>
-            <SelectTrigger className="bg-kiosk-background border-kiosk-border text-kiosk-text">
+            <SelectTrigger className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text">
               <SelectValue placeholder={t('cloudBackup.selectProvider')} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-kiosk-surface border-kiosk-border">
               {cloudProviders.map((provider) => (
                 <SelectItem key={provider.id} value={provider.id}>
                   <span className="flex items-center gap-2">
@@ -160,14 +160,14 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
 
         {/* Provider-specific Configuration */}
         {config.provider === 'aws' && (
-          <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
+          <div className="space-y-3 p-3 rounded-lg card-option-dark-3d">
             <div className="space-y-2">
               <Label className="text-label-yellow text-sm">{t('cloudBackup.bucketName')}</Label>
               <Input
                 value={config.awsBucket || ''}
                 onChange={(e) => setConfig({ ...config, awsBucket: e.target.value })}
                 placeholder="my-backup-bucket"
-                className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm"
+                className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm"
                 disabled={isDemoMode}
               />
             </div>
@@ -177,7 +177,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 value={config.awsAccessKey || ''}
                 onChange={(e) => setConfig({ ...config, awsAccessKey: e.target.value })}
                 placeholder="AKIAIOSFODNN7EXAMPLE"
-                className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm font-mono"
+                className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm font-mono"
                 disabled={isDemoMode}
               />
             </div>
@@ -189,14 +189,13 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                   value={config.awsSecretKey || ''}
                   onChange={(e) => setConfig({ ...config, awsSecretKey: e.target.value })}
                   placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-                  className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm font-mono pr-10"
+                  className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm font-mono pr-10"
                   disabled={isDemoMode}
                 />
                 <Button
                   type="button"
-                  variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 text-kiosk-text/50 hover:text-kiosk-text"
+                  className="absolute right-0 top-0 h-full px-3 button-action-neon"
                   onClick={() => setShowSecrets(!showSecrets)}
                 >
                   {showSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -209,7 +208,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 value={config.awsRegion || ''}
                 onChange={(e) => setConfig({ ...config, awsRegion: e.target.value })}
                 placeholder="us-east-1"
-                className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm"
+                className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm"
                 disabled={isDemoMode}
               />
             </div>
@@ -217,7 +216,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         )}
 
         {config.provider === 'mega' && (
-          <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
+          <div className="space-y-3 p-3 rounded-lg card-option-dark-3d">
             <div className="space-y-2">
               <Label className="text-label-yellow text-sm">{t('cloudBackup.email')}</Label>
               <Input
@@ -225,7 +224,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 value={config.megaEmail || ''}
                 onChange={(e) => setConfig({ ...config, megaEmail: e.target.value })}
                 placeholder="seu@email.com"
-                className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm"
+                className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm"
                 disabled={isDemoMode}
               />
             </div>
@@ -237,14 +236,13 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                   value={config.megaPassword || ''}
                   onChange={(e) => setConfig({ ...config, megaPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm pr-10"
+                  className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm pr-10"
                   disabled={isDemoMode}
                 />
                 <Button
                   type="button"
-                  variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 text-kiosk-text/50 hover:text-kiosk-text"
+                  className="absolute right-0 top-0 h-full px-3 button-action-neon"
                   onClick={() => setShowSecrets(!showSecrets)}
                 >
                   {showSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -255,7 +253,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         )}
 
         {config.provider === 'storj' && (
-          <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
+          <div className="space-y-3 p-3 rounded-lg card-option-dark-3d">
             <div className="space-y-2">
               <Label className="text-label-yellow text-sm">{t('cloudBackup.accessGrant')}</Label>
               <div className="relative">
@@ -264,14 +262,13 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                   value={config.storjAccessGrant || ''}
                   onChange={(e) => setConfig({ ...config, storjAccessGrant: e.target.value })}
                   placeholder="1DZZn..."
-                  className="bg-kiosk-background border-kiosk-border text-kiosk-text text-sm font-mono pr-10"
+                  className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text text-sm font-mono pr-10"
                   disabled={isDemoMode}
                 />
                 <Button
                   type="button"
-                  variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 text-kiosk-text/50 hover:text-kiosk-text"
+                  className="absolute right-0 top-0 h-full px-3 button-action-neon"
                   onClick={() => setShowSecrets(!showSecrets)}
                 >
                   {showSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -283,7 +280,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
 
         {/* OAuth Providers */}
         {currentProvider?.needsOAuth && (
-          <div className="p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
+          <div className="p-3 rounded-lg card-option-dark-3d">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-kiosk-text">
@@ -296,8 +293,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               <Button
                 onClick={() => handleOAuthConnect(config.provider as CloudProvider)}
                 disabled={isDemoMode}
-                variant={config.isOAuthConnected ? 'outline' : 'default'}
-                className={config.isOAuthConnected ? 'border-green-500/50 text-green-400' : 'bg-kiosk-primary hover:bg-kiosk-primary/90'}
+                className={config.isOAuthConnected ? 'button-action-neon' : 'button-primary-glow-3d'}
               >
                 {config.isOAuthConnected ? (
                   <>
@@ -324,7 +320,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               <Button
                 onClick={handleSaveConfig}
                 disabled={isDemoMode || isLoading}
-                className="flex-1 bg-kiosk-primary hover:bg-kiosk-primary/90"
+                className="flex-1 button-primary-glow-3d ripple-effect"
               >
                 {isLoading ? (
                   <Settings className="w-4 h-4 mr-2 animate-spin" />
@@ -336,8 +332,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               <Button
                 onClick={handleSync}
                 disabled={isDemoMode || isSyncing}
-                variant="outline"
-                className="flex-1 border-kiosk-border hover:bg-kiosk-surface/80"
+                className="flex-1 button-outline-neon ripple-effect"
               >
                 {isSyncing ? (
                   <CloudUpload className="w-4 h-4 mr-2 animate-bounce" />
