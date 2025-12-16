@@ -616,13 +616,8 @@
 
   .deck-button-cyan:hover {
     border-color: hsl(185 80% 50% / 0.6);
-    box-shadow: 
-      inset 0 3px 0 hsl(0 0% 100% / 0.25),
-      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
-      0 10px 0 hsl(185 80% 30% / 0.3),
-      0 15px 30px -5px hsl(0 0% 0% / 0.6),
-      0 0 30px hsl(185 80% 50% / 0.3),
-      0 0 60px hsl(185 80% 50% / 0.15);
+    animation: pulse-glow-cyan 1.5s ease-in-out infinite;
+    transform: translateY(-6px);
   }
 
   /* Amber button (Reload) */
@@ -632,13 +627,8 @@
 
   .deck-button-amber:hover {
     border-color: hsl(38 90% 55% / 0.6);
-    box-shadow: 
-      inset 0 3px 0 hsl(0 0% 100% / 0.25),
-      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
-      0 10px 0 hsl(38 90% 35% / 0.3),
-      0 15px 30px -5px hsl(0 0% 0% / 0.6),
-      0 0 30px hsl(38 90% 50% / 0.3),
-      0 0 60px hsl(38 90% 50% / 0.15);
+    animation: pulse-glow-amber 1.5s ease-in-out infinite;
+    transform: translateY(-6px);
   }
 
   /* White button (Setup) */
@@ -648,13 +638,8 @@
 
   .deck-button-white:hover {
     border-color: hsl(0 0% 100% / 0.4);
-    box-shadow: 
-      inset 0 3px 0 hsl(0 0% 100% / 0.3),
-      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
-      0 10px 0 hsl(0 0% 50% / 0.2),
-      0 15px 30px -5px hsl(0 0% 0% / 0.6),
-      0 0 25px hsl(0 0% 100% / 0.15),
-      0 0 50px hsl(0 0% 100% / 0.08);
+    animation: pulse-glow-white 1.5s ease-in-out infinite;
+    transform: translateY(-6px);
   }
 
   /* Red button (Reboot) - Critical action */
@@ -668,13 +653,218 @@
 
   .deck-button-red:hover {
     border-color: hsl(0 80% 55% / 0.7);
+    animation: pulse-glow-red 1.2s ease-in-out infinite;
+    transform: translateY(-6px);
+  }
+
+  /* ========================================
+     EXTREME 3D PLAYER CONTROLS
+     ======================================== */
+
+  /* Next/Prev buttons - Extreme 3D */
+  .button-control-extreme-3d {
+    box-shadow: 
+      inset 0 4px 8px hsl(0 0% 100% / 0.15),
+      inset 0 -4px 8px hsl(0 0% 0% / 0.3),
+      0 8px 0 hsl(0 0% 0% / 0.25),
+      0 12px 25px hsl(0 0% 0% / 0.5),
+      0 6px 10px hsl(0 0% 0% / 0.3);
+    border: 2px solid hsl(0 0% 100% / 0.1);
+    transform: translateY(-4px);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, box-shadow;
+  }
+
+  .button-control-extreme-3d:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      inset 0 4px 8px hsl(0 0% 100% / 0.2),
+      inset 0 -4px 8px hsl(0 0% 0% / 0.2),
+      0 12px 0 hsl(0 0% 0% / 0.2),
+      0 20px 40px hsl(0 0% 0% / 0.5),
+      0 0 30px hsl(142 71% 45% / 0.3);
+    border-color: hsl(142 71% 45% / 0.5);
+  }
+
+  .button-control-extreme-3d:active {
+    transform: translateY(2px);
+    box-shadow: 
+      inset 0 4px 12px hsl(0 0% 0% / 0.4),
+      0 2px 4px hsl(0 0% 0% / 0.3);
+  }
+
+  /* Play/Pause button - Ultra Extreme 3D */
+  .button-play-ultra-3d {
+    box-shadow: 
+      inset 0 6px 0 hsl(0 0% 100% / 0.35),
+      inset 0 -6px 0 hsl(0 0% 0% / 0.5),
+      0 0 60px hsl(142 71% 45% / 0.5),
+      0 0 100px hsl(142 71% 45% / 0.3),
+      0 0 140px hsl(142 71% 45% / 0.15),
+      0 20px 40px -10px hsl(142 71% 45% / 0.7),
+      0 15px 30px -5px hsl(0 0% 0% / 0.5);
+    border: 3px solid hsl(0 0% 100% / 0.25);
+    transform: translateY(-6px);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, box-shadow;
+  }
+
+  .button-play-ultra-3d:hover {
+    animation: pulse-glow-primary 1.2s ease-in-out infinite;
+    transform: translateY(-10px) scale(1.05);
+  }
+
+  .button-play-ultra-3d:active {
+    transform: translateY(0) scale(0.98);
+    animation: none;
+    box-shadow: 
+      inset 0 6px 12px hsl(0 0% 0% / 0.5),
+      0 0 30px hsl(142 71% 45% / 0.4),
+      0 5px 15px hsl(0 0% 0% / 0.4);
+  }
+
+  /* Stop button - Extreme 3D */
+  .button-stop-extreme-3d {
+    box-shadow: 
+      inset 0 3px 6px hsl(0 0% 100% / 0.1),
+      inset 0 -3px 6px hsl(0 0% 0% / 0.3),
+      0 6px 0 hsl(0 0% 0% / 0.2),
+      0 10px 20px hsl(0 0% 0% / 0.4);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    transform: translateY(-3px);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, box-shadow;
+  }
+
+  .button-stop-extreme-3d:hover {
+    transform: translateY(-6px);
+    box-shadow: 
+      inset 0 3px 6px hsl(0 0% 100% / 0.15),
+      0 8px 0 hsl(0 0% 0% / 0.15),
+      0 15px 30px hsl(0 0% 0% / 0.5),
+      0 0 20px hsl(0 75% 50% / 0.3);
+    border-color: hsl(0 75% 50% / 0.5);
+  }
+
+  .button-stop-extreme-3d:active {
+    transform: translateY(2px);
+    box-shadow: 
+      inset 0 4px 10px hsl(0 0% 0% / 0.5);
+  }
+}
+
+/* ========================================
+   PULSING GLOW ANIMATIONS
+   ======================================== */
+
+@keyframes pulse-glow-cyan {
+  0%, 100% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.25),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(185 80% 30% / 0.3),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 30px hsl(185 80% 50% / 0.4),
+      0 0 60px hsl(185 80% 50% / 0.2);
+  }
+  50% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.3),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(185 80% 30% / 0.3),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 50px hsl(185 80% 55% / 0.6),
+      0 0 90px hsl(185 80% 55% / 0.35),
+      0 0 120px hsl(185 80% 50% / 0.2);
+  }
+}
+
+@keyframes pulse-glow-amber {
+  0%, 100% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.25),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(38 90% 35% / 0.3),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 30px hsl(38 90% 50% / 0.4),
+      0 0 60px hsl(38 90% 50% / 0.2);
+  }
+  50% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.3),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(38 90% 35% / 0.3),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 50px hsl(38 90% 55% / 0.6),
+      0 0 90px hsl(38 90% 55% / 0.35),
+      0 0 120px hsl(38 90% 50% / 0.2);
+  }
+}
+
+@keyframes pulse-glow-white {
+  0%, 100% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.3),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(0 0% 50% / 0.2),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 25px hsl(0 0% 100% / 0.2),
+      0 0 50px hsl(0 0% 100% / 0.1);
+  }
+  50% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.35),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(0 0% 50% / 0.2),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 40px hsl(0 0% 100% / 0.3),
+      0 0 80px hsl(0 0% 100% / 0.15),
+      0 0 100px hsl(0 0% 100% / 0.08);
+  }
+}
+
+@keyframes pulse-glow-red {
+  0%, 100% {
     box-shadow: 
       inset 0 3px 0 hsl(0 0% 100% / 0.25),
       inset 0 -4px 0 hsl(0 0% 0% / 0.5),
       0 10px 0 hsl(0 70% 25% / 0.4),
       0 15px 30px -5px hsl(0 0% 0% / 0.6),
-      0 0 35px hsl(0 80% 50% / 0.4),
-      0 0 70px hsl(0 80% 50% / 0.2);
+      0 0 35px hsl(0 80% 50% / 0.5),
+      0 0 70px hsl(0 80% 50% / 0.25);
+  }
+  50% {
+    box-shadow: 
+      inset 0 3px 0 hsl(0 0% 100% / 0.3),
+      inset 0 -4px 0 hsl(0 0% 0% / 0.5),
+      0 10px 0 hsl(0 70% 25% / 0.4),
+      0 15px 30px -5px hsl(0 0% 0% / 0.6),
+      0 0 55px hsl(0 85% 55% / 0.7),
+      0 0 100px hsl(0 85% 55% / 0.4),
+      0 0 140px hsl(0 80% 50% / 0.2);
+  }
+}
+
+@keyframes pulse-glow-primary {
+  0%, 100% {
+    box-shadow: 
+      inset 0 6px 0 hsl(0 0% 100% / 0.35),
+      inset 0 -6px 0 hsl(0 0% 0% / 0.5),
+      0 0 60px hsl(142 71% 45% / 0.5),
+      0 0 100px hsl(142 71% 45% / 0.3),
+      0 0 140px hsl(142 71% 45% / 0.15),
+      0 20px 40px -10px hsl(142 71% 45% / 0.7),
+      0 15px 30px -5px hsl(0 0% 0% / 0.5);
+  }
+  50% {
+    box-shadow: 
+      inset 0 6px 0 hsl(0 0% 100% / 0.4),
+      inset 0 -6px 0 hsl(0 0% 0% / 0.5),
+      0 0 80px hsl(142 71% 50% / 0.7),
+      0 0 140px hsl(142 71% 50% / 0.45),
+      0 0 200px hsl(142 71% 45% / 0.25),
+      0 20px 40px -10px hsl(142 71% 45% / 0.8),
+      0 15px 30px -5px hsl(0 0% 0% / 0.5);
   }
 }
 

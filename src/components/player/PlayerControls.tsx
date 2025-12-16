@@ -38,7 +38,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-14 h-14 md:w-16 md:h-16 rounded-full",
-            "button-control-3d",
+            "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
             "transition-all duration-200"
           )}
@@ -80,7 +80,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
             "w-20 h-20 md:w-24 md:h-24 rounded-full relative z-10",
             "bg-kiosk-primary hover:bg-kiosk-primary/90",
             "text-kiosk-bg hover:text-kiosk-bg",
-            "button-play-extreme-3d",
+            "button-play-ultra-3d",
             "transition-all duration-200"
           )}
         >
@@ -114,7 +114,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-14 h-14 md:w-16 md:h-16 rounded-full",
-            "button-control-3d",
+            "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
             "transition-all duration-200"
           )}
@@ -137,7 +137,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           disabled={isLoading}
           className={cn(
             "w-12 h-12 rounded-full",
-            "button-3d",
+            "button-stop-extreme-3d",
             "text-kiosk-text/50 hover:text-destructive",
             "transition-all duration-200"
           )}
