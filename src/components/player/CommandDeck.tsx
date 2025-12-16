@@ -196,14 +196,14 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 100 }}
       >
-        {/* Admin Badge - more compact */}
+        {/* Admin Badge - golden neon */}
         <motion.div
           className="absolute -top-6 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <span className="text-[9px] font-medium text-kiosk-text/40 uppercase tracking-[0.15em]">
+          <span className="text-[9px] font-medium text-gold-neon uppercase tracking-[0.15em]">
             {t('commandDeck.admin')}
           </span>
         </motion.div>

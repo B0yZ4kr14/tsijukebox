@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { SettingsSection } from './SettingsSection';
+import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
 
 interface CloudBackupSectionProps {
@@ -37,6 +38,7 @@ const cloudProviders = [
 ];
 
 export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
+  const { t } = useTranslation();
   const [config, setConfig] = useState<CloudConfig>({ provider: '' });
   const [showSecrets, setShowSecrets] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +50,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
 
   const handleSaveConfig = async () => {
     if (isDemoMode) {
-      toast.info('Demo: Configuração salva (simulado)');
+      toast.info(`Demo: ${t('cloudBackup.configSaved')}`);
       return;
     }
 
@@ -62,12 +64,12 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
       const result = await response.json();
       
       if (result.success) {
-        toast.success('Configuração de backup em nuvem salva');
+        toast.success(t('cloudBackup.configSaved'));
       } else {
-        toast.error(`Falha ao salvar: ${result.message}`);
+        toast.error(`${t('cloudBackup.syncError')}: ${result.message}`);
       }
     } catch (error) {
-      toast.error('Erro ao salvar configuração');
+      toast.error(t('cloudBackup.syncError'));
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +77,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
 
   const handleOAuthConnect = async (provider: CloudProvider) => {
     if (isDemoMode) {
-      toast.info('Demo: Conexão OAuth simulada');
+      toast.info(`Demo: ${t('cloudBackup.authenticate')}`);
       return;
     }
 
@@ -89,13 +91,13 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         window.location.href = result.authUrl;
       }
     } catch (error) {
-      toast.error('Erro ao iniciar autenticação');
+      toast.error(t('cloudBackup.syncError'));
     }
   };
 
   const handleSync = async () => {
     if (isDemoMode) {
-      toast.info('Demo: Sincronização simulada');
+      toast.info(`Demo: ${t('cloudBackup.syncNow')}`);
       return;
     }
 
@@ -108,12 +110,12 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
       const result = await response.json();
       
       if (result.success) {
-        toast.success('Backup sincronizado com a nuvem');
+        toast.success(t('cloudBackup.syncSuccess'));
       } else {
-        toast.error(`Falha na sincronização: ${result.message}`);
+        toast.error(`${t('cloudBackup.syncError')}: ${result.message}`);
       }
     } catch (error) {
-      toast.error('Erro ao sincronizar backup');
+      toast.error(t('cloudBackup.syncError'));
     } finally {
       setIsSyncing(false);
     }
@@ -124,8 +126,8 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
   return (
     <SettingsSection
       icon={<Cloud className="w-5 h-5 icon-neon-blue" />}
-      title="Backup em Nuvem"
-      description="Sincronize backups com serviços de armazenamento em nuvem"
+      title={t('cloudBackup.title')}
+      description={t('cloudBackup.description')}
       badge={
         config.provider ? (
           <Badge variant="outline" className="ml-2 border-kiosk-primary/50 text-kiosk-primary">
@@ -138,10 +140,10 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
       <div className="space-y-4">
         {/* Provider Selection */}
         <div className="space-y-2">
-          <Label className="text-label-yellow">Provedor de Nuvem</Label>
+          <Label className="text-label-yellow">{t('cloudBackup.provider')}</Label>
           <Select value={config.provider} onValueChange={handleProviderChange}>
             <SelectTrigger className="bg-kiosk-background border-kiosk-border text-kiosk-text">
-              <SelectValue placeholder="Selecione um provedor" />
+              <SelectValue placeholder={t('cloudBackup.selectProvider')} />
             </SelectTrigger>
             <SelectContent>
               {cloudProviders.map((provider) => (
@@ -160,7 +162,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         {config.provider === 'aws' && (
           <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Bucket Name</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.bucketName')}</Label>
               <Input
                 value={config.awsBucket || ''}
                 onChange={(e) => setConfig({ ...config, awsBucket: e.target.value })}
@@ -170,7 +172,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Access Key ID</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.accessKey')}</Label>
               <Input
                 value={config.awsAccessKey || ''}
                 onChange={(e) => setConfig({ ...config, awsAccessKey: e.target.value })}
@@ -180,7 +182,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Secret Access Key</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.secretKey')}</Label>
               <div className="relative">
                 <Input
                   type={showSecrets ? 'text' : 'password'}
@@ -202,7 +204,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Region</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.region')}</Label>
               <Input
                 value={config.awsRegion || ''}
                 onChange={(e) => setConfig({ ...config, awsRegion: e.target.value })}
@@ -217,7 +219,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         {config.provider === 'mega' && (
           <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Email</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.email')}</Label>
               <Input
                 type="email"
                 value={config.megaEmail || ''}
@@ -228,7 +230,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Password</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.password')}</Label>
               <div className="relative">
                 <Input
                   type={showSecrets ? 'text' : 'password'}
@@ -255,7 +257,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
         {config.provider === 'storj' && (
           <div className="space-y-3 p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border card-option-neon">
             <div className="space-y-2">
-              <Label className="text-label-yellow text-sm">Access Grant</Label>
+              <Label className="text-label-yellow text-sm">{t('cloudBackup.accessGrant')}</Label>
               <div className="relative">
                 <Input
                   type={showSecrets ? 'text' : 'password'}
@@ -288,7 +290,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                   {currentProvider.icon} {currentProvider.name}
                 </p>
                 <p className="text-xs text-kiosk-text/75">
-                  {config.isOAuthConnected ? 'Conectado' : 'Clique para autenticar'}
+                  {config.isOAuthConnected ? t('cloudBackup.authenticated') : t('cloudBackup.authenticate')}
                 </p>
               </div>
               <Button
@@ -300,12 +302,12 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 {config.isOAuthConnected ? (
                   <>
                     <Check className="w-4 h-4 mr-2" />
-                    Conectado
+                    {t('cloudBackup.authenticated')}
                   </>
                 ) : (
                   <>
                     <Settings className="w-4 h-4 mr-2" />
-                    Conectar
+                    {t('cloudBackup.authenticate')}
                   </>
                 )}
               </Button>
@@ -329,7 +331,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 ) : (
                   <Settings className="w-4 h-4 mr-2" />
                 )}
-                Salvar Configuração
+                {t('cloudBackup.saveConfig')}
               </Button>
               <Button
                 onClick={handleSync}
@@ -342,7 +344,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
                 ) : (
                   <CloudUpload className="w-4 h-4 mr-2" />
                 )}
-                Sincronizar Agora
+                {t('cloudBackup.syncNow')}
               </Button>
             </div>
           </>
@@ -352,7 +354,7 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
           <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
             <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
             <p className="text-xs text-yellow-400">
-              Configuração de nuvem indisponível no modo demo
+              {t('cloudBackup.demoWarning')}
             </p>
           </div>
         )}

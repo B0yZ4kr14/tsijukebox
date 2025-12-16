@@ -6,16 +6,17 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsSection } from './SettingsSection';
+import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
 
 const NTP_SERVERS = [
-  { value: 'pool.ntp.br', label: 'pool.ntp.br (Recomendado)' },
+  { value: 'pool.ntp.br', labelKey: 'recommended' },
   { value: 'a.ntp.br', label: 'a.ntp.br' },
   { value: 'b.ntp.br', label: 'b.ntp.br' },
   { value: 'c.ntp.br', label: 'c.ntp.br' },
-  { value: 'gps.ntp.br', label: 'gps.ntp.br (GPS)' },
-  { value: 'pool.ntp.org', label: 'pool.ntp.org (Internacional)' },
-  { value: 'custom', label: 'Servidor Customizado' },
+  { value: 'gps.ntp.br', labelKey: 'gps' },
+  { value: 'pool.ntp.org', labelKey: 'international' },
+  { value: 'custom', labelKey: 'custom' },
 ];
 
 interface NtpConfig {
@@ -26,6 +27,7 @@ interface NtpConfig {
 }
 
 export function NtpConfigSection() {
+  const { t, language } = useTranslation();
   const [config, setConfig] = useState<NtpConfig>(() => {
     const saved = localStorage.getItem('ntp_config');
     return saved ? JSON.parse(saved) : {
@@ -54,6 +56,13 @@ export function NtpConfigSection() {
     return config.server === 'custom' ? config.customServer : config.server;
   };
 
+  const getServerLabel = (server: typeof NTP_SERVERS[0]) => {
+    if (server.labelKey) {
+      return `${server.value} ${t(`ntp.${server.labelKey}`)}`;
+    }
+    return server.label || server.value;
+  };
+
   const handleSync = async () => {
     setIsSyncing(true);
     const server = getActiveServer();
@@ -71,8 +80,8 @@ export function NtpConfigSection() {
           lastSync: new Date().toISOString(),
           syncStatus: 'synced',
         });
-        toast.success('Sincronização NTP concluída', {
-          description: `Sincronizado com ${server}`,
+        toast.success(t('ntp.syncSuccess'), {
+          description: `${t('ntp.activeServer')}: ${server}`,
         });
       } else {
         saveConfig({
@@ -80,35 +89,48 @@ export function NtpConfigSection() {
           lastSync: new Date().toISOString(),
           syncStatus: 'synced',
         });
-        toast.success('Sincronização NTP simulada', {
-          description: `Backend indisponível - modo demo`,
-        });
+        toast.success(t('ntp.syncDemo'));
       }
     } catch (error) {
       saveConfig({ ...config, syncStatus: 'error' });
-      toast.error('Erro na sincronização NTP');
+      toast.error(t('ntp.syncError'));
     } finally {
       setIsSyncing(false);
     }
   };
 
   const formatLastSync = () => {
-    if (!config.lastSync) return 'Nunca sincronizado';
-    return new Date(config.lastSync).toLocaleString('pt-BR');
+    if (!config.lastSync) return t('ntp.neverSynced');
+    return new Date(config.lastSync).toLocaleString(language === 'pt-BR' ? 'pt-BR' : language === 'es' ? 'es-ES' : 'en-US');
+  };
+
+  const getStatusText = () => {
+    switch (config.syncStatus) {
+      case 'synced': return t('ntp.statusOk');
+      case 'error': return t('ntp.statusFailed');
+      default: return t('ntp.statusUnknown');
+    }
+  };
+
+  const getBadgeText = () => {
+    switch (config.syncStatus) {
+      case 'synced': return t('ntp.statusOk');
+      case 'error': return t('ntp.statusFailed');
+      default: return t('ntp.statusUnknown');
+    }
   };
 
   return (
     <SettingsSection
       icon={<Clock className="w-5 h-5 icon-neon-blue" />}
-      title="Sincronização de Tempo (NTP)"
-      description="Configure o servidor NTP para sincronização automática do relógio do sistema"
+      title={t('ntp.title')}
+      description={t('ntp.description')}
       badge={
         <Badge 
           variant={config.syncStatus === 'synced' ? 'default' : 'secondary'}
           className={config.syncStatus === 'synced' ? 'bg-green-500/20 text-green-400' : ''}
         >
-          {config.syncStatus === 'synced' ? 'Sincronizado' : 
-           config.syncStatus === 'error' ? 'Erro' : 'Pendente'}
+          {getBadgeText()}
         </Badge>
       }
       delay={0.5}
@@ -116,17 +138,17 @@ export function NtpConfigSection() {
       <div className="space-y-4">
         {/* Server Selection */}
         <div className="space-y-2">
-          <Label className="text-label-yellow">Servidor NTP</Label>
+          <Label className="text-label-yellow">{t('ntp.server')}</Label>
           <Select value={config.server} onValueChange={handleServerChange}>
             <SelectTrigger className="bg-background/50 border-border">
-              <SelectValue placeholder="Selecione um servidor" />
+              <SelectValue placeholder={t('ntp.selectServer')} />
             </SelectTrigger>
             <SelectContent>
               {NTP_SERVERS.map((server) => (
                 <SelectItem key={server.value} value={server.value}>
                   <div className="flex items-center gap-2">
                     <Globe className="w-3 h-3" />
-                    {server.label}
+                    {getServerLabel(server)}
                   </div>
                 </SelectItem>
               ))}
@@ -137,11 +159,11 @@ export function NtpConfigSection() {
         {/* Custom Server Input */}
         {config.server === 'custom' && (
           <div className="space-y-2">
-            <Label className="text-label-yellow">Servidor Customizado</Label>
+            <Label className="text-label-yellow">{t('ntp.customServer')}</Label>
             <Input
               value={config.customServer}
               onChange={(e) => handleCustomServerChange(e.target.value)}
-              placeholder="ntp.exemplo.com"
+              placeholder="ntp.example.com"
               className="bg-background/50 border-border font-mono"
             />
           </div>
@@ -150,15 +172,15 @@ export function NtpConfigSection() {
         {/* Status Info */}
         <div className="p-3 rounded-lg bg-background/30 border border-border/50 card-option-neon space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">Servidor Ativo:</span>
-            <span className="font-mono text-kiosk-text">{getActiveServer() || 'Não configurado'}</span>
+            <span className="text-label-orange">{t('ntp.activeServer')}:</span>
+            <span className="font-mono text-kiosk-text">{getActiveServer() || t('ntp.notConfigured')}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">Última Sincronização:</span>
+            <span className="text-label-orange">{t('ntp.lastSync')}:</span>
             <span className="text-kiosk-text">{formatLastSync()}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">Status:</span>
+            <span className="text-label-orange">{t('ntp.status')}:</span>
             <div className="flex items-center gap-1">
               {config.syncStatus === 'synced' ? (
                 <Check className="w-3 h-3 text-green-400" />
@@ -171,8 +193,7 @@ export function NtpConfigSection() {
                 config.syncStatus === 'synced' ? 'text-green-400' :
                 config.syncStatus === 'error' ? 'text-destructive' : 'text-kiosk-text/70'
               }>
-                {config.syncStatus === 'synced' ? 'OK' :
-                 config.syncStatus === 'error' ? 'Falha' : 'Desconhecido'}
+                {getStatusText()}
               </span>
             </div>
           </div>
@@ -185,13 +206,12 @@ export function NtpConfigSection() {
           className="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30"
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-          {isSyncing ? 'Sincronizando...' : 'Sincronizar Agora'}
+          {isSyncing ? t('ntp.syncing') : t('ntp.syncNow')}
         </Button>
 
         {/* Info Text */}
         <p className="text-xs text-kiosk-text/75">
-          O NTP.br é o serviço oficial de hora legal brasileira, mantido pelo NIC.br.
-          Recomendamos usar <code className="text-cyan-400">pool.ntp.br</code> para melhor disponibilidade.
+          {t('ntp.infoText')}
         </p>
       </div>
     </SettingsSection>

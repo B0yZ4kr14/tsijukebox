@@ -143,6 +143,27 @@
     filter: drop-shadow(0 0 6px hsl(195 100% 60%)) drop-shadow(0 0 12px hsl(195 100% 50% / 0.6));
   }
 
+  /* ========== GOLDEN NEON TITLES ========== */
+  
+  /* Títulos dourados com glow neon */
+  .text-gold-neon {
+    color: hsl(45 100% 68%);
+    text-shadow: 
+      0 0 10px hsl(45 100% 50% / 0.6),
+      0 0 20px hsl(45 100% 45% / 0.4),
+      0 0 30px hsl(30 100% 50% / 0.3);
+  }
+
+  /* Títulos dourados com contorno neon azul */
+  .text-gold-blue-outline {
+    color: hsl(45 100% 70%);
+    text-shadow: 
+      0 0 8px hsl(45 100% 50% / 0.5),
+      1px 1px 0 hsl(195 100% 50% / 0.4),
+      -1px -1px 0 hsl(195 100% 50% / 0.4),
+      0 0 20px hsl(195 100% 50% / 0.2);
+  }
+
   /* Contornos de cards com neon azul */
   .card-neon-border {
     border: 1px solid hsl(195 100% 50% / 0.4);
@@ -167,6 +188,26 @@
   .title-neon-blue {
     color: hsl(195 100% 75%);
     text-shadow: 0 0 12px hsl(195 100% 60% / 0.6);
+  }
+
+  /* Card com borda dourada neon */
+  .card-gold-neon-border {
+    border: 1px solid hsl(45 100% 50% / 0.35);
+    box-shadow: 
+      0 0 25px hsl(45 100% 50% / 0.15),
+      0 0 50px hsl(195 100% 50% / 0.1),
+      inset 0 0 15px hsl(45 100% 50% / 0.05);
+  }
+
+  /* Divider neon dourado/azul */
+  .divider-gold-neon {
+    background: linear-gradient(90deg,
+      transparent 0%,
+      hsl(195 100% 60% / 0.4) 25%,
+      hsl(45 100% 60% / 0.6) 50%,
+      hsl(195 100% 60% / 0.4) 75%,
+      transparent 100%);
+    height: 2px;
   }
 
   /* Placeholder com melhor visibilidade */

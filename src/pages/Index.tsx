@@ -274,7 +274,7 @@ export default function Index() {
         </header>
 
         {/* Main Content - increased padding to prevent CommandDeck overlap */}
-        <main className="flex-1 flex flex-col items-center justify-center gap-3 px-4 pb-52 touch-pan-y">
+        <main className="flex-1 flex flex-col items-center justify-center gap-3 px-4 pb-64 touch-pan-y">
           <NowPlaying 
             track={status?.track ?? null} 
             isPlaying={status?.playing ?? false} 
@@ -310,7 +310,7 @@ export default function Index() {
           </div>
 
           {/* Player Controls - clear separation from CommandDeck */}
-          <div className="mb-20">
+          <div className="mb-28">
             <PlayerControls isPlaying={status?.playing ?? false} />
           </div>
           
@@ -332,13 +332,13 @@ export default function Index() {
 
         {/* Visual Divider - Separates Music Area from Admin Controls with fade animation */}
         <motion.div 
-          className="fixed bottom-[120px] left-0 right-0 z-40 pointer-events-none"
+          className="fixed bottom-[140px] left-0 right-0 z-40 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
         >
-          <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent" />
-          <div className="h-12 bg-gradient-to-t from-kiosk-bg/95 to-transparent" />
+          <div className="h-[2px] divider-gold-neon" />
+          <div className="h-14 bg-gradient-to-t from-kiosk-bg/98 to-transparent" />
         </motion.div>
 
         {/* Command Deck */}

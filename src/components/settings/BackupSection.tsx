@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SettingsSection } from './SettingsSection';
+import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
 
 interface BackupSectionProps {
@@ -19,6 +20,7 @@ interface BackupItem {
 }
 
 export function BackupSection({ isDemoMode }: BackupSectionProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<string | null>(null);
   const [backups] = useState<BackupItem[]>([
     { id: '1', name: 'backup_2024-01-15_full.db', type: 'full', size: '2.4 MB', date: '2024-01-15T10:30:00Z' },
@@ -28,7 +30,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
 
   const handleBackup = async (type: 'full' | 'incremental') => {
     if (isDemoMode) {
-      toast.info(`Demo: Backup ${type} simulado`);
+      toast.info(`Demo: ${type === 'full' ? t('backupLocal.fullBackup') : t('backupLocal.incrementalBackup')}`);
       return;
     }
 
@@ -41,12 +43,12 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
       const result = await response.json();
       
       if (result.success) {
-        toast.success(`Backup ${type === 'full' ? 'completo' : 'incremental'} criado`);
+        toast.success(type === 'full' ? t('backupLocal.fullSuccess') : t('backupLocal.incrementalSuccess'));
       } else {
-        toast.error(`Falha no backup: ${result.message}`);
+        toast.error(`${t('backupLocal.error')}: ${result.message}`);
       }
     } catch (error) {
-      toast.error('Erro ao criar backup');
+      toast.error(t('backupLocal.error'));
     } finally {
       setIsLoading(null);
     }
@@ -54,7 +56,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
 
   const handleRestore = async (backupId: string) => {
     if (isDemoMode) {
-      toast.info('Demo: Restauração simulada');
+      toast.info(`Demo: ${t('backupLocal.restore')}`);
       return;
     }
 
@@ -68,12 +70,12 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
       const result = await response.json();
       
       if (result.success) {
-        toast.success('Backup restaurado com sucesso');
+        toast.success(t('backupLocal.restoreSuccess'));
       } else {
-        toast.error(`Falha na restauração: ${result.message}`);
+        toast.error(`${t('backupLocal.error')}: ${result.message}`);
       }
     } catch (error) {
-      toast.error('Erro ao restaurar backup');
+      toast.error(t('backupLocal.error'));
     } finally {
       setIsLoading(null);
     }
@@ -81,7 +83,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
 
   const handleDelete = async (backupId: string) => {
     if (isDemoMode) {
-      toast.info('Demo: Exclusão simulada');
+      toast.info(`Demo: ${t('backupLocal.deleteBackup')}`);
       return;
     }
 
@@ -93,12 +95,12 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
       const result = await response.json();
       
       if (result.success) {
-        toast.success('Backup excluído');
+        toast.success(t('backupLocal.deleteSuccess'));
       } else {
-        toast.error(`Falha ao excluir: ${result.message}`);
+        toast.error(`${t('backupLocal.error')}: ${result.message}`);
       }
     } catch (error) {
-      toast.error('Erro ao excluir backup');
+      toast.error(t('backupLocal.error'));
     } finally {
       setIsLoading(null);
     }
@@ -107,8 +109,8 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
   return (
     <SettingsSection
       icon={<Archive className="w-5 h-5 icon-neon-blue" />}
-      title="Backup Local"
-      description="Criar e restaurar backups do banco de dados"
+      title={t('backupLocal.title')}
+      description={t('backupLocal.description')}
       delay={0.2}
     >
       <div className="space-y-4">
@@ -124,7 +126,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
             ) : (
               <Download className="w-4 h-4 mr-2" />
             )}
-            Backup Completo
+            {t('backupLocal.fullBackup')}
           </Button>
           <Button
             onClick={() => handleBackup('incremental')}
@@ -137,7 +139,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
             ) : (
               <Download className="w-4 h-4 mr-2" />
             )}
-            Backup Incremental
+            {t('backupLocal.incrementalBackup')}
           </Button>
         </div>
 
@@ -145,14 +147,14 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 icon-neon-blue" />
-            <span className="text-sm font-medium text-label-yellow">Backups Existentes</span>
+            <span className="text-sm font-medium text-label-yellow">{t('backupLocal.existingBackups')}</span>
           </div>
           
           <ScrollArea className="h-48 rounded-lg border border-kiosk-border bg-kiosk-background/50 card-option-neon">
             <div className="p-2 space-y-2">
               {backups.length === 0 ? (
                 <p className="text-sm text-kiosk-text/80 text-center py-4">
-                  Nenhum backup encontrado
+                  {t('backupLocal.noBackups')}
                 </p>
               ) : (
                 backups.map((backup) => (
@@ -188,7 +190,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                         onClick={() => handleRestore(backup.id)}
                         disabled={isDemoMode || isLoading === `restore-${backup.id}`}
                         className="w-8 h-8 text-kiosk-text/80 hover:text-kiosk-primary"
-                        title="Restaurar"
+                        title={t('backupLocal.restore')}
                       >
                         <Upload className="w-4 h-4" />
                       </Button>
@@ -198,7 +200,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
                         onClick={() => handleDelete(backup.id)}
                         disabled={isDemoMode || isLoading === `delete-${backup.id}`}
                         className="w-8 h-8 text-kiosk-text/80 hover:text-red-500"
-                        title="Excluir"
+                        title={t('backupLocal.deleteBackup')}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -214,7 +216,7 @@ export function BackupSection({ isDemoMode }: BackupSectionProps) {
           <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
             <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
             <p className="text-xs text-yellow-400">
-              Operações de backup indisponíveis no modo demo
+              {t('backupLocal.demoWarning')}
             </p>
           </div>
         )}
