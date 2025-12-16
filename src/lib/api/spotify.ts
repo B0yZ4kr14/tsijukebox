@@ -662,6 +662,87 @@ class SpotifyClient {
     });
   }
 
+  // ==================== Playback Controls ====================
+
+  async play(options?: { 
+    deviceId?: string; 
+    contextUri?: string; 
+    uris?: string[]; 
+    positionMs?: number;
+    offset?: { position?: number; uri?: string };
+  }): Promise<void> {
+    const params = options?.deviceId ? `?device_id=${options.deviceId}` : '';
+    const body: Record<string, any> = {};
+    
+    if (options?.contextUri) body.context_uri = options.contextUri;
+    if (options?.uris) body.uris = options.uris;
+    if (options?.positionMs !== undefined) body.position_ms = options.positionMs;
+    if (options?.offset) body.offset = options.offset;
+
+    await this.apiRequest(`/me/player/play${params}`, {
+      method: "PUT",
+      body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined,
+    });
+  }
+
+  async pause(deviceId?: string): Promise<void> {
+    const params = deviceId ? `?device_id=${deviceId}` : '';
+    await this.apiRequest(`/me/player/pause${params}`, { method: "PUT" });
+  }
+
+  async skipToNext(deviceId?: string): Promise<void> {
+    const params = deviceId ? `?device_id=${deviceId}` : '';
+    await this.apiRequest(`/me/player/next${params}`, { method: "POST" });
+  }
+
+  async skipToPrevious(deviceId?: string): Promise<void> {
+    const params = deviceId ? `?device_id=${deviceId}` : '';
+    await this.apiRequest(`/me/player/previous${params}`, { method: "POST" });
+  }
+
+  async seek(positionMs: number, deviceId?: string): Promise<void> {
+    const params = new URLSearchParams({ position_ms: String(positionMs) });
+    if (deviceId) params.set('device_id', deviceId);
+    await this.apiRequest(`/me/player/seek?${params}`, { method: "PUT" });
+  }
+
+  async setVolume(volumePercent: number, deviceId?: string): Promise<void> {
+    const volume = Math.max(0, Math.min(100, Math.round(volumePercent)));
+    const params = new URLSearchParams({ volume_percent: String(volume) });
+    if (deviceId) params.set('device_id', deviceId);
+    await this.apiRequest(`/me/player/volume?${params}`, { method: "PUT" });
+  }
+
+  async setShuffle(state: boolean, deviceId?: string): Promise<void> {
+    const params = new URLSearchParams({ state: String(state) });
+    if (deviceId) params.set('device_id', deviceId);
+    await this.apiRequest(`/me/player/shuffle?${params}`, { method: "PUT" });
+  }
+
+  async setRepeat(state: 'track' | 'context' | 'off', deviceId?: string): Promise<void> {
+    const params = new URLSearchParams({ state });
+    if (deviceId) params.set('device_id', deviceId);
+    await this.apiRequest(`/me/player/repeat?${params}`, { method: "PUT" });
+  }
+
+  async addToQueue(uri: string, deviceId?: string): Promise<void> {
+    const params = new URLSearchParams({ uri });
+    if (deviceId) params.set('device_id', deviceId);
+    await this.apiRequest(`/me/player/queue?${params}`, { method: "POST" });
+  }
+
+  async getCurrentQueue(): Promise<{ currentlyPlaying: SpotifyTrack | null; queue: SpotifyTrack[] }> {
+    try {
+      const data = await this.apiRequest<any>("/me/player/queue");
+      return {
+        currentlyPlaying: data.currently_playing ? this.mapTrack(data.currently_playing) : null,
+        queue: (data.queue || []).map(this.mapTrack),
+      };
+    } catch {
+      return { currentlyPlaying: null, queue: [] };
+    }
+  }
+
   // ==================== Recommendations ====================
 
   async getRecommendations(params: {

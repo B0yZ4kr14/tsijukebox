@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { UserProvider } from "@/contexts/UserContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -33,42 +34,44 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <SettingsProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/install" element={<Install />} />
-              <Route path="/settings" element={<Settings />} />
-              
-              {/* Spotify Routes */}
-              <Route path="/spotify" element={<SpotifyBrowser />} />
-              <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
-              <Route path="/spotify/search" element={<SpotifySearchPage />} />
-              <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
-              
-              {/* Protected Admin Routes */}
-              <Route path="/admin" element={
-                <ProtectedRoute><Admin /></ProtectedRoute>
-              } />
-              <Route path="/admin/library" element={
-                <ProtectedRoute><AdminLibrary /></ProtectedRoute>
-              } />
-              <Route path="/admin/logs" element={
-                <ProtectedRoute><AdminLogs /></ProtectedRoute>
-              } />
-              <Route path="/admin/feedback" element={
-                <ProtectedRoute><AdminFeedback /></ProtectedRoute>
-              } />
-              
-              {/* Catch-all */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <UserProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/install" element={<Install />} />
+                <Route path="/settings" element={<Settings />} />
+                
+                {/* Spotify Routes */}
+                <Route path="/spotify" element={<SpotifyBrowser />} />
+                <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
+                <Route path="/spotify/search" element={<SpotifySearchPage />} />
+                <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
+                
+                {/* Protected Admin Routes */}
+                <Route path="/admin" element={
+                  <ProtectedRoute><Admin /></ProtectedRoute>
+                } />
+                <Route path="/admin/library" element={
+                  <ProtectedRoute><AdminLibrary /></ProtectedRoute>
+                } />
+                <Route path="/admin/logs" element={
+                  <ProtectedRoute><AdminLogs /></ProtectedRoute>
+                } />
+                <Route path="/admin/feedback" element={
+                  <ProtectedRoute><AdminFeedback /></ProtectedRoute>
+                } />
+                
+                {/* Catch-all */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </UserProvider>
       </AuthProvider>
     </SettingsProvider>
   </QueryClientProvider>
