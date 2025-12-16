@@ -12,6 +12,7 @@ import { ConnectionIndicator } from '@/components/player/ConnectionIndicator';
 import { ProgressBar } from '@/components/player/ProgressBar';
 import { CommandDeck } from '@/components/player/CommandDeck';
 import { UserBadge } from '@/components/player/UserBadge';
+import { DigitalClock } from '@/components/player/DigitalClock';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useVolume } from '@/hooks/useVolume';
@@ -218,7 +219,10 @@ export default function Index() {
             />
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Digital Clock */}
+            <DigitalClock showDate={true} />
+
             {/* User Badge */}
             <UserBadge />
 

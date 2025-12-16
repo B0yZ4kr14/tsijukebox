@@ -28,21 +28,22 @@ export function SettingsSection({
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay }}
+      whileHover={{ y: -2 }}
     >
       <Collapsible defaultOpen={defaultOpen}>
-        <Card className="bg-kiosk-surface border-kiosk-border">
+        <Card className="card-3d bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
           <CollapsibleTrigger asChild>
-            <CardHeader className="cursor-pointer hover:bg-kiosk-surface/80 transition-colors rounded-t-lg">
+            <CardHeader className="cursor-pointer hover:bg-accent/50 transition-all duration-300 rounded-t-lg group">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-kiosk-text">
+                <CardTitle className="flex items-center gap-2 text-foreground">
                   {icon}
                   {title}
                   {badge}
                 </CardTitle>
-                <ChevronDown className="w-5 h-5 text-kiosk-text/50 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                <ChevronDown className="w-5 h-5 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180" />
               </div>
               {description && (
-                <CardDescription className="text-kiosk-text/60">
+                <CardDescription className="text-muted-foreground">
                   {description}
                 </CardDescription>
               )}

@@ -9,3 +9,4 @@ export { BackupScheduleSection } from './BackupScheduleSection';
 export { UserManagementSection } from './UserManagementSection';
 export { AuthProviderSection } from './AuthProviderSection';
 export { SystemUrlsSection } from './SystemUrlsSection';
+export { NtpConfigSection } from './NtpConfigSection';

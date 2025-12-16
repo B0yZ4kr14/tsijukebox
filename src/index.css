@@ -119,6 +119,45 @@
     -webkit-user-drag: none;
     user-drag: none;
   }
+
+  /* 3D Card Effects */
+  .card-3d {
+    box-shadow: 
+      0 1px 1px hsl(var(--foreground) / 0.02),
+      0 2px 2px hsl(var(--foreground) / 0.02),
+      0 4px 4px hsl(var(--foreground) / 0.02),
+      0 8px 8px hsl(var(--foreground) / 0.03),
+      0 16px 16px hsl(var(--foreground) / 0.03),
+      inset 0 1px 0 hsl(var(--foreground) / 0.05);
+    transform: translateZ(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid hsl(var(--border) / 0.5);
+    background: linear-gradient(
+      145deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card) / 0.8) 100%
+    );
+  }
+
+  .card-3d:hover {
+    box-shadow: 
+      0 2px 2px hsl(var(--foreground) / 0.03),
+      0 4px 4px hsl(var(--foreground) / 0.03),
+      0 8px 8px hsl(var(--foreground) / 0.04),
+      0 16px 16px hsl(var(--foreground) / 0.04),
+      0 32px 32px hsl(var(--foreground) / 0.05),
+      inset 0 1px 0 hsl(var(--foreground) / 0.08);
+    border-color: hsl(var(--primary) / 0.3);
+  }
+
+  /* Glow text effect */
+  .text-glow {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  .text-glow-sm {
+    text-shadow: 0 0 5px currentColor;
+  }
 }
 
 /* Custom scrollbar for dark theme */
