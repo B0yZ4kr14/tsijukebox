@@ -7,3 +7,4 @@ export { CloudBackupSection } from './CloudBackupSection';
 export { BackupScheduleSection } from './BackupScheduleSection';
 export { UserManagementSection } from './UserManagementSection';
 export { AuthProviderSection } from './AuthProviderSection';
+export { SystemUrlsSection } from './SystemUrlsSection';
