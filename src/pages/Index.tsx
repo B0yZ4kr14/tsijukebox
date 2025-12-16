@@ -225,65 +225,73 @@ export default function Index() {
           </div>
         )}
 
-        {/* Header with 3D effect */}
-        <header className="flex items-center justify-between p-4 header-3d backdrop-blur-sm">
-          {/* Left: System Info */}
-          <div className="flex items-center gap-4">
-            <SystemMonitor 
-              cpu={status?.cpu ?? 0} 
-              memory={status?.memory ?? 0} 
-              temp={status?.temp ?? 0} 
-            />
-            
-            <div className="w-px h-8 bg-kiosk-text/20" />
-            
-            {/* Weather Widget */}
-            <WeatherWidget />
-            
-            <div className="w-px h-8 bg-kiosk-text/20" />
-            
-            <ConnectionIndicator 
-              connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'}
-              isSpotifyActive={!!status?.playing && !!status?.track}
-            />
+        {/* Header with 3D effect - Two Lines: Logo on top, Status bar below */}
+        <header className="flex flex-col p-3 pt-2 header-3d backdrop-blur-sm">
+          {/* LINE 1: Logo centered at absolute top */}
+          <div className="w-full flex justify-center mb-2">
+            <LogoBrand size="lg" variant="ultra" animate />
           </div>
 
-          {/* Center: Digital Clock */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <DigitalClock showDate={true} showSeconds={false} />
-          </div>
-          
-          {/* Right: User & Actions */}
-          <div className="flex items-center gap-3">
-            <UserBadge />
+          {/* LINE 2: Status bar */}
+          <div className="flex items-center justify-between relative">
+            {/* Left: System Info */}
+            <div className="flex items-center gap-3">
+              <SystemMonitor 
+                cpu={status?.cpu ?? 0} 
+                memory={status?.memory ?? 0} 
+                temp={status?.temp ?? 0} 
+              />
+              
+              <div className="w-px h-6 bg-kiosk-text/20" />
+              
+              {/* Weather Widget */}
+              <WeatherWidget />
+              
+              <div className="w-px h-6 bg-kiosk-text/20" />
+              
+              <ConnectionIndicator 
+                connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'}
+                isSpotifyActive={!!status?.playing && !!status?.track}
+              />
+            </div>
 
-            <div className="w-px h-8 bg-kiosk-text/20" />
+            {/* Center: Digital Clock */}
+            <div className="absolute left-1/2 -translate-x-1/2">
+              <DigitalClock showDate={true} showSeconds={false} />
+            </div>
+            
+            {/* Right: User & Actions */}
+            <div className="flex items-center gap-3">
+              <UserBadge />
 
-            {/* Spotify Panel Toggle - Always visible */}
-            <SpotifyPanelToggle 
-              onClick={() => {
-                if (spotify.isConnected) {
-                  setShowSpotifyPanel(!showSpotifyPanel);
-                } else {
-                  navigate('/settings');
-                  toast.info(t('spotify.configureInSettings'));
-                }
-              }} 
-              isOpen={showSpotifyPanel}
-              isConnected={spotify.isConnected}
-            />
+              <div className="w-px h-6 bg-kiosk-text/20" />
 
-            {/* PWA Install Button */}
-            {canInstall && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleInstall}
-                className="w-10 h-10 rounded-full button-primary-3d bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
-              >
-                <Download className="w-5 h-5" />
-              </Button>
-            )}
+              {/* Spotify Panel Toggle - Always visible */}
+              <SpotifyPanelToggle 
+                onClick={() => {
+                  if (spotify.isConnected) {
+                    setShowSpotifyPanel(!showSpotifyPanel);
+                  } else {
+                    navigate('/settings');
+                    toast.info(t('spotify.configureInSettings'));
+                  }
+                }} 
+                isOpen={showSpotifyPanel}
+                isConnected={spotify.isConnected}
+              />
+
+              {/* PWA Install Button */}
+              {canInstall && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleInstall}
+                  className="w-10 h-10 rounded-full button-primary-3d bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
+                >
+                  <Download className="w-5 h-5" />
+                </Button>
+              )}
+            </div>
           </div>
         </header>
 
@@ -333,14 +341,11 @@ export default function Index() {
             muted={status?.muted ?? false} 
           />
 
-          {/* Branding and hint integrated */}
+          {/* Swipe hint only - logo now at top */}
           <div className="text-center mt-2">
             <p className="text-xs text-kiosk-text/40">
               {t('player.swipeHint')}
             </p>
-            <div className="mt-2 opacity-40 hover:opacity-70 transition-opacity">
-              <LogoBrand size="sm" />
-            </div>
           </div>
         </main>
 
