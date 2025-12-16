@@ -67,6 +67,19 @@ export function SystemUrlsSection() {
       title={t('systemUrls.title')}
       description={t('systemUrls.description')}
       delay={0.15}
+      instructions={{
+        title: "🔗 O que são URLs de Sistema?",
+        steps: [
+          "URLs são 'endereços' que permitem acessar diferentes partes do sistema.",
+          "Dashboard (Grafana): Mostra gráficos de uso do servidor em tempo real.",
+          "Datasource (Prometheus): Coleta métricas de performance do sistema.",
+          "Você pode alterar essas URLs se seus serviços estiverem em outro endereço."
+        ],
+        tips: [
+          "💡 As URLs padrão funcionam para instalação local",
+          "💡 Use 'http://' para endereços locais e 'https://' para remotos"
+        ]
+      }}
     >
       <div className="space-y-4">
         {/* Dashboard URL */}

@@ -10,7 +10,9 @@ import {
   Eye, 
   Cloud, 
   Sparkles,
-  Volume2
+  Volume2,
+  Trophy,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -26,11 +28,20 @@ const SETUP_COMPLETE_KEY = 'tsi_jukebox_setup_complete';
 
 type ThemeColor = 'blue' | 'green' | 'purple';
 
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  unlocked: boolean;
+}
+
 interface WizardStep {
   id: string;
   title: string;
   description: string;
   icon: React.ReactNode;
+  achievementId?: string;
 }
 
 const steps: WizardStep[] = [
@@ -45,31 +56,45 @@ const steps: WizardStep[] = [
     title: 'Escolha seu Tema',
     description: 'Personalize as cores do sistema',
     icon: <Palette className="w-8 h-8" />,
+    achievementId: 'designer',
   },
   {
     id: 'accessibility',
     title: 'Acessibilidade',
     description: 'Ajuste o tamanho e contraste',
     icon: <Eye className="w-8 h-8" />,
+    achievementId: 'accessible',
   },
   {
     id: 'connections',
     title: 'Conexões',
     description: 'Configure Spotify e Clima',
     icon: <Cloud className="w-8 h-8" />,
+    achievementId: 'connected',
   },
   {
     id: 'complete',
     title: 'Tudo Pronto!',
     description: 'Configuração concluída',
     icon: <Sparkles className="w-8 h-8" />,
+    achievementId: 'master',
   },
+];
+
+const initialAchievements: Achievement[] = [
+  { id: 'designer', title: '🎨 Designer', description: 'Escolheu um tema', icon: <Palette className="w-4 h-4" />, unlocked: false },
+  { id: 'accessible', title: '👁️ Acessível', description: 'Configurou acessibilidade', icon: <Eye className="w-4 h-4" />, unlocked: false },
+  { id: 'connected', title: '🔗 Conectado', description: 'Configurou conexões', icon: <Cloud className="w-4 h-4" />, unlocked: false },
+  { id: 'master', title: '🏆 Mestre', description: 'Completou o setup', icon: <Trophy className="w-4 h-4" />, unlocked: false },
 ];
 
 export default function SetupWizard() {
   const navigate = useNavigate();
   const { theme, setTheme, weather, setWeatherConfig } = useSettings();
   const [currentStep, setCurrentStep] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [achievements, setAchievements] = useState<Achievement[]>(initialAchievements);
+  const [showAchievement, setShowAchievement] = useState<Achievement | null>(null);
   const [wizardData, setWizardData] = useState<{
     theme: ThemeColor;
     highContrast: boolean;
@@ -89,16 +114,34 @@ export default function SetupWizard() {
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
 
+  const unlockAchievement = (achievementId: string) => {
+    const achievement = achievements.find(a => a.id === achievementId);
+    if (achievement && !achievement.unlocked) {
+      setAchievements(prev => prev.map(a => 
+        a.id === achievementId ? { ...a, unlocked: true } : a
+      ));
+      setShowAchievement(achievement);
+      setTimeout(() => setShowAchievement(null), 2500);
+    }
+  };
+
   const handleNext = () => {
+    const currentStepData = steps[currentStep];
+    if (currentStepData.achievementId) {
+      unlockAchievement(currentStepData.achievementId);
+    }
+    
     if (isLastStep) {
       completeSetup();
     } else {
+      setDirection(1);
       setCurrentStep(prev => prev + 1);
     }
   };
 
   const handlePrev = () => {
     if (!isFirstStep) {
+      setDirection(-1);
       setCurrentStep(prev => prev - 1);
     }
   };
@@ -125,16 +168,38 @@ export default function SetupWizard() {
       });
     }
 
+    // Save achievements
+    localStorage.setItem('tsi_jukebox_achievements', JSON.stringify(achievements));
+
     // Mark setup as complete
     localStorage.setItem(SETUP_COMPLETE_KEY, 'true');
     
-    toast.success('Configuração concluída com sucesso!');
+    toast.success('🏆 Configuração concluída com sucesso!');
     navigate('/');
   };
 
   const skipSetup = () => {
     localStorage.setItem(SETUP_COMPLETE_KEY, 'true');
     navigate('/');
+  };
+
+  // Slide animation variants
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.95,
+    }),
   };
 
   const renderStepContent = () => {
@@ -177,17 +242,17 @@ export default function SetupWizard() {
                 <Label
                   key={option.value}
                   htmlFor={option.value}
-                  className={`flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                  className={`flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
                     wizardData.theme === option.value
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border hover:border-primary/50'
+                      ? 'card-option-selected-3d'
+                      : 'card-option-dark-3d'
                   }`}
                 >
                   <RadioGroupItem value={option.value} id={option.value} className="sr-only" />
-                  <div className={`w-16 h-16 rounded-full ${option.color} shadow-lg`} />
+                  <div className={`w-16 h-16 rounded-full ${option.color} shadow-lg shadow-current/30`} />
                   <span className="text-sm font-medium text-kiosk-text">{option.label}</span>
                   {wizardData.theme === option.value && (
-                    <Check className="w-5 h-5 text-primary" />
+                    <Check className="w-5 h-5 text-cyan-400" />
                   )}
                 </Label>
               ))}
@@ -347,21 +412,33 @@ export default function SetupWizard() {
 
       {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-6">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 30,
+              opacity: { duration: 0.2 },
+            }}
             className="w-full max-w-lg"
           >
             {/* Step Header */}
             <div className="text-center mb-8">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+              <motion.div 
+                className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center text-primary"
+                initial={{ scale: 0.8, rotate: -10 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              >
                 {steps[currentStep].icon}
-              </div>
-              <h2 className="text-2xl font-bold text-kiosk-text">{steps[currentStep].title}</h2>
+              </motion.div>
+              <h2 className="text-2xl font-bold text-gold-neon">{steps[currentStep].title}</h2>
               <p className="text-kiosk-text/70">{steps[currentStep].description}</p>
             </div>
 
@@ -374,12 +451,12 @@ export default function SetupWizard() {
       </div>
 
       {/* Navigation */}
-      <div className="p-6 border-t border-border">
+      <div className="p-6 border-t border-kiosk-surface/50">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <Button
             variant="ghost"
             onClick={isFirstStep ? skipSetup : handlePrev}
-            className="text-kiosk-text/70 hover:text-kiosk-text"
+            className="button-ghost-visible"
           >
             {isFirstStep ? (
               'Pular Configuração'
@@ -391,11 +468,28 @@ export default function SetupWizard() {
             )}
           </Button>
 
+          {/* Achievements mini display */}
+          <div className="flex items-center gap-1">
+            {achievements.map((a) => (
+              <div
+                key={a.id}
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all ${
+                  a.unlocked 
+                    ? 'bg-yellow-500/20 text-yellow-400 scale-110' 
+                    : 'bg-kiosk-surface/50 text-kiosk-text/30'
+                }`}
+                title={a.title}
+              >
+                {a.unlocked ? <Star className="w-3 h-3" /> : <span className="opacity-50">?</span>}
+              </div>
+            ))}
+          </div>
+
           <Button onClick={handleNext} className="button-primary-glow-3d">
             {isLastStep ? (
               <>
                 Começar a Usar
-                <Check className="w-4 h-4 ml-2" />
+                <Trophy className="w-4 h-4 ml-2" />
               </>
             ) : (
               <>
@@ -406,6 +500,30 @@ export default function SetupWizard() {
           </Button>
         </div>
       </div>
+
+      {/* Achievement Toast */}
+      <AnimatePresence>
+        {showAchievement && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 shadow-lg shadow-yellow-500/20">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-yellow-500/30 flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-yellow-400/80">Conquista Desbloqueada!</p>
+                  <p className="text-sm font-bold text-yellow-300">{showAchievement.title}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

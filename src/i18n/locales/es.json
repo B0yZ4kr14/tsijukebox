@@ -151,13 +151,15 @@
     "reload": "Reload",
     "setup": "Setup",
     "reboot": "Reboot",
+    "help": "Help",
     "admin": "Admin",
     "tooltips": {
       "dashboard": "Abrir panel de métricas",
       "datasource": "Abrir fuente de datos",
       "reload": "Reiniciar servicios (soft restart)",
       "setup": "Configuración del sistema",
-      "reboot": "Reiniciar sistema (reboot)"
+      "reboot": "Reiniciar sistema (reboot)",
+      "help": "Abrir manual y FAQ"
     },
     "rebootDialog": {
       "title": "Confirmar Reinicio",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft } from 'lucide-react';
+import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
@@ -241,6 +241,16 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             label={t('commandDeck.setup')}
             tooltip={t('commandDeck.tooltips.setup')}
             onClick={handleSetup}
+            color="white"
+            disabled={disabled}
+          />
+
+          {/* Help Button (White) */}
+          <DeckButton
+            icon={<HelpCircle className="w-4 h-4" />}
+            label={t('commandDeck.help')}
+            tooltip={t('commandDeck.tooltips.help')}
+            onClick={() => navigate('/help')}
             color="white"
             disabled={disabled}
           />

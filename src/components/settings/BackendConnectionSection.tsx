@@ -47,6 +47,20 @@ export function BackendConnectionSection({
       title="Backend FastAPI"
       description="Configure a conexão com o servidor de reprodução local"
       delay={0.15}
+      instructions={{
+        title: "🖥️ O que é o Backend FastAPI?",
+        steps: [
+          "O backend é o 'cérebro' do sistema que controla a reprodução de música.",
+          "Ele roda em um servidor local e se comunica com o Spotify via playerctl.",
+          "A URL da API define onde o frontend deve buscar as informações.",
+          "WebSocket permite atualizações em tempo real, polling é o método alternativo."
+        ],
+        tips: [
+          "💡 Em produção, use a URL https://midiaserver.local/api",
+          "💡 WebSocket é mais rápido que polling para atualizações",
+          "💡 Ative o modo demo para testar sem o backend"
+        ]
+      }}
     >
       <div className="space-y-4">
         <div className="space-y-2">

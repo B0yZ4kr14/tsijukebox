@@ -151,13 +151,15 @@
     "reload": "Reload",
     "setup": "Setup",
     "reboot": "Reboot",
+    "help": "Help",
     "admin": "Admin",
     "tooltips": {
       "dashboard": "Open metrics panel",
       "datasource": "Open data source",
       "reload": "Restart services (soft restart)",
       "setup": "System settings",
-      "reboot": "Restart system (reboot)"
+      "reboot": "Restart system (reboot)",
+      "help": "Open manual and FAQ"
     },
     "rebootDialog": {
       "title": "Confirm Restart",

@@ -65,14 +65,14 @@ export function AuthProviderSection() {
                 className={cn(
                   "w-full p-4 rounded-lg text-left transition-all",
                   isSelected
-                    ? "border-primary bg-primary/10 ring-1 ring-primary card-neon-border"
-                    : "border-border/50 bg-background/50 hover:border-border hover:bg-muted/30 card-option-neon"
+                    ? "card-option-selected-3d"
+                    : "card-option-dark-3d"
                 )}
               >
                 <div className="flex items-start gap-3">
                   <div className={cn(
                     "p-2 rounded-lg",
-                    isSelected ? "bg-primary/20 text-primary" : "bg-muted icon-neon-blue"
+                    isSelected ? "bg-primary/20 text-primary" : "bg-kiosk-surface icon-neon-blue"
                   )}>
                     {provider.icon}
                   </div>

@@ -23,6 +23,7 @@ import { useVolume } from '@/hooks/useVolume';
 import { usePlaybackControls } from '@/hooks/usePlaybackControls';
 import { useTouchGestures } from '@/hooks/useTouchGestures';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useFirstAccess } from '@/hooks/useFirstAccess';
 import { api } from '@/lib/api/client';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
@@ -34,6 +35,7 @@ import { toast } from 'sonner';
 export default function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isFirstAccess } = useFirstAccess();
   const { data: status, isLoading, error, connectionType } = useStatus();
   const { play, pause, next, prev } = usePlayer();
   const { setVolume } = useVolume();
@@ -44,6 +46,13 @@ export default function Index() {
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [showQueue, setShowQueue] = useState(false);
   const [showSpotifyPanel, setShowSpotifyPanel] = useState(false);
+
+  // Redirect to setup wizard on first access
+  useEffect(() => {
+    if (isFirstAccess) {
+      navigate('/setup', { replace: true });
+    }
+  }, [isFirstAccess, navigate]);
 
   // Show toast on network status change
   useEffect(() => {

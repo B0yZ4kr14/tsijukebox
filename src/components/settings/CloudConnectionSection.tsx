@@ -24,6 +24,19 @@ export function CloudConnectionSection() {
         ) : null
       }
       delay={0.25}
+      instructions={{
+        title: "☁️ O que é Lovable Cloud?",
+        steps: [
+          "Lovable Cloud é um serviço de backend automático integrado ao seu projeto.",
+          "Oferece banco de dados PostgreSQL, autenticação de usuários e armazenamento.",
+          "Edge Functions permitem executar código no servidor para lógica personalizada.",
+          "A conexão é configurada automaticamente pelo Lovable - você não precisa fazer nada!"
+        ],
+        tips: [
+          "💡 Dados são sincronizados automaticamente com a nuvem",
+          "💡 Ideal para projetos que precisam de backend sem configuração manual"
+        ]
+      }}
     >
       <div className="space-y-4">
         {isConnected ? (
