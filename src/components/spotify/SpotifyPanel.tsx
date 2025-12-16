@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, ListMusic, Heart, Clock, Sparkles, Music2, ChevronLeft, ChevronRight, Play, Plus, X } from 'lucide-react';
+import { Search, ListMusic, Heart, Clock, Sparkles, Music2, Play, Plus, X, Disc3, Star, Grid3X3, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,8 +8,9 @@ import { useSpotifyPlaylists } from '@/hooks/useSpotifyPlaylists';
 import { useSpotifyLibrary } from '@/hooks/useSpotifyLibrary';
 import { useSpotifySearch } from '@/hooks/useSpotifySearch';
 import { useSpotifyRecommendations } from '@/hooks/useSpotifyRecommendations';
+import { useSpotifyBrowse } from '@/hooks/useSpotifyBrowse';
 import { useSettings } from '@/contexts/SettingsContext';
-import { spotifyClient, SpotifyTrack } from '@/lib/api/spotify';
+import { spotifyClient, SpotifyTrack, SpotifyAlbum, SpotifyPlaylist } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -26,13 +27,13 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
   onAddToQueue: () => void;
 }) {
   return (
-    <div className="group flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors">
+    <div className="group flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors card-3d">
       <div className="relative w-10 h-10 flex-shrink-0">
         {track.albumImageUrl ? (
           <img 
             src={track.albumImageUrl} 
             alt={track.album}
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-cover rounded shadow-lg"
           />
         ) : (
           <div className="w-full h-full bg-kiosk-surface rounded flex items-center justify-center">
@@ -53,12 +54,72 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity button-3d"
         onClick={onAddToQueue}
       >
         <Plus className="w-4 h-4" />
       </Button>
     </div>
+  );
+}
+
+function AlbumCard({ album, onPlay }: { album: SpotifyAlbum; onPlay: () => void }) {
+  return (
+    <button
+      onClick={onPlay}
+      className="group flex flex-col gap-2 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-all card-3d-deep"
+    >
+      <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+        {album.imageUrl ? (
+          <img 
+            src={album.imageUrl} 
+            alt={album.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
+            <Disc3 className="w-8 h-8 text-kiosk-text/50" />
+          </div>
+        )}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Play className="w-8 h-8 text-white fill-white" />
+        </div>
+      </div>
+      <div className="text-left">
+        <p className="text-xs font-medium text-kiosk-text truncate">{album.name}</p>
+        <p className="text-[10px] text-kiosk-text/60 truncate">{album.artist}</p>
+      </div>
+    </button>
+  );
+}
+
+function PlaylistCard({ playlist, onPlay }: { playlist: SpotifyPlaylist; onPlay: () => void }) {
+  return (
+    <button
+      onClick={onPlay}
+      className="group flex flex-col gap-2 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-all card-3d-deep"
+    >
+      <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+        {playlist.imageUrl ? (
+          <img 
+            src={playlist.imageUrl} 
+            alt={playlist.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
+            <ListMusic className="w-8 h-8 text-kiosk-text/50" />
+          </div>
+        )}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Play className="w-8 h-8 text-white fill-white" />
+        </div>
+      </div>
+      <div className="text-left">
+        <p className="text-xs font-medium text-kiosk-text truncate">{playlist.name}</p>
+        <p className="text-[10px] text-kiosk-text/60 truncate">{playlist.tracksTotal} músicas</p>
+      </div>
+    </button>
   );
 }
 
@@ -76,6 +137,13 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
     seedArtistIds: currentArtistIds,
     enabled: activeTab === 'recommendations' && isConnected,
   });
+  const { 
+    featuredPlaylists, 
+    newReleases, 
+    categories, 
+    topTracks,
+    isLoading: browseLoading 
+  } = useSpotifyBrowse();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,24 +180,42 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
     }
   };
 
+  const handlePlayAlbum = async (albumId: string) => {
+    try {
+      await spotifyClient.play({ contextUri: `spotify:album:${albumId}` });
+      toast.success('Álbum iniciado');
+    } catch (error) {
+      toast.error('Erro ao tocar álbum');
+    }
+  };
+
   if (!isConnected) {
     return null;
   }
 
+  const LoadingSkeleton = () => (
+    <div className="space-y-2">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
+      ))}
+    </div>
+  );
+
   return (
     <div 
       className={cn(
-        "fixed top-0 right-0 h-full w-80 bg-kiosk-background/95 backdrop-blur-xl border-l border-kiosk-surface z-50 transition-transform duration-300 ease-out",
+        "fixed top-0 right-0 h-full w-96 z-50 transition-transform duration-300 ease-out panel-3d",
+        "bg-kiosk-bg/98 backdrop-blur-xl",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-kiosk-surface">
+      <div className="flex items-center justify-between p-4 border-b border-kiosk-surface header-3d">
         <h2 className="text-lg font-bold text-kiosk-text flex items-center gap-2">
           <Music2 className="w-5 h-5 text-[#1DB954]" />
           Spotify
         </h2>
-        <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
+        <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 button-3d">
           <X className="w-4 h-4" />
         </Button>
       </div>
@@ -143,51 +229,51 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
             placeholder="Buscar músicas, artistas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/40"
+            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/40 progress-track-3d"
           />
         </div>
       </form>
 
-      {/* Tabs */}
+      {/* Tabs - 7 tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-[calc(100%-140px)]">
-        <TabsList className="grid grid-cols-4 mx-4 bg-kiosk-surface/50">
-          <TabsTrigger value="playlists" className="text-xs data-[state=active]:bg-[#1DB954] data-[state=active]:text-white">
+        <TabsList className="grid grid-cols-7 mx-4 bg-kiosk-surface/50 badge-3d">
+          <TabsTrigger value="playlists" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Suas Playlists">
             <ListMusic className="w-4 h-4" />
           </TabsTrigger>
-          <TabsTrigger value="liked" className="text-xs data-[state=active]:bg-[#1DB954] data-[state=active]:text-white">
+          <TabsTrigger value="liked" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Curtidas">
             <Heart className="w-4 h-4" />
           </TabsTrigger>
-          <TabsTrigger value="recent" className="text-xs data-[state=active]:bg-[#1DB954] data-[state=active]:text-white">
+          <TabsTrigger value="recent" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Recentes">
             <Clock className="w-4 h-4" />
           </TabsTrigger>
-          <TabsTrigger value="recommendations" className="text-xs data-[state=active]:bg-[#1DB954] data-[state=active]:text-white">
+          <TabsTrigger value="recommendations" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Recomendações">
             <Sparkles className="w-4 h-4" />
+          </TabsTrigger>
+          <TabsTrigger value="releases" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Lançamentos">
+            <Disc3 className="w-4 h-4" />
+          </TabsTrigger>
+          <TabsTrigger value="featured" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Destaque">
+            <Star className="w-4 h-4" />
+          </TabsTrigger>
+          <TabsTrigger value="top" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Top">
+            <TrendingUp className="w-4 h-4" />
           </TabsTrigger>
         </TabsList>
 
         <ScrollArea className="flex-1 mt-2">
           {/* Playlists Tab */}
           <TabsContent value="playlists" className="px-4 pb-4 mt-0">
-            {playlistsLoading ? (
-              <div className="space-y-2">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
-                ))}
-              </div>
-            ) : (
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Suas Playlists</h3>
+            {playlistsLoading ? <LoadingSkeleton /> : (
               <div className="space-y-1">
                 {playlists.map((playlist) => (
                   <button
                     key={playlist.id}
                     onClick={() => handlePlayPlaylist(playlist.id)}
-                    className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors text-left"
+                    className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors text-left card-3d"
                   >
                     {playlist.imageUrl ? (
-                      <img 
-                        src={playlist.imageUrl} 
-                        alt={playlist.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
+                      <img src={playlist.imageUrl} alt={playlist.name} className="w-10 h-10 object-cover rounded shadow-lg" />
                     ) : (
                       <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center">
                         <ListMusic className="w-4 h-4 text-kiosk-text/50" />
@@ -206,15 +292,10 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
 
           {/* Liked Songs Tab */}
           <TabsContent value="liked" className="px-4 pb-4 mt-0">
-            {libraryLoading ? (
-              <div className="space-y-2">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
-                ))}
-              </div>
-            ) : (
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Músicas Curtidas</h3>
+            {libraryLoading ? <LoadingSkeleton /> : (
               <div className="space-y-1">
-                {likedTracks.slice(0, 20).map((track) => (
+                {likedTracks.slice(0, 30).map((track) => (
                   <TrackRow
                     key={track.id}
                     track={track}
@@ -228,15 +309,10 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
 
           {/* Recent Tab */}
           <TabsContent value="recent" className="px-4 pb-4 mt-0">
-            {libraryLoading ? (
-              <div className="space-y-2">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
-                ))}
-              </div>
-            ) : (
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Tocadas Recentemente</h3>
+            {libraryLoading ? <LoadingSkeleton /> : (
               <div className="space-y-1">
-                {recentlyPlayed.slice(0, 20).map((track, idx) => (
+                {recentlyPlayed.slice(0, 30).map((track, idx) => (
                   <TrackRow
                     key={`${track.id}-${idx}`}
                     track={track}
@@ -250,18 +326,13 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
 
           {/* Recommendations Tab */}
           <TabsContent value="recommendations" className="px-4 pb-4 mt-0">
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Para Você</h3>
             {!currentTrackId ? (
               <div className="text-center py-8 text-kiosk-text/60">
                 <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Toque uma música para ver recomendações</p>
               </div>
-            ) : recommendationsLoading ? (
-              <div className="space-y-2">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
-                ))}
-              </div>
-            ) : (
+            ) : recommendationsLoading ? <LoadingSkeleton /> : (
               <div className="space-y-1">
                 {recommendations.map((track) => (
                   <TrackRow
@@ -275,17 +346,65 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
             )}
           </TabsContent>
 
-          {/* Search Results Tab */}
-          <TabsContent value="search" className="px-4 pb-4 mt-0">
-            {isSearching ? (
-              <div className="space-y-2">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
+          {/* New Releases Tab */}
+          <TabsContent value="releases" className="px-4 pb-4 mt-0">
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Novos Lançamentos</h3>
+            {browseLoading ? <LoadingSkeleton /> : (
+              <div className="grid grid-cols-2 gap-2">
+                {newReleases.slice(0, 20).map((album) => (
+                  <AlbumCard
+                    key={album.id}
+                    album={album}
+                    onPlay={() => handlePlayAlbum(album.id)}
+                  />
                 ))}
               </div>
-            ) : searchResults.tracks.length > 0 ? (
+            )}
+          </TabsContent>
+
+          {/* Featured Playlists Tab */}
+          <TabsContent value="featured" className="px-4 pb-4 mt-0">
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Playlists em Destaque</h3>
+            {browseLoading ? <LoadingSkeleton /> : (
+              <div className="grid grid-cols-2 gap-2">
+                {featuredPlaylists.slice(0, 20).map((playlist) => (
+                  <PlaylistCard
+                    key={playlist.id}
+                    playlist={playlist}
+                    onPlay={() => handlePlayPlaylist(playlist.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Top Tracks Tab */}
+          <TabsContent value="top" className="px-4 pb-4 mt-0">
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Suas Top Músicas</h3>
+            {browseLoading ? <LoadingSkeleton /> : (
               <div className="space-y-1">
-                {searchResults.tracks.slice(0, 20).map((track) => (
+                {topTracks.slice(0, 30).map((track, idx) => (
+                  <div key={track.id} className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-kiosk-primary w-5">{idx + 1}</span>
+                    <div className="flex-1">
+                      <TrackRow
+                        track={track}
+                        onPlay={() => handlePlayTrack(track)}
+                        onAddToQueue={() => handleAddToQueue(track)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Search Results Tab */}
+          <TabsContent value="search" className="px-4 pb-4 mt-0">
+            <h3 className="text-sm font-semibold text-kiosk-text/70 mb-3">Resultados da Busca</h3>
+            {isSearching ? <LoadingSkeleton /> : searchResults.tracks.length > 0 ? (
+              <div className="space-y-1">
+                {searchResults.tracks.slice(0, 30).map((track) => (
                   <TrackRow
                     key={track.id}
                     track={track}
@@ -303,16 +422,6 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
           </TabsContent>
         </ScrollArea>
       </Tabs>
-
-      {/* Toggle Button (when closed) */}
-      {!isOpen && (
-        <button
-          onClick={() => {}}
-          className="absolute top-1/2 -left-10 -translate-y-1/2 w-10 h-20 bg-[#1DB954] rounded-l-lg flex items-center justify-center shadow-lg"
-        >
-          <ChevronLeft className="w-5 h-5 text-white" />
-        </button>
-      )}
     </div>
   );
 }
@@ -325,11 +434,11 @@ export function SpotifyPanelToggle({ onClick, isOpen }: { onClick: () => void; i
       variant="ghost"
       size="icon"
       className={cn(
-        "h-10 w-10 rounded-full transition-all",
-        isOpen ? "bg-[#1DB954] text-white" : "bg-kiosk-surface/50 text-[#1DB954] hover:bg-[#1DB954]/20"
+        "h-10 w-10 rounded-full transition-all button-3d",
+        isOpen ? "bg-[#1DB954] text-white button-primary-3d" : "bg-kiosk-surface/50 text-[#1DB954] hover:bg-[#1DB954]/20"
       )}
     >
-      {isOpen ? <ChevronRight className="w-5 h-5" /> : <Music2 className="w-5 h-5" />}
+      {isOpen ? <X className="w-5 h-5" /> : <Music2 className="w-5 h-5" />}
     </Button>
   );
 }

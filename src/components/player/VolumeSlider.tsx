@@ -40,9 +40,9 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           disabled={isLoading}
           className={cn(
             "w-12 h-12 rounded-full shrink-0",
-            "bg-kiosk-surface/30 hover:bg-kiosk-surface/50",
+            "button-control-3d",
             "text-kiosk-text/70 hover:text-kiosk-text",
-            "transition-colors duration-200",
+            "transition-all duration-200",
             muted && "text-destructive hover:text-destructive"
           )}
         >
@@ -52,15 +52,18 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
-            <VolumeIcon className="w-5 h-5" />
+            <VolumeIcon className="w-5 h-5 drop-shadow-md" />
           </motion.div>
         </Button>
       </motion.div>
 
       <div className="flex-1 relative">
-        {/* Volume level indicator background */}
+        {/* 3D Track background */}
+        <div className="absolute inset-0 rounded-full volume-track-3d" />
+        
+        {/* Volume level indicator */}
         <motion.div
-          className="absolute inset-y-0 left-0 bg-kiosk-primary/20 rounded-full"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-kiosk-primary/60 to-kiosk-primary rounded-full"
           animate={{ width: `${muted ? 0 : volume}%` }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           style={{ height: '100%' }}
@@ -77,7 +80,10 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
       </div>
 
       <motion.span 
-        className="text-sm font-medium text-kiosk-text/70 w-12 text-right tabular-nums"
+        className={cn(
+          "text-sm font-bold text-kiosk-text/70 w-14 text-right tabular-nums",
+          "badge-3d px-2 py-1 rounded-lg"
+        )}
         key={muted ? 0 : volume}
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
