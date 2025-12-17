@@ -56,17 +56,17 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
       </div>
 
       {/* Track Info with new neon styles */}
-      <div className="text-center space-y-0.5 max-w-sm mt-2">
-        <h2 className="text-lg md:text-xl text-title-white-neon">
+      <div className="text-center space-y-1 max-w-sm mt-2">
+        <h2 className="text-xl md:text-2xl text-title-white-neon font-bold">
           {track?.title || 'Nenhuma faixa'}
         </h2>
         
-        <p className="text-sm text-artist-neon-blue">
+        <p className="text-base md:text-lg text-artist-neon-blue">
           {track?.artist || 'Aguardando...'}
         </p>
         
         {track?.album && (
-          <p className="text-xs text-album-neon">
+          <p className="text-sm md:text-base text-album-neon">
             {track.album}
           </p>
         )}
