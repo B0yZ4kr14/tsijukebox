@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 interface LogoBrandProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'ultra' | 'bulge' | 'mirror' | 'silver';
+  variant?: 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver';
   showTagline?: boolean;
   centered?: boolean;
   animate?: boolean;
@@ -36,6 +36,7 @@ export function LogoBrand({
       case 'ultra': return 'logo-container-ultra';
       case 'bulge': return 'logo-container-bulge';
       case 'mirror': return 'logo-container-mirror';
+      case 'mirror-dark': return 'logo-container-mirror';
       case 'silver': return 'logo-container-silver';
       default: return 'logo-container-3d';
     }
@@ -55,6 +56,7 @@ export function LogoBrand({
       case 'ultra': return 'logo-tsi-ultra';
       case 'bulge': return 'logo-tsi-bulge';
       case 'mirror': return 'logo-tsi-mirror';
+      case 'mirror-dark': return 'logo-tsi-mirror-dark';
       case 'silver': return 'logo-tsi-silver';
       default: return 'logo-tsi';
     }
@@ -65,6 +67,7 @@ export function LogoBrand({
       case 'ultra': return 'logo-jukebox-ultra';
       case 'bulge': return 'logo-jukebox-bulge';
       case 'mirror': return 'logo-jukebox-mirror';
+      case 'mirror-dark': return 'logo-jukebox-mirror-dark';
       case 'silver': return 'logo-jukebox-silver';
       default: return 'logo-jukebox';
     }
