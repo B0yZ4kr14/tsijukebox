@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -21,15 +21,22 @@ import {
   Volume2,
   Monitor,
   Printer,
-  BookOpen
+  BookOpen,
+  Download,
+  FileText,
+  Code
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { resetTour } from '@/components/tour/GuidedTour';
 import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
+import { GlobalSearchModal } from '@/components/GlobalSearchModal';
+import { useGlobalSearch } from '@/hooks/useGlobalSearch';
+import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 
 interface HelpSection {
@@ -485,8 +492,17 @@ const helpSections: HelpSection[] = [
 export default function Help() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [selectedSection, setSelectedSection] = useState<string | null>('getting-started');
   const [showInteractiveTest, setShowInteractiveTest] = useState<'keyboard' | 'gestures' | null>(null);
+
+  // Global search
+  const globalSearch = useGlobalSearch({ 
+    helpSections: helpSections.map(s => ({ 
+      id: s.id, 
+      title: s.title, 
+      items: s.items 
+    })) 
+  });
 
   const filteredSections = useMemo(() => {
     if (!searchQuery.trim()) return helpSections;
@@ -510,13 +526,37 @@ export default function Help() {
 
   const totalArticles = helpSections.reduce((acc, section) => acc + section.items.length, 0);
 
+  // Export functions
+  const handleExportMarkdown = () => {
+    downloadMarkdown(helpSections.map(s => ({ id: s.id, title: s.title, items: s.items })));
+    toast.success('Markdown exportado com sucesso!');
+  };
+
+  const handleExportHTML = () => {
+    downloadHTML(helpSections.map(s => ({ id: s.id, title: s.title, items: s.items })));
+    toast.success('HTML exportado com sucesso!');
+  };
+
   const handlePrint = () => {
-    window.print();
-    toast.success('Preparando impressão...');
+    printDocument(helpSections.map(s => ({ id: s.id, title: s.title, items: s.items })));
   };
 
   return (
     <div className="min-h-screen bg-kiosk-bg help-content">
+      {/* Global Search Modal */}
+      <GlobalSearchModal
+        isOpen={globalSearch.isOpen}
+        onClose={() => globalSearch.setIsOpen(false)}
+        query={globalSearch.query}
+        setQuery={globalSearch.setQuery}
+        results={globalSearch.results}
+        filters={globalSearch.filters}
+        toggleSource={globalSearch.toggleSource}
+        clearSearch={globalSearch.clearSearch}
+        helpCount={globalSearch.helpCount}
+        wikiCount={globalSearch.wikiCount}
+      />
+
       {/* Interactive Test Mode Modal */}
       {showInteractiveTest && (
         <InteractiveTestMode 
@@ -546,41 +586,58 @@ export default function Help() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Global Search Button */}
+            <Button
+              onClick={() => globalSearch.setIsOpen(true)}
+              variant="outline"
+              className="button-outline-neon"
+            >
+              <Search className="w-4 h-4 mr-2 icon-neon-blue" />
+              Busca Global
+              <kbd className="ml-2 px-1.5 py-0.5 text-[10px] bg-kiosk-surface rounded">Ctrl+K</kbd>
+            </Button>
             <Button
               onClick={() => navigate('/wiki')}
               variant="outline"
               className="button-outline-neon"
             >
               <BookOpen className="w-4 h-4 mr-2 icon-neon-blue" />
-              Wiki Completa
+              Wiki
             </Button>
-            <Button
-              onClick={handlePrint}
-              variant="outline"
-              className="button-outline-neon"
-            >
-              <Printer className="w-4 h-4 mr-2 icon-neon-blue" />
-              Imprimir
-            </Button>
-            <Button
-              onClick={() => navigate('/theme-preview')}
-              variant="outline"
-              className="button-outline-neon"
-            >
-              <Palette className="w-4 h-4 mr-2 icon-neon-blue" />
-              Preview de Temas
-            </Button>
+            {/* Export Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="button-outline-neon">
+                  <Download className="w-4 h-4 mr-2 icon-neon-blue" />
+                  Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-kiosk-surface border-kiosk-border">
+                <DropdownMenuItem onClick={handleExportMarkdown} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Exportar Markdown (.md)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportHTML} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                  <Code className="w-4 h-4 mr-2" />
+                  Exportar HTML
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePrint} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                  <Printer className="w-4 h-4 mr-2" />
+                  Imprimir / PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               onClick={() => {
                 resetTour();
                 navigate('/');
-                toast.success('Tour reiniciado! Aproveite o passeio guiado.');
+                toast.success('Tour reiniciado!');
               }}
               variant="outline"
               className="button-outline-neon"
             >
               <RotateCcw className="w-4 h-4 mr-2 icon-neon-blue" />
-              Reiniciar Tour
+              Tour
             </Button>
             <LogoBrand size="sm" />
           </div>

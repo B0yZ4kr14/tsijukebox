@@ -1,30 +1,56 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Book, FileText, Printer, Star, Trash2 } from 'lucide-react';
+import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { WikiNavigation } from '@/components/wiki/WikiNavigation';
 import { WikiArticleView } from '@/components/wiki/WikiArticle';
 import { WikiSearch } from '@/components/wiki/WikiSearch';
+import { GlobalSearchModal } from '@/components/GlobalSearchModal';
 import { wikiCategories, findArticleById, getTotalArticleCount } from '@/components/wiki/wikiData';
 import { useWikiBookmarks } from '@/hooks/useWikiBookmarks';
+import { useGlobalSearch } from '@/hooks/useGlobalSearch';
+import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 
 export default function Wiki() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { bookmarks, toggleBookmark, isBookmarked, clearBookmarks } = useWikiBookmarks();
 
+  // Global search
+  const globalSearch = useGlobalSearch({});
+
+  // Handle URL params for article selection
+  useEffect(() => {
+    const articleId = searchParams.get('article');
+    if (articleId) {
+      setSelectedArticle(articleId);
+    }
+  }, [searchParams]);
+
   const article = selectedArticle ? findArticleById(selectedArticle) : null;
   const totalArticles = getTotalArticleCount();
 
+  // Export functions
+  const handleExportMarkdown = () => {
+    downloadMarkdown([]);
+    toast.success('Markdown exportado com sucesso!');
+  };
+
+  const handleExportHTML = () => {
+    downloadHTML([]);
+    toast.success('HTML exportado com sucesso!');
+  };
+
   const handlePrint = () => {
-    window.print();
-    toast.success('Preparando impressão...');
+    printDocument([]);
   };
 
   return (
@@ -53,24 +79,71 @@ export default function Wiki() {
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="w-80">
+            <div className="flex items-center gap-3">
+              <div className="w-64">
                 <WikiSearch onSelectArticle={setSelectedArticle} />
               </div>
+              {/* Global Search Button */}
               <Button
+                onClick={() => globalSearch.setIsOpen(true)}
                 variant="outline"
                 size="sm"
-                onClick={handlePrint}
                 className="button-outline-neon"
               >
-                <Printer className="w-4 h-4 mr-2" />
-                Imprimir / PDF
+                <Search className="w-4 h-4 mr-2" />
+                <kbd className="px-1 py-0.5 text-[10px] bg-kiosk-surface rounded">Ctrl+K</kbd>
               </Button>
+              <Button
+                onClick={() => navigate('/help')}
+                variant="outline"
+                size="sm"
+                className="button-outline-neon"
+              >
+                <HelpCircle className="w-4 h-4 mr-2" />
+                Help
+              </Button>
+              {/* Export Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="button-outline-neon">
+                    <Download className="w-4 h-4 mr-2" />
+                    Exportar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-kiosk-surface border-kiosk-border">
+                  <DropdownMenuItem onClick={handleExportMarkdown} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Exportar Markdown
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleExportHTML} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                    <Code className="w-4 h-4 mr-2" />
+                    Exportar HTML
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handlePrint} className="text-kiosk-text hover:bg-kiosk-bg cursor-pointer">
+                    <Printer className="w-4 h-4 mr-2" />
+                    Imprimir / PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <LogoBrand size="sm" />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Global Search Modal */}
+      <GlobalSearchModal
+        isOpen={globalSearch.isOpen}
+        onClose={() => globalSearch.setIsOpen(false)}
+        query={globalSearch.query}
+        setQuery={globalSearch.setQuery}
+        results={globalSearch.results}
+        filters={globalSearch.filters}
+        toggleSource={globalSearch.toggleSource}
+        clearSearch={globalSearch.clearSearch}
+        helpCount={globalSearch.helpCount}
+        wikiCount={globalSearch.wikiCount}
+      />
 
       <div className="max-w-7xl mx-auto p-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
