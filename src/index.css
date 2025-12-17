@@ -2629,50 +2629,50 @@ body[data-gradient="true"] {
   /* SEM background, SEM border */
 }
 
-/* Logo TSi MIRROR - Azul escuro com gradiente convexo e borda neon */
+/* Logo TSi MIRROR - REFINADO: Azul escuro abaulado 3D com contorno neon SUTIL */
 .logo-tsi-mirror {
-  /* Gradiente no texto simulando abaulamento usando background-clip */
+  /* Gradiente convexo pronunciado - efeito 3D arredondado */
   background: linear-gradient(
     180deg,
-    hsl(210 100% 55%) 0%,
-    hsl(210 90% 45%) 30%,
-    hsl(210 80% 32%) 60%,
-    hsl(210 70% 25%) 100%
+    hsl(200 80% 50%) 0%,
+    hsl(210 85% 42%) 25%,
+    hsl(210 90% 35%) 50%,
+    hsl(215 85% 28%) 75%,
+    hsl(220 80% 22%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Filtro para adicionar glow neon azul (contorno) */
+  /* Contorno neon SUTIL - apenas linha fina */
   filter: 
-    drop-shadow(0 0 3px hsl(195 100% 60% / 1))
-    drop-shadow(0 0 8px hsl(195 100% 55% / 0.9))
-    drop-shadow(0 0 15px hsl(195 100% 50% / 0.6))
-    drop-shadow(0 0 30px hsl(195 100% 45% / 0.4));
+    drop-shadow(0 0 1px hsl(195 100% 60% / 0.9))
+    drop-shadow(0 0 2px hsl(195 100% 55% / 0.6));
   letter-spacing: -0.02em;
+  font-weight: 900;
 }
 
-/* Logo JUKEBOX MIRROR - Azul neon mais claro com gradiente convexo */
+/* Logo JUKEBOX MIRROR - REFINADO: Consistente com TSi */
 .logo-jukebox-mirror {
   background: linear-gradient(
     180deg,
-    hsl(195 100% 70%) 0%,
-    hsl(195 90% 60%) 30%,
-    hsl(210 80% 45%) 60%,
-    hsl(210 70% 35%) 100%
+    hsl(195 90% 55%) 0%,
+    hsl(200 85% 48%) 25%,
+    hsl(210 80% 40%) 50%,
+    hsl(215 75% 32%) 75%,
+    hsl(220 70% 25%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 0 4px hsl(195 100% 65% / 1))
-    drop-shadow(0 0 10px hsl(195 100% 60% / 0.9))
-    drop-shadow(0 0 20px hsl(195 100% 55% / 0.6))
-    drop-shadow(0 0 40px hsl(195 100% 50% / 0.4));
-  letter-spacing: 0.08em;
-  margin-left: 0.1em;
+    drop-shadow(0 0 1px hsl(195 100% 65% / 0.9))
+    drop-shadow(0 0 2px hsl(195 100% 60% / 0.5));
+  letter-spacing: 0.06em;
+  margin-left: 0.08em;
+  font-weight: 900;
 }
 
-/* ========== REFLEXO ESPELHADO (Mirror Reflection) ========== */
+/* ========== REFLEXO ESPELHADO (Mirror Reflection) - Mais Sutil ========== */
 
 .logo-mirror-reflection {
   position: absolute;
@@ -2680,17 +2680,16 @@ body[data-gradient="true"] {
   left: 0;
   right: 0;
   transform: scaleY(-1);
-  opacity: 0.3;
-  /* Máscara de gradiente para fade do reflexo */
+  opacity: 0.2;
   mask-image: linear-gradient(
     to top,
-    rgba(0,0,0,0.5) 0%,
-    transparent 70%
+    rgba(0,0,0,0.4) 0%,
+    transparent 60%
   );
   -webkit-mask-image: linear-gradient(
     to top,
-    rgba(0,0,0,0.5) 0%,
-    transparent 70%
+    rgba(0,0,0,0.4) 0%,
+    transparent 60%
   );
   pointer-events: none;
 }
@@ -2698,50 +2697,35 @@ body[data-gradient="true"] {
 .logo-tsi-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(210 70% 40%) 0%,
-    hsl(210 60% 30%) 100%
+    hsl(210 60% 35%) 0%,
+    hsl(215 50% 25%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 0 2px hsl(195 100% 50% / 0.4))
-    blur(0.3px);
+    drop-shadow(0 0 1px hsl(195 100% 50% / 0.3))
+    blur(0.2px);
   letter-spacing: -0.02em;
 }
 
 .logo-jukebox-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(195 70% 55%) 0%,
-    hsl(210 60% 40%) 100%
+    hsl(200 55% 40%) 0%,
+    hsl(210 50% 28%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 0 3px hsl(195 100% 55% / 0.4))
-    blur(0.3px);
-  letter-spacing: 0.08em;
-  margin-left: 0.1em;
+    drop-shadow(0 0 1px hsl(195 100% 55% / 0.3))
+    blur(0.2px);
+  letter-spacing: 0.06em;
+  margin-left: 0.08em;
 }
 
-/* Animação sutil de pulsação do glow */
+/* Animação removida - sem pulsação */
 .logo-animate-mirror {
-  animation: logo-pulse-mirror 3s ease-in-out infinite;
-}
-
-@keyframes logo-pulse-mirror {
-  0%, 100% {
-    filter: 
-      drop-shadow(0 0 3px hsl(195 100% 60% / 1))
-      drop-shadow(0 0 8px hsl(195 100% 55% / 0.9))
-      drop-shadow(0 0 15px hsl(195 100% 50% / 0.6));
-  }
-  50% {
-    filter: 
-      drop-shadow(0 0 5px hsl(195 100% 65% / 1))
-      drop-shadow(0 0 12px hsl(195 100% 60% / 0.95))
-      drop-shadow(0 0 25px hsl(195 100% 55% / 0.7));
-  }
+  animation: none;
 }

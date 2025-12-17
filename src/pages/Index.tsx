@@ -241,7 +241,7 @@ export default function Index() {
         <header className="flex flex-col p-2 pt-1.5 header-3d backdrop-blur-sm">
           {/* LINE 1: Logo centered at absolute top */}
           <div className="w-full flex justify-center mb-2">
-            <LogoBrand size="lg" variant="mirror" animate />
+            <LogoBrand size="lg" variant="mirror" animate={false} />
           </div>
 
           {/* LINE 2: Status bar with grid for perfect centering */}
@@ -264,6 +264,19 @@ export default function Index() {
                 connectionType={isOnline ? (connectionType ?? 'polling') : 'disconnected'}
                 isSpotifyActive={!!status?.playing && !!status?.track}
               />
+              
+              {/* Mini visualizer no header quando tocando */}
+              {status?.playing && (
+                <>
+                  <div className="w-px h-6 bg-kiosk-text/20" />
+                  <AudioVisualizer 
+                    variant="compact" 
+                    isPlaying={true} 
+                    barCount={12}
+                    className="opacity-70"
+                  />
+                </>
+              )}
             </div>
 
             {/* Center: Digital Clock - truly centered via grid */}
