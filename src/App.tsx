@@ -20,6 +20,7 @@ const Install = lazy(() => import("./pages/Install"));
 const Settings = lazy(() => import("./pages/Settings"));
 const ThemePreview = lazy(() => import("./pages/ThemePreview"));
 const Help = lazy(() => import("./pages/Help"));
+const Wiki = lazy(() => import("./pages/Wiki"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminLibrary = lazy(() => import("./pages/AdminLibrary"));
@@ -72,6 +73,7 @@ const App = () => (
                 {/* Public Routes - Lazy loaded */}
                 <Route path="/install" element={<Install />} />
                 <Route path="/help" element={<Help />} />
+                <Route path="/wiki" element={<Wiki />} />
                 
                 {/* Protected Routes - Lazy loaded */}
                 <Route path="/settings" element={
