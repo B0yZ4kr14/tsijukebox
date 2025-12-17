@@ -3052,6 +3052,13 @@ body[data-gradient="true"] {
 }
 
 /* Color variants for nav buttons */
+.settings-nav-button-gold.active {
+  background: hsl(45 60% 40% / 0.12);
+  border-color: hsl(45 60% 50% / 0.4);
+  color: hsl(45 100% 70%);
+  box-shadow: 0 0 20px hsl(45 100% 50% / 0.15);
+}
+
 .settings-nav-button-cyan.active {
   background: hsl(185 60% 40% / 0.12);
   border-color: hsl(185 60% 50% / 0.4);
@@ -3092,6 +3099,55 @@ body[data-gradient="true"] {
   border-color: hsl(210 60% 50% / 0.4);
   color: hsl(210 100% 75%);
   box-shadow: 0 0 20px hsl(210 100% 50% / 0.15);
+}
+
+/* Status Badges */
+.status-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.status-badge-ok {
+  background: hsl(141 70% 50%);
+  box-shadow: 0 0 8px hsl(141 70% 50% / 0.6);
+}
+
+.status-badge-warning {
+  background: hsl(45 100% 55%);
+  box-shadow: 0 0 8px hsl(45 100% 55% / 0.6);
+  animation: pulse-status-warning 2s ease-in-out infinite;
+}
+
+.status-badge-error {
+  background: hsl(0 70% 55%);
+  box-shadow: 0 0 8px hsl(0 70% 55% / 0.6);
+  animation: pulse-status-error 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-status-warning {
+  0%, 100% {
+    box-shadow: 0 0 8px hsl(45 100% 55% / 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 14px hsl(45 100% 55% / 0.9);
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pulse-status-error {
+  0%, 100% {
+    box-shadow: 0 0 8px hsl(0 70% 55% / 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px hsl(0 70% 55% / 1);
+    transform: scale(1.15);
+  }
 }
 
 /* Tooltip Styling */

@@ -33,10 +33,11 @@ import {
   KeysManagementSection 
 } from '@/components/settings';
 import { SettingsSidebar, SettingsCategory } from '@/components/settings/SettingsSidebar';
+import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
 
 export default function Settings() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeCategory, setActiveCategory] = useState<SettingsCategory>('connections');
+  const [activeCategory, setActiveCategory] = useState<SettingsCategory>('dashboard');
   
   const {
     isDemoMode,
@@ -62,7 +63,7 @@ export default function Settings() {
   // Persist active category
   useEffect(() => {
     const saved = localStorage.getItem('settings_active_category');
-    if (saved && ['connections', 'data', 'system', 'appearance', 'security', 'integrations'].includes(saved)) {
+    if (saved && ['dashboard', 'connections', 'data', 'system', 'appearance', 'security', 'integrations'].includes(saved)) {
       setActiveCategory(saved as SettingsCategory);
     }
   }, []);
@@ -147,6 +148,7 @@ export default function Settings() {
 
   // Category titles for header
   const categoryTitles: Record<SettingsCategory, string> = {
+    dashboard: 'Dashboard',
     connections: 'Conexões',
     data: 'Dados & Backup',
     system: 'Sistema',
@@ -158,6 +160,9 @@ export default function Settings() {
   // Render content based on active category
   const renderCategoryContent = () => {
     switch (activeCategory) {
+      case 'dashboard':
+        return <SettingsDashboard onNavigateToCategory={setActiveCategory} />;
+
       case 'connections':
         return (
           <>
@@ -171,7 +176,6 @@ export default function Settings() {
               isDemoMode={isDemoMode}
             />
             <CloudConnectionSection />
-            <SystemUrlsSection />
           </>
         );
 
@@ -189,6 +193,7 @@ export default function Settings() {
       case 'system':
         return (
           <>
+            <SystemUrlsSection />
             <NtpConfigSection />
             {/* Demo Mode */}
             <SettingsSection
