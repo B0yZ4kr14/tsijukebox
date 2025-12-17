@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Eye, Type, Zap, Monitor, Check, X } from 'lucide-react';
+import { Eye, Type, Zap, Monitor, Check, X, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface AccessibilitySettings {
   highContrast: boolean;
@@ -22,6 +23,11 @@ const defaultAccessibility: AccessibilitySettings = {
 const STORAGE_KEY = 'tsi_jukebox_accessibility';
 
 export function AccessibilitySection() {
+  const { 
+    soundEnabled, setSoundEnabled, 
+    animationsEnabled, setAnimationsEnabled 
+  } = useSettings();
+
   const [settings, setSettings] = useState<AccessibilitySettings>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -72,6 +78,8 @@ export function AccessibilitySection() {
   const resetToDefaults = () => {
     setPreviewSettings(defaultAccessibility);
     setSettings(defaultAccessibility);
+    setSoundEnabled(true);
+    setAnimationsEnabled(true);
     toast.success('Configurações de acessibilidade restauradas');
   };
 
@@ -81,12 +89,15 @@ export function AccessibilitySection() {
       "Acessibilidade são ajustes que tornam o sistema mais fácil de usar para todos.",
       "Modo Alto Contraste: Aumenta a visibilidade usando cores mais fortes e fundos mais escuros.",
       "Tamanho da Fonte: Torna os textos maiores ou menores conforme sua necessidade.",
-      "Reduzir Animações: Desliga movimentos e efeitos para quem prefere uma tela mais calma."
+      "Reduzir Animações: Desliga movimentos e efeitos para quem prefere uma tela mais calma.",
+      "Sons de Feedback: Emite sons sutis ao clicar em botões e interagir.",
+      "Efeitos Visuais: Exibe ondas de ripple e efeitos neon nos botões."
     ],
     tips: [
       "💡 O Modo Alto Contraste é ideal para ambientes muito iluminados",
       "💡 Aumente a fonte se você usa o Jukebox de longe",
-      "💡 Reduza animações se você sente desconforto com movimentos na tela"
+      "💡 Reduza animações se você sente desconforto com movimentos na tela",
+      "💡 Desative sons se preferir uma experiência silenciosa"
     ]
   };
 
@@ -218,6 +229,50 @@ export function AccessibilitySection() {
             <Switch
               checked={previewSettings.reducedMotion}
               onCheckedChange={(checked) => updatePreview('reducedMotion', checked)}
+              variant="neon"
+            />
+          </div>
+        </div>
+
+        {/* Sound Feedback */}
+        <div className="card-option-dark-3d rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {soundEnabled ? (
+                <Volume2 className="w-5 h-5 icon-neon-blue" />
+              ) : (
+                <VolumeX className="w-5 h-5 text-kiosk-text/50" />
+              )}
+              <div>
+                <Label className="text-kiosk-text font-medium">Sons de Feedback</Label>
+                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                  Sons sutis ao clicar em botões e interagir
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={soundEnabled}
+              onCheckedChange={setSoundEnabled}
+              variant="neon"
+            />
+          </div>
+        </div>
+
+        {/* Visual Effects */}
+        <div className="card-option-dark-3d rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Sparkles className={`w-5 h-5 ${animationsEnabled ? 'icon-neon-blue' : 'text-kiosk-text/50'}`} />
+              <div>
+                <Label className="text-kiosk-text font-medium">Efeitos Visuais</Label>
+                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                  Ripples, partículas e efeitos neon nos botões
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={animationsEnabled}
+              onCheckedChange={setAnimationsEnabled}
               variant="neon"
             />
           </div>

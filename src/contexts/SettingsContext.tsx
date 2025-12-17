@@ -42,6 +42,11 @@ interface SettingsContextType {
   // Theme settings
   theme: ThemeColor;
   setTheme: (theme: ThemeColor) => void;
+  // Feedback settings
+  soundEnabled: boolean;
+  setSoundEnabled: (value: boolean) => void;
+  animationsEnabled: boolean;
+  setAnimationsEnabled: (value: boolean) => void;
 }
 
 const defaultApiUrl = import.meta.env.VITE_API_URL || 'https://midiaserver.local/api';
@@ -83,6 +88,10 @@ const defaultSettings: SettingsContextType = {
   setLanguage: () => {},
   theme: 'blue',
   setTheme: () => {},
+  soundEnabled: true,
+  setSoundEnabled: () => {},
+  animationsEnabled: true,
+  setAnimationsEnabled: () => {},
 };
 
 const SettingsContext = createContext<SettingsContextType>(defaultSettings);
@@ -92,6 +101,7 @@ const SPOTIFY_STORAGE_KEY = 'tsi_jukebox_spotify';
 const WEATHER_STORAGE_KEY = 'tsi_jukebox_weather';
 const LANGUAGE_STORAGE_KEY = 'tsi_jukebox_language';
 const THEME_STORAGE_KEY = 'tsi_jukebox_theme';
+const FEEDBACK_STORAGE_KEY = 'tsi_jukebox_feedback';
 
 interface StoredSettings {
   isDemoMode?: boolean;
@@ -208,6 +218,16 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       return (stored as ThemeColor) || 'blue';
     } catch {
       return 'blue';
+    }
+  });
+
+  // Feedback settings (sound + animations)
+  const [feedbackSettings, setFeedbackSettings] = useState(() => {
+    try {
+      const stored = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : { soundEnabled: true, animationsEnabled: true };
+    } catch {
+      return { soundEnabled: true, animationsEnabled: true };
     }
   });
 
@@ -335,6 +355,22 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  const setSoundEnabled = useCallback((value: boolean) => {
+    setFeedbackSettings(prev => {
+      const updated = { ...prev, soundEnabled: value };
+      localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  const setAnimationsEnabled = useCallback((value: boolean) => {
+    setFeedbackSettings(prev => {
+      const updated = { ...prev, animationsEnabled: value };
+      localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   const value = {
     isDemoMode: settings.isDemoMode ?? false,
     setDemoMode,
@@ -355,6 +391,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setLanguage,
     theme,
     setTheme,
+    soundEnabled: feedbackSettings.soundEnabled,
+    setSoundEnabled,
+    animationsEnabled: feedbackSettings.animationsEnabled,
+    setAnimationsEnabled,
   };
 
   return (

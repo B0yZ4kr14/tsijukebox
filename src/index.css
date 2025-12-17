@@ -1967,6 +1967,24 @@
   box-shadow: 0 0 20px hsl(0 80% 50% / 0.3);
 }
 
+/* Ripple cor primária (rosa neon) */
+.ripple-primary {
+  background: radial-gradient(circle, hsl(var(--kiosk-primary) / 0.6), hsl(var(--kiosk-primary) / 0.2), transparent 70%);
+  box-shadow: 0 0 30px hsl(var(--kiosk-primary) / 0.4);
+}
+
+/* Ripple verde neon */
+.ripple-green {
+  background: radial-gradient(circle, hsl(142 70% 55% / 0.5), hsl(142 70% 45% / 0.2), transparent 70%);
+  box-shadow: 0 0 25px hsl(142 70% 50% / 0.35);
+}
+
+/* Ripple amarelo/laranja para Stop */
+.ripple-stop {
+  background: radial-gradient(circle, hsl(45 100% 55% / 0.5), hsl(45 100% 45% / 0.2), transparent 70%);
+  box-shadow: 0 0 25px hsl(45 100% 50% / 0.35);
+}
+
 /* ========== GRADIENT BACKGROUND ========== */
 body[data-gradient="true"] {
   background: var(--custom-gradient, hsl(var(--kiosk-bg)));

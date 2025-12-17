@@ -2,6 +2,10 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, SkipBack, SkipForward, Square } from 'lucide-react';
 import { usePlayer } from '@/hooks/usePlayer';
+import { useRipple } from '@/hooks/useRipple';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { RippleContainer } from '@/components/ui/RippleContainer';
+import { useSettings } from '@/contexts/SettingsContext';
 import { cn } from '@/lib/utils';
 
 interface PlayerControlsProps {
@@ -16,6 +20,39 @@ const buttonVariants = {
 
 export function PlayerControls({ isPlaying }: PlayerControlsProps) {
   const { play, pause, next, prev, stop, isLoading } = usePlayer();
+  const { soundEnabled, animationsEnabled } = useSettings();
+  
+  // Ripples individuais para cada botão
+  const prevRipple = useRipple();
+  const playRipple = useRipple();
+  const nextRipple = useRipple();
+  const stopRipple = useRipple();
+  
+  const { playSound } = useSoundEffects();
+
+  const handlePrev = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) prevRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    prev();
+  };
+
+  const handlePlayPause = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) playRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    isPlaying ? pause() : play();
+  };
+
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) nextRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    next();
+  };
+
+  const handleStop = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) stopRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    stop();
+  };
 
   return (
     <motion.div 
@@ -34,16 +71,17 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={prev}
+          onClick={handlePrev}
           disabled={isLoading}
           className={cn(
-            "w-14 h-14 md:w-16 md:h-16 rounded-full",
+            "w-14 h-14 md:w-16 md:h-16 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
             "transition-all duration-200"
           )}
         >
-          <SkipBack className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg" />
+          <RippleContainer ripples={prevRipple.ripples} color="cyan" />
+          <SkipBack className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg relative z-10" />
         </Button>
       </motion.div>
 
@@ -56,7 +94,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
         className="relative"
       >
         {/* Pulse effect when playing */}
-        {isPlaying && (
+        {isPlaying && animationsEnabled && (
           <motion.div
             className="absolute inset-0 rounded-full bg-kiosk-primary"
             animate={{
@@ -74,22 +112,24 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={isPlaying ? pause : play}
+          onClick={handlePlayPause}
           disabled={isLoading}
           className={cn(
-            "w-20 h-20 md:w-24 md:h-24 rounded-full relative z-10",
+            "w-20 h-20 md:w-24 md:h-24 rounded-full relative z-10 overflow-hidden",
             "bg-kiosk-primary hover:bg-kiosk-primary/90",
             "text-kiosk-bg hover:text-kiosk-bg",
             "button-play-ultra-3d",
             "transition-all duration-200"
           )}
         >
+          <RippleContainer ripples={playRipple.ripples} color="primary" />
           <motion.div
             key={isPlaying ? 'pause' : 'play'}
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="relative z-10"
           >
             {isPlaying ? (
               <Pause className="w-8 h-8 md:w-10 md:h-10 drop-shadow-lg" />
@@ -110,16 +150,17 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={next}
+          onClick={handleNext}
           disabled={isLoading}
           className={cn(
-            "w-14 h-14 md:w-16 md:h-16 rounded-full",
+            "w-14 h-14 md:w-16 md:h-16 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
             "transition-all duration-200"
           )}
         >
-          <SkipForward className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg" />
+          <RippleContainer ripples={nextRipple.ripples} color="cyan" />
+          <SkipForward className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg relative z-10" />
         </Button>
       </motion.div>
 
@@ -133,16 +174,17 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={stop}
+          onClick={handleStop}
           disabled={isLoading}
           className={cn(
-            "w-12 h-12 rounded-full",
+            "w-12 h-12 rounded-full relative overflow-hidden",
             "button-stop-extreme-3d",
             "text-kiosk-text/50 hover:text-destructive",
             "transition-all duration-200"
           )}
         >
-          <Square className="w-5 h-5 drop-shadow-md" />
+          <RippleContainer ripples={stopRipple.ripples} color="stop" />
+          <Square className="w-5 h-5 drop-shadow-md relative z-10" />
         </Button>
       </motion.div>
     </motion.div>

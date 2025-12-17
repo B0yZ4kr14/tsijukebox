@@ -3,7 +3,7 @@ import type { Ripple } from '@/hooks/useRipple';
 
 interface RippleContainerProps {
   ripples: Ripple[];
-  color?: 'cyan' | 'amber' | 'white' | 'red';
+  color?: 'cyan' | 'amber' | 'white' | 'red' | 'primary' | 'green' | 'stop';
 }
 
 const rippleColors = {
@@ -11,6 +11,9 @@ const rippleColors = {
   amber: 'ripple-amber',
   white: 'ripple-white',
   red: 'ripple-red',
+  primary: 'ripple-primary',
+  green: 'ripple-green',
+  stop: 'ripple-stop',
 };
 
 export function RippleContainer({ ripples, color = 'cyan' }: RippleContainerProps) {
