@@ -1,207 +1,75 @@
 import { Music } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useMemo } from 'react';
 import type { TrackInfo } from '@/lib/api/types';
 import { cn } from '@/lib/utils';
-import { useSettings } from '@/contexts/SettingsContext';
 
 interface NowPlayingProps {
   track: TrackInfo | null;
   isPlaying: boolean;
 }
 
-// Floating particle component
-const FloatingParticle = ({ 
-  delay, 
-  x, 
-  startY, 
-  color 
-}: { 
-  delay: number; 
-  x: number; 
-  startY: number;
-  color: 'cyan' | 'pink' | 'gold';
-}) => {
-  const colorClasses = {
-    cyan: 'floating-particle-cyan',
-    pink: 'floating-particle-pink',
-    gold: 'floating-particle-gold',
-  };
-
-  return (
-    <motion.div
-      className={`absolute w-1.5 h-1.5 rounded-full ${colorClasses[color]} pointer-events-none`}
-      style={{ left: `${x}%` }}
-      initial={{ y: startY, opacity: 0, scale: 0 }}
-      animate={{
-        y: [startY, startY - 120, startY - 180],
-        opacity: [0, 1, 0],
-        scale: [0, 1.2, 0.5],
-        x: [0, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 50],
-      }}
-      transition={{
-        duration: 3 + Math.random() * 2,
-        delay,
-        repeat: Infinity,
-        repeatDelay: Math.random() * 1.5,
-        ease: 'easeOut',
-      }}
-    />
-  );
-};
-
 export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
-  const { animationsEnabled } = useSettings();
-
-  // Generate floating particles
-  const particles = useMemo(() => 
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      startY: 280 + Math.random() * 40,
-      delay: Math.random() * 2,
-      color: (['cyan', 'pink', 'gold'] as const)[i % 3],
-    })),
-  []);
-
   return (
-    <div className="flex flex-col items-center gap-3 relative">
-      {/* Floating particles container - only shows when playing and animations enabled */}
-      <AnimatePresence>
-        {isPlaying && animationsEnabled && (
-          <motion.div 
-            className="absolute inset-0 pointer-events-none overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {particles.map(p => (
-              <FloatingParticle
-                key={p.id}
-                x={p.x}
-                startY={p.startY}
-                delay={p.delay}
-                color={p.color}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+    <div className="flex flex-col items-center gap-2 relative">
       {/* Album Cover - Static with 3D effects */}
       <div className="relative">
-        {/* Outer glow when playing */}
-        <motion.div
-          className="absolute -inset-5 rounded-2xl bg-kiosk-primary/20 blur-2xl"
-          animate={{
-            opacity: isPlaying ? [0.15, 0.35, 0.15] : 0.05,
-            scale: isPlaying ? [1, 1.05, 1] : 1,
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+        {/* Outer glow - static */}
+        <div 
+          className={cn(
+            "absolute -inset-4 rounded-xl blur-xl transition-opacity duration-500",
+            isPlaying ? "bg-kiosk-primary/25 opacity-100" : "bg-kiosk-primary/10 opacity-50"
+          )}
         />
 
-        {/* Multiple shadow layers for extreme depth */}
-        <div className="absolute -inset-1 rounded-xl bg-black/60 blur-xl" />
-        <div className="absolute -inset-2 rounded-xl bg-kiosk-primary/10 blur-2xl" />
+        {/* Multiple shadow layers for depth */}
+        <div className="absolute -inset-1 rounded-lg bg-black/50 blur-lg" />
+        <div className="absolute -inset-2 rounded-lg bg-kiosk-primary/10 blur-xl" />
 
-        {/* Main album cover - 3D Frame with SOLID dark background */}
-        <motion.div 
+        {/* Main album cover - Reduced size, no animations */}
+        <div 
           className={cn(
-            "w-48 h-48 md:w-52 md:h-52 rounded-xl overflow-hidden relative z-10",
+            "w-40 h-40 md:w-44 md:h-44 rounded-lg overflow-hidden relative z-10",
             "album-frame-extreme-3d"
           )}
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ 
-            scale: 1, 
-            opacity: 1,
-          }}
-          transition={{ duration: 0.5 }}
         >
-          {/* Multiple SOLID dark background layers - prevents any transparency */}
+          {/* Solid dark background layers */}
           <div className="absolute inset-0 bg-[#050508]" />
           <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a12] to-[#000000]" />
           
-          <AnimatePresence mode="wait">
-            {track?.cover ? (
-              <motion.img
-                key={track.cover}
-                src={track.cover}
-                alt={`${track.title} - ${track.artist}`}
-                className="w-full h-full object-cover relative z-10"
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-              />
-            ) : (
-              <motion.div 
-                key="placeholder"
-                className="w-full h-full bg-gradient-to-br from-kiosk-surface to-[#050508] flex items-center justify-center relative z-10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Music className="w-14 h-14 text-kiosk-primary/40" />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {track?.cover ? (
+            <img
+              src={track.cover}
+              alt={`${track.title} - ${track.artist}`}
+              className="w-full h-full object-cover relative z-10"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-kiosk-surface to-[#050508] flex items-center justify-center relative z-10">
+              <Music className="w-12 h-12 text-kiosk-primary/40" />
+            </div>
+          )}
 
-          {/* Overlay gradient for depth - enhanced darkening effect */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/60 via-transparent to-[#050508]/40 pointer-events-none z-20" />
+          {/* Overlay gradient for depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/50 via-transparent to-[#050508]/30 pointer-events-none z-20" />
           
-          {/* Inner shadow for extreme inset effect */}
-          <div className="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.7)] pointer-events-none rounded-xl z-20" />
-        </motion.div>
-
+          {/* Inner shadow for inset effect */}
+          <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.6)] pointer-events-none rounded-lg z-20" />
+        </div>
       </div>
 
-      {/* Track Info with 3D text shadow */}
-      <div className="text-center space-y-1 max-w-sm">
-        <AnimatePresence mode="wait">
-          <motion.h2 
-            key={track?.title || 'no-track'}
-            className="text-lg md:text-xl font-bold text-kiosk-text drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {track?.title || 'Nenhuma faixa'}
-          </motion.h2>
-        </AnimatePresence>
+      {/* Track Info with new neon styles */}
+      <div className="text-center space-y-0.5 max-w-sm mt-2">
+        <h2 className="text-lg md:text-xl text-title-white-neon">
+          {track?.title || 'Nenhuma faixa'}
+        </h2>
         
-        <AnimatePresence mode="wait">
-          <motion.p 
-            key={track?.artist || 'no-artist'}
-            className="text-sm text-kiosk-text/70 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            {track?.artist || 'Aguardando...'}
-          </motion.p>
-        </AnimatePresence>
+        <p className="text-sm text-artist-neon-blue">
+          {track?.artist || 'Aguardando...'}
+        </p>
         
-        <AnimatePresence>
-          {track?.album && (
-            <motion.p 
-              key={track.album}
-              className="text-sm text-kiosk-text/50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-            >
-              {track.album}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        {track?.album && (
+          <p className="text-xs text-kiosk-text/50">
+            {track.album}
+          </p>
+        )}
       </div>
     </div>
   );

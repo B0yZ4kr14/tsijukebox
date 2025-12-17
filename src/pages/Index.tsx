@@ -305,7 +305,7 @@ export default function Index() {
         </header>
 
         {/* Main Content - centralized container */}
-        <main className="flex-1 flex flex-col items-center justify-center gap-2 px-4 pb-32 touch-pan-y">
+        <main className="flex-1 flex flex-col items-center justify-start pt-4 gap-2 px-4 pb-32 touch-pan-y">
           {/* Centralized container for all player elements */}
           <div className="w-full max-w-md flex flex-col items-center gap-3">
             {/* Now Playing */}
@@ -324,7 +324,7 @@ export default function Index() {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full mt-1">
+            <div className="w-full mt-2">
               <ProgressBar
                 position={status?.track?.position ?? 0}
                 duration={status?.track?.duration ?? 0}
@@ -334,7 +334,7 @@ export default function Index() {
             </div>
             
             {/* Playback Controls (shuffle, repeat, queue) */}
-            <div className="mt-3">
+            <div className="mt-4">
               <PlaybackControls
                 shuffle={shuffle}
                 repeat={repeat}
@@ -345,12 +345,12 @@ export default function Index() {
             </div>
 
             {/* Player Controls (play/pause/prev/next) */}
-            <div className="mt-4">
+            <div className="mt-5">
               <PlayerControls isPlaying={status?.playing ?? false} />
             </div>
             
             {/* Volume Slider */}
-            <div className="w-full max-w-[280px] mt-4">
+            <div className="w-full max-w-[280px] mt-5">
               <VolumeSlider 
                 volume={status?.volume ?? 75} 
                 muted={status?.muted ?? false} 
