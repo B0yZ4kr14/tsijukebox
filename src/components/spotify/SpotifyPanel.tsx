@@ -23,6 +23,7 @@ interface SpotifyPanelProps {
   isOpen: boolean;
   onClose: () => void;
   currentTrackId?: string;
+  currentAlbumId?: string;
   currentArtistIds?: string[];
 }
 
@@ -159,7 +160,7 @@ function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlayli
   );
 }
 
-export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds = [] }: SpotifyPanelProps) {
+export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, currentArtistIds = [] }: SpotifyPanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('playlists');
   const { spotify } = useSettings();
@@ -410,6 +411,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentArtistIds
                           key={album.id}
                           album={album}
                           onPlay={() => handlePlayAlbum(album.id)}
+                          isPlaying={currentAlbumId === album.id}
                         />
                       ))}
                     </div>

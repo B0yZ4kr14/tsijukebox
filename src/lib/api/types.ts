@@ -3,6 +3,8 @@
 export type MusicGenre = 'rock' | 'pop' | 'soul' | 'hip-hop' | 'ballad' | 'classic-rock';
 
 export interface TrackInfo {
+  id?: string;
+  albumId?: string;
   title: string;
   artist: string;
   album: string;

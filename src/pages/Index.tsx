@@ -400,6 +400,8 @@ export default function Index() {
         <SpotifyPanel
           isOpen={showSpotifyPanel}
           onClose={() => setShowSpotifyPanel(false)}
+          currentTrackId={status?.track?.id}
+          currentAlbumId={status?.track?.albumId}
         />
 
         {/* Guided Tour for new users */}
