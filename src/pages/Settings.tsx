@@ -269,7 +269,7 @@ export default function Settings() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-kiosk-text/60">Versão</span>
-                  <span className="text-kiosk-text">TSi JUKEBOX Enterprise v4.0</span>
+                  <span className="text-kiosk-text">TSiJUKEBOX Enterprise v4.0</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-kiosk-text/60">Modo</span>

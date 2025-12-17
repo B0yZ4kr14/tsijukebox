@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   ChevronRight, 
@@ -23,6 +24,7 @@ interface WikiArticleProps {
   onSelectArticle: (articleId: string) => void;
   isBookmarked?: boolean;
   onToggleBookmark?: () => void;
+  onArticleViewed?: (articleId: string) => void;
 }
 
 // Simple illustration components
@@ -154,8 +156,15 @@ const illustrations: Record<string, React.ReactNode> = {
   deck: <SettingsIllustration />,
 };
 
-export function WikiArticleView({ article, onSelectArticle, isBookmarked, onToggleBookmark }: WikiArticleProps) {
+export function WikiArticleView({ article, onSelectArticle, isBookmarked, onToggleBookmark, onArticleViewed }: WikiArticleProps) {
   const path = getArticlePath(article.id);
+
+  // Mark article as read when viewed
+  useEffect(() => {
+    if (onArticleViewed) {
+      onArticleViewed(article.id);
+    }
+  }, [article.id, onArticleViewed]);
 
   return (
     <motion.article

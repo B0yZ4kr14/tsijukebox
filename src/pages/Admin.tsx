@@ -1,5 +1,6 @@
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useStatus } from '@/hooks/useStatus';
 import { useLogs } from '@/hooks/useLogs';
 import { Cpu, HardDrive, Thermometer, Music, Play, Pause, AlertCircle } from 'lucide-react';
@@ -47,9 +48,12 @@ export default function Admin() {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gold-neon">Dashboard</h2>
-          <p className="text-kiosk-text/70">Visão geral do sistema TSi JUKEBOX</p>
+        <div className="flex items-center gap-4">
+          <LogoBrand size="sm" variant="metal" centered={false} animate={false} />
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-gold-neon">Dashboard</h2>
+            <p className="text-kiosk-text/70">Visão geral do sistema</p>
+          </div>
         </div>
 
         {/* Stats Grid */}

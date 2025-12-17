@@ -23,6 +23,7 @@ interface WikiNavigationProps {
   onSelectArticle: (articleId: string) => void;
   onSelectCategory: (categoryId: string) => void;
   selectedCategory: string | null;
+  isArticleRead?: (articleId: string) => boolean;
 }
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -75,7 +76,8 @@ export function WikiNavigation({
   selectedArticle, 
   onSelectArticle, 
   onSelectCategory,
-  selectedCategory 
+  selectedCategory,
+  isArticleRead 
 }: WikiNavigationProps) {
   // Default: expand 'integrations' category to show new Spicetify/YouTube Music articles
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
@@ -386,8 +388,10 @@ export function WikiNavigation({
                     "hover:bg-primary/10 border border-transparent",
                     expandedCategories.has(category.id) && "bg-kiosk-surface/50 border-primary/20",
                     selectedCategory === category.id && "bg-primary/20 text-primary border-primary/40",
-                    // Special highlight for category with new articles
-                    category.id === CATEGORY_WITH_NEW_ARTICLES && "border-green-500/40 bg-green-500/5 hover:bg-green-500/10"
+                    // Special highlight for category with new articles (only if has unread)
+                    category.id === CATEGORY_WITH_NEW_ARTICLES && 
+                      [...NEW_ARTICLE_IDS].some(id => !(isArticleRead?.(id))) && 
+                      "border-green-500/40 bg-green-500/5 hover:bg-green-500/10"
                   )}
                 >
                   {expandedCategories.has(category.id) ? (
@@ -399,8 +403,9 @@ export function WikiNavigation({
                   <span className="text-sm font-medium truncate flex-1">
                     {highlightMatch(category.title, searchQuery)}
                   </span>
-                  {/* NOVO badge for integrations category */}
-                  {category.id === CATEGORY_WITH_NEW_ARTICLES && (
+                  {/* NOVO badge for integrations category (hide when all read) */}
+                  {category.id === CATEGORY_WITH_NEW_ARTICLES && 
+                    [...NEW_ARTICLE_IDS].some(id => !(isArticleRead?.(id))) && (
                     <Badge className="bg-green-500 text-white text-[8px] px-1.5 py-0 h-4 animate-pulse shadow-[0_0_8px_hsl(142_70%_45%/0.6)]">
                       NOVO
                     </Badge>
@@ -498,23 +503,23 @@ export function WikiNavigation({
                                                 selectedArticle === article.id
                                                   ? "bg-primary/20 text-primary"
                                                   : "hover:bg-kiosk-surface/30 text-kiosk-text/60 hover:text-kiosk-text",
-                                                // Highlight new articles
-                                                NEW_ARTICLE_IDS.has(article.id) && "bg-green-500/5 hover:bg-green-500/10"
+                                                // Highlight new articles (only if not read)
+                                                NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)) && "bg-green-500/5 hover:bg-green-500/10"
                                               )}
                                             >
                                               <span className={cn(
                                                 "w-1.5 h-1.5 rounded-full shrink-0 transition-colors",
                                                 selectedArticle === article.id 
                                                   ? "bg-primary shadow-[0_0_6px_hsl(var(--primary))]" 
-                                                  : NEW_ARTICLE_IDS.has(article.id)
+                                                  : (NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)))
                                                     ? "bg-green-500 shadow-[0_0_4px_hsl(142_70%_45%/0.5)]"
                                                     : "bg-current opacity-50"
                                               )} />
                                               <span className="truncate flex-1">
                                                 {highlightMatch(article.title, searchQuery)}
                                               </span>
-                                              {/* NOVO badge for new articles */}
-                                              {NEW_ARTICLE_IDS.has(article.id) && (
+                                              {/* NOVO badge for new articles (hide if read) */}
+                                              {NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)) && (
                                                 <Badge className="bg-green-500/80 text-white text-[7px] px-1 py-0 h-3.5 ml-1">
                                                   NOVO
                                                 </Badge>

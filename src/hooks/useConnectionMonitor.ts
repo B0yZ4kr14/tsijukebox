@@ -56,7 +56,7 @@ export function useConnectionMonitor() {
             icon: '✅',
             duration: 4000,
           });
-          sendNotification('TSi JUKEBOX', '✅ Conexão com o servidor restaurada');
+          sendNotification('TSiJUKEBOX', '✅ Conexão com o servidor restaurada');
         } else if (response.ok) {
           lastStatusRef.current = 'online';
         }
@@ -69,7 +69,7 @@ export function useConnectionMonitor() {
             duration: 6000,
             description: 'Tentando reconectar automaticamente...',
           });
-          sendNotification('TSi JUKEBOX', '❌ Conexão com o servidor perdida!');
+          sendNotification('TSiJUKEBOX', '❌ Conexão com o servidor perdida!');
         }
       }
     };
