@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ListMusic, Heart, Clock, Sparkles, Music2, Play, Plus, X, Disc3, Star, TrendingUp } from 'lucide-react';
+import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -116,7 +117,7 @@ function AlbumCard({ album, onPlay }: { album: SpotifyAlbum; onPlay: () => void 
   );
 }
 
-function PlaylistCard({ playlist, onPlay }: { playlist: SpotifyPlaylist; onPlay: () => void }) {
+function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlaylist; onPlay: () => void; isPlaying?: boolean }) {
   return (
     <button
       onClick={onPlay}
@@ -134,9 +135,15 @@ function PlaylistCard({ playlist, onPlay }: { playlist: SpotifyPlaylist; onPlay:
             <ListMusic className="w-8 h-8 text-kiosk-text/50" />
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Play className="w-8 h-8 text-white fill-white" />
-        </div>
+        {isPlaying ? (
+          <div className="absolute inset-x-0 bottom-0 h-8 flex items-end justify-center bg-gradient-to-t from-black/80 to-transparent pb-1">
+            <AudioVisualizer isPlaying={true} barCount={8} variant="compact" className="opacity-90" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Play className="w-8 h-8 text-white fill-white" />
+          </div>
+        )}
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{playlist.name}</p>
