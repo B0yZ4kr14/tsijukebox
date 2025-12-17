@@ -345,6 +345,7 @@
     "description": "Sync backups with cloud storage services",
     "provider": "Cloud Provider",
     "selectProvider": "Select a provider",
+    "selectProviderFirst": "Select a provider first",
     "bucketName": "Bucket Name",
     "accessKey": "Access Key ID",
     "secretKey": "Secret Access Key",
@@ -361,7 +362,22 @@
     "configSaved": "Cloud backup configuration saved",
     "syncSuccess": "Backup synced to cloud",
     "syncError": "Sync error",
-    "demoWarning": "Cloud configuration unavailable in demo mode"
+    "demoWarning": "Cloud configuration unavailable in demo mode",
+    "migration": {
+      "title": "Configuration Migration",
+      "description": "Export your settings to migrate to another TSi JUKEBOX installation or backup your credentials.",
+      "export": "Export JSON",
+      "import": "Import JSON",
+      "includeCredentials": "Include sensitive credentials",
+      "includeCredentialsWarning": "⚠️ Not recommended for sharing. Keep the file in a secure location!",
+      "info": "Sensitive credentials (passwords, secret keys) are masked by default. Check the option above only if you need a complete backup."
+    },
+    "exportSuccess": "Settings exported successfully",
+    "importSuccess": "Settings imported successfully",
+    "importSuccessWithMasked": "Settings imported! Please fill in sensitive credentials manually.",
+    "importError": "Import error: invalid file",
+    "importInvalidFormat": "Invalid file format",
+    "importVersionWarning": "Different version detected. Some settings may not be compatible."
   },
   "ntp": {
     "title": "Time Synchronization (NTP)",
