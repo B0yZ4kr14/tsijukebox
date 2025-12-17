@@ -241,7 +241,7 @@ export default function Index() {
         <header className="flex flex-col p-2 pt-1.5 header-3d backdrop-blur-sm">
           {/* LINE 1: Logo centered at absolute top */}
           <div className="w-full flex justify-center mb-2">
-            <LogoBrand size="lg" variant="mirror" animate={false} />
+            <LogoBrand size="lg" variant="metal" animate={false} />
           </div>
 
           {/* LINE 2: Status bar with grid for perfect centering */}
