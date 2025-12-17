@@ -272,8 +272,8 @@ export default function Index() {
                   <AudioVisualizer 
                     variant="compact" 
                     isPlaying={true} 
-                    barCount={12}
-                    className="opacity-70"
+                    barCount={8}
+                    className="opacity-50 scale-75"
                   />
                 </>
               )}
