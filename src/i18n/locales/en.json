@@ -159,7 +159,9 @@
       "reload": "Restart services (soft restart)",
       "setup": "System settings",
       "reboot": "Restart system (reboot)",
-      "help": "Open manual and FAQ"
+      "help": "Open manual and FAQ",
+      "spotify": "Browse Spotify library",
+      "youtube": "Browse YouTube Music library"
     },
     "rebootDialog": {
       "title": "Confirm Restart",

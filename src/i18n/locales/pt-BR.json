@@ -159,7 +159,9 @@
       "reload": "Reiniciar serviços (soft restart)",
       "setup": "Configurações do sistema",
       "reboot": "Reiniciar sistema (reboot)",
-      "help": "Abrir manual e FAQ"
+      "help": "Abrir manual e FAQ",
+      "spotify": "Navegar biblioteca Spotify",
+      "youtube": "Navegar biblioteca YouTube Music"
     },
     "rebootDialog": {
       "title": "Confirmar Reinicialização",

@@ -379,7 +379,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
                   <DeckButton
                     icon={<Music className="w-5 h-5" />}
                     label="SPOTIFY"
-                    tooltip="Navegar biblioteca Spotify"
+                    tooltip={t('commandDeck.tooltips.spotify')}
                     onClick={() => navigate('/spotify')}
                     color="green"
                     disabled={disabled}
@@ -391,7 +391,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
                   <DeckButton
                     icon={<Youtube className="w-5 h-5" />}
                     label="YOUTUBE"
-                    tooltip="Navegar biblioteca YouTube Music"
+                    tooltip={t('commandDeck.tooltips.youtube')}
                     onClick={() => navigate('/youtube-music')}
                     color="red"
                     disabled={disabled}
