@@ -2629,59 +2629,55 @@ body[data-gradient="true"] {
   /* SEM background, SEM border */
 }
 
-/* Logo TSi MIRROR - GOLDEN CHROME (Dual-tone) */
+/* Logo TSi MIRROR - STEEL CHROME (Profissional) */
 .logo-tsi-mirror {
-  /* Gradiente DOURADO - 45° hue, 65-28% lightness */
   background: linear-gradient(
     180deg,
-    hsl(45 90% 65%) 0%,       /* Topo: Ouro brilhante */
-    hsl(42 85% 55%) 20%,      /* Transição rica */
-    hsl(38 80% 45%) 50%,      /* Core dourado profundo */
-    hsl(35 75% 35%) 80%,      /* Âmbar escuro */
-    hsl(30 70% 28%) 100%      /* Base bronze */
+    hsl(210 8% 75%) 0%,       /* Highlight prata claro */
+    hsl(212 10% 55%) 15%,     /* Transição */
+    hsl(215 12% 42%) 45%,     /* Core steel */
+    hsl(218 14% 32%) 75%,     /* Profundidade */
+    hsl(220 15% 25%) 100%     /* Base gunmetal */
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Contorno dourado intenso - 2-4px glow */
   filter: 
-    drop-shadow(0 0 2px hsl(45 100% 70% / 0.9))
-    drop-shadow(0 0 4px hsl(40 100% 60% / 0.6))
-    drop-shadow(0 1px 1px hsl(35 100% 50% / 0.4));
+    drop-shadow(0 0 1px hsl(0 0% 100% / 0.7))
+    drop-shadow(0 0 2px hsl(210 10% 70% / 0.5))
+    drop-shadow(0 1px 2px hsl(220 20% 10% / 0.6));
   letter-spacing: -0.02em;
   font-weight: 900;
 }
 
-/* Logo JUKEBOX MIRROR - CYAN CHROME (Dual-tone) */
+/* Logo JUKEBOX MIRROR - STEEL CHROME consistente */
 .logo-jukebox-mirror {
-  /* Gradiente CIANO - 195° hue, 50-22% lightness */
   background: linear-gradient(
     180deg,
-    hsl(195 85% 50%) 0%,      /* Topo: Ciano brilhante */
-    hsl(200 80% 42%) 20%,     /* Transição */
-    hsl(210 75% 35%) 50%,     /* Core azul médio */
-    hsl(215 70% 28%) 80%,     /* Azul profundo */
-    hsl(220 65% 22%) 100%     /* Base azul escuro */
+    hsl(205 10% 72%) 0%,      /* Highlight prata */
+    hsl(208 12% 52%) 15%,     /* Transição */
+    hsl(212 14% 40%) 45%,     /* Core steel */
+    hsl(215 16% 30%) 75%,     /* Profundidade */
+    hsl(218 18% 23%) 100%     /* Base gunmetal */
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Contorno ciano intenso - 2-4px glow */
   filter: 
-    drop-shadow(0 0 2px hsl(195 100% 65% / 0.9))
-    drop-shadow(0 0 4px hsl(195 100% 55% / 0.6))
-    drop-shadow(0 1px 1px hsl(200 100% 45% / 0.4));
+    drop-shadow(0 0 1px hsl(0 0% 100% / 0.7))
+    drop-shadow(0 0 2px hsl(205 10% 68% / 0.5))
+    drop-shadow(0 1px 2px hsl(220 20% 10% / 0.6));
   letter-spacing: 0.06em;
   margin-left: 0.08em;
   font-weight: 900;
 }
 
-/* Reflexo da logo TSi - DOURADO */
+/* Reflexo da logo TSi - STEEL */
 .logo-tsi-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(40 60% 35%) 0%,
-    hsl(35 50% 20%) 100%
+    hsl(215 10% 35%) 0%,
+    hsl(220 12% 18%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2689,31 +2685,66 @@ body[data-gradient="true"] {
   letter-spacing: -0.02em;
 }
 
-/* Reflexo da logo JUKEBOX - CIANO */
+/* Reflexo da logo JUKEBOX - STEEL */
 .logo-jukebox-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(200 55% 30%) 0%,
-    hsl(210 50% 18%) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.06em;
-}
-
-/* Reflexo JUKEBOX - ultra dark */
-.logo-jukebox-mirror-reflection {
-  background: linear-gradient(
-    180deg,
-    hsl(215 55% 16%) 0%,
-    hsl(222 50% 7%) 100%
+    hsl(212 10% 32%) 0%,
+    hsl(218 12% 16%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0.06em;
   margin-left: 0.08em;
+}
+
+/* ========================================
+   VARIANTE SILVER/WHITE - Alto Contraste
+   ======================================== */
+
+.logo-tsi-silver {
+  background: linear-gradient(
+    180deg,
+    hsl(0 0% 100%) 0%,
+    hsl(210 5% 95%) 20%,
+    hsl(210 8% 88%) 50%,
+    hsl(210 10% 80%) 80%,
+    hsl(210 12% 72%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: 
+    drop-shadow(0 0 1px hsl(0 0% 60% / 0.5))
+    drop-shadow(0 1px 2px hsl(220 15% 20% / 0.3));
+  letter-spacing: -0.02em;
+  font-weight: 900;
+}
+
+.logo-jukebox-silver {
+  background: linear-gradient(
+    180deg,
+    hsl(0 0% 100%) 0%,
+    hsl(205 5% 94%) 20%,
+    hsl(205 8% 86%) 50%,
+    hsl(205 10% 78%) 80%,
+    hsl(205 12% 70%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: 
+    drop-shadow(0 0 1px hsl(0 0% 55% / 0.5))
+    drop-shadow(0 1px 2px hsl(220 15% 20% / 0.3));
+  letter-spacing: 0.06em;
+  margin-left: 0.08em;
+  font-weight: 900;
+}
+
+.logo-container-silver {
+  position: relative;
+  padding: 8px 0;
 }
 
 /* Animação removida - sem pulsação */
