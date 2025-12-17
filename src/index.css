@@ -1946,6 +1946,27 @@
     0 0 20px hsl(45 100% 50% / 0.4);
 }
 
+/* ========== RIPPLE WAVE EFFECTS ========== */
+.ripple-cyan {
+  background: radial-gradient(circle, hsl(185 100% 60% / 0.5), hsl(185 100% 50% / 0.2), transparent 70%);
+  box-shadow: 0 0 20px hsl(185 100% 50% / 0.3);
+}
+
+.ripple-amber {
+  background: radial-gradient(circle, hsl(38 100% 60% / 0.5), hsl(38 100% 50% / 0.2), transparent 70%);
+  box-shadow: 0 0 20px hsl(38 100% 50% / 0.3);
+}
+
+.ripple-white {
+  background: radial-gradient(circle, hsl(0 0% 100% / 0.4), hsl(0 0% 100% / 0.15), transparent 70%);
+  box-shadow: 0 0 20px hsl(0 0% 100% / 0.2);
+}
+
+.ripple-red {
+  background: radial-gradient(circle, hsl(0 80% 60% / 0.5), hsl(0 80% 50% / 0.2), transparent 70%);
+  box-shadow: 0 0 20px hsl(0 80% 50% / 0.3);
+}
+
 /* ========== GRADIENT BACKGROUND ========== */
 body[data-gradient="true"] {
   background: var(--custom-gradient, hsl(var(--kiosk-bg)));

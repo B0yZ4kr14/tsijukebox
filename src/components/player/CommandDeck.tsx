@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft, HelpCircle } from 'lucide-react';
+import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useRipple } from '@/hooks/useRipple';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { RippleContainer } from '@/components/ui/RippleContainer';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -77,17 +80,26 @@ const colorClasses = {
 
 function DeckButton({ icon, label, tooltip, onClick, color, disabled }: DeckButtonProps) {
   const colors = colorClasses[color];
+  const { ripples, createRipple } = useRipple();
+  const { playSound } = useSoundEffects();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled) return;
+    createRipple(e);
+    playSound('click');
+    onClick();
+  };
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.button
-            onClick={onClick}
+            onClick={handleClick}
             disabled={disabled}
             className={`
               relative flex flex-col items-center justify-center gap-2
-              w-20 h-20 rounded-2xl ripple-effect
+              w-20 h-20 rounded-2xl overflow-hidden
               ${colors.bg} border-2 ${colors.border}
               ${colors.pulseClass}
               transition-all duration-150
@@ -97,8 +109,11 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled }: DeckButt
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.95 }}
           >
+            {/* Ripple effect */}
+            <RippleContainer ripples={ripples} color={color} />
+            
             {/* Top highlight for 3D bevel */}
-            <div className="absolute inset-x-3 top-1.5 h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full" />
+            <div className="absolute inset-x-3 top-1.5 h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full z-10" />
             
             {/* Icon with glow */}
             <span className={`${colors.icon} relative z-10`}>{icon}</span>
@@ -109,7 +124,7 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled }: DeckButt
             </span>
 
             {/* Bottom shadow for 3D depth */}
-            <div className="absolute inset-x-3 bottom-1.5 h-0.5 bg-black/60 rounded-full" />
+            <div className="absolute inset-x-3 bottom-1.5 h-0.5 bg-black/60 rounded-full z-10" />
           </motion.button>
         </TooltipTrigger>
         <TooltipContent side="right" className="bg-slate-900 border-slate-600 text-white shadow-2xl">
@@ -129,6 +144,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { hasPermission } = useUser();
+  const { playSound } = useSoundEffects();
   const [showRebootDialog, setShowRebootDialog] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -342,7 +358,11 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
 
         {/* Toggle Tab */}
         <motion.button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => {
+            const newState = !isExpanded;
+            setIsExpanded(newState);
+            playSound(newState ? 'open' : 'close');
+          }}
           className="command-deck-tab flex items-center justify-center w-6 h-16 rounded-r-lg"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
