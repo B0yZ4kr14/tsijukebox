@@ -56,6 +56,8 @@ export default function Settings() {
     setSpotifyTokens,
     setSpotifyUser,
     clearSpotifyAuth,
+    setYouTubeMusicTokens,
+    setYouTubeMusicUser,
   } = useSettings();
 
   const [localClientId, setLocalClientId] = useState(spotify.clientId);
@@ -113,6 +115,27 @@ export default function Settings() {
     } catch (error) {
       if (import.meta.env.DEV) console.error('Failed to exchange code:', error);
       toast.error('Falha ao conectar com Spotify');
+    } finally {
+      setIsConnecting(false);
+      setSearchParams({});
+    }
+  };
+
+  const handleYouTubeMusicCallback = async (code: string) => {
+    setIsConnecting(true);
+    try {
+      const redirectUri = `${window.location.origin}/settings`;
+      const tokens = await youtubeMusicClient.exchangeCode(code, redirectUri);
+      setYouTubeMusicTokens(tokens);
+      
+      const user = await youtubeMusicClient.getCurrentUser();
+      if (user) {
+        setYouTubeMusicUser(user);
+        toast.success(`YouTube Music conectado como ${user.name}`);
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('Failed to exchange YouTube Music code:', error);
+      toast.error('Falha ao conectar com YouTube Music');
     } finally {
       setIsConnecting(false);
       setSearchParams({});

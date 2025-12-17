@@ -66,7 +66,7 @@ export function MusicIntegrationsSection() {
       description: 'Controle local do Spotify desktop via Spicetify',
       icon: <Radio className="w-6 h-6" />,
       color: '#1ED760',
-      isConnected: spicetify.enabled || false,
+      isConnected: spicetify.isInstalled || false,
       configPath: '/settings?section=integrations',
     },
     {
