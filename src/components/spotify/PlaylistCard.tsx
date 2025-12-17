@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Play, Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SpotifyPlaylist } from '@/lib/api/spotify';
@@ -14,6 +14,38 @@ interface PlaylistCardProps {
   onPlay?: () => void;
   className?: string;
 }
+
+// Confetti burst component
+const ConfettiBurst = ({ isActive }: { isActive: boolean }) => {
+  const particles = useMemo(() => 
+    Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      angle: (i * 30) * (Math.PI / 180),
+      distance: 40 + Math.random() * 30,
+    })),
+  []);
+
+  if (!isActive) return null;
+
+  return (
+    <>
+      {particles.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute left-1/2 top-1/2 w-1.5 h-1.5 rounded-full bg-[hsl(141_70%_50%)] pointer-events-none z-50"
+          initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+          animate={{
+            x: Math.cos(p.angle) * p.distance,
+            y: Math.sin(p.angle) * p.distance,
+            scale: 0,
+            opacity: 0,
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        />
+      ))}
+    </>
+  );
+};
 
 // Partícula individual para efeito hover
 const HoverParticle = ({ delay, x, color }: { delay: number; x: number; color: 'green' | 'cyan' | 'gold' }) => {
@@ -45,15 +77,20 @@ const HoverParticle = ({ delay, x, color }: { delay: number; x: number; color: '
 
 export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { animationsEnabled, soundEnabled } = useSettings();
   const cardRipple = useRipple();
   const { playSound } = useSoundEffects();
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (animationsEnabled) cardRipple.createRipple(e);
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (animationsEnabled) {
+      cardRipple.createRipple(e);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 600);
+    }
     if (soundEnabled) playSound('click');
     onClick?.();
-  };
+  }, [animationsEnabled, soundEnabled, cardRipple, playSound, onClick]);
 
   const hoverParticles = useMemo(() => 
     Array.from({ length: 12 }, (_, i) => ({
@@ -76,6 +113,9 @@ export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistC
     >
       {/* Ripple verde Spotify */}
       <RippleContainer ripples={cardRipple.ripples} color="spotify" />
+      
+      {/* Confetti burst on click */}
+      <ConfettiBurst isActive={showConfetti} />
       
       {/* Partículas flutuantes no hover */}
       <AnimatePresence>
