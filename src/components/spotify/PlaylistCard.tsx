@@ -7,12 +7,14 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { useRipple } from '@/hooks/useRipple';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { RippleContainer } from '@/components/ui/RippleContainer';
+import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 
 interface PlaylistCardProps {
   playlist: SpotifyPlaylist;
   onClick?: () => void;
   onPlay?: () => void;
   className?: string;
+  isPlaying?: boolean;
 }
 
 // Confetti burst component
@@ -75,7 +77,7 @@ const HoverParticle = ({ delay, x, color }: { delay: number; x: number; color: '
   );
 };
 
-export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistCardProps) {
+export function PlaylistCard({ playlist, onClick, onPlay, className, isPlaying }: PlaylistCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const { animationsEnabled, soundEnabled } = useSettings();
@@ -139,16 +141,22 @@ export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistC
           </div>
         )}
         
-        {/* Play button overlay com glow pulsante */}
-        <button
-          className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transition-all hover:scale-110 group-hover:play-button-spotify-glow"
-          onClick={(e) => {
-            e.stopPropagation();
-            onPlay?.();
-          }}
-        >
-          <Play className="w-5 h-5 text-black fill-black ml-0.5" />
-        </button>
+        {/* Play button ou AudioVisualizer quando tocando */}
+        {isPlaying ? (
+          <div className="absolute inset-x-0 bottom-0 h-10 flex items-end justify-center bg-gradient-to-t from-black/80 to-transparent pb-2">
+            <AudioVisualizer isPlaying={true} barCount={10} variant="compact" className="opacity-90" />
+          </div>
+        ) : (
+          <button
+            className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transition-all hover:scale-110 group-hover:play-button-spotify-glow"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPlay?.();
+            }}
+          >
+            <Play className="w-5 h-5 text-black fill-black ml-0.5" />
+          </button>
+        )}
       </div>
 
       {/* Info */}
