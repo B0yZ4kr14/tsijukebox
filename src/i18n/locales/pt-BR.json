@@ -377,7 +377,9 @@
     "importSuccessWithMasked": "Configurações importadas! Preencha as credenciais sensíveis manualmente.",
     "importError": "Erro ao importar: arquivo inválido",
     "importInvalidFormat": "Formato de arquivo inválido",
-    "importVersionWarning": "Versão diferente detectada. Algumas configurações podem não ser compatíveis."
+    "importVersionWarning": "Versão diferente detectada. Algumas configurações podem não ser compatíveis.",
+    "missingFieldsTitle": "Campos obrigatórios faltando:",
+    "oauthRequired": "Autenticação OAuth necessária"
   },
   "ntp": {
     "title": "Sincronização de Tempo (NTP)",

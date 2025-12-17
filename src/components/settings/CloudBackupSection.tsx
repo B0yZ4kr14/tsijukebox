@@ -155,7 +155,56 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
     setConfig({ provider: provider as CloudProvider });
   };
 
+  // Validate required fields
+  const validateConfig = (): { isValid: boolean; missingFields: string[] } => {
+    const missingFields: string[] = [];
+
+    if (!config.provider) {
+      missingFields.push(t('cloudBackup.provider'));
+      return { isValid: false, missingFields };
+    }
+
+    switch (config.provider) {
+      case 'aws':
+        if (!config.awsBucket?.trim()) missingFields.push(t('cloudBackup.bucketName'));
+        if (!config.awsAccessKey?.trim()) missingFields.push(t('cloudBackup.accessKey'));
+        if (!config.awsSecretKey?.trim()) missingFields.push(t('cloudBackup.secretKey'));
+        if (!config.awsRegion?.trim()) missingFields.push(t('cloudBackup.region'));
+        break;
+      case 'mega':
+        if (!config.megaEmail?.trim()) missingFields.push(t('cloudBackup.email'));
+        if (!config.megaPassword?.trim()) missingFields.push(t('cloudBackup.password'));
+        break;
+      case 'storj':
+        if (!config.storjAccessGrant?.trim()) missingFields.push(t('cloudBackup.accessGrant'));
+        break;
+      case 'gdrive':
+      case 'dropbox':
+      case 'onedrive':
+        if (!config.isOAuthConnected) missingFields.push(t('cloudBackup.oauthRequired'));
+        break;
+    }
+
+    return { isValid: missingFields.length === 0, missingFields };
+  };
+
   const handleSaveConfig = async () => {
+    const { isValid, missingFields } = validateConfig();
+
+    if (!isValid) {
+      toast.error(
+        <div>
+          <p className="font-semibold">{t('cloudBackup.missingFieldsTitle')}</p>
+          <ul className="list-disc list-inside mt-1 text-sm">
+            {missingFields.map((field, i) => (
+              <li key={i}>{field}</li>
+            ))}
+          </ul>
+        </div>
+      );
+      return;
+    }
+
     if (isDemoMode) {
       toast.info(`Demo: ${t('cloudBackup.configSaved')}`);
       return;

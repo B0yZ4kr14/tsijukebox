@@ -377,7 +377,9 @@
     "importSuccessWithMasked": "Settings imported! Please fill in sensitive credentials manually.",
     "importError": "Import error: invalid file",
     "importInvalidFormat": "Invalid file format",
-    "importVersionWarning": "Different version detected. Some settings may not be compatible."
+    "importVersionWarning": "Different version detected. Some settings may not be compatible.",
+    "missingFieldsTitle": "Required fields missing:",
+    "oauthRequired": "OAuth authentication required"
   },
   "ntp": {
     "title": "Time Synchronization (NTP)",

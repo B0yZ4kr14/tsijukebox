@@ -38,11 +38,11 @@ export function DigitalClock({
   };
 
   return (
-    <div className={cn("flex items-center gap-2 badge-3d px-4 py-2 rounded-xl", className)}>
+    <div className={cn("flex items-center gap-2 badge-3d px-3 py-1.5 rounded-xl", className)}>
       <div className="flex flex-col items-end">
         <span className={cn(
-          "text-2xl font-mono font-bold tabular-nums tracking-wider",
-          "text-kiosk-primary clock-led"
+          "text-lg font-mono font-bold tabular-nums tracking-wider",
+          "text-gold-neon clock-gold"
         )}>
           {formatTime()}
         </span>

@@ -80,26 +80,6 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
           <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.7)] pointer-events-none rounded-2xl z-20" />
         </motion.div>
 
-        {/* Playing indicator - glowing pulse */}
-        {isPlaying && (
-          <motion.div
-            className="absolute -bottom-3 -right-3 w-6 h-6 rounded-full bg-kiosk-primary z-20 button-primary-3d"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.8, 1, 0.8],
-              boxShadow: [
-                '0 0 10px hsl(var(--kiosk-primary) / 0.5)',
-                '0 0 25px hsl(var(--kiosk-primary) / 0.8)',
-                '0 0 10px hsl(var(--kiosk-primary) / 0.5)',
-              ]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        )}
       </div>
 
       {/* Track Info with 3D text shadow */}
