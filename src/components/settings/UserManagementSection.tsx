@@ -51,7 +51,7 @@ export function UserManagementSection() {
     newbie: { 
       label: t('users.roles.newbie'), 
       icon: <Shield className="w-3 h-3" />, 
-      color: 'bg-slate-500/20 text-slate-300 border-slate-500/30' 
+      color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' 
     },
     user: { 
       label: t('users.roles.user'), 

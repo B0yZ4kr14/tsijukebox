@@ -73,7 +73,7 @@ export function TrackItem({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-kiosk-text/30">♪</span>
+              <span className="text-kiosk-text/50">♪</span>
             </div>
           )}
         </div>

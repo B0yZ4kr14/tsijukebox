@@ -137,7 +137,7 @@ export function PlaylistCard({ playlist, onClick, onPlay, className, isPlaying }
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Music className="w-12 h-12 text-kiosk-text/30" />
+            <Music className="w-12 h-12 text-kiosk-text/50" />
           </div>
         )}
         

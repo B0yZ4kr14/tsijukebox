@@ -71,7 +71,7 @@ export default function Wiki() {
               <div className="flex items-center gap-3">
                 <Book className="w-6 h-6 icon-neon-blue" />
                 <div>
-                  <h1 className="text-xl font-bold text-kiosk-text">Wiki TSi JUKEBOX</h1>
+                  <h1 className="text-xl font-bold text-gold-neon">Wiki</h1>
                   <p className="text-xs text-kiosk-text/60">
                     {totalArticles} artigos em {wikiCategories.length} categorias
                   </p>
@@ -302,9 +302,9 @@ function WelcomeScreen({
       className="space-y-8"
     >
       <div className="text-center py-8">
-        <Book className="w-16 h-16 mx-auto icon-neon-blue opacity-50 mb-4" />
+        <LogoBrand size="sm" variant="metal" className="opacity-50 mb-4" />
         <h1 className="text-2xl font-bold text-gold-neon mb-2">
-          Bem-vindo à Wiki do TSi JUKEBOX
+          Bem-vindo à Wiki
         </h1>
         <p className="text-kiosk-text/70 max-w-lg mx-auto">
           Documentação completa sobre todas as funcionalidades do sistema. 

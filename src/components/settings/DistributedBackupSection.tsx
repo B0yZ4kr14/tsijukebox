@@ -279,9 +279,9 @@ export function DistributedBackupSection() {
                       <div key={i} className="flex flex-col items-center">
                         <div className={cn(
                           "w-10 h-10 rounded-lg border flex items-center justify-center",
-                          isActive ? "bg-green-500/20 border-green-500/50" : "bg-slate-500/20 border-slate-500/30"
+                          isActive ? "bg-green-500/20 border-green-500/50" : "bg-cyan-500/20 border-cyan-500/30"
                         )}>
-                          <Cloud className={cn("w-5 h-5", isActive ? "text-green-400" : "text-slate-400")} />
+                          <Cloud className={cn("w-5 h-5", isActive ? "text-green-400" : "text-cyan-400")} />
                         </div>
                   <span className="text-xs text-neon-white mt-1">
                     {replica?.clientName?.slice(0, 8) || `Réplica ${i + 1}`}

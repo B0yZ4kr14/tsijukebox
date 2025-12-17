@@ -438,9 +438,9 @@ export default function SystemDiagnostics() {
       case 'running':
         return <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />;
       case 'skipped':
-        return <AlertTriangle className="w-5 h-5 text-gray-400" />;
+        return <AlertTriangle className="w-5 h-5 text-cyan-400/60" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-500" />;
+        return <Clock className="w-5 h-5 text-cyan-500/50" />;
     }
   };
 
@@ -450,8 +450,8 @@ export default function SystemDiagnostics() {
       warning: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
       error: 'bg-red-500/20 text-red-400 border-red-500/30',
       running: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
-      skipped: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-      pending: 'bg-gray-500/20 text-gray-500 border-gray-500/30',
+      skipped: 'bg-cyan-500/10 text-cyan-400/60 border-cyan-500/20',
+      pending: 'bg-cyan-500/10 text-cyan-500/50 border-cyan-500/20',
     };
     return variants[status] || variants.pending;
   };
@@ -818,9 +818,9 @@ export default function SystemDiagnostics() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-gray-400" />
+                    <AlertTriangle className="w-4 h-4 text-cyan-400/60" />
                     <span className="text-sm text-kiosk-text">
-                      <strong className="text-gray-400">{summary.skipped}</strong> Ignorados
+                      <strong className="text-cyan-400/60">{summary.skipped}</strong> Ignorados
                     </span>
                   </div>
                 </div>

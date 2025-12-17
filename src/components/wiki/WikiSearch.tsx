@@ -107,7 +107,7 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-full left-0 right-0 mt-2 bg-kiosk-surface border border-border rounded-xl shadow-xl z-50 p-6 text-center"
           >
-            <Search className="w-8 h-8 mx-auto text-kiosk-text/30 mb-2" />
+            <Search className="w-8 h-8 mx-auto text-kiosk-text/50 mb-2" />
             <p className="text-sm text-kiosk-text/60">Nenhum resultado para "{query}"</p>
           </motion.div>
         )}

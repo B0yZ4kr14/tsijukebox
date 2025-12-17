@@ -80,7 +80,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                   />
                 ) : (
                   <div className="w-12 h-12 rounded bg-kiosk-surface flex items-center justify-center">
-                    <Music className="w-6 h-6 text-kiosk-text/30" />
+                    <Music className="w-6 h-6 text-kiosk-text/50" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
@@ -134,7 +134,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                         />
                       ) : (
                         <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center">
-                          <Music className="w-5 h-5 text-kiosk-text/30" />
+                          <Music className="w-5 h-5 text-kiosk-text/50" />
                         </div>
                       )}
                       <div className="flex-1 text-left min-w-0">

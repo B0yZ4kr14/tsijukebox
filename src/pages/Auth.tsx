@@ -4,10 +4,11 @@ import { useUser } from '@/contexts/UserContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Music, Lock, Mail, User, Cloud, Server } from 'lucide-react';
+import { Lock, Mail, User, Cloud, Server } from 'lucide-react';
+import { LogoBrand } from '@/components/ui/LogoBrand';
 
 export default function Auth() {
   const [identifier, setIdentifier] = useState('');
@@ -86,11 +87,8 @@ export default function Auth() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Music className="w-8 h-8 text-primary" />
-          </div>
+          <LogoBrand size="sm" variant="metal" centered animate className="mb-2" />
           <div>
-            <CardTitle className="text-2xl font-bold">TSi JUKEBOX</CardTitle>
             <CardDescription className="flex items-center justify-center gap-2 mt-2">
               {isSupabaseProvider ? (
                 <>
@@ -119,7 +117,7 @@ export default function Auth() {
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
                         id="email"
                         type="email"
@@ -135,7 +133,7 @@ export default function Auth() {
                   <div className="space-y-2">
                     <Label htmlFor="password">Senha</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
                         id="password"
                         type="password"
@@ -163,7 +161,7 @@ export default function Auth() {
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
                         id="signup-email"
                         type="email"
@@ -179,7 +177,7 @@ export default function Auth() {
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Senha</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
                         id="signup-password"
                         type="password"
@@ -195,7 +193,7 @@ export default function Auth() {
                   <div className="space-y-2">
                     <Label htmlFor="confirm-password">Confirmar Senha</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
                         id="confirm-password"
                         type="password"
@@ -223,7 +221,7 @@ export default function Auth() {
               <div className="space-y-2">
                 <Label htmlFor="username">Usuário</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                   <Input
                     id="username"
                     type="text"
@@ -239,7 +237,7 @@ export default function Auth() {
               <div className="space-y-2">
                 <Label htmlFor="local-password">Senha</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                   <Input
                     id="local-password"
                     type="password"

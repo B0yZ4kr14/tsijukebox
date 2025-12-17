@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { LogoBrand } from '@/components/ui/LogoBrand';
 import { 
   Download, 
   Smartphone, 
@@ -94,7 +95,8 @@ export default function Install() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-kiosk-text">Instalar TSi JUKEBOX</h1>
+          <LogoBrand size="sm" variant="metal" centered={false} />
+          <span className="text-xl font-bold text-gold-neon">Instalar</span>
         </motion.header>
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-md mx-auto w-full space-y-8">
@@ -135,7 +137,7 @@ export default function Install() {
                 App Instalado!
               </h2>
               <p className="text-kiosk-text/70">
-                O TSi JUKEBOX está instalado no seu dispositivo. 
+                O app está instalado no seu dispositivo. 
                 Você pode acessá-lo pela tela inicial.
               </p>
               <Link to="/">
@@ -236,9 +238,7 @@ export default function Install() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <p className="text-xs text-kiosk-text/30">
-            TSi JUKEBOX Enterprise v4.0
-          </p>
+          <LogoBrand size="sm" variant="metal" animate className="opacity-60" />
         </motion.footer>
       </motion.div>
     </KioskLayout>

@@ -29,7 +29,7 @@ export function ArtistCard({ artist, onClick, onPlay, className }: ArtistCardPro
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <User className="w-12 h-12 text-kiosk-text/30" />
+            <User className="w-12 h-12 text-kiosk-text/50" />
           </div>
         )}
         

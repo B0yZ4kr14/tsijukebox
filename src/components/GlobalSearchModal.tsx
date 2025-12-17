@@ -185,7 +185,7 @@ export function GlobalSearchModal({
                           <span className="font-medium text-kiosk-text truncate">
                             {highlightMatch(result.title, query)}
                           </span>
-                          <ChevronRight className="w-4 h-4 text-kiosk-text/30 group-hover:text-primary transition-colors" />
+                          <ChevronRight className="w-4 h-4 text-kiosk-text/50 group-hover:text-primary transition-colors" />
                         </div>
                         <p className="text-sm text-kiosk-text/60 line-clamp-2 mt-1">
                           {highlightMatch(result.description, query)}
@@ -194,7 +194,7 @@ export function GlobalSearchModal({
                           <Badge variant="outline" className="text-xs">
                             {result.source === 'help' ? 'Help' : 'Wiki'}
                           </Badge>
-                          <span className="text-xs text-kiosk-text/40">
+                          <span className="text-xs text-kiosk-text/60">
                             {result.path}
                           </span>
                         </div>

@@ -252,7 +252,7 @@ const faqItems: FAQItem[] = [
 ];
 
 const categoryInfo: Record<SettingsCategoryId, { icon: typeof Plug; label: string; color: string }> = {
-  dashboard: { icon: HelpCircle, label: 'Dashboard', color: 'text-gray-400' },
+  dashboard: { icon: HelpCircle, label: 'Dashboard', color: 'text-cyan-400' },
   connections: { icon: Plug, label: 'Conexões', color: 'text-cyan-400' },
   data: { icon: Database, label: 'Dados', color: 'text-green-400' },
   system: { icon: Settings2, label: 'Sistema', color: 'text-purple-400' },

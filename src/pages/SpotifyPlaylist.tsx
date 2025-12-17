@@ -43,7 +43,7 @@ export default function SpotifyPlaylistPage() {
     return (
       <KioskLayout>
         <div className="min-h-screen flex flex-col items-center justify-center p-8">
-          <Music className="w-16 h-16 text-kiosk-text/30 mb-4" />
+          <Music className="w-16 h-16 text-kiosk-text/50 mb-4" />
           <h1 className="text-xl font-bold text-kiosk-text mb-2">Playlist não encontrada</h1>
           <p className="text-kiosk-text/60 mb-4">A playlist pode ter sido removida ou você não tem acesso.</p>
           <Link to="/spotify">
@@ -79,7 +79,7 @@ export default function SpotifyPlaylistPage() {
                   <img src={playlist.imageUrl} alt={playlist.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Music className="w-20 h-20 text-kiosk-text/30" />
+                    <Music className="w-20 h-20 text-kiosk-text/50" />
                   </div>
                 )}
               </div>
@@ -136,7 +136,7 @@ export default function SpotifyPlaylistPage() {
         <div className="p-4">
           {tracks.length === 0 ? (
             <div className="text-center py-12">
-              <Music className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
+              <Music className="w-12 h-12 text-kiosk-text/50 mx-auto mb-4" />
               <p className="text-kiosk-text/60">Esta playlist está vazia</p>
             </div>
           ) : (

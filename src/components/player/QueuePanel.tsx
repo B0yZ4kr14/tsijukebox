@@ -71,7 +71,7 @@ function QueueTrackItemBase({
           <img src={item.cover} alt={item.album} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Music className="w-5 h-5 text-kiosk-text/30" />
+            <Music className="w-5 h-5 text-kiosk-text/50" />
           </div>
         )}
       </div>
@@ -247,7 +247,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                         <img src={queue.current.cover} alt={queue.current.album} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Music className="w-6 h-6 text-kiosk-text/30" />
+                          <Music className="w-6 h-6 text-kiosk-text/50" />
                         </div>
                       )}
                     </div>

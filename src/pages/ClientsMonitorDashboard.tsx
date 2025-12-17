@@ -108,13 +108,13 @@ export default function ClientsMonitorDashboard() {
   const statusColors = {
     online: 'bg-green-500',
     offline: 'bg-red-500',
-    unknown: 'bg-slate-500',
+    unknown: 'bg-cyan-500',
   };
 
   const statusBadgeColors = {
     online: 'bg-green-500/20 text-green-400 border-green-500/30',
     offline: 'bg-red-500/20 text-red-400 border-red-500/30',
-    unknown: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
+    unknown: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
   };
 
   return (

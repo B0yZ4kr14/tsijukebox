@@ -103,7 +103,7 @@ export default function SpotifyLibraryPage() {
 
                 {likedTracks.length === 0 ? (
                   <div className="text-center py-12 bg-kiosk-surface/30 rounded-lg">
-                    <Heart className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
+                    <Heart className="w-12 h-12 text-kiosk-text/50 mx-auto mb-4" />
                     <p className="text-kiosk-text/60">Você ainda não curtiu nenhuma música</p>
                   </div>
                 ) : (

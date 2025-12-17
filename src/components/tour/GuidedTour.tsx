@@ -218,7 +218,7 @@ export function useTourSteps(): TourStep[] {
   return [
     {
       target: '.logo-container-3d, .logo-container-ultra',
-      title: 'Bem-vindo ao TSi JUKEBOX!',
+      title: 'Bem-vindo!',
       description: 'Este é seu sistema de música inteligente. Vamos fazer um tour rápido pelas principais funcionalidades.',
       position: 'bottom',
     },
