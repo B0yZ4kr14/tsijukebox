@@ -2629,45 +2629,47 @@ body[data-gradient="true"] {
   /* SEM background, SEM border */
 }
 
-/* Logo TSi MIRROR - DARK BLUE com contorno neon muito sutil */
+/* Logo TSi MIRROR - ULTRA DARK CHROME */
 .logo-tsi-mirror {
-  /* Gradiente DARK - azul muito escuro com highlight sutil */
+  /* Gradiente ULTRA DARK - 4-28% lightness com highlight especular */
   background: linear-gradient(
     180deg,
-    hsl(210 70% 40%) 0%,
-    hsl(215 80% 30%) 30%,
-    hsl(220 85% 22%) 55%,
-    hsl(225 80% 16%) 80%,
-    hsl(230 75% 12%) 100%
+    hsl(200 65% 28%) 0%,
+    hsl(215 70% 16%) 18%,
+    hsl(220 75% 10%) 45%,
+    hsl(225 70% 7%) 75%,
+    hsl(230 65% 4%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Contorno neon MUITO SUTIL - apenas 0.5px de glow */
+  /* Contorno neon DIRECIONAL - bottom-glow */
   filter: 
-    drop-shadow(0 0 0.5px hsl(195 100% 55% / 0.8))
-    drop-shadow(0 0 1px hsl(195 100% 50% / 0.4));
+    drop-shadow(0 0.5px 0.3px hsl(195 100% 65% / 0.9))
+    drop-shadow(0 1px 1px hsl(195 100% 50% / 0.4))
+    drop-shadow(0 0 0.5px hsl(195 100% 40% / 0.3));
   letter-spacing: -0.02em;
   font-weight: 900;
 }
 
-/* Logo JUKEBOX MIRROR - DARK BLUE consistente */
+/* Logo JUKEBOX MIRROR - ULTRA DARK CHROME consistente */
 .logo-jukebox-mirror {
   background: linear-gradient(
     180deg,
-    hsl(205 75% 45%) 0%,
-    hsl(210 80% 35%) 30%,
-    hsl(215 85% 25%) 55%,
-    hsl(220 80% 18%) 80%,
-    hsl(225 75% 14%) 100%
+    hsl(195 70% 32%) 0%,
+    hsl(210 75% 18%) 18%,
+    hsl(218 80% 11%) 45%,
+    hsl(222 75% 7%) 75%,
+    hsl(228 70% 4%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Contorno neon MUITO SUTIL */
+  /* Contorno neon DIRECIONAL - bottom-glow */
   filter: 
-    drop-shadow(0 0 0.5px hsl(195 100% 60% / 0.8))
-    drop-shadow(0 0 1px hsl(195 100% 55% / 0.4));
+    drop-shadow(0 0.5px 0.3px hsl(195 100% 70% / 0.9))
+    drop-shadow(0 1px 1px hsl(195 100% 55% / 0.4))
+    drop-shadow(0 0 0.5px hsl(195 100% 45% / 0.3));
   letter-spacing: 0.06em;
   margin-left: 0.08em;
   font-weight: 900;
@@ -2681,7 +2683,7 @@ body[data-gradient="true"] {
   left: 0;
   right: 0;
   transform: scaleY(-0.85) scaleX(0.95);
-  opacity: 0.15;
+  opacity: 0.22;
   mask-image: linear-gradient(
     to top,
     rgba(0,0,0,0.6) 0%,
@@ -2699,12 +2701,12 @@ body[data-gradient="true"] {
   pointer-events: none;
 }
 
-/* Reflexo TSi - mais escuro */
+/* Reflexo TSi - ultra dark */
 .logo-tsi-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(220 50% 20%) 0%,
-    hsl(225 45% 12%) 100%
+    hsl(220 55% 14%) 0%,
+    hsl(225 50% 6%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2712,12 +2714,12 @@ body[data-gradient="true"] {
   letter-spacing: -0.02em;
 }
 
-/* Reflexo JUKEBOX - mais escuro */
+/* Reflexo JUKEBOX - ultra dark */
 .logo-jukebox-mirror-reflection {
   background: linear-gradient(
     180deg,
-    hsl(215 50% 22%) 0%,
-    hsl(220 45% 14%) 100%
+    hsl(215 55% 16%) 0%,
+    hsl(222 50% 7%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
