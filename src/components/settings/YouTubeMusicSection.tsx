@@ -39,23 +39,23 @@ export function YouTubeMusicSection() {
   };
 
   return (
-    <Card className="card-neon-border">
+    <Card className="card-dark-neon-border">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-gold-neon">
+        <CardTitle className="flex items-center gap-2 text-gold-neon font-bold">
           <Youtube className="w-5 h-5 text-red-500" />
           YouTube Music
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-settings-label">Status</span>
+          <span className="text-label-yellow font-semibold">Status</span>
           {youtubeMusic?.isConnected ? (
-            <Badge variant="default" className="bg-green-600">
+            <Badge variant="default" className="bg-green-600 text-white font-bold">
               <Check className="w-3 h-3 mr-1" />
               Conectado
             </Badge>
           ) : (
-            <Badge variant="secondary">
+            <Badge variant="secondary" className="font-bold">
               <X className="w-3 h-3 mr-1" />
               Não conectado
             </Badge>
@@ -63,14 +63,14 @@ export function YouTubeMusicSection() {
         </div>
 
         {youtubeMusic?.isConnected && youtubeMusic.user && (
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-kiosk-surface/50">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-kiosk-surface/70 border border-cyan-500/20">
             <Avatar className="h-10 w-10">
               <AvatarImage src={youtubeMusic.user.imageUrl || undefined} />
-              <AvatarFallback>{youtubeMusic.user.name?.[0] || 'U'}</AvatarFallback>
+              <AvatarFallback className="bg-red-600 text-white font-bold">{youtubeMusic.user.name?.[0] || 'U'}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-kiosk-text truncate">{youtubeMusic.user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{youtubeMusic.user.email}</p>
+              <p className="font-bold text-kiosk-text truncate">{youtubeMusic.user.name}</p>
+              <p className="text-xs text-kiosk-text/70 truncate">{youtubeMusic.user.email}</p>
             </div>
           </div>
         )}
@@ -89,7 +89,7 @@ export function YouTubeMusicSection() {
             <Button
               onClick={handleConnect}
               disabled={isConnecting}
-              className="button-control-extreme-3d bg-red-600 hover:bg-red-700"
+              className="button-control-extreme-3d bg-red-600 hover:bg-red-700 text-white font-bold"
             >
               <Youtube className="w-4 h-4 mr-2" />
               {isConnecting ? 'Conectando...' : 'Conectar com Google'}
@@ -97,14 +97,14 @@ export function YouTubeMusicSection() {
           )}
         </div>
 
-        <div className="pt-2 border-t border-border/50">
-          <p className="text-xs text-muted-foreground">
+        <div className="pt-2 border-t border-cyan-500/20">
+          <p className="text-xs text-kiosk-text/70">
             Conecte sua conta do YouTube Music para acessar playlists, músicas curtidas e histórico.
             <a 
               href="https://music.youtube.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-cyan-400 hover:underline ml-1 inline-flex items-center gap-1"
+              className="text-cyan-400 hover:underline ml-1 inline-flex items-center gap-1 font-semibold"
             >
               Abrir YouTube Music <ExternalLink className="w-3 h-3" />
             </a>

@@ -561,6 +561,184 @@ export const wikiCategories: WikiCategory[] = [
             illustration: 'settings'
           }
         ]
+      },
+      {
+        id: 'spicetify',
+        title: 'Spicetify',
+        articles: [
+          {
+            id: 'spicetify-overview',
+            title: 'O que é Spicetify?',
+            description: 'Entenda a integração com Spicetify',
+            content: 'Spicetify é uma ferramenta de linha de comando que permite personalizar o cliente desktop do Spotify com temas, extensões e funcionalidades adicionais.',
+            steps: [
+              'Spicetify modifica o cliente Spotify desktop',
+              'Permite aplicar temas visuais personalizados',
+              'Adiciona extensões para funcionalidades extras',
+              'Integra-se com o TSi JUKEBOX para controle local'
+            ],
+            tips: [
+              'Requer Spotify desktop instalado',
+              'Funciona apenas no sistema local (não remoto)',
+              'Atualizações do Spotify podem exigir re-aplicação'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['spicetify-themes', 'spicetify-extensions']
+          },
+          {
+            id: 'spicetify-themes',
+            title: 'Aplicar Temas no Spicetify',
+            description: 'Personalize a aparência do Spotify',
+            content: 'Os temas do Spicetify modificam completamente a aparência visual do cliente Spotify desktop, incluindo cores, fontes e layout.',
+            steps: [
+              'Acesse Configurações > Integrações > Spicetify',
+              'Verifique se Spicetify está instalado (status verde)',
+              'Na seção "Temas Disponíveis", clique no tema desejado',
+              'Aguarde a aplicação (pode levar alguns segundos)',
+              'O Spotify reiniciará automaticamente com o novo tema'
+            ],
+            tips: [
+              'O tema "Dribbblish" é um dos mais populares',
+              'Faça backup antes de mudar temas',
+              'Alguns temas têm variantes de cor'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['spicetify-overview', 'spicetify-extensions']
+          },
+          {
+            id: 'spicetify-extensions',
+            title: 'Gerenciar Extensões Spicetify',
+            description: 'Adicione funcionalidades ao Spotify',
+            content: 'As extensões do Spicetify adicionam novas funcionalidades ao cliente Spotify, como letras de músicas, controles adicionais e integrações.',
+            steps: [
+              'Acesse Configurações > Integrações > Spicetify',
+              'Role até a seção "Extensões"',
+              'Use o switch para ativar/desativar cada extensão',
+              'As mudanças são aplicadas automaticamente',
+              'O Spotify pode precisar reiniciar'
+            ],
+            tips: [
+              'Extensões populares: Lyrics, Full App Display, Shuffle+',
+              'Muitas extensões podem afetar performance',
+              'Desative extensões que não usa'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['spicetify-overview', 'spicetify-themes']
+          }
+        ]
+      },
+      {
+        id: 'youtube-music',
+        title: 'YouTube Music',
+        articles: [
+          {
+            id: 'ytm-connect',
+            title: 'Conectar YouTube Music',
+            description: 'Configure sua conta Google',
+            content: 'O TSi JUKEBOX suporta YouTube Music como provedor de música alternativo ao Spotify, permitindo acessar sua biblioteca e playlists do YouTube Music.',
+            steps: [
+              'Acesse Configurações > Integrações > YouTube Music',
+              'Clique em "Conectar com Google"',
+              'Uma janela de autorização do Google abrirá',
+              'Selecione sua conta Google e autorize o acesso',
+              'Após autorização, você será redirecionado de volta',
+              'Seu nome e foto aparecerão confirmando a conexão'
+            ],
+            tips: [
+              'Use uma conta Google com YouTube Music Premium para melhor experiência',
+              'A conexão usa OAuth seguro (suas credenciais não são armazenadas)',
+              'Você pode desconectar a qualquer momento'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['ytm-library', 'ytm-playback']
+          },
+          {
+            id: 'ytm-library',
+            title: 'Navegar Biblioteca YouTube Music',
+            description: 'Acesse suas playlists e músicas',
+            content: 'Após conectar sua conta, você pode navegar por toda sua biblioteca do YouTube Music incluindo playlists, álbuns curtidos, artistas seguidos e histórico.',
+            steps: [
+              'No menu principal, acesse "YouTube Music"',
+              'Navegue pelas abas: Playlists, Curtidas, Álbuns, Artistas',
+              'Use a busca para encontrar músicas específicas',
+              'Toque em uma playlist para ver as músicas',
+              'Adicione músicas à fila de reprodução'
+            ],
+            tips: [
+              'Playlists são sincronizadas em tempo real',
+              'Músicas "Curtidas" aparecem na aba dedicada',
+              'Histórico mostra suas reproduções recentes'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['ytm-connect', 'ytm-playback']
+          },
+          {
+            id: 'ytm-playback',
+            title: 'Reprodução com YouTube Music',
+            description: 'Controle a reprodução de músicas',
+            content: 'O TSi JUKEBOX integra controles de reprodução para YouTube Music, permitindo tocar, pausar, pular e controlar volume das músicas.',
+            steps: [
+              'Selecione uma música ou playlist no YouTube Music Browser',
+              'Toque no botão Play para iniciar a reprodução',
+              'Use os controles do player principal para pause/play/skip',
+              'O volume é controlado pelo slider do player',
+              'A fila de reprodução mostra as próximas músicas'
+            ],
+            tips: [
+              'A qualidade de áudio depende da sua assinatura YouTube',
+              'Reprodução continua em background',
+              'Histórico é salvo automaticamente'
+            ],
+            illustration: 'player',
+            relatedArticles: ['ytm-connect', 'ytm-library']
+          }
+        ]
+      },
+      {
+        id: 'multi-provider',
+        title: 'Multi-Provedor',
+        articles: [
+          {
+            id: 'provider-selection',
+            title: 'Escolher Provedor Padrão',
+            description: 'Configure o serviço de música principal',
+            content: 'O TSi JUKEBOX suporta múltiplos provedores de música (Spotify, YouTube Music, Spicetify). Você pode escolher qual será o provedor padrão.',
+            steps: [
+              'Acesse Configurações > Integrações',
+              'Na seção "Provedor Padrão", selecione o serviço',
+              'Opções: Spotify, YouTube Music, ou Spicetify (local)',
+              'O provedor selecionado será usado para reprodução',
+              'Outros provedores continuam disponíveis para navegação'
+            ],
+            tips: [
+              'Spotify oferece melhor integração de desktop',
+              'YouTube Music é bom para vídeos musicais',
+              'Spicetify funciona apenas localmente'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['provider-fallback', 'spotify-connect', 'ytm-connect']
+          },
+          {
+            id: 'provider-fallback',
+            title: 'Configurar Fallback Automático',
+            description: 'Reprodução contínua sem interrupção',
+            content: 'O sistema de fallback permite que a reprodução continue mesmo se o provedor principal falhar, mudando automaticamente para outro serviço.',
+            steps: [
+              'Acesse Configurações > Integrações',
+              'Role até "Ordem de Fallback"',
+              'Arraste para reordenar a prioridade dos provedores',
+              'Ative "Fallback Automático" para mudança automática',
+              'Configure tempo de timeout antes do fallback'
+            ],
+            tips: [
+              'Ordem padrão: Spotify > YouTube Music > Spicetify',
+              'Fallback é útil para conexões instáveis',
+              'Desative se preferir controle manual'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['provider-selection']
+          }
+        ]
       }
     ]
   },

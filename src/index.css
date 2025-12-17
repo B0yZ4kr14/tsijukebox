@@ -388,6 +388,28 @@
       inset 0 0 20px hsl(195 100% 50% / 0.05);
   }
 
+  /* Card ESCURO com borda neon - para Settings sections */
+  .card-dark-neon-border {
+    background: linear-gradient(145deg, 
+      hsl(220 25% 12%) 0%, 
+      hsl(220 30% 8%) 100%);
+    border: 1px solid hsl(195 100% 50% / 0.4);
+    box-shadow: 
+      0 0 20px hsl(195 100% 50% / 0.15),
+      0 4px 15px hsl(0 0% 0% / 0.5),
+      inset 0 0 20px hsl(195 100% 50% / 0.05),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  }
+
+  .card-dark-neon-border:hover {
+    border-color: hsl(195 100% 50% / 0.55);
+    box-shadow: 
+      0 0 25px hsl(195 100% 50% / 0.2),
+      0 6px 20px hsl(0 0% 0% / 0.6),
+      inset 0 0 25px hsl(195 100% 50% / 0.08),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1);
+  }
+
   /* Card de opção com contorno neon sutil */
   .card-option-neon {
     border: 1px solid hsl(195 100% 50% / 0.25);

@@ -26,23 +26,23 @@ export function SpicetifySection() {
   return (
     <div className="space-y-6">
       {/* Status Card */}
-      <Card className="card-neon-border">
+      <Card className="card-dark-neon-border">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-gold-neon">
+          <CardTitle className="flex items-center gap-2 text-gold-neon font-bold">
             <Palette className="w-5 h-5 icon-neon-blue" />
             Spicetify
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-settings-label">Status</span>
+            <span className="text-label-yellow font-semibold">Status</span>
             {isInstalled ? (
-              <Badge variant="default" className="bg-green-600">
+              <Badge variant="default" className="bg-green-600 text-white font-bold">
                 <Check className="w-3 h-3 mr-1" />
                 Instalado v{status?.version}
               </Badge>
             ) : (
-              <Badge variant="destructive">
+              <Badge variant="destructive" className="font-bold">
                 <X className="w-3 h-3 mr-1" />
                 Não detectado
               </Badge>
@@ -52,8 +52,8 @@ export function SpicetifySection() {
           {isInstalled && (
             <>
               <div className="flex items-center justify-between">
-                <span className="text-settings-label">Tema atual</span>
-                <span className="text-kiosk-text">{currentTheme || 'Padrão'}</span>
+                <span className="text-label-yellow font-semibold">Tema atual</span>
+                <span className="text-kiosk-text font-medium">{currentTheme || 'Padrão'}</span>
               </div>
 
               <div className="flex gap-2 flex-wrap">
@@ -92,8 +92,8 @@ export function SpicetifySection() {
           )}
 
           {error && (
-            <p className="text-sm text-muted-foreground">
-              {error}. <a href="https://spicetify.app" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instalar Spicetify</a>
+            <p className="text-sm text-kiosk-text/70">
+              {error}. <a href="https://spicetify.app" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline font-semibold">Instalar Spicetify</a>
             </p>
           )}
         </CardContent>
@@ -101,9 +101,9 @@ export function SpicetifySection() {
 
       {/* Themes */}
       {isInstalled && themes.length > 0 && (
-        <Card className="card-neon-border">
+        <Card className="card-dark-neon-border">
           <CardHeader className="pb-3">
-            <CardTitle className="text-label-yellow text-sm">TEMAS DISPONÍVEIS</CardTitle>
+            <CardTitle className="text-label-yellow text-sm font-bold">TEMAS DISPONÍVEIS</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -115,9 +115,9 @@ export function SpicetifySection() {
                   onClick={() => applyTheme(theme.name)}
                   disabled={isLoading || theme.isActive}
                 >
-                  <span className="font-medium">{theme.name}</span>
+                  <span className="font-bold text-kiosk-text">{theme.name}</span>
                   {theme.author && (
-                    <span className="text-xs text-muted-foreground">por {theme.author}</span>
+                    <span className="text-xs text-kiosk-text/70">por {theme.author}</span>
                   )}
                 </Button>
               ))}
@@ -128,18 +128,18 @@ export function SpicetifySection() {
 
       {/* Extensions */}
       {isInstalled && extensions.length > 0 && (
-        <Card className="card-neon-border">
+        <Card className="card-dark-neon-border">
           <CardHeader className="pb-3">
-            <CardTitle className="text-label-yellow text-sm">EXTENSÕES</CardTitle>
+            <CardTitle className="text-label-yellow text-sm font-bold">EXTENSÕES</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {extensions.map((ext) => (
-                <div key={ext.name} className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50">
+                <div key={ext.name} className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/70 border border-cyan-500/20">
                   <div>
-                    <p className="font-medium text-kiosk-text">{ext.name}</p>
+                    <p className="font-bold text-kiosk-text">{ext.name}</p>
                     {ext.description && (
-                      <p className="text-xs text-muted-foreground">{ext.description}</p>
+                      <p className="text-xs text-kiosk-text/70">{ext.description}</p>
                     )}
                   </div>
                   <Switch
