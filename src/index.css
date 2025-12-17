@@ -2633,11 +2633,11 @@ body[data-gradient="true"] {
 .logo-tsi-mirror {
   background: linear-gradient(
     90deg,
-    hsl(185 80% 42%) 0%,
-    hsl(185 80% 42%) 42%,
-    hsl(180 90% 60%) 50%,
-    hsl(185 80% 42%) 58%,
-    hsl(185 80% 42%) 100%
+    hsl(185 80% 32%) 0%,
+    hsl(185 80% 32%) 42%,
+    hsl(180 90% 50%) 50%,
+    hsl(185 80% 32%) 58%,
+    hsl(185 80% 32%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2659,11 +2659,11 @@ body[data-gradient="true"] {
 .logo-jukebox-mirror {
   background: linear-gradient(
     90deg,
-    hsl(45 45% 45%) 0%,
-    hsl(45 45% 45%) 42%,
-    hsl(48 55% 62%) 50%,
-    hsl(45 45% 45%) 58%,
-    hsl(45 45% 45%) 100%
+    hsl(45 45% 35%) 0%,
+    hsl(45 45% 35%) 42%,
+    hsl(48 55% 52%) 50%,
+    hsl(45 45% 35%) 58%,
+    hsl(45 45% 35%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2710,11 +2710,11 @@ body[data-gradient="true"] {
 .logo-tsi-mirror-dark {
   background: linear-gradient(
     90deg,
-    hsl(185 80% 28%) 0%,
-    hsl(185 80% 28%) 42%,
-    hsl(180 90% 45%) 50%,
-    hsl(185 80% 28%) 58%,
-    hsl(185 80% 28%) 100%
+    hsl(185 80% 18%) 0%,
+    hsl(185 80% 18%) 42%,
+    hsl(180 90% 35%) 50%,
+    hsl(185 80% 18%) 58%,
+    hsl(185 80% 18%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2736,11 +2736,11 @@ body[data-gradient="true"] {
 .logo-jukebox-mirror-dark {
   background: linear-gradient(
     90deg,
-    hsl(45 45% 30%) 0%,
-    hsl(45 45% 30%) 42%,
-    hsl(48 55% 48%) 50%,
-    hsl(45 45% 30%) 58%,
-    hsl(45 45% 30%) 100%
+    hsl(45 45% 20%) 0%,
+    hsl(45 45% 20%) 42%,
+    hsl(48 55% 38%) 50%,
+    hsl(45 45% 20%) 58%,
+    hsl(45 45% 20%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
