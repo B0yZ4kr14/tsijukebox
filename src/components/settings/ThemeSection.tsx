@@ -163,8 +163,8 @@ export function ThemeSection() {
       instructions={instructions}
       delay={0.15}
     >
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4 bg-kiosk-surface/50">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" data-tour="theme-customizer">
+        <TabsList className="grid w-full grid-cols-2 mb-4 bg-kiosk-surface/50" data-tour="theme-tools">
           <TabsTrigger 
             value="customize" 
             className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"

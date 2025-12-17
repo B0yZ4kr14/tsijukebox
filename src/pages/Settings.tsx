@@ -20,6 +20,8 @@ import {
   BackendConnectionSection, 
   UnifiedDatabaseSection,
   UnifiedBackupSection,
+  AdvancedDatabaseSection,
+  ClientsManagementSection,
   UserManagementSection, 
   AuthProviderSection, 
   SystemUrlsSection, 
@@ -180,8 +182,9 @@ export default function Settings() {
       case 'data':
         return (
           <>
-            <UnifiedDatabaseSection isDemoMode={isDemoMode} />
+            <AdvancedDatabaseSection isDemoMode={isDemoMode} />
             <UnifiedBackupSection isDemoMode={isDemoMode} />
+            <ClientsManagementSection />
           </>
         );
 

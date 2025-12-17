@@ -164,7 +164,7 @@ export function UserManagementSection() {
     >
       <div className="space-y-4">
         {/* User List */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-tour="user-management-list">
           {users.map((user) => (
             <div
               key={user.id}
@@ -210,6 +210,7 @@ export function UserManagementSection() {
         {/* Add User Button */}
         <Button
           className="w-full button-primary-glow-3d"
+          data-tour="add-user-button"
           onClick={() => {
             setFormData({ username: '', password: '', role: 'user' });
             setShowAddDialog(true);

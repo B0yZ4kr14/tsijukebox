@@ -156,7 +156,7 @@ export function NtpConfigSection() {
         <div className="space-y-2">
           <Label className="text-label-yellow">{t('ntp.server')}</Label>
           <Select value={config.server} onValueChange={handleServerChange}>
-            <SelectTrigger className="bg-background/50 border-border">
+            <SelectTrigger data-tour="ntp-server" className="bg-background/50 border-border">
               <SelectValue placeholder={t('ntp.selectServer')} />
             </SelectTrigger>
             <SelectContent>
@@ -220,6 +220,7 @@ export function NtpConfigSection() {
           onClick={handleSync}
           disabled={isSyncing || (!getActiveServer())}
           className="w-full button-primary-glow-3d"
+          data-tour="ntp-sync-button"
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
           {isSyncing ? t('ntp.syncing') : t('ntp.syncNow')}

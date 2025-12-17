@@ -109,7 +109,7 @@ export function AccessibilitySection() {
       instructions={instructions}
       delay={0.15}
     >
-      <div className="space-y-6">
+      <div className="space-y-6" data-tour="accessibility-settings">
         {/* Real-time Preview Panel */}
         <div className="card-option-dark-3d rounded-lg p-4 space-y-3">
           <h4 className="text-label-yellow flex items-center gap-2">

@@ -9,6 +9,8 @@ export { BackupSection } from './BackupSection';
 export { CloudBackupSection } from './CloudBackupSection';
 export { BackupScheduleSection } from './BackupScheduleSection';
 export { UnifiedBackupSection } from './UnifiedBackupSection';
+export { AdvancedDatabaseSection } from './AdvancedDatabaseSection';
+export { ClientsManagementSection } from './ClientsManagementSection';
 export { UserManagementSection } from './UserManagementSection';
 export { AuthProviderSection } from './AuthProviderSection';
 export { SystemUrlsSection } from './SystemUrlsSection';

@@ -93,6 +93,7 @@ export function SystemUrlsSection() {
           <div className="flex gap-2">
             <Input
               id="dashboardUrl"
+              data-tour="system-dashboard-url"
               value={urls.dashboardUrl}
               onChange={(e) => handleChange('dashboardUrl', e.target.value)}
               placeholder="http://localhost:3000"
@@ -124,6 +125,7 @@ export function SystemUrlsSection() {
           <div className="flex gap-2">
             <Input
               id="datasourceUrl"
+              data-tour="system-datasource-url"
               value={urls.datasourceUrl}
               onChange={(e) => handleChange('datasourceUrl', e.target.value)}
               placeholder="http://localhost:9090"

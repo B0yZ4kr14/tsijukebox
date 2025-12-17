@@ -77,7 +77,7 @@ export function KeysManagementSection() {
       instructions={instructions}
       delay={0.25}
     >
-      <div className="space-y-6">
+      <div className="space-y-6" data-tour="keys-management">
         {/* SSH Keys Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-label-yellow">

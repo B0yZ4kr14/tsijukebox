@@ -54,7 +54,7 @@ export function AuthProviderSection() {
           Selecione o método de autenticação
         </Label>
 
-        <div className="grid gap-3">
+        <div className="grid gap-3" data-tour="auth-provider-selector">
           {providers.map((provider) => {
             const isSelected = authConfig.provider === provider.id;
             

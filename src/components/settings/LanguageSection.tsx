@@ -15,7 +15,7 @@ export function LanguageSection() {
       title="Idioma / Language"
       description="Selecione o idioma da interface"
     >
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3" data-tour="language-selector">
         {(Object.keys(languages) as Language[]).map((lang) => (
           <Button
             key={lang}
