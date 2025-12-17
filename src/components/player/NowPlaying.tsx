@@ -1,16 +1,94 @@
 import { Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMemo } from 'react';
 import type { TrackInfo } from '@/lib/api/types';
 import { cn } from '@/lib/utils';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface NowPlayingProps {
   track: TrackInfo | null;
   isPlaying: boolean;
 }
 
-export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
+// Floating particle component
+const FloatingParticle = ({ 
+  delay, 
+  x, 
+  startY, 
+  color 
+}: { 
+  delay: number; 
+  x: number; 
+  startY: number;
+  color: 'cyan' | 'pink' | 'gold';
+}) => {
+  const colorClasses = {
+    cyan: 'floating-particle-cyan',
+    pink: 'floating-particle-pink',
+    gold: 'floating-particle-gold',
+  };
+
   return (
-    <div className="flex flex-col items-center gap-6">
+    <motion.div
+      className={`absolute w-1.5 h-1.5 rounded-full ${colorClasses[color]} pointer-events-none`}
+      style={{ left: `${x}%` }}
+      initial={{ y: startY, opacity: 0, scale: 0 }}
+      animate={{
+        y: [startY, startY - 120, startY - 180],
+        opacity: [0, 1, 0],
+        scale: [0, 1.2, 0.5],
+        x: [0, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 50],
+      }}
+      transition={{
+        duration: 3 + Math.random() * 2,
+        delay,
+        repeat: Infinity,
+        repeatDelay: Math.random() * 1.5,
+        ease: 'easeOut',
+      }}
+    />
+  );
+};
+
+export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
+  const { animationsEnabled } = useSettings();
+
+  // Generate floating particles
+  const particles = useMemo(() => 
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      startY: 280 + Math.random() * 40,
+      delay: Math.random() * 2,
+      color: (['cyan', 'pink', 'gold'] as const)[i % 3],
+    })),
+  []);
+
+  return (
+    <div className="flex flex-col items-center gap-6 relative">
+      {/* Floating particles container - only shows when playing and animations enabled */}
+      <AnimatePresence>
+        {isPlaying && animationsEnabled && (
+          <motion.div 
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {particles.map(p => (
+              <FloatingParticle
+                key={p.id}
+                x={p.x}
+                startY={p.startY}
+                delay={p.delay}
+                color={p.color}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Album Cover - Static with 3D effects */}
       <div className="relative">
         {/* Outer glow when playing */}

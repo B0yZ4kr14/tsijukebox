@@ -14,6 +14,9 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient, SpotifyTrack, SpotifyAlbum, SpotifyPlaylist } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useRipple } from '@/hooks/useRipple';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { RippleContainer } from '@/components/ui/RippleContainer';
 
 interface SpotifyPanelProps {
   isOpen: boolean;
@@ -27,6 +30,23 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
   onPlay: () => void;
   onAddToQueue: () => void;
 }) {
+  const playRipple = useRipple();
+  const queueRipple = useRipple();
+  const { playSound } = useSoundEffects();
+  const { soundEnabled, animationsEnabled } = useSettings();
+
+  const handlePlay = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) playRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    onPlay();
+  };
+
+  const handleQueue = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (animationsEnabled) queueRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
+    onAddToQueue();
+  };
+
   return (
     <div className="group flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors card-3d">
       <div className="relative w-10 h-10 flex-shrink-0">
@@ -42,10 +62,11 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
           </div>
         )}
         <button
-          onClick={onPlay}
-          className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded"
+          onClick={handlePlay}
+          className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded relative overflow-hidden"
         >
-          <Play className="w-4 h-4 text-white fill-white" />
+          <RippleContainer ripples={playRipple.ripples} color="spotify" />
+          <Play className="w-4 h-4 text-white fill-white relative z-10" />
         </button>
       </div>
       <div className="flex-1 min-w-0">
@@ -55,10 +76,11 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity button-3d"
-        onClick={onAddToQueue}
+        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity button-3d relative overflow-hidden"
+        onClick={handleQueue}
       >
-        <Plus className="w-4 h-4" />
+        <RippleContainer ripples={queueRipple.ripples} color="spotify" />
+        <Plus className="w-4 h-4 relative z-10" />
       </Button>
     </div>
   );

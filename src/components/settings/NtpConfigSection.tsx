@@ -188,15 +188,15 @@ export function NtpConfigSection() {
         {/* Status Info */}
         <div className="p-3 rounded-lg card-option-dark-3d space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">{t('ntp.activeServer')}:</span>
-            <span className="font-mono text-kiosk-text">{getActiveServer() || t('ntp.notConfigured')}</span>
+            <span className="text-label-neon">{t('ntp.activeServer')}:</span>
+            <span className="font-mono text-neon-white">{getActiveServer() || t('ntp.notConfigured')}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">{t('ntp.lastSync')}:</span>
-            <span className="text-kiosk-text">{formatLastSync()}</span>
+            <span className="text-label-neon">{t('ntp.lastSync')}:</span>
+            <span className="text-neon-white">{formatLastSync()}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-orange">{t('ntp.status')}:</span>
+            <span className="text-label-neon">{t('ntp.status')}:</span>
             <div className="flex items-center gap-1">
               {config.syncStatus === 'synced' ? (
                 <Check className="w-3 h-3 text-green-400" />

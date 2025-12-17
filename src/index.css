@@ -1985,6 +1985,45 @@
   box-shadow: 0 0 25px hsl(45 100% 50% / 0.35);
 }
 
+/* Ripple verde Spotify */
+.ripple-spotify {
+  background: radial-gradient(circle, hsl(141 70% 55% / 0.6), hsl(141 70% 45% / 0.2), transparent 70%);
+  box-shadow: 0 0 25px hsl(141 70% 50% / 0.4);
+}
+
+/* ========== TEXT NEON WHITE - HIGH READABILITY ========== */
+.text-neon-white {
+  color: hsl(200 20% 95%);
+  text-shadow: 
+    0 0 8px hsl(195 80% 85% / 0.5),
+    0 0 16px hsl(195 60% 75% / 0.3);
+}
+
+/* Label neon cyan para títulos de campos em status boxes */
+.text-label-neon {
+  color: hsl(195 100% 80%);
+  text-shadow: 
+    0 0 10px hsl(195 100% 70% / 0.6),
+    0 0 20px hsl(195 100% 60% / 0.4);
+  font-weight: 500;
+}
+
+/* ========== FLOATING PARTICLES ========== */
+.floating-particle-cyan {
+  background: hsl(185 100% 65%);
+  box-shadow: 0 0 8px hsl(185 100% 60%), 0 0 16px hsl(185 100% 50% / 0.5);
+}
+
+.floating-particle-pink {
+  background: hsl(var(--kiosk-primary));
+  box-shadow: 0 0 8px hsl(var(--kiosk-primary)), 0 0 16px hsl(var(--kiosk-primary) / 0.5);
+}
+
+.floating-particle-gold {
+  background: hsl(45 100% 65%);
+  box-shadow: 0 0 8px hsl(45 100% 60%), 0 0 16px hsl(45 100% 50% / 0.5);
+}
+
 /* ========== GRADIENT BACKGROUND ========== */
 body[data-gradient="true"] {
   background: var(--custom-gradient, hsl(var(--kiosk-bg)));
