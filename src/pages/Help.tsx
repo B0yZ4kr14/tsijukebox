@@ -62,8 +62,8 @@ const helpSections: HelpSection[] = [
     items: [
       {
         id: 'what-is',
-        question: 'O que é o TSi JUKEBOX?',
-        answer: 'O TSi JUKEBOX é um sistema de música inteligente projetado para funcionar como um "jukebox digital". Ele permite reproduzir músicas, gerenciar playlists e conectar-se ao Spotify de forma fácil e intuitiva.',
+        question: 'O que é o TSiJUKEBOX?',
+        answer: 'O TSiJUKEBOX é um sistema de música inteligente projetado para funcionar como um "jukebox digital". Ele permite reproduzir músicas, gerenciar playlists e conectar-se ao Spotify de forma fácil e intuitiva.',
         tips: ['O sistema foi pensado para uso em tela de toque', 'Funciona perfeitamente em modo kiosk (tela cheia)']
       },
       {
@@ -93,7 +93,7 @@ const helpSections: HelpSection[] = [
       {
         id: 'playback-shortcuts',
         question: 'Quais são os atalhos para controlar a reprodução de música?',
-        answer: 'O TSi JUKEBOX oferece atalhos de teclado intuitivos para controle completo da reprodução sem precisar tocar na tela.',
+        answer: 'O TSiJUKEBOX oferece atalhos de teclado intuitivos para controle completo da reprodução sem precisar tocar na tela.',
         steps: [
           'Barra de Espaço (Space): Alternar entre Play e Pause',
           'Seta para Direita (→): Avançar para a próxima faixa',
@@ -130,7 +130,7 @@ const helpSections: HelpSection[] = [
       {
         id: 'basic-gestures',
         question: 'Quais gestos de toque estão disponíveis?',
-        answer: 'O TSi JUKEBOX suporta gestos de deslizar (swipe) para controle rápido da reprodução.',
+        answer: 'O TSiJUKEBOX suporta gestos de deslizar (swipe) para controle rápido da reprodução.',
         steps: [
           'Deslizar para Esquerda (← Swipe Left): Avança para a próxima música',
           'Deslizar para Direita (→ Swipe Right): Volta para a música anterior',
@@ -348,13 +348,13 @@ const helpSections: HelpSection[] = [
         ],
         tips: [
           'Em modo demo, nenhum áudio real é reproduzido',
-          'O volume do TSi JUKEBOX é independente do volume do sistema'
+          'O volume do TSiJUKEBOX é independente do volume do sistema'
         ]
       },
       {
         id: 'faq-volume-not-changing',
         question: 'O volume não muda quando ajusto o slider',
-        answer: 'O controle de volume do TSi JUKEBOX comunica-se com o Spotify via MPRIS/playerctl. Se não funcionar, pode haver problema na comunicação.',
+        answer: 'O controle de volume do TSiJUKEBOX comunica-se com o Spotify via MPRIS/playerctl. Se não funcionar, pode haver problema na comunicação.',
         steps: [
           'Teste playerctl diretamente: playerctl volume 0.5',
           'Verifique se o Spotify está respondendo a comandos MPRIS',

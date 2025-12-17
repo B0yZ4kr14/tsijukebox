@@ -58,7 +58,7 @@ const steps: WizardStep[] = [
   {
     id: 'welcome',
     title: 'Bem-vindo!',
-    description: 'Vamos configurar seu TSi JUKEBOX',
+    description: 'Vamos configurar seu TSiJUKEBOX',
     icon: <Music className="w-8 h-8" />,
   },
   {
@@ -356,7 +356,7 @@ export default function SetupWizard() {
             <LogoBrand size="xl" showTagline animate centered />
             <div className="space-y-3 max-w-md mx-auto">
               <p className="text-lg text-kiosk-text">
-                O TSi JUKEBOX é seu sistema de música inteligente.
+                O TSiJUKEBOX é seu sistema de música inteligente.
               </p>
               <p className="text-kiosk-text/70">
                 Nas próximas telas, vamos configurar idioma, visual, conexões e integrações

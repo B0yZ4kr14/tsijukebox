@@ -367,7 +367,7 @@
     "demoWarning": "Configuración de nube no disponible en modo demo",
     "migration": {
       "title": "Migración de Configuraciones",
-      "description": "Exporte sus configuraciones para migrar a otra instalación de TSi JUKEBOX o haga respaldo de sus credenciales.",
+      "description": "Exporte sus configuraciones para migrar a otra instalación de TSiJUKEBOX o haga respaldo de sus credenciales.",
       "export": "Exportar JSON",
       "import": "Importar JSON",
       "includeCredentials": "Incluir credenciales sensibles",

@@ -146,7 +146,7 @@ export function generateFullMarkdown(helpSections: HelpSection[]): string {
     day: 'numeric' 
   });
   
-  let md = `# TSi JUKEBOX - Documentação Completa
+  let md = `# TSiJUKEBOX - Documentação Completa
 
 **Versão:** 1.0  
 **Gerado em:** ${date}
@@ -172,7 +172,7 @@ ${exportWikiToMarkdown()}
 
 ---
 
-*Documento gerado automaticamente pelo TSi JUKEBOX*
+*Documento gerado automaticamente pelo TSiJUKEBOX*
 `;
 
   return md;
@@ -202,7 +202,7 @@ export function generateFullHTML(helpSections: HelpSection[]): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSi JUKEBOX - Documentação</title>
+  <title>TSiJUKEBOX - Documentação</title>
   <style>
     :root {
       --bg: #1a1a2e;

@@ -14,6 +14,7 @@ import { GlobalSearchModal } from '@/components/GlobalSearchModal';
 import { wikiCategories, findArticleById, getTotalArticleCount } from '@/components/wiki/wikiData';
 import { useWikiBookmarks } from '@/hooks/useWikiBookmarks';
 import { useGlobalSearch } from '@/hooks/useGlobalSearch';
+import { useReadArticles } from '@/hooks/useReadArticles';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 
@@ -23,6 +24,7 @@ export default function Wiki() {
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { bookmarks, toggleBookmark, isBookmarked, clearBookmarks } = useWikiBookmarks();
+  const { markAsRead, isRead } = useReadArticles();
 
   // Global search
   const globalSearch = useGlobalSearch({});
@@ -200,6 +202,7 @@ export default function Wiki() {
                 onSelectArticle={setSelectedArticle}
                 onSelectCategory={setSelectedCategory}
                 selectedCategory={selectedCategory}
+                isArticleRead={isRead}
               />
             </div>
           </div>
@@ -216,6 +219,7 @@ export default function Wiki() {
                     toggleBookmark(article.id);
                     toast.success(isBookmarked(article.id) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
                   }}
+                  onArticleViewed={markAsRead}
                 />
               ) : selectedCategory ? (
                 <CategoryOverview 
