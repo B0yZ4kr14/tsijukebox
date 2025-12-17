@@ -61,10 +61,14 @@ export function WikiNavigation({
   onSelectCategory,
   selectedCategory 
 }: WikiNavigationProps) {
+  // Default: expand 'integrations' category to show new Spicetify/YouTube Music articles
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(selectedCategory ? [selectedCategory] : [])
+    new Set(selectedCategory ? [selectedCategory, 'integrations'] : ['integrations'])
   );
-  const [expandedSubSections, setExpandedSubSections] = useState<Set<string>>(new Set());
+  // Default: expand integrations subsections (spicetify, youtube-music, multi-provider)
+  const [expandedSubSections, setExpandedSubSections] = useState<Set<string>>(
+    new Set(['spicetify', 'youtube-music', 'multi-provider'])
+  );
   const [showTreeLines, setShowTreeLines] = useState(true);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [searchQuery, setSearchQuery] = useState('');
