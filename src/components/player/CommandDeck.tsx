@@ -192,12 +192,20 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
   }
 
   const containerVariants = {
-    hidden: { opacity: 1 },
+    hidden: { 
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.06,
+        staggerDirection: -1,
+        when: "afterChildren"
+      }
+    },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.08,
         delayChildren: 0.1,
+        staggerDirection: 1,
       }
     }
   };
@@ -206,7 +214,12 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
     hidden: { 
       opacity: 0, 
       x: -20,
-      scale: 0.8 
+      scale: 0.8,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 30
+      }
     },
     visible: { 
       opacity: 1, 
