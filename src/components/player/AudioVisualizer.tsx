@@ -134,13 +134,13 @@ export function AudioVisualizer({
 
   return (
     <div className={cn(
-      "flex items-end justify-center gap-[2px] h-8",
+      "flex items-end justify-center gap-[1px] h-6",
       className
     )}>
       {bars.map((height, i) => (
         <motion.div
           key={i}
-          className={cn("w-1.5 rounded-full bg-gradient-to-t", config.color)}
+          className={cn("w-1 rounded-full bg-gradient-to-t", config.color)}
           initial={{ height: '10%' }}
           animate={{ 
             height: `${height * 100}%`,

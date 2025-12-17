@@ -640,6 +640,113 @@
     }
   }
 
+  /* ========== TSiJUKEBOX LOGO BULGE STYLES - 3D Convex Effect ========== */
+  
+  /* Container Bulge - Efeito abaulado convexo com fundo azul escuro */
+  .logo-container-bulge {
+    position: relative;
+    /* Fundo abaulado com gradiente que simula volume convexo */
+    background: linear-gradient(
+      180deg,
+      hsl(210 80% 28%) 0%,
+      hsl(210 90% 38%) 25%,
+      hsl(210 85% 32%) 50%,
+      hsl(210 80% 22%) 75%,
+      hsl(210 70% 15%) 100%
+    );
+    border-radius: 14px;
+    padding: 10px 28px;
+    /* Borda neon azul */
+    border: 2px solid hsl(195 100% 55% / 0.7);
+    box-shadow:
+      /* Glow externo neon azul */
+      0 0 20px hsl(195 100% 55% / 0.6),
+      0 0 40px hsl(195 100% 50% / 0.4),
+      0 0 80px hsl(210 100% 45% / 0.25),
+      /* Bevel interno para efeito 3D convexo */
+      inset 0 3px 8px hsl(210 100% 70% / 0.5),
+      inset 0 -4px 10px hsl(210 80% 8% / 0.9),
+      inset 3px 0 6px hsl(210 100% 65% / 0.2),
+      inset -3px 0 6px hsl(210 80% 10% / 0.4),
+      /* Sombra de profundidade */
+      0 10px 30px hsl(0 0% 0% / 0.6),
+      0 20px 50px hsl(210 80% 10% / 0.4);
+  }
+
+  /* Logo TSi BULGE - Azul escuro com contorno neon azul */
+  .logo-tsi-bulge {
+    color: hsl(210 100% 65%);
+    text-shadow:
+      /* Contorno neon azul brilhante */
+      0 0 10px hsl(195 100% 65% / 1),
+      0 0 25px hsl(195 100% 60% / 0.8),
+      0 0 50px hsl(195 100% 55% / 0.5),
+      0 0 80px hsl(195 100% 50% / 0.35),
+      /* Sombra para profundidade 3D */
+      2px 3px 2px hsl(210 80% 12% / 0.95),
+      -1px -1px 0 hsl(195 100% 85% / 0.4);
+    letter-spacing: -0.02em;
+  }
+
+  /* Logo JUKEBOX BULGE - Azul neon intenso com contorno */
+  .logo-jukebox-bulge {
+    color: hsl(195 100% 75%);
+    text-shadow:
+      /* Contorno neon azul intenso */
+      0 0 12px hsl(195 100% 70% / 1),
+      0 0 30px hsl(195 100% 65% / 0.85),
+      0 0 60px hsl(195 100% 60% / 0.55),
+      0 0 100px hsl(195 100% 55% / 0.35),
+      /* Sombra para profundidade 3D */
+      3px 4px 3px hsl(210 70% 10% / 0.98),
+      -2px -2px 0 hsl(195 100% 90% / 0.5);
+    letter-spacing: 0.08em;
+    margin-left: 0.1em;
+  }
+
+  /* Animação de pulsação BULGE do glow do logo */
+  .logo-animate-bulge {
+    animation: logo-pulse-bulge 3s ease-in-out infinite;
+  }
+
+  @keyframes logo-pulse-bulge {
+    0%, 100% {
+      filter: brightness(1);
+      box-shadow:
+        0 0 20px hsl(195 100% 55% / 0.6),
+        0 0 40px hsl(195 100% 50% / 0.4),
+        0 0 80px hsl(210 100% 45% / 0.25),
+        inset 0 3px 8px hsl(210 100% 70% / 0.5),
+        inset 0 -4px 10px hsl(210 80% 8% / 0.9),
+        0 10px 30px hsl(0 0% 0% / 0.6);
+    }
+    50% {
+      filter: brightness(1.1);
+      box-shadow:
+        0 0 30px hsl(195 100% 60% / 0.75),
+        0 0 60px hsl(195 100% 55% / 0.5),
+        0 0 100px hsl(210 100% 50% / 0.35),
+        inset 0 3px 10px hsl(210 100% 75% / 0.6),
+        inset 0 -4px 12px hsl(210 80% 8% / 0.85),
+        0 12px 35px hsl(0 0% 0% / 0.55);
+    }
+  }
+
+  /* ========== DIVIDER SUBTLE - Linha divisória neon sutil ========== */
+  
+  .divider-subtle {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(195 100% 50% / 0.25) 15%,
+      hsl(195 100% 60% / 0.5) 50%,
+      hsl(195 100% 50% / 0.25) 85%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px hsl(195 100% 55% / 0.25);
+  }
+
   /* ========== CARD ADMIN EXTREME 3D ========== */
   
   .card-admin-extreme-3d {

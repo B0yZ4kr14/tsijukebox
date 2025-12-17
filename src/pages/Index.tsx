@@ -241,7 +241,7 @@ export default function Index() {
         <header className="flex flex-col p-2 pt-1.5 header-3d backdrop-blur-sm">
           {/* LINE 1: Logo centered at absolute top */}
           <div className="w-full flex justify-center mb-2">
-            <LogoBrand size="md" variant="ultra" animate />
+            <LogoBrand size="md" variant="bulge" animate />
           </div>
 
           {/* LINE 2: Status bar with grid for perfect centering */}
@@ -318,10 +318,13 @@ export default function Index() {
             <div className="w-full">
               <AudioVisualizer 
                 isPlaying={status?.playing ?? false} 
-                barCount={48}
+                barCount={32}
                 genre={status?.track?.genre}
               />
             </div>
+
+            {/* Linha divisória sutil */}
+            <div className="w-full max-w-[200px] divider-subtle my-2" />
 
             {/* Progress Bar */}
             <div className="w-full mt-2">

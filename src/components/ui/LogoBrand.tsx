@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 interface LogoBrandProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'ultra';
+  variant?: 'default' | 'ultra' | 'bulge';
   showTagline?: boolean;
   centered?: boolean;
   animate?: boolean;
@@ -31,21 +31,51 @@ export function LogoBrand({
     xl: 'text-base',
   };
 
-  const isUltra = variant === 'ultra';
+  const getContainerClass = () => {
+    switch (variant) {
+      case 'ultra': return 'logo-container-ultra';
+      case 'bulge': return 'logo-container-bulge';
+      default: return 'logo-container-3d';
+    }
+  };
+
+  const getAnimateClass = () => {
+    switch (variant) {
+      case 'ultra': return 'logo-animate-ultra';
+      case 'bulge': return 'logo-animate-bulge';
+      default: return 'logo-animate';
+    }
+  };
+
+  const getTsiClass = () => {
+    switch (variant) {
+      case 'ultra': return 'logo-tsi-ultra';
+      case 'bulge': return 'logo-tsi-bulge';
+      default: return 'logo-tsi';
+    }
+  };
+
+  const getJukeboxClass = () => {
+    switch (variant) {
+      case 'ultra': return 'logo-jukebox-ultra';
+      case 'bulge': return 'logo-jukebox-bulge';
+      default: return 'logo-jukebox';
+    }
+  };
 
   return (
     <div className={cn(
-      isUltra ? "logo-container-ultra" : "logo-container-3d",
+      getContainerClass(),
       centered && "flex flex-col items-center justify-center",
       className
     )}>
       <div className={cn(
         "font-black tracking-tight select-none",
         sizeClasses[size],
-        animate && (isUltra ? "logo-animate-ultra" : "logo-animate")
+        animate && getAnimateClass()
       )}>
-        <span className={isUltra ? "logo-tsi-ultra" : "logo-tsi"}>TSi</span>
-        <span className={isUltra ? "logo-jukebox-ultra" : "logo-jukebox"}>JUKEBOX</span>
+        <span className={getTsiClass()}>TSi</span>
+        <span className={getJukeboxClass()}>JUKEBOX</span>
       </div>
       {showTagline && (
         <p className={cn(
