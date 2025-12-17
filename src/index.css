@@ -1333,9 +1333,9 @@
   }
 
   .deck-button-cyan:hover {
-    border-color: hsl(185 80% 50% / 0.6);
-    animation: pulse-glow-cyan 1.5s ease-in-out infinite;
-    transform: translateY(-6px);
+    border-color: hsl(185 80% 60% / 0.8);
+    animation: pulse-glow-cyan 1.2s ease-in-out infinite;
+    transform: translateY(-8px) scale(1.08);
   }
 
   /* Amber button (Reload) */
@@ -1344,9 +1344,9 @@
   }
 
   .deck-button-amber:hover {
-    border-color: hsl(38 90% 55% / 0.6);
-    animation: pulse-glow-amber 1.5s ease-in-out infinite;
-    transform: translateY(-6px);
+    border-color: hsl(38 90% 60% / 0.8);
+    animation: pulse-glow-amber 1.2s ease-in-out infinite;
+    transform: translateY(-8px) scale(1.08);
   }
 
   /* White button (Setup) */
@@ -1355,9 +1355,9 @@
   }
 
   .deck-button-white:hover {
-    border-color: hsl(0 0% 100% / 0.4);
-    animation: pulse-glow-white 1.5s ease-in-out infinite;
-    transform: translateY(-6px);
+    border-color: hsl(0 0% 100% / 0.6);
+    animation: pulse-glow-white 1.2s ease-in-out infinite;
+    transform: translateY(-8px) scale(1.08);
   }
 
   /* Red button (Reboot) - Critical action */
@@ -1370,9 +1370,9 @@
   }
 
   .deck-button-red:hover {
-    border-color: hsl(0 80% 55% / 0.7);
-    animation: pulse-glow-red 1.2s ease-in-out infinite;
-    transform: translateY(-6px);
+    border-color: hsl(0 80% 60% / 0.9);
+    animation: pulse-glow-red 1s ease-in-out infinite;
+    transform: translateY(-8px) scale(1.08);
   }
 
   /* ========================================

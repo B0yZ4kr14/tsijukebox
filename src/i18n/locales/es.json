@@ -345,6 +345,7 @@
     "description": "Sincronice respaldos con servicios de almacenamiento en la nube",
     "provider": "Proveedor de Nube",
     "selectProvider": "Seleccione un proveedor",
+    "selectProviderFirst": "Seleccione un proveedor primero",
     "bucketName": "Bucket Name",
     "accessKey": "Access Key ID",
     "secretKey": "Secret Access Key",
@@ -361,7 +362,24 @@
     "configSaved": "Configuración de respaldo en la nube guardada",
     "syncSuccess": "Respaldo sincronizado con la nube",
     "syncError": "Error de sincronización",
-    "demoWarning": "Configuración de nube no disponible en modo demo"
+    "demoWarning": "Configuración de nube no disponible en modo demo",
+    "migration": {
+      "title": "Migración de Configuraciones",
+      "description": "Exporte sus configuraciones para migrar a otra instalación de TSi JUKEBOX o haga respaldo de sus credenciales.",
+      "export": "Exportar JSON",
+      "import": "Importar JSON",
+      "includeCredentials": "Incluir credenciales sensibles",
+      "includeCredentialsWarning": "⚠️ No recomendado para compartir. ¡Mantenga el archivo en un lugar seguro!",
+      "info": "Las credenciales sensibles (contraseñas, claves secretas) se enmascaran por defecto. Marque la opción anterior solo si necesita un respaldo completo."
+    },
+    "exportSuccess": "Configuraciones exportadas con éxito",
+    "importSuccess": "Configuraciones importadas con éxito",
+    "importSuccessWithMasked": "¡Configuraciones importadas! Complete las credenciales sensibles manualmente.",
+    "importError": "Error de importación: archivo inválido",
+    "importInvalidFormat": "Formato de archivo inválido",
+    "importVersionWarning": "Versión diferente detectada. Algunas configuraciones pueden no ser compatibles.",
+    "missingFieldsTitle": "Campos obligatorios faltantes:",
+    "oauthRequired": "Autenticación OAuth requerida"
   },
   "ntp": {
     "title": "Sincronización de Tiempo (NTP)",

@@ -44,6 +44,7 @@ const colorClasses = {
     glow: 'shadow-cyan-500/30',
     hover: 'hover:border-cyan-400/60 hover:shadow-cyan-500/40',
     icon: 'text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]',
+    pulseClass: 'deck-button-cyan',
   },
   amber: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
@@ -52,6 +53,7 @@ const colorClasses = {
     glow: 'shadow-amber-500/30',
     hover: 'hover:border-amber-400/60 hover:shadow-amber-500/40',
     icon: 'text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]',
+    pulseClass: 'deck-button-amber',
   },
   white: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
@@ -60,6 +62,7 @@ const colorClasses = {
     glow: 'shadow-white/20',
     hover: 'hover:border-white/50 hover:shadow-white/30',
     icon: 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]',
+    pulseClass: 'deck-button-white',
   },
   red: {
     bg: 'bg-gradient-to-b from-slate-700 to-slate-800',
@@ -68,6 +71,7 @@ const colorClasses = {
     glow: 'shadow-red-500/30',
     hover: 'hover:border-red-400/60 hover:shadow-red-500/40',
     icon: 'text-red-400 drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]',
+    pulseClass: 'deck-button-red',
   },
 };
 
@@ -85,12 +89,13 @@ function DeckButton({ icon, label, tooltip, onClick, color, disabled }: DeckButt
               relative flex flex-col items-center justify-center gap-2
               w-20 h-20 rounded-2xl ripple-effect
               ${colors.bg} border-2 ${colors.border}
+              ${colors.pulseClass}
               transition-all duration-150
               disabled:opacity-50 disabled:cursor-not-allowed
               shadow-lg ${colors.glow} ${colors.hover}
             `}
-            whileHover={{ scale: 1.1, x: 4 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.95 }}
           >
             {/* Top highlight for 3D bevel */}
             <div className="absolute inset-x-3 top-1.5 h-0.5 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full" />
@@ -192,7 +197,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
       <motion.div
         className="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center"
         initial={{ x: -100 }}
-        animate={{ x: isExpanded ? 0 : -88 }}
+        animate={{ x: isExpanded ? 12 : -88 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         {/* Deck Container */}
