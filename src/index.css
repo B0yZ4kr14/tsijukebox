@@ -227,10 +227,20 @@
   /* Artista - azul neon intenso */
   .text-artist-neon-blue {
     color: hsl(195 100% 70%);
+    font-weight: 600;
     text-shadow:
       0 0 8px hsl(195 100% 60% / 0.8),
       0 0 16px hsl(195 100% 55% / 0.5),
       0 0 30px hsl(195 100% 50% / 0.3);
+  }
+
+  /* Álbum - cinza claro com glow sutil */
+  .text-album-neon {
+    color: hsl(200 15% 75%);
+    font-weight: 500;
+    text-shadow:
+      0 0 6px hsl(200 30% 60% / 0.4),
+      0 0 12px hsl(200 25% 50% / 0.2);
   }
 
   /* Botão outline neon com boa visibilidade */
@@ -2633,11 +2643,11 @@ body[data-gradient="true"] {
 .logo-tsi-mirror {
   background: linear-gradient(
     90deg,
-    hsl(185 80% 32%) 0%,
-    hsl(185 80% 32%) 42%,
-    hsl(180 90% 50%) 50%,
-    hsl(185 80% 32%) 58%,
-    hsl(185 80% 32%) 100%
+    hsl(185 92% 32%) 0%,
+    hsl(185 92% 32%) 42%,
+    hsl(180 100% 50%) 50%,
+    hsl(185 92% 32%) 58%,
+    hsl(185 92% 32%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2659,11 +2669,11 @@ body[data-gradient="true"] {
 .logo-jukebox-mirror {
   background: linear-gradient(
     90deg,
-    hsl(45 45% 35%) 0%,
-    hsl(45 45% 35%) 42%,
-    hsl(48 55% 52%) 50%,
-    hsl(45 45% 35%) 58%,
-    hsl(45 45% 35%) 100%
+    hsl(45 62% 35%) 0%,
+    hsl(45 62% 35%) 42%,
+    hsl(48 72% 52%) 50%,
+    hsl(45 62% 35%) 58%,
+    hsl(45 62% 35%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2710,11 +2720,11 @@ body[data-gradient="true"] {
 .logo-tsi-mirror-dark {
   background: linear-gradient(
     90deg,
-    hsl(185 80% 18%) 0%,
-    hsl(185 80% 18%) 42%,
-    hsl(180 90% 35%) 50%,
-    hsl(185 80% 18%) 58%,
-    hsl(185 80% 18%) 100%
+    hsl(185 95% 18%) 0%,
+    hsl(185 95% 18%) 42%,
+    hsl(180 100% 35%) 50%,
+    hsl(185 95% 18%) 58%,
+    hsl(185 95% 18%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -2736,11 +2746,11 @@ body[data-gradient="true"] {
 .logo-jukebox-mirror-dark {
   background: linear-gradient(
     90deg,
-    hsl(45 45% 20%) 0%,
-    hsl(45 45% 20%) 42%,
-    hsl(48 55% 38%) 50%,
-    hsl(45 45% 20%) 58%,
-    hsl(45 45% 20%) 100%
+    hsl(45 65% 20%) 0%,
+    hsl(45 65% 20%) 42%,
+    hsl(48 75% 38%) 50%,
+    hsl(45 65% 20%) 58%,
+    hsl(45 65% 20%) 100%
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;

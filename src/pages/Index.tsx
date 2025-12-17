@@ -373,10 +373,6 @@ export default function Index() {
               />
             </div>
 
-            {/* Swipe hint */}
-            <p className="text-xs text-kiosk-text/40 text-center">
-              {t('player.swipeHint')}
-            </p>
           </div>
         </main>
 

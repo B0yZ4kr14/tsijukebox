@@ -66,7 +66,7 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
         </p>
         
         {track?.album && (
-          <p className="text-xs text-kiosk-text/50">
+          <p className="text-xs text-album-neon">
             {track.album}
           </p>
         )}
