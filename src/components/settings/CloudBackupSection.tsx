@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Cloud, CloudUpload, Settings, Check, AlertCircle, Eye, EyeOff, FolderSync, Package, Lock, CloudCog, Satellite } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Cloud, CloudUpload, Settings, Check, AlertCircle, Eye, EyeOff, FolderSync, Package, Lock, CloudCog, Satellite, Download, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { SettingsSection } from './SettingsSection';
 import { CloudProviderHelp } from './CloudProviderHelp';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -44,6 +45,111 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
   const [showSecrets, setShowSecrets] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [includeCredentials, setIncludeCredentials] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Export config to JSON
+  const handleExportConfig = () => {
+    if (!config.provider) {
+      toast.error(t('cloudBackup.selectProviderFirst'));
+      return;
+    }
+
+    const exportData = {
+      version: '1.0',
+      application: 'TSi JUKEBOX',
+      exportedAt: new Date().toISOString(),
+      provider: config.provider,
+      config: {
+        provider: config.provider,
+        awsBucket: config.awsBucket || undefined,
+        awsAccessKey: config.awsAccessKey || undefined,
+        awsSecretKey: includeCredentials ? config.awsSecretKey : (config.awsSecretKey ? '***MASKED***' : undefined),
+        awsRegion: config.awsRegion || undefined,
+        megaEmail: config.megaEmail || undefined,
+        megaPassword: includeCredentials ? config.megaPassword : (config.megaPassword ? '***MASKED***' : undefined),
+        storjAccessGrant: includeCredentials ? config.storjAccessGrant : (config.storjAccessGrant ? '***MASKED***' : undefined),
+        isOAuthConnected: config.isOAuthConnected || undefined,
+      },
+      notes: includeCredentials 
+        ? 'ATENÇÃO: Este arquivo contém credenciais sensíveis. Mantenha em local seguro!'
+        : 'Credenciais sensíveis foram mascaradas. Preencha-as manualmente após importar.',
+    };
+
+    // Remove undefined values
+    Object.keys(exportData.config).forEach(key => {
+      if (exportData.config[key as keyof typeof exportData.config] === undefined) {
+        delete exportData.config[key as keyof typeof exportData.config];
+      }
+    });
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tsi-jukebox-cloud-backup-${config.provider}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success(t('cloudBackup.exportSuccess'));
+  };
+
+  // Import config from JSON
+  const handleImportConfig = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target?.result as string);
+        
+        // Validate structure
+        if (!imported.provider || !imported.config) {
+          toast.error(t('cloudBackup.importInvalidFormat'));
+          return;
+        }
+
+        // Check version compatibility
+        if (imported.version && imported.version !== '1.0') {
+          toast.warning(t('cloudBackup.importVersionWarning'));
+        }
+
+        const newConfig: CloudConfig = {
+          provider: imported.provider as CloudProvider,
+          awsBucket: imported.config.awsBucket,
+          awsAccessKey: imported.config.awsAccessKey,
+          awsSecretKey: imported.config.awsSecretKey === '***MASKED***' ? '' : imported.config.awsSecretKey,
+          awsRegion: imported.config.awsRegion,
+          megaEmail: imported.config.megaEmail,
+          megaPassword: imported.config.megaPassword === '***MASKED***' ? '' : imported.config.megaPassword,
+          storjAccessGrant: imported.config.storjAccessGrant === '***MASKED***' ? '' : imported.config.storjAccessGrant,
+          isOAuthConnected: imported.config.isOAuthConnected,
+        };
+
+        setConfig(newConfig);
+
+        // Check if masked credentials need to be filled
+        const hasMasked = imported.config.awsSecretKey === '***MASKED***' || 
+                         imported.config.megaPassword === '***MASKED***' || 
+                         imported.config.storjAccessGrant === '***MASKED***';
+
+        if (hasMasked) {
+          toast.success(t('cloudBackup.importSuccessWithMasked'));
+        } else {
+          toast.success(t('cloudBackup.importSuccess'));
+        }
+      } catch (error) {
+        toast.error(t('cloudBackup.importError'));
+      }
+    };
+    reader.readAsText(file);
+
+    // Reset input value to allow importing the same file again
+    event.target.value = '';
+  };
 
   const handleProviderChange = (provider: string) => {
     setConfig({ provider: provider as CloudProvider });
@@ -348,6 +454,75 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
             </div>
           </>
         )}
+
+        {/* Migration Section */}
+        <Separator className="bg-kiosk-border" />
+        
+        <div className="space-y-3">
+          <Label className="text-label-orange flex items-center gap-2">
+            <Download className="w-4 h-4 icon-neon-blue" />
+            {t('cloudBackup.migration.title')}
+          </Label>
+          
+          <p className="text-xs text-kiosk-text/70">
+            {t('cloudBackup.migration.description')}
+          </p>
+
+          {/* Include credentials checkbox */}
+          <div className="flex items-center space-x-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
+            <Checkbox
+              id="includeCredentials"
+              checked={includeCredentials}
+              onCheckedChange={(checked) => setIncludeCredentials(checked === true)}
+              className="border-amber-500/50 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+            />
+            <div className="flex-1">
+              <label
+                htmlFor="includeCredentials"
+                className="text-sm text-amber-400 cursor-pointer"
+              >
+                {t('cloudBackup.migration.includeCredentials')}
+              </label>
+              <p className="text-xs text-amber-400/70">
+                {t('cloudBackup.migration.includeCredentialsWarning')}
+              </p>
+            </div>
+          </div>
+
+          {/* Export/Import buttons */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleExportConfig}
+              disabled={!config.provider}
+              className="flex-1 button-outline-neon ripple-effect"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {t('cloudBackup.migration.export')}
+            </Button>
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1 button-outline-neon ripple-effect"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              {t('cloudBackup.migration.import')}
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleImportConfig}
+              className="hidden"
+            />
+          </div>
+
+          {/* Info note */}
+          <div className="flex items-start gap-2 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+            <Info className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-cyan-400">
+              {t('cloudBackup.migration.info')}
+            </p>
+          </div>
+        </div>
 
         {isDemoMode && (
           <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">

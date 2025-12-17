@@ -345,6 +345,7 @@
     "description": "Sincronize backups com serviços de armazenamento em nuvem",
     "provider": "Provedor de Nuvem",
     "selectProvider": "Selecione um provedor",
+    "selectProviderFirst": "Selecione um provedor primeiro",
     "bucketName": "Bucket Name",
     "accessKey": "Access Key ID",
     "secretKey": "Secret Access Key",
@@ -361,7 +362,22 @@
     "configSaved": "Configuração de backup em nuvem salva",
     "syncSuccess": "Backup sincronizado com a nuvem",
     "syncError": "Erro na sincronização",
-    "demoWarning": "Configuração de nuvem indisponível no modo demo"
+    "demoWarning": "Configuração de nuvem indisponível no modo demo",
+    "migration": {
+      "title": "Migração de Configurações",
+      "description": "Exporte suas configurações para migrar para outra instalação do TSi JUKEBOX ou faça backup das suas credenciais.",
+      "export": "Exportar JSON",
+      "import": "Importar JSON",
+      "includeCredentials": "Incluir credenciais sensíveis",
+      "includeCredentialsWarning": "⚠️ Não recomendado para compartilhamento. Mantenha o arquivo em local seguro!",
+      "info": "Credenciais sensíveis (senhas, chaves secretas) são mascaradas por padrão. Marque a opção acima apenas se precisar de um backup completo."
+    },
+    "exportSuccess": "Configurações exportadas com sucesso",
+    "importSuccess": "Configurações importadas com sucesso",
+    "importSuccessWithMasked": "Configurações importadas! Preencha as credenciais sensíveis manualmente.",
+    "importError": "Erro ao importar: arquivo inválido",
+    "importInvalidFormat": "Formato de arquivo inválido",
+    "importVersionWarning": "Versão diferente detectada. Algumas configurações podem não ser compatíveis."
   },
   "ntp": {
     "title": "Sincronização de Tempo (NTP)",
