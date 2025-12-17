@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { SettingsSection } from './SettingsSection';
+import { CloudProviderHelp } from './CloudProviderHelp';
 import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
 
@@ -28,7 +29,7 @@ interface CloudConfig {
   isOAuthConnected?: boolean;
 }
 
-const cloudProviders = [
+const cloudProviders: { id: CloudProvider; name: string; icon: React.ReactNode; needsOAuth: boolean }[] = [
   { id: 'aws', name: 'AWS S3', icon: <Cloud className="w-4 h-4 icon-neon-blue" />, needsOAuth: false },
   { id: 'gdrive', name: 'Google Drive', icon: <FolderSync className="w-4 h-4 icon-neon-blue" />, needsOAuth: true },
   { id: 'dropbox', name: 'Dropbox', icon: <Package className="w-4 h-4 icon-neon-blue" />, needsOAuth: true },
@@ -140,15 +141,18 @@ export function CloudBackupSection({ isDemoMode }: CloudBackupSectionProps) {
       <div className="space-y-4">
         {/* Provider Selection */}
         <div className="space-y-2">
-          <Label className="text-label-yellow">{t('cloudBackup.provider')}</Label>
+          <div className="flex items-center gap-2">
+            <Label className="text-label-yellow">{t('cloudBackup.provider')}</Label>
+            {config.provider && <CloudProviderHelp provider={config.provider as CloudProvider} />}
+          </div>
           <Select value={config.provider} onValueChange={handleProviderChange}>
-            <SelectTrigger className="input-3d bg-kiosk-bg border-kiosk-border text-kiosk-text">
+            <SelectTrigger className="input-3d bg-kiosk-bg border-kiosk-border text-white">
               <SelectValue placeholder={t('cloudBackup.selectProvider')} />
             </SelectTrigger>
-            <SelectContent className="bg-kiosk-surface border-kiosk-border">
+            <SelectContent>
               {cloudProviders.map((provider) => (
                 <SelectItem key={provider.id} value={provider.id}>
-                  <span className="flex items-center gap-2 text-white">
+                  <span className="flex items-center gap-2">
                     {provider.icon}
                     <span>{provider.name}</span>
                   </span>

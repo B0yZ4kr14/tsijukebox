@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronDown, FolderOpen, FolderClosed, Minus } from 'lucide-react';
+import { ChevronRight, ChevronDown, FolderOpen, FolderClosed, Minus, Search, X, Filter } from 'lucide-react';
 import { 
   Music, 
   Keyboard, 
@@ -15,6 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Toggle } from '@/components/ui/toggle';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 interface WikiNavigationProps {
@@ -44,6 +45,16 @@ function getTotalArticleCount(): number {
   return wikiCategories.reduce((acc, cat) => acc + getCategoryArticleCount(cat), 0);
 }
 
+// Highlight matching text
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query.trim()) return text;
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+  return parts.map((part, i) => 
+    regex.test(part) ? <mark key={i} className="bg-cyan-500/40 text-white rounded px-0.5">{part}</mark> : part
+  );
+}
+
 export function WikiNavigation({ 
   selectedArticle, 
   onSelectArticle, 
@@ -56,13 +67,54 @@ export function WikiNavigation({
   const [expandedSubSections, setExpandedSubSections] = useState<Set<string>>(new Set());
   const [showTreeLines, setShowTreeLines] = useState(true);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Filter categories based on search and category filter
+  const filteredCategories = useMemo(() => {
+    let categories = [...wikiCategories];
+    
+    // Apply category filter
+    if (categoryFilter) {
+      categories = categories.filter(cat => cat.id === categoryFilter);
+    }
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      categories = categories.map(category => {
+        const filteredSubSections = category.subSections.map(subSection => {
+          const filteredArticles = subSection.articles.filter(article =>
+            article.title.toLowerCase().includes(query) ||
+            article.description?.toLowerCase().includes(query)
+          );
+          return { ...subSection, articles: filteredArticles };
+        }).filter(sub => sub.articles.length > 0);
+        
+        return { ...category, subSections: filteredSubSections };
+      }).filter(cat => cat.subSections.length > 0);
+    }
+    
+    return categories;
+  }, [searchQuery, categoryFilter]);
+
+  // Auto-expand categories with search results
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const catsWithResults = new Set(filteredCategories.map(c => c.id));
+      const subsWithResults = new Set(filteredCategories.flatMap(c => c.subSections.map(s => s.id)));
+      setExpandedCategories(catsWithResults);
+      setExpandedSubSections(subsWithResults);
+    }
+  }, [searchQuery, filteredCategories]);
 
   // Build flat list for keyboard navigation
   const flatItems = useCallback(() => {
     const items: { type: 'category' | 'subsection' | 'article'; id: string; categoryId?: string; subSectionId?: string }[] = [];
     
-    wikiCategories.forEach(category => {
+    filteredCategories.forEach(category => {
       items.push({ type: 'category', id: category.id });
       if (expandedCategories.has(category.id)) {
         category.subSections.forEach(subSection => {
@@ -77,7 +129,7 @@ export function WikiNavigation({
     });
     
     return items;
-  }, [expandedCategories, expandedSubSections]);
+  }, [expandedCategories, expandedSubSections, filteredCategories]);
 
   // Expand all categories and subsections
   const expandAll = () => {
@@ -185,9 +237,71 @@ export function WikiNavigation({
   }, [focusedIndex, flatItems, expandedCategories, expandedSubSections]);
 
   const totalArticles = getTotalArticleCount();
+  const filteredArticleCount = filteredCategories.reduce((acc, cat) => acc + getCategoryArticleCount(cat), 0);
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setCategoryFilter(null);
+  };
 
   return (
     <div ref={navRef} tabIndex={0} className="outline-none">
+      {/* Search Bar */}
+      <div className="relative mb-3">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400/60" />
+        <Input
+          ref={searchInputRef}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Buscar artigos..."
+          className="pl-9 pr-9 h-9 bg-kiosk-bg/50 border-cyan-500/20 text-white placeholder:text-kiosk-text/40 focus:border-cyan-500/50"
+        />
+        {(searchQuery || categoryFilter) && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-red-500/20"
+            onClick={clearSearch}
+          >
+            <X className="w-3 h-3 text-red-400" />
+          </Button>
+        )}
+      </div>
+
+      {/* Category Filter Chips */}
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setCategoryFilter(null)}
+          className={cn(
+            "h-6 px-2 text-[10px] rounded-full border transition-all",
+            !categoryFilter 
+              ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-400" 
+              : "bg-transparent border-kiosk-border text-kiosk-text/60 hover:border-cyan-500/30"
+          )}
+        >
+          <Filter className="w-3 h-3 mr-1" />
+          Todas
+        </Button>
+        {wikiCategories.map(cat => (
+          <Button
+            key={cat.id}
+            variant="ghost"
+            size="sm"
+            onClick={() => setCategoryFilter(categoryFilter === cat.id ? null : cat.id)}
+            className={cn(
+              "h-6 px-2 text-[10px] rounded-full border transition-all",
+              categoryFilter === cat.id 
+                ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-400" 
+                : "bg-transparent border-kiosk-border text-kiosk-text/60 hover:border-cyan-500/30"
+            )}
+          >
+            {cat.title.split(' ')[0]}
+          </Button>
+        ))}
+      </div>
+
       {/* Control Bar */}
       <div className="p-3 mb-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
         <div className="flex items-center gap-2 mb-2">
@@ -222,14 +336,24 @@ export function WikiNavigation({
           </div>
         </div>
         <div className="text-xs text-kiosk-text/50">
-          {totalArticles} artigos • {wikiCategories.length} categorias
+          {searchQuery || categoryFilter 
+            ? `${filteredArticleCount} de ${totalArticles} artigos` 
+            : `${totalArticles} artigos • ${wikiCategories.length} categorias`
+          }
         </div>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-280px)]">
+      <ScrollArea className="h-[calc(100vh-380px)]">
         <nav className="space-y-1 pr-4">
-          {wikiCategories.map((category, catIndex) => {
-            const isLastCategory = catIndex === wikiCategories.length - 1;
+          {filteredCategories.length === 0 ? (
+            <div className="text-center py-8 text-kiosk-text/50">
+              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">Nenhum artigo encontrado</p>
+              <p className="text-xs mt-1">Tente outros termos de busca</p>
+            </div>
+          ) : (
+          filteredCategories.map((category, catIndex) => {
+            const isLastCategory = catIndex === filteredCategories.length - 1;
             const categoryArticleCount = getCategoryArticleCount(category);
             
             return (
@@ -250,7 +374,9 @@ export function WikiNavigation({
                     <ChevronRight className="w-4 h-4 shrink-0" />
                   )}
                   <span className="icon-neon-blue">{iconMap[category.icon]}</span>
-                  <span className="text-sm font-medium truncate flex-1">{category.title}</span>
+                  <span className="text-sm font-medium truncate flex-1">
+                    {highlightMatch(category.title, searchQuery)}
+                  </span>
                   <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 border-cyan-500/30 text-cyan-400">
                     {categoryArticleCount}
                   </Badge>
@@ -299,7 +425,9 @@ export function WikiNavigation({
                                 ) : (
                                   <ChevronRight className="w-3 h-3 shrink-0" />
                                 )}
-                                <span className="text-xs font-medium truncate flex-1">{subSection.title}</span>
+                                <span className="text-xs font-medium truncate flex-1">
+                                  {highlightMatch(subSection.title, searchQuery)}
+                                </span>
                                 <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-kiosk-border text-kiosk-text/50">
                                   {subSection.articles.length}
                                 </Badge>
@@ -350,7 +478,9 @@ export function WikiNavigation({
                                                   ? "bg-primary shadow-[0_0_6px_hsl(var(--primary))]" 
                                                   : "bg-current opacity-50"
                                               )} />
-                                              <span className="truncate">{article.title}</span>
+                                              <span className="truncate">
+                                                {highlightMatch(article.title, searchQuery)}
+                                              </span>
                                             </button>
                                           </div>
                                         );
@@ -368,7 +498,8 @@ export function WikiNavigation({
                 </AnimatePresence>
               </div>
             );
-          })}
+          })
+          )}
         </nav>
       </ScrollArea>
     </div>
