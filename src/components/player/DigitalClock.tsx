@@ -84,14 +84,14 @@ export function DigitalClock({
       <PopoverTrigger asChild>
         <motion.div 
           className={cn(
-            "flex items-center gap-3 badge-3d px-4 py-1.5 rounded-xl min-w-[180px] cursor-pointer",
+            "flex items-center gap-2 badge-3d px-3 py-0.5 rounded-lg min-w-[180px] cursor-pointer",
             "hover:scale-105 transition-transform duration-200",
             className
           )}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <div className="flex items-center gap-3 w-full justify-center">
+          <div className="flex items-center gap-2 w-full justify-center">
             <AnimatePresence mode="wait">
               <motion.span
                 key={timeKey}
@@ -107,7 +107,7 @@ export function DigitalClock({
             
             {showDate && (
               <>
-                <div className="w-px h-4 bg-cyan-500/30" />
+                <div className="w-px h-3 bg-cyan-500/30" />
                 <span className="text-[10px] uppercase tracking-wide font-medium clock-date-neon whitespace-nowrap">
                   {formatDate()}
                 </span>

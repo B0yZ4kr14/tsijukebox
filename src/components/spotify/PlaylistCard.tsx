@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SpotifyPlaylist } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useRipple } from '@/hooks/useRipple';
+import { RippleContainer } from '@/components/ui/RippleContainer';
 
 interface PlaylistCardProps {
   playlist: SpotifyPlaylist;
@@ -43,6 +45,12 @@ const HoverParticle = ({ delay, x, color }: { delay: number; x: number; color: '
 export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const { animationsEnabled } = useSettings();
+  const cardRipple = useRipple();
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (animationsEnabled) cardRipple.createRipple(e);
+    onClick?.();
+  };
 
   const hoverParticles = useMemo(() => 
     Array.from({ length: 12 }, (_, i) => ({
@@ -59,10 +67,13 @@ export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistC
         "group relative bg-kiosk-surface/50 rounded-lg p-4 cursor-pointer transition-all hover:bg-kiosk-surface hover:scale-[1.02] overflow-hidden",
         className
       )}
-      onClick={onClick}
+      onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Ripple verde Spotify */}
+      <RippleContainer ripples={cardRipple.ripples} color="spotify" />
+      
       {/* Partículas flutuantes no hover */}
       <AnimatePresence>
         {isHovered && animationsEnabled && hoverParticles.map(p => (
@@ -85,9 +96,9 @@ export function PlaylistCard({ playlist, onClick, onPlay, className }: PlaylistC
           </div>
         )}
         
-        {/* Play button overlay */}
+        {/* Play button overlay com glow pulsante */}
         <button
-          className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transition-all hover:scale-110"
+          className="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transition-all hover:scale-110 group-hover:play-button-spotify-glow"
           onClick={(e) => {
             e.stopPropagation();
             onPlay?.();
