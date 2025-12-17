@@ -227,7 +227,7 @@ export function NtpConfigSection() {
         </Button>
 
         {/* Info Text */}
-        <p className="text-xs text-kiosk-text/75">
+        <p className="text-xs text-settings-hint">
           {t('ntp.infoText')}
         </p>
       </div>

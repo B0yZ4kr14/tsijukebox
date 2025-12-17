@@ -690,7 +690,39 @@ export const wikiCategories: WikiCategory[] = [
               'Histórico é salvo automaticamente'
             ],
             illustration: 'player',
-            relatedArticles: ['ytm-connect', 'ytm-library']
+            relatedArticles: ['ytm-connect', 'ytm-library', 'google-oauth-setup']
+          },
+          {
+            id: 'google-oauth-setup',
+            title: 'Configurar Google Cloud Console',
+            description: 'Guia completo para configurar OAuth do YouTube Music',
+            content: 'Para usar o YouTube Music no TSi JUKEBOX, você precisa configurar um projeto no Google Cloud Console com as credenciais OAuth 2.0. Este guia passo a passo mostra como criar e configurar tudo.',
+            steps: [
+              '1. Acesse console.cloud.google.com e faça login com sua conta Google',
+              '2. Clique em "Selecionar Projeto" e depois "Novo Projeto"',
+              '3. Dê um nome ao projeto (ex: "TSi JUKEBOX") e clique em Criar',
+              '4. No menu lateral, vá em "APIs e Serviços" > "Biblioteca"',
+              '5. Pesquise por "YouTube Data API v3" e clique em Ativar',
+              '6. Vá em "APIs e Serviços" > "Tela de Consentimento OAuth"',
+              '7. Selecione "Externo" e preencha o nome do app e email de suporte',
+              '8. Em "Escopos", adicione: youtube.readonly',
+              '9. Vá em "APIs e Serviços" > "Credenciais"',
+              '10. Clique em "Criar Credenciais" > "ID do cliente OAuth"',
+              '11. Selecione "Aplicativo da Web"',
+              '12. Em "Origens JavaScript autorizadas", adicione a URL do seu Jukebox',
+              '13. Em "URIs de redirecionamento autorizados", adicione: https://[seu-dominio]/settings',
+              '14. Copie o Client ID e Client Secret gerados',
+              '15. Cole as credenciais em Configurações > Integrações > YouTube Music'
+            ],
+            tips: [
+              'O Client ID é público, pode ser exposto no frontend',
+              'O Client Secret deve ser mantido seguro (armazenado no backend)',
+              'Para teste local, adicione http://localhost:8080 nas origens autorizadas',
+              'A verificação do app Google pode levar alguns dias para produção',
+              'Em modo de teste, apenas emails cadastrados podem usar o app'
+            ],
+            illustration: 'settings',
+            relatedArticles: ['ytm-connect', 'ytm-library', 'ytm-playback']
           }
         ]
       },

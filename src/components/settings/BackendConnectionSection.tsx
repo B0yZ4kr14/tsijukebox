@@ -64,7 +64,7 @@ export function BackendConnectionSection({
     >
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="apiUrl" className="text-kiosk-text">URL da API</Label>
+          <Label htmlFor="apiUrl" className="text-label-yellow font-semibold">URL da API</Label>
           <div className="flex gap-2">
             <Input
               id="apiUrl"
@@ -84,7 +84,7 @@ export function BackendConnectionSection({
             </Button>
           </div>
           {isDemoMode && (
-            <p className="text-xs text-kiosk-text/70">
+            <p className="text-xs text-settings-hint">
               Desative o modo demo para alterar a URL
             </p>
           )}
@@ -95,11 +95,11 @@ export function BackendConnectionSection({
         {/* WebSocket Toggle */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="text-kiosk-text flex items-center gap-2">
-              <Zap className="w-4 h-4" />
+            <Label className="text-label-yellow font-semibold flex items-center gap-2">
+              <Zap className="w-4 h-4 icon-neon-blue" />
               WebSocket
             </Label>
-            <p className="text-xs text-kiosk-text/70">
+            <p className="text-xs text-settings-hint">
               Atualizações em tempo real via WebSocket
             </p>
           </div>
@@ -120,13 +120,13 @@ export function BackendConnectionSection({
             animate={{ opacity: 1 }}
           >
             <div className="flex items-center justify-between">
-              <Label className="text-kiosk-text flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                Intervalo de Polling
-              </Label>
-              <span className="text-sm text-kiosk-text/70">
-                {pollingInterval / 1000}s
-              </span>
+            <Label className="text-label-yellow font-semibold flex items-center gap-2">
+              <Clock className="w-4 h-4 icon-neon-blue" />
+              Intervalo de Polling
+            </Label>
+            <span className="text-sm text-neon-white">
+              {pollingInterval / 1000}s
+            </span>
             </div>
             <Slider
               value={[pollingInterval]}
@@ -136,7 +136,7 @@ export function BackendConnectionSection({
               step={500}
               className="w-full"
             />
-            <p className="text-xs text-kiosk-text/70">
+            <p className="text-xs text-settings-hint">
               Menor intervalo = mais responsivo, maior uso de rede
             </p>
           </motion.div>

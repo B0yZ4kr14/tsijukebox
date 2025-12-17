@@ -87,7 +87,7 @@ export function KeysManagementSection() {
 
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label htmlFor="ssh-key-path" className="text-settings-label">
+              <Label htmlFor="ssh-key-path" className="text-label-yellow font-semibold">
                 Caminho da Chave Privada
               </Label>
               <Input
@@ -97,13 +97,13 @@ export function KeysManagementSection() {
                 placeholder="~/.keys/ssh/id_ed25519"
                 className="input-3d bg-kiosk-bg font-mono text-sm"
               />
-              <p className="text-xs text-kiosk-text/60">
+              <p className="text-xs text-settings-hint">
                 Esta é sua chave SECRETA - mantenha segura!
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="ssh-pub-path" className="text-settings-label">
+              <Label htmlFor="ssh-pub-path" className="text-label-yellow font-semibold">
                 Caminho da Chave Pública
               </Label>
               <Input
@@ -113,7 +113,7 @@ export function KeysManagementSection() {
                 placeholder="~/.keys/ssh/id_ed25519.pub"
                 className="input-3d bg-kiosk-bg font-mono text-sm"
               />
-              <p className="text-xs text-kiosk-text/60">
+              <p className="text-xs text-settings-hint">
                 Esta pode ser compartilhada com servidores
               </p>
             </div>
@@ -123,8 +123,8 @@ export function KeysManagementSection() {
                 <div className="flex items-center gap-3">
                   <Shield className="w-4 h-4 icon-neon-blue" />
                   <div>
-                    <Label className="text-kiosk-text">Usar SSH Agent</Label>
-                    <p className="text-xs text-kiosk-text/60 mt-0.5">
+                    <Label className="text-label-yellow font-medium">Usar SSH Agent</Label>
+                    <p className="text-xs text-settings-hint mt-0.5">
                       Guarda a senha na memória (recomendado)
                     </p>
                   </div>
@@ -145,7 +145,7 @@ export function KeysManagementSection() {
             <FolderKey className="w-4 h-4" />
             <span className="text-sm font-medium">Exemplo de Estrutura de Pastas</span>
           </div>
-          <pre className="text-xs font-mono text-kiosk-text/80 bg-kiosk-bg/50 p-3 rounded overflow-x-auto">
+          <pre className="text-xs font-mono text-neon-white bg-kiosk-bg/50 p-3 rounded overflow-x-auto">
 {`~/.keys/
   ├── ssh/
   │   ├── id_ed25519        (chave privada - SECRETA!)
@@ -164,7 +164,7 @@ export function KeysManagementSection() {
 
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label htmlFor="gpg-key-id" className="text-settings-label">
+              <Label htmlFor="gpg-key-id" className="text-label-yellow font-semibold">
                 ID da Chave GPG
               </Label>
               <Input
@@ -174,13 +174,13 @@ export function KeysManagementSection() {
                 placeholder="3AA5C34371567BD2"
                 className="input-3d bg-kiosk-bg font-mono text-sm"
               />
-              <p className="text-xs text-kiosk-text/60">
+              <p className="text-xs text-settings-hint">
                 Identificador único da sua chave GPG
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="gpg-key-path" className="text-settings-label">
+              <Label htmlFor="gpg-key-path" className="text-label-yellow font-semibold">
                 Diretório das Chaves GPG
               </Label>
               <Input

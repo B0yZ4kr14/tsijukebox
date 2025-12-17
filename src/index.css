@@ -1790,6 +1790,30 @@
     transform: translateY(-8px) scale(1.08);
   }
 
+  /* Green button (Spotify) - Music provider */
+  .deck-button-green {
+    border-color: hsl(141 70% 45% / 0.5);
+    background: linear-gradient(145deg,
+      hsl(141 50% 20%) 0%,
+      hsl(141 60% 15%) 50%,
+      hsl(141 70% 10%) 100%);
+  }
+
+  .deck-button-green:hover {
+    border-color: hsl(141 80% 55% / 0.9);
+    animation: pulse-glow-green 1.2s ease-in-out infinite;
+    transform: translateY(-8px) scale(1.08);
+  }
+
+  @keyframes pulse-glow-green {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(141 70% 50% / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px hsl(141 70% 50% / 0.7);
+    }
+  }
+
   /* ========================================
      EXTREME 3D PLAYER CONTROLS
      ======================================== */

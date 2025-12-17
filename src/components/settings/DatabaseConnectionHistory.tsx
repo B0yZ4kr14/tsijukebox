@@ -76,11 +76,11 @@ export function DatabaseConnectionHistory({ engine }: DatabaseConnectionHistoryP
     return (
       <Card className="p-4 bg-kiosk-surface/30 border-cyan-500/20">
         <div className="text-center py-6">
-          <Activity className="w-8 h-8 mx-auto text-kiosk-text/30 mb-2" />
-          <p className="text-sm text-kiosk-text/50">
+          <Activity className="w-8 h-8 mx-auto text-kiosk-text/50 mb-2" />
+          <p className="text-sm text-settings-hint">
             Nenhum histórico de conexão disponível
           </p>
-          <p className="text-xs text-kiosk-text/30 mt-1">
+          <p className="text-xs text-kiosk-text/50 mt-1">
             Execute um teste de conexão para começar
           </p>
         </div>
@@ -112,11 +112,11 @@ export function DatabaseConnectionHistory({ engine }: DatabaseConnectionHistoryP
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="p-3 rounded-lg bg-kiosk-bg/50 border border-cyan-500/20">
-          <p className="text-xs text-kiosk-text/50 mb-1">Latência Média</p>
+          <p className="text-xs text-label-neon mb-1">Latência Média</p>
           <p className="text-lg font-bold text-cyan-400">{avgLatency}ms</p>
         </div>
         <div className="p-3 rounded-lg bg-kiosk-bg/50 border border-cyan-500/20">
-          <p className="text-xs text-kiosk-text/50 mb-1">Taxa de Sucesso</p>
+          <p className="text-xs text-label-neon mb-1">Taxa de Sucesso</p>
           <p className={cn(
             "text-lg font-bold",
             successRate >= 90 ? "text-green-400" : successRate >= 70 ? "text-yellow-400" : "text-red-400"
@@ -125,7 +125,7 @@ export function DatabaseConnectionHistory({ engine }: DatabaseConnectionHistoryP
           </p>
         </div>
         <div className="p-3 rounded-lg bg-kiosk-bg/50 border border-cyan-500/20">
-          <p className="text-xs text-kiosk-text/50 mb-1">Tendência</p>
+          <p className="text-xs text-label-neon mb-1">Tendência</p>
           <div className="flex items-center gap-1">
             {latencyTrend > 0 ? (
               <TrendingUp className="w-4 h-4 text-red-400" />

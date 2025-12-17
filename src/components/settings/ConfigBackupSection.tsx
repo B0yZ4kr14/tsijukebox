@@ -181,8 +181,8 @@ export function ConfigBackupSection() {
           <FileJson className="w-5 h-5 text-cyan-400" />
         </div>
         <div>
-          <h3 className="font-semibold text-kiosk-text">Backup de Configurações</h3>
-          <p className="text-xs text-kiosk-text/60">Exporte ou importe suas preferências em JSON</p>
+          <h3 className="font-semibold text-label-yellow">Backup de Configurações</h3>
+          <p className="text-xs text-settings-hint">Exporte ou importe suas preferências em JSON</p>
         </div>
       </div>
 
@@ -192,7 +192,7 @@ export function ConfigBackupSection() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Download className="w-4 h-4 text-green-400" />
-              <span className="text-sm font-medium text-kiosk-text">Exportar</span>
+              <span className="text-sm font-medium text-label-yellow">Exportar</span>
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export function ConfigBackupSection() {
               checked={includeSecrets}
               onCheckedChange={(checked) => setIncludeSecrets(checked === true)}
             />
-            <Label htmlFor="includeSecrets" className="text-xs text-kiosk-text/70 cursor-pointer">
+            <Label htmlFor="includeSecrets" className="text-xs text-settings-hint cursor-pointer">
               Incluir chaves secretas (API keys)
             </Label>
           </div>
@@ -247,10 +247,10 @@ export function ConfigBackupSection() {
         <div className="p-3 rounded-lg bg-kiosk-background/50 border border-kiosk-border">
           <div className="flex items-center gap-2 mb-3">
             <Upload className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium text-kiosk-text">Importar</span>
+            <span className="text-sm font-medium text-label-yellow">Importar</span>
           </div>
 
-          <p className="text-xs text-kiosk-text/60 mb-3">
+          <p className="text-xs text-settings-hint mb-3">
             Selecione um arquivo JSON exportado anteriormente para restaurar suas configurações.
           </p>
 
@@ -289,7 +289,7 @@ export function ConfigBackupSection() {
         {/* Security Info */}
         <div className="flex items-start gap-2 p-2 rounded bg-kiosk-surface/30 border border-kiosk-border">
           <Shield className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-kiosk-text/60">
+          <p className="text-xs text-settings-hint">
             Por padrão, chaves secretas são mascaradas na exportação. Ative a opção acima apenas para backup completo.
           </p>
         </div>

@@ -171,8 +171,8 @@ export function AccessibilitySection() {
             <div className="flex items-center gap-3">
               <Monitor className="w-5 h-5 icon-neon-blue" />
               <div>
-                <Label className="text-kiosk-text font-medium">Modo Alto Contraste</Label>
-                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                <Label className="text-label-yellow font-medium">Modo Alto Contraste</Label>
+                <p className="text-xs text-settings-hint mt-0.5">
                   Cores mais intensas e bordas mais visíveis
                 </p>
               </div>
@@ -190,8 +190,8 @@ export function AccessibilitySection() {
           <div className="flex items-center gap-3">
             <Type className="w-5 h-5 icon-neon-blue" />
             <div className="flex-1">
-              <Label className="text-kiosk-text font-medium">Tamanho da Fonte</Label>
-              <p className="text-xs text-kiosk-text/70 mt-0.5">
+              <Label className="text-label-yellow font-medium">Tamanho da Fonte</Label>
+              <p className="text-xs text-settings-hint mt-0.5">
                 Ajuste o tamanho do texto: {previewSettings.fontSize}%
               </p>
             </div>
@@ -207,7 +207,7 @@ export function AccessibilitySection() {
             step={5}
             className="w-full"
           />
-          <div className="flex justify-between text-xs text-kiosk-text/50">
+          <div className="flex justify-between text-xs text-settings-hint">
             <span>Pequeno (80%)</span>
             <span>Normal (100%)</span>
             <span>Grande (150%)</span>
@@ -220,8 +220,8 @@ export function AccessibilitySection() {
             <div className="flex items-center gap-3">
               <Zap className="w-5 h-5 icon-neon-blue" />
               <div>
-                <Label className="text-kiosk-text font-medium">Reduzir Animações</Label>
-                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                <Label className="text-label-yellow font-medium">Reduzir Animações</Label>
+                <p className="text-xs text-settings-hint mt-0.5">
                   Desativa movimentos e transições
                 </p>
               </div>
@@ -244,8 +244,8 @@ export function AccessibilitySection() {
                 <VolumeX className="w-5 h-5 text-kiosk-text/50" />
               )}
               <div>
-                <Label className="text-kiosk-text font-medium">Sons de Feedback</Label>
-                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                <Label className="text-label-yellow font-medium">Sons de Feedback</Label>
+                <p className="text-xs text-settings-hint mt-0.5">
                   Sons sutis ao clicar em botões e interagir
                 </p>
               </div>
@@ -264,8 +264,8 @@ export function AccessibilitySection() {
             <div className="flex items-center gap-3">
               <Sparkles className={`w-5 h-5 ${animationsEnabled ? 'icon-neon-blue' : 'text-kiosk-text/50'}`} />
               <div>
-                <Label className="text-kiosk-text font-medium">Efeitos Visuais</Label>
-                <p className="text-xs text-kiosk-text/70 mt-0.5">
+                <Label className="text-label-yellow font-medium">Efeitos Visuais</Label>
+                <p className="text-xs text-settings-hint mt-0.5">
                   Ripples, partículas e efeitos neon nos botões
                 </p>
               </div>

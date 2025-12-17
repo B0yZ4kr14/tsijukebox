@@ -44,12 +44,12 @@ export function CloudConnectionSection() {
             <div className="p-4 rounded-lg bg-[#3ECF8E]/10 border border-[#3ECF8E]/20">
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Status</span>
+                  <span className="text-label-neon">Status</span>
                   <span className="text-[#3ECF8E] font-medium">✓ Ativo</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Project ID</span>
-                  <code className="text-kiosk-text font-mono text-xs bg-kiosk-background px-2 py-0.5 rounded">
+                  <span className="text-label-neon">Project ID</span>
+                  <code className="text-neon-white font-mono text-xs bg-kiosk-background px-2 py-0.5 rounded">
                     {projectId}
                   </code>
                 </div>
@@ -60,31 +60,31 @@ export function CloudConnectionSection() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-lg bg-kiosk-background border border-kiosk-border">
-                <p className="text-xs text-kiosk-text/50 mb-1">Database</p>
-                <p className="text-sm text-kiosk-text font-medium">PostgreSQL</p>
+                <p className="text-xs text-label-neon mb-1">Database</p>
+                <p className="text-sm text-neon-white font-medium">PostgreSQL</p>
               </div>
               <div className="p-3 rounded-lg bg-kiosk-background border border-kiosk-border">
-                <p className="text-xs text-kiosk-text/50 mb-1">Auth</p>
-                <p className="text-sm text-kiosk-text font-medium">Disponível</p>
+                <p className="text-xs text-label-neon mb-1">Auth</p>
+                <p className="text-sm text-neon-white font-medium">Disponível</p>
               </div>
               <div className="p-3 rounded-lg bg-kiosk-background border border-kiosk-border">
-                <p className="text-xs text-kiosk-text/50 mb-1">Storage</p>
-                <p className="text-sm text-kiosk-text font-medium">Disponível</p>
+                <p className="text-xs text-label-neon mb-1">Storage</p>
+                <p className="text-sm text-neon-white font-medium">Disponível</p>
               </div>
               <div className="p-3 rounded-lg bg-kiosk-background border border-kiosk-border">
-                <p className="text-xs text-kiosk-text/50 mb-1">Edge Functions</p>
-                <p className="text-sm text-kiosk-text font-medium">Disponível</p>
+                <p className="text-xs text-label-neon mb-1">Edge Functions</p>
+                <p className="text-sm text-neon-white font-medium">Disponível</p>
               </div>
             </div>
 
-            <p className="text-xs text-kiosk-text/40 text-center">
+            <p className="text-xs text-settings-hint text-center">
               Configuração automática gerenciada pelo Lovable
             </p>
           </>
         ) : (
           <div className="text-center py-6">
             <Cloud className="w-12 h-12 text-kiosk-text/20 mx-auto mb-3" />
-            <p className="text-kiosk-text/60 mb-4">Lovable Cloud não está configurado</p>
+            <p className="text-settings-hint mb-4">Lovable Cloud não está configurado</p>
             <Button variant="outline" className="border-kiosk-border text-kiosk-text">
               <ExternalLink className="w-4 h-4 mr-2" />
               Saiba mais

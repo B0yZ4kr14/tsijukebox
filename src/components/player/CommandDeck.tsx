@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft, HelpCircle } from 'lucide-react';
+import { LineChart, Activity, RefreshCw, SlidersHorizontal, Power, ChevronRight, ChevronLeft, HelpCircle, Music, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
@@ -35,7 +35,7 @@ interface DeckButtonProps {
   label: string;
   tooltip: string;
   onClick: () => void;
-  color: 'cyan' | 'amber' | 'white' | 'red';
+  color: 'cyan' | 'amber' | 'white' | 'red' | 'green';
   disabled?: boolean;
 }
 
@@ -75,6 +75,15 @@ const colorClasses = {
     hover: 'hover:border-red-300/90 hover:shadow-[0_0_35px_hsl(0_100%_50%/0.55)]',
     icon: 'text-red-400 drop-shadow-[0_0_12px_rgba(248,113,113,0.9)]',
     pulseClass: 'deck-button-red deck-button-3d-ultra',
+  },
+  green: {
+    bg: 'bg-gradient-to-b from-green-900/70 via-slate-800 to-slate-900',
+    border: 'border-green-400/60',
+    text: 'text-green-300',
+    glow: 'shadow-[0_0_20px_hsl(141_70%_50%/0.35)]',
+    hover: 'hover:border-green-300/90 hover:shadow-[0_0_35px_hsl(141_70%_50%/0.55)]',
+    icon: 'text-green-400 drop-shadow-[0_0_12px_rgba(74,222,128,0.9)]',
+    pulseClass: 'deck-button-green deck-button-3d-ultra',
   },
 };
 
@@ -356,6 +365,35 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
                     tooltip={t('commandDeck.tooltips.help')}
                     onClick={() => navigate('/help')}
                     color="white"
+                    disabled={disabled}
+                  />
+                </motion.div>
+
+                {/* Music Provider Divider */}
+                <motion.div variants={buttonVariants}>
+                  <div className="h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent" />
+                </motion.div>
+
+                {/* Spotify Button (Green) */}
+                <motion.div variants={buttonVariants}>
+                  <DeckButton
+                    icon={<Music className="w-5 h-5" />}
+                    label="SPOTIFY"
+                    tooltip="Navegar biblioteca Spotify"
+                    onClick={() => navigate('/spotify')}
+                    color="green"
+                    disabled={disabled}
+                  />
+                </motion.div>
+
+                {/* YouTube Music Button (Red) */}
+                <motion.div variants={buttonVariants}>
+                  <DeckButton
+                    icon={<Youtube className="w-5 h-5" />}
+                    label="YOUTUBE"
+                    tooltip="Navegar biblioteca YouTube Music"
+                    onClick={() => navigate('/youtube-music')}
+                    color="red"
                     disabled={disabled}
                   />
                 </motion.div>

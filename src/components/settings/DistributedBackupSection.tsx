@@ -148,8 +148,8 @@ export function DistributedBackupSection() {
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 icon-neon-blue" />
             <div>
-              <p className="text-sm font-medium text-kiosk-text">Backup Distribuído</p>
-              <p className="text-xs text-kiosk-text/60">Replica dados entre terminais</p>
+              <p className="text-sm font-medium text-label-yellow">Backup Distribuído</p>
+              <p className="text-xs text-settings-hint">Replica dados entre terminais</p>
             </div>
           </div>
           <Switch
@@ -177,8 +177,8 @@ export function DistributedBackupSection() {
                     )}
                   >
                     <RadioGroupItem value={s.id} className="sr-only" />
-                    <span className="text-sm font-medium text-kiosk-text">{s.name}</span>
-                    <span className="text-xs text-kiosk-text/60 mt-1">{s.description}</span>
+                    <span className="text-sm font-medium text-neon-white">{s.name}</span>
+                    <span className="text-xs text-settings-hint mt-1">{s.description}</span>
                   </label>
                 ))}
               </RadioGroup>
@@ -229,7 +229,7 @@ export function DistributedBackupSection() {
                   checked={config.encryptBackups}
                   onCheckedChange={(v) => saveConfig({ ...config, encryptBackups: v })}
                 />
-                <Label htmlFor="encrypt" className="text-sm text-kiosk-text">Criptografar</Label>
+                <Label htmlFor="encrypt" className="text-sm text-label-yellow">Criptografar</Label>
               </div>
               <Select
                 value={config.compressionLevel}
@@ -283,8 +283,8 @@ export function DistributedBackupSection() {
                         )}>
                           <Cloud className={cn("w-5 h-5", isActive ? "text-green-400" : "text-slate-400")} />
                         </div>
-                        <span className="text-xs text-kiosk-text/60 mt-1">
-                          {replica?.clientName?.slice(0, 8) || `Réplica ${i + 1}`}
+                  <span className="text-xs text-neon-white mt-1">
+                    {replica?.clientName?.slice(0, 8) || `Réplica ${i + 1}`}
                         </span>
                       </div>
                     );
@@ -305,12 +305,12 @@ export function DistributedBackupSection() {
                         ) : (
                           <RefreshCw className="w-4 h-4 text-yellow-400 animate-spin" />
                         )}
-                        <span className="text-sm text-kiosk-text">{replica.clientName}</span>
-                        <span className="text-xs text-kiosk-text/50">{replica.size}</span>
+                        <span className="text-sm text-neon-white">{replica.clientName}</span>
+                        <span className="text-xs text-settings-hint">{replica.size}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {replica.lastSync && (
-                          <span className="text-xs text-kiosk-text/50">
+                          <span className="text-xs text-settings-hint">
                             {new Date(replica.lastSync).toLocaleString()}
                           </span>
                         )}
@@ -329,7 +329,7 @@ export function DistributedBackupSection() {
               )}
 
               {config.replicas.length === 0 && (
-                <p className="text-sm text-center text-kiosk-text/50 py-2">
+                <p className="text-sm text-center text-settings-hint py-2">
                   Nenhuma réplica sincronizada. Clique em "Sincronizar Agora".
                 </p>
               )}
@@ -357,7 +357,7 @@ export function DistributedBackupSection() {
               </Button>
 
               {config.lastFullSync && (
-                <span className="text-xs text-kiosk-text/50 flex items-center gap-1">
+                <span className="text-xs text-settings-hint flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   Última sync: {new Date(config.lastFullSync).toLocaleString()}
                 </span>
