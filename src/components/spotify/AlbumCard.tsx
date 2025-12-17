@@ -5,6 +5,7 @@ import { SpotifyAlbum } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useRipple } from '@/hooks/useRipple';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 
 interface AlbumCardProps {
@@ -44,11 +45,13 @@ const HoverParticle = ({ delay, x, color }: { delay: number; x: number; color: '
 
 export function AlbumCard({ album, onClick, onPlay, className }: AlbumCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const { animationsEnabled } = useSettings();
+  const { animationsEnabled, soundEnabled } = useSettings();
   const cardRipple = useRipple();
+  const { playSound } = useSoundEffects();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (animationsEnabled) cardRipple.createRipple(e);
+    if (soundEnabled) playSound('click');
     onClick?.();
   };
 
@@ -64,7 +67,7 @@ export function AlbumCard({ album, onClick, onPlay, className }: AlbumCardProps)
   return (
     <div
       className={cn(
-        "group relative bg-kiosk-surface/50 rounded-lg p-4 cursor-pointer transition-all hover:bg-kiosk-surface hover:scale-[1.02] overflow-hidden",
+        "group relative bg-kiosk-surface/50 rounded-lg p-4 cursor-pointer transition-all hover:bg-kiosk-surface hover:scale-[1.02] overflow-hidden card-shimmer-border",
         className
       )}
       onClick={handleClick}

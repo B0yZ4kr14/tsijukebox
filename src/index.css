@@ -1604,7 +1604,175 @@
   animation: pulse-glow-spotify 1.5s ease-in-out infinite;
 }
 
-  
+/* ========== SHIMMER BORDER EFFECT ========== */
+@keyframes shimmer-border {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.card-shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 40%,
+    hsl(141 70% 55% / 0.8) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-shimmer-border:hover::before {
+  opacity: 1;
+  animation: shimmer-border 2s linear infinite;
+}
+
+/* ========== CALENDAR PRO - PROFESSIONAL DESIGN ========== */
+.calendar-container-pro {
+  background: linear-gradient(145deg, 
+    hsl(220 30% 12%) 0%, 
+    hsl(220 35% 8%) 100%);
+  border: 1px solid hsl(185 80% 50% / 0.4);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 
+    0 0 30px hsl(185 100% 50% / 0.15),
+    0 20px 50px hsl(0 0% 0% / 0.8),
+    inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  position: relative;
+  overflow: visible;
+}
+
+.calendar-pro {
+  background: transparent !important;
+}
+
+/* Month title - golden neon readable */
+.calendar-pro .rdp-caption_label {
+  color: hsl(45 100% 70%) !important;
+  text-shadow: 
+    0 0 10px hsl(45 100% 55% / 0.7),
+    0 0 20px hsl(45 100% 50% / 0.4);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+
+/* Weekday headers - cyan neon */
+.calendar-pro .rdp-head_cell {
+  color: hsl(185 100% 65%) !important;
+  text-shadow: 0 0 8px hsl(185 100% 60% / 0.6);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Normal days - white readable text */
+.calendar-pro .rdp-day {
+  color: hsl(0 0% 92%) !important;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+}
+
+/* Hover on days */
+.calendar-pro .rdp-day:hover:not(.rdp-day_selected):not(.rdp-day_disabled) {
+  background: hsl(185 80% 50% / 0.25) !important;
+  color: hsl(185 100% 85%) !important;
+  text-shadow: 0 0 10px hsl(185 100% 70%);
+  box-shadow: 0 0 15px hsl(185 100% 50% / 0.3);
+}
+
+/* Selected day - intense golden */
+.calendar-pro .rdp-day_selected {
+  background: linear-gradient(145deg, 
+    hsl(45 80% 40%) 0%, 
+    hsl(45 90% 30%) 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px hsl(0 0% 0% / 0.5);
+  border: 1px solid hsl(45 100% 55% / 0.6) !important;
+  box-shadow: 
+    0 0 20px hsl(45 100% 50% / 0.4),
+    inset 0 1px 0 hsl(45 100% 80% / 0.3);
+}
+
+/* Today - cyan highlight */
+.calendar-pro .rdp-day_today:not(.rdp-day_selected) {
+  background: hsl(185 80% 50% / 0.2) !important;
+  border: 2px solid hsl(185 100% 55% / 0.6) !important;
+  color: hsl(185 100% 80%) !important;
+  font-weight: 700;
+}
+
+/* Days outside current month */
+.calendar-pro .rdp-day_outside {
+  color: hsl(0 0% 45%) !important;
+  opacity: 0.6;
+}
+
+/* Disabled days */
+.calendar-pro .rdp-day_disabled {
+  color: hsl(0 0% 35%) !important;
+  opacity: 0.4;
+}
+
+/* Navigation buttons */
+.calendar-pro .rdp-nav_button {
+  color: hsl(185 100% 70%) !important;
+  background: hsl(185 80% 50% / 0.15) !important;
+  border: 1px solid hsl(185 80% 50% / 0.4) !important;
+  border-radius: 0.5rem;
+  width: 32px;
+  height: 32px;
+  transition: all 0.2s ease;
+}
+
+.calendar-pro .rdp-nav_button:hover {
+  background: hsl(185 80% 50% / 0.3) !important;
+  box-shadow: 0 0 15px hsl(185 100% 50% / 0.4);
+  border-color: hsl(185 100% 60% / 0.6) !important;
+}
+
+/* Caption container */
+.calendar-pro .rdp-caption {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid hsl(185 80% 50% / 0.2);
+}
+
+/* Table styling */
+.calendar-pro .rdp-table {
+  margin: 0 auto;
+}
+
+.calendar-pro .rdp-cell {
+  padding: 2px;
+}
+
 /* Smooth color transitions for theme switching */
 :root,
 [data-theme] {
