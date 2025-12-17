@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useConnectionMonitor } from "@/hooks/useConnectionMonitor";
 import { Music } from "lucide-react";
 
 // Eagerly loaded pages (critical path)
@@ -55,6 +56,84 @@ function PageLoader() {
   );
 }
 
+// Inner app component that uses hooks
+function AppRoutes() {
+  // Monitor backend connection and send push notifications
+  useConnectionMonitor();
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Public Routes - Eagerly loaded */}
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/login" element={<Navigate to="/auth" replace />} />
+        <Route path="/setup" element={<SetupWizard />} />
+        
+        {/* Public Routes - Lazy loaded */}
+        <Route path="/install" element={<Install />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/wiki" element={<Wiki />} />
+        
+        {/* Protected Routes - Lazy loaded */}
+        <Route path="/settings" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <Settings />
+          </ProtectedRoute>
+        } />
+        <Route path="/settings/diagnostics" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <SystemDiagnostics />
+          </ProtectedRoute>
+        } />
+        <Route path="/theme-preview" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <ThemePreview />
+          </ProtectedRoute>
+        } />
+        
+        {/* Dashboard Route */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        
+        {/* Spotify Routes - Lazy loaded */}
+        <Route path="/spotify" element={<SpotifyBrowser />} />
+        <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
+        <Route path="/spotify/search" element={<SpotifySearchPage />} />
+        <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
+        
+        {/* Protected Admin Routes - Lazy loaded */}
+        <Route path="/admin" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <Admin />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/library" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <AdminLibrary />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/logs" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <AdminLogs />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/feedback" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <AdminFeedback />
+          </ProtectedRoute>
+        } />
+        
+        {/* Catch-all */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <SettingsProvider>
@@ -63,75 +142,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                {/* Public Routes - Eagerly loaded */}
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/login" element={<Navigate to="/auth" replace />} />
-                <Route path="/setup" element={<SetupWizard />} />
-                
-                {/* Public Routes - Lazy loaded */}
-                <Route path="/install" element={<Install />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/wiki" element={<Wiki />} />
-                
-                {/* Protected Routes - Lazy loaded */}
-                <Route path="/settings" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <Settings />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings/diagnostics" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <SystemDiagnostics />
-                  </ProtectedRoute>
-                } />
-                <Route path="/theme-preview" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <ThemePreview />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Dashboard Route */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Spotify Routes - Lazy loaded */}
-                <Route path="/spotify" element={<SpotifyBrowser />} />
-                <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
-                <Route path="/spotify/search" element={<SpotifySearchPage />} />
-                <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
-                
-                {/* Protected Admin Routes - Lazy loaded */}
-                <Route path="/admin" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <Admin />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/library" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <AdminLibrary />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/logs" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <AdminLogs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/feedback" element={
-                  <ProtectedRoute requiredPermission="canAccessSettings">
-                    <AdminFeedback />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Catch-all */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+            <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
       </UserProvider>

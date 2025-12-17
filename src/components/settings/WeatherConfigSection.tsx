@@ -181,6 +181,7 @@ export function WeatherConfigSection() {
               onChange={(e) => setLocalApiKey(e.target.value)}
               placeholder={t('weatherConfig.apiKeyPlaceholder')}
               className="input-3d bg-kiosk-bg border-kiosk-surface text-kiosk-text font-mono text-sm pr-10"
+              data-tour="weather-api-key"
             />
             <Button
               type="button"
@@ -203,6 +204,7 @@ export function WeatherConfigSection() {
             onChange={(e) => setLocalCity(e.target.value)}
             placeholder={t('weatherConfig.cityPlaceholder')}
             className="input-3d bg-kiosk-bg border-kiosk-surface text-kiosk-text"
+            data-tour="weather-city"
           />
           <p className="text-xs text-settings-hint">
             {t('weatherConfig.cityHint')}

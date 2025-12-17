@@ -18,11 +18,8 @@ import {
   ThemeSection, 
   CloudConnectionSection, 
   BackendConnectionSection, 
-  DatabaseSection, 
-  DatabaseConfigSection, 
-  BackupSection, 
-  CloudBackupSection, 
-  BackupScheduleSection, 
+  UnifiedDatabaseSection,
+  UnifiedBackupSection,
   UserManagementSection, 
   AuthProviderSection, 
   SystemUrlsSection, 
@@ -183,11 +180,8 @@ export default function Settings() {
       case 'data':
         return (
           <>
-            <DatabaseConfigSection isDemoMode={isDemoMode} />
-            <DatabaseSection isDemoMode={isDemoMode} />
-            <BackupSection isDemoMode={isDemoMode} />
-            <CloudBackupSection isDemoMode={isDemoMode} />
-            <BackupScheduleSection />
+            <UnifiedDatabaseSection isDemoMode={isDemoMode} />
+            <UnifiedBackupSection isDemoMode={isDemoMode} />
           </>
         );
 

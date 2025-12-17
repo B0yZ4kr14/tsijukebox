@@ -73,6 +73,7 @@ export function BackendConnectionSection({
               placeholder="https://midiaserver.local/api"
               className="bg-kiosk-background border-kiosk-border text-kiosk-text"
               disabled={isDemoMode}
+              data-tour="backend-url"
             />
             <Button
               onClick={handleSaveApiUrl}
@@ -107,6 +108,7 @@ export function BackendConnectionSection({
             onCheckedChange={handleWebSocketToggle}
             disabled={isDemoMode}
             className="data-[state=checked]:bg-kiosk-primary"
+            data-tour="websocket-toggle"
           />
         </div>
 

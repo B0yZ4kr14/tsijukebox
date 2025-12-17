@@ -28,7 +28,7 @@ export function SettingsSection({
   description,
   badge,
   children,
-  defaultOpen = true,
+  defaultOpen = false,
   delay = 0,
   instructions,
 }: SettingsSectionProps) {
