@@ -29,7 +29,9 @@ import {
   WeatherConfigSection, 
   LanguageSection, 
   AccessibilitySection, 
-  KeysManagementSection 
+  KeysManagementSection,
+  SpicetifySection,
+  YouTubeMusicSection
 } from '@/components/settings';
 import { SettingsSidebar, SettingsCategory } from '@/components/settings/SettingsSidebar';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
@@ -462,6 +464,12 @@ export default function Settings() {
                 )}
               </div>
             </SettingsSection>
+
+            {/* Spicetify Section */}
+            <SpicetifySection />
+
+            {/* YouTube Music Section */}
+            <YouTubeMusicSection />
           </>
         );
 

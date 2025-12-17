@@ -20,7 +20,9 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
-  Wifi
+  Wifi,
+  Youtube,
+  Disc
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -88,6 +90,13 @@ const steps: WizardStep[] = [
     achievementId: 'networked',
   },
   {
+    id: 'music-provider',
+    title: 'Provedor de Música',
+    description: 'Escolha seu serviço de streaming',
+    icon: <Disc className="w-8 h-8" />,
+    achievementId: 'music_master',
+  },
+  {
     id: 'spotify',
     title: 'Spotify',
     description: 'Conecte sua conta do Spotify',
@@ -115,6 +124,7 @@ const initialAchievements: Achievement[] = [
   { id: 'designer', title: '🎨 Designer', description: 'Escolheu um tema', icon: <Palette className="w-4 h-4" />, unlocked: false },
   { id: 'accessible', title: '👁️ Acessível', description: 'Configurou acessibilidade', icon: <Eye className="w-4 h-4" />, unlocked: false },
   { id: 'networked', title: '🔌 Conectado', description: 'Configurou o servidor', icon: <Server className="w-4 h-4" />, unlocked: false },
+  { id: 'music_master', title: '🎧 DJ', description: 'Escolheu provedor de música', icon: <Disc className="w-4 h-4" />, unlocked: false },
   { id: 'music_lover', title: '🎵 Melômano', description: 'Configurou Spotify', icon: <Music2 className="w-4 h-4" />, unlocked: false },
   { id: 'weather_aware', title: '🌤️ Meteorologista', description: 'Configurou clima', icon: <Cloud className="w-4 h-4" />, unlocked: false },
   { id: 'master', title: '🏆 Mestre', description: 'Completou o setup', icon: <Trophy className="w-4 h-4" />, unlocked: false },
@@ -140,6 +150,7 @@ export default function SetupWizard() {
     fontSize: number;
     backendUrl: string;
     useDemoMode: boolean;
+    musicProvider: 'spotify' | 'spicetify' | 'youtube-music' | 'local';
     spotifyClientId: string;
     spotifyClientSecret: string;
     weatherApiKey: string;
@@ -151,6 +162,7 @@ export default function SetupWizard() {
     fontSize: 100,
     backendUrl: 'https://midiaserver.local/api',
     useDemoMode: true,
+    musicProvider: 'spotify',
     spotifyClientId: '',
     spotifyClientSecret: '',
     weatherApiKey: '',
@@ -283,6 +295,9 @@ export default function SetupWizard() {
     if (!wizardData.useDemoMode && wizardData.backendUrl) {
       localStorage.setItem('api_url', wizardData.backendUrl);
     }
+
+    // Save music provider preference
+    localStorage.setItem('music_provider', wizardData.musicProvider);
 
     // Apply Spotify settings
     if (wizardData.spotifyClientId && wizardData.spotifyClientSecret) {
@@ -569,6 +584,81 @@ export default function SetupWizard() {
                 </div>
               )}
             </div>
+          </div>
+        );
+
+      case 'music-provider':
+        return (
+          <div className="space-y-6">
+            <div className="flex justify-center mb-4">
+              <SettingsIllustration type="integrations" size="md" animated />
+            </div>
+            <p className="text-center text-kiosk-text/70">
+              Escolha seu serviço de música preferido:
+            </p>
+            
+            <RadioGroup
+              value={wizardData.musicProvider}
+              onValueChange={(value) => setWizardData(prev => ({ ...prev, musicProvider: value as any }))}
+              className="space-y-3"
+            >
+              {[
+                { 
+                  value: 'spotify', 
+                  label: 'Spotify', 
+                  description: 'Streaming oficial com Web API', 
+                  icon: <Music className="w-6 h-6 text-[#1DB954]" />,
+                  color: 'border-[#1DB954]/50'
+                },
+                { 
+                  value: 'spicetify', 
+                  label: 'Spicetify', 
+                  description: 'Spotify customizado com temas', 
+                  icon: <Palette className="w-6 h-6 text-purple-400" />,
+                  color: 'border-purple-500/50'
+                },
+                { 
+                  value: 'youtube-music', 
+                  label: 'YouTube Music', 
+                  description: 'Streaming via Google/YouTube', 
+                  icon: <Youtube className="w-6 h-6 text-red-500" />,
+                  color: 'border-red-500/50'
+                },
+                { 
+                  value: 'local', 
+                  label: 'Música Local', 
+                  description: 'Arquivos locais via playerctl', 
+                  icon: <Volume2 className="w-6 h-6 text-cyan-400" />,
+                  color: 'border-cyan-500/50'
+                },
+              ].map((option) => (
+                <Label
+                  key={option.value}
+                  htmlFor={`provider-${option.value}`}
+                  className={`flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all ${
+                    wizardData.musicProvider === option.value
+                      ? `card-option-selected-3d ${option.color}`
+                      : 'card-option-dark-3d'
+                  }`}
+                >
+                  <RadioGroupItem value={option.value} id={`provider-${option.value}`} className="sr-only" />
+                  <div className="flex-shrink-0">
+                    {option.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-kiosk-text">{option.label}</p>
+                    <p className="text-xs text-kiosk-text/60">{option.description}</p>
+                  </div>
+                  {wizardData.musicProvider === option.value && (
+                    <Check className="w-5 h-5 text-cyan-400" />
+                  )}
+                </Label>
+              ))}
+            </RadioGroup>
+            
+            <p className="text-xs text-center text-kiosk-text/50">
+              Você pode configurar outros provedores depois nas Configurações
+            </p>
           </div>
         );
 

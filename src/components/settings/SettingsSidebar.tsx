@@ -42,7 +42,7 @@ const categories: CategoryItem[] = [
   { id: 'system', label: 'Sistema', icon: Settings2, color: 'purple', keywords: ['demo', 'ntp', 'hora', 'time', 'versão', 'info', 'urls', 'grafana', 'prometheus'] },
   { id: 'appearance', label: 'Aparência', icon: Palette, color: 'pink', keywords: ['tema', 'theme', 'cor', 'color', 'idioma', 'language', 'acessibilidade', 'contraste'] },
   { id: 'security', label: 'Segurança', icon: Shield, color: 'green', keywords: ['usuário', 'user', 'senha', 'password', 'admin', 'permissão', 'keys', 'api key', 'auth'] },
-  { id: 'integrations', label: 'Integrações', icon: Globe, color: 'blue', keywords: ['spotify', 'clima', 'weather', 'openweathermap', 'música', 'music'] },
+  { id: 'integrations', label: 'Integrações', icon: Globe, color: 'blue', keywords: ['spotify', 'spicetify', 'youtube', 'youtube music', 'ytm', 'clima', 'weather', 'openweathermap', 'música', 'music', 'streaming', 'tema', 'extensão'] },
 ];
 
 interface SettingsSidebarProps {
