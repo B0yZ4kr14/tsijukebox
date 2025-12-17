@@ -35,6 +35,22 @@ const iconMap: Record<string, React.ReactNode> = {
   'HelpCircle': <HelpCircle className="w-4 h-4" />,
 };
 
+// IDs of newly added articles (Spicetify, YouTube Music, Multi-Provider)
+const NEW_ARTICLE_IDS = new Set([
+  'spicetify-overview',
+  'spicetify-themes', 
+  'spicetify-extensions',
+  'ytm-connect',
+  'ytm-oauth-setup',
+  'ytm-library',
+  'ytm-playback',
+  'provider-selection',
+  'provider-fallback',
+]);
+
+// Category with new articles
+const CATEGORY_WITH_NEW_ARTICLES = 'integrations';
+
 // Count total articles in a category
 function getCategoryArticleCount(category: WikiCategory): number {
   return category.subSections.reduce((acc, sub) => acc + sub.articles.length, 0);
@@ -369,7 +385,9 @@ export function WikiNavigation({
                     "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all",
                     "hover:bg-primary/10 border border-transparent",
                     expandedCategories.has(category.id) && "bg-kiosk-surface/50 border-primary/20",
-                    selectedCategory === category.id && "bg-primary/20 text-primary border-primary/40"
+                    selectedCategory === category.id && "bg-primary/20 text-primary border-primary/40",
+                    // Special highlight for category with new articles
+                    category.id === CATEGORY_WITH_NEW_ARTICLES && "border-green-500/40 bg-green-500/5 hover:bg-green-500/10"
                   )}
                 >
                   {expandedCategories.has(category.id) ? (
@@ -381,6 +399,12 @@ export function WikiNavigation({
                   <span className="text-sm font-medium truncate flex-1">
                     {highlightMatch(category.title, searchQuery)}
                   </span>
+                  {/* NOVO badge for integrations category */}
+                  {category.id === CATEGORY_WITH_NEW_ARTICLES && (
+                    <Badge className="bg-green-500 text-white text-[8px] px-1.5 py-0 h-4 animate-pulse shadow-[0_0_8px_hsl(142_70%_45%/0.6)]">
+                      NOVO
+                    </Badge>
+                  )}
                   <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 border-cyan-500/30 text-cyan-400">
                     {categoryArticleCount}
                   </Badge>
@@ -473,18 +497,28 @@ export function WikiNavigation({
                                                 showTreeLines ? "pl-5 pr-2" : "px-3",
                                                 selectedArticle === article.id
                                                   ? "bg-primary/20 text-primary"
-                                                  : "hover:bg-kiosk-surface/30 text-kiosk-text/60 hover:text-kiosk-text"
+                                                  : "hover:bg-kiosk-surface/30 text-kiosk-text/60 hover:text-kiosk-text",
+                                                // Highlight new articles
+                                                NEW_ARTICLE_IDS.has(article.id) && "bg-green-500/5 hover:bg-green-500/10"
                                               )}
                                             >
                                               <span className={cn(
                                                 "w-1.5 h-1.5 rounded-full shrink-0 transition-colors",
                                                 selectedArticle === article.id 
                                                   ? "bg-primary shadow-[0_0_6px_hsl(var(--primary))]" 
-                                                  : "bg-current opacity-50"
+                                                  : NEW_ARTICLE_IDS.has(article.id)
+                                                    ? "bg-green-500 shadow-[0_0_4px_hsl(142_70%_45%/0.5)]"
+                                                    : "bg-current opacity-50"
                                               )} />
-                                              <span className="truncate">
+                                              <span className="truncate flex-1">
                                                 {highlightMatch(article.title, searchQuery)}
                                               </span>
+                                              {/* NOVO badge for new articles */}
+                                              {NEW_ARTICLE_IDS.has(article.id) && (
+                                                <Badge className="bg-green-500/80 text-white text-[7px] px-1 py-0 h-3.5 ml-1">
+                                                  NOVO
+                                                </Badge>
+                                              )}
                                             </button>
                                           </div>
                                         );
