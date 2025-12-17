@@ -24,3 +24,4 @@ export { SettingsGuideModal } from './SettingsGuideModal';
 export { SettingsFAQ } from './SettingsFAQ';
 export { SettingsIllustration } from './SettingsIllustration';
 export { SettingsNotificationBanner, SettingsNotificationBadge } from './SettingsNotificationBanner';
+export { SettingsSectionTour } from './SettingsSectionTour';

@@ -17,7 +17,8 @@ import {
   AlertTriangle,
   XCircle,
   TrendingUp,
-  Rocket
+  Rocket,
+  Stethoscope
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -448,14 +449,14 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
           <Zap className="w-4 h-4" />
           AÇÕES RÁPIDAS
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <Button
             variant="outline"
             className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-green-500/50 hover:bg-green-500/5"
             onClick={() => navigate('/setup')}
           >
             <Rocket className="w-5 h-5 text-green-400" />
-            <span className="text-xs">Wizard de Setup</span>
+            <span className="text-xs font-bold text-neon-action-label-gold">Wizard de Setup</span>
           </Button>
           <Button
             variant="outline"
@@ -463,7 +464,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
             onClick={handleResetTour}
           >
             <RefreshCw className="w-5 h-5 text-cyan-400" />
-            <span className="text-xs">Reiniciar Tour</span>
+            <span className="text-xs font-bold text-neon-action-label">Reiniciar Tour</span>
           </Button>
           <Button
             variant="outline"
@@ -471,7 +472,15 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
             onClick={() => navigate('/help')}
           >
             <HelpCircle className="w-5 h-5 text-cyan-400" />
-            <span className="text-xs">Manual Completo</span>
+            <span className="text-xs font-bold text-neon-action-label">Manual Completo</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-purple-500/50 hover:bg-purple-500/5"
+            onClick={() => navigate('/settings/diagnostics')}
+          >
+            <Stethoscope className="w-5 h-5 text-purple-400" />
+            <span className="text-xs font-bold text-neon-action-label-purple">Diagnóstico</span>
           </Button>
           <Button
             variant="outline"
@@ -479,7 +488,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
             onClick={() => navigate('/')}
           >
             <Sparkles className="w-5 h-5 text-cyan-400" />
-            <span className="text-xs">Voltar ao Player</span>
+            <span className="text-xs font-bold text-neon-action-label">Voltar ao Player</span>
           </Button>
         </div>
       </motion.div>

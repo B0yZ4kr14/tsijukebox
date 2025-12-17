@@ -191,6 +191,37 @@
     color: hsl(0 0% 72%);
   }
 
+  /* Neon Action Labels - Para Ações Rápidas */
+  .text-neon-action-label {
+    color: hsl(185 100% 75%);
+    font-weight: 700;
+    text-shadow: 
+      0 0 4px hsl(185 100% 60% / 0.6),
+      0 0 8px hsl(185 100% 50% / 0.4),
+      0 0 12px hsl(185 100% 45% / 0.3);
+    letter-spacing: 0.02em;
+  }
+
+  .text-neon-action-label-gold {
+    color: hsl(45 100% 70%);
+    font-weight: 700;
+    text-shadow: 
+      0 0 4px hsl(45 100% 60% / 0.6),
+      0 0 8px hsl(45 100% 50% / 0.4),
+      0 0 12px hsl(45 100% 45% / 0.3);
+    letter-spacing: 0.02em;
+  }
+
+  .text-neon-action-label-purple {
+    color: hsl(270 100% 75%);
+    font-weight: 700;
+    text-shadow: 
+      0 0 4px hsl(270 100% 60% / 0.6),
+      0 0 8px hsl(270 100% 50% / 0.4),
+      0 0 12px hsl(270 100% 45% / 0.3);
+    letter-spacing: 0.02em;
+  }
+
   /* Labels com alta visibilidade - Amarelo/Laranja - ULTRA VIBRANTES */
   .text-label-yellow {
     color: hsl(50 100% 78%);

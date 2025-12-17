@@ -30,6 +30,7 @@ const SpotifyBrowser = lazy(() => import("./pages/SpotifyBrowser"));
 const SpotifyPlaylistPage = lazy(() => import("./pages/SpotifyPlaylist"));
 const SpotifySearchPage = lazy(() => import("./pages/SpotifySearch"));
 const SpotifyLibraryPage = lazy(() => import("./pages/SpotifyLibrary"));
+const SystemDiagnostics = lazy(() => import("./pages/SystemDiagnostics"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +80,11 @@ const App = () => (
                 <Route path="/settings" element={
                   <ProtectedRoute requiredPermission="canAccessSettings">
                     <Settings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings/diagnostics" element={
+                  <ProtectedRoute requiredPermission="canAccessSettings">
+                    <SystemDiagnostics />
                   </ProtectedRoute>
                 } />
                 <Route path="/theme-preview" element={
