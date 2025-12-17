@@ -34,6 +34,7 @@ import {
 } from '@/components/settings';
 import { SettingsSidebar, SettingsCategory } from '@/components/settings/SettingsSidebar';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
+import { SettingsBreadcrumb } from '@/components/settings/SettingsBreadcrumb';
 
 export default function Settings() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -497,9 +498,17 @@ export default function Settings() {
             <LogoBrand size="md" animate />
           </motion.div>
 
+          {/* Breadcrumb */}
+          <div className="px-6">
+            <SettingsBreadcrumb 
+              category={activeCategory} 
+              onNavigateToCategory={setActiveCategory} 
+            />
+          </div>
+
           {/* Header */}
           <motion.header
-            className="flex items-center gap-4 px-6 pb-6"
+            className="flex items-center gap-4 px-6 pb-4"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}

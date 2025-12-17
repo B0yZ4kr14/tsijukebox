@@ -17,3 +17,7 @@ export { SettingsDashboard } from './SettingsDashboard';
 export { AccessibilitySection } from './AccessibilitySection';
 export { KeysManagementSection } from './KeysManagementSection';
 export { SettingsSidebar, type SettingsCategory } from './SettingsSidebar';
+export { SettingsBreadcrumb } from './SettingsBreadcrumb';
+export { ConfigBackupSection } from './ConfigBackupSection';
+export { SettingsGuideCard } from './SettingsGuideCard';
+export { SettingsGuideModal } from './SettingsGuideModal';
