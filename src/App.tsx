@@ -31,6 +31,10 @@ const SpotifyBrowser = lazy(() => import("./pages/SpotifyBrowser"));
 const SpotifyPlaylistPage = lazy(() => import("./pages/SpotifyPlaylist"));
 const SpotifySearchPage = lazy(() => import("./pages/SpotifySearch"));
 const SpotifyLibraryPage = lazy(() => import("./pages/SpotifyLibrary"));
+const YouTubeMusicBrowser = lazy(() => import("./pages/YouTubeMusicBrowser"));
+const YouTubeMusicLibraryPage = lazy(() => import("./pages/YouTubeMusicLibrary"));
+const YouTubeMusicSearchPage = lazy(() => import("./pages/YouTubeMusicSearch"));
+const YouTubeMusicPlaylistPage = lazy(() => import("./pages/YouTubeMusicPlaylist"));
 const SystemDiagnostics = lazy(() => import("./pages/SystemDiagnostics"));
 const ClientsMonitorDashboard = lazy(() => import("./pages/ClientsMonitorDashboard"));
 
@@ -110,6 +114,12 @@ function AppRoutes() {
         <Route path="/spotify/playlist/:id" element={<SpotifyPlaylistPage />} />
         <Route path="/spotify/search" element={<SpotifySearchPage />} />
         <Route path="/spotify/library" element={<SpotifyLibraryPage />} />
+        
+        {/* YouTube Music Routes - Lazy loaded */}
+        <Route path="/youtube-music" element={<YouTubeMusicBrowser />} />
+        <Route path="/youtube-music/library" element={<YouTubeMusicLibraryPage />} />
+        <Route path="/youtube-music/search" element={<YouTubeMusicSearchPage />} />
+        <Route path="/youtube-music/playlist/:id" element={<YouTubeMusicPlaylistPage />} />
         
         {/* Protected Admin Routes - Lazy loaded */}
         <Route path="/admin" element={

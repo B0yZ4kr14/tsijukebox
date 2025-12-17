@@ -32,3 +32,4 @@ export { SettingsIllustration } from './SettingsIllustration';
 export { SettingsNotificationBanner, SettingsNotificationBadge } from './SettingsNotificationBanner';
 export { SpicetifySection } from './SpicetifySection';
 export { YouTubeMusicSection } from './YouTubeMusicSection';
+export { MusicIntegrationsSection } from './MusicIntegrationsSection';

@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient } from '@/lib/api/spotify';
+import { youtubeMusicClient } from '@/lib/api/youtubeMusic';
 import { toast } from 'sonner';
 import { 
   SettingsSection, 
@@ -74,19 +75,27 @@ export default function Settings() {
     localStorage.setItem('settings_active_category', activeCategory);
   }, [activeCategory]);
 
-  // Handle OAuth callback
+  // Handle OAuth callback (Spotify and YouTube Music)
   useEffect(() => {
     const code = searchParams.get('spotify_code');
-    const error = searchParams.get('spotify_error');
+    const ytCode = searchParams.get('code');
+    const state = searchParams.get('state');
+    const error = searchParams.get('spotify_error') || searchParams.get('error');
 
     if (error) {
-      toast.error(`Erro na autenticação Spotify: ${error}`);
+      toast.error(`Erro na autenticação: ${error}`);
       setSearchParams({});
       return;
     }
 
+    // Spotify OAuth callback
     if (code && spotify.clientId && spotify.clientSecret) {
       handleSpotifyCallback(code);
+    }
+
+    // YouTube Music OAuth callback
+    if (ytCode && state === 'youtube-music-oauth') {
+      handleYouTubeMusicCallback(ytCode);
     }
   }, [searchParams, spotify.clientId, spotify.clientSecret]);
 
