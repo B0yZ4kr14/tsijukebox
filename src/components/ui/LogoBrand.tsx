@@ -84,19 +84,6 @@ export function LogoBrand({
         <span className={getTsiClass()}>TSi</span>
         <span className={getJukeboxClass()}>JUKEBOX</span>
       </div>
-      {/* Mirror reflection element */}
-      {variant === 'mirror' && (
-        <div 
-          className={cn(
-            "logo-mirror-reflection font-black tracking-tight select-none",
-            sizeClasses[size]
-          )}
-          aria-hidden="true"
-        >
-          <span className="logo-tsi-mirror-reflection">TSi</span>
-          <span className="logo-jukebox-mirror-reflection">JUKEBOX</span>
-        </div>
-      )}
       {showTagline && (
         <p className={cn(
           "text-kiosk-text/60 mt-1 tracking-widest uppercase",
