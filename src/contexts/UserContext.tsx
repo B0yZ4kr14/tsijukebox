@@ -32,6 +32,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 // Local users for SQLite backend simulation
 const LOCAL_USERS: Record<string, { password: string; role: UserRole }> = {
   'tsi': { password: 'connect', role: 'admin' },
+  'admin': { password: 'admin', role: 'admin' },
   'user': { password: 'user123', role: 'user' },
   'guest': { password: 'guest', role: 'newbie' },
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Mic2, AlignLeft, Music, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Pause, RotateCcw, Mic2, AlignLeft, Music, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,18 +7,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LyricsDisplay } from '@/components/player/LyricsDisplay';
 import { KaraokeLyrics } from '@/components/player/KaraokeLyrics';
+import { FullscreenKaraoke } from '@/components/player/FullscreenKaraoke';
 import { useLyrics } from '@/hooks/useLyrics';
 import { formatTime } from '@/lib/lrcParser';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Link } from 'react-router-dom';
 
-// Demo tracks for testing
+// Demo tracks for testing with album covers
 const DEMO_TRACKS = [
-  { id: '1', name: 'Bohemian Rhapsody', artist: 'Queen', duration: 354 },
-  { id: '2', name: 'Billie Jean', artist: 'Michael Jackson', duration: 294 },
-  { id: '3', name: 'Shape of You', artist: 'Ed Sheeran', duration: 234 },
-  { id: '4', name: 'Blinding Lights', artist: 'The Weeknd', duration: 200 },
-  { id: '5', name: 'Smells Like Teen Spirit', artist: 'Nirvana', duration: 301 },
+  { id: '1', name: 'Bohemian Rhapsody', artist: 'Queen', duration: 354, cover: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Bohemian_Rhapsody.png' },
+  { id: '2', name: 'Billie Jean', artist: 'Michael Jackson', duration: 294, cover: 'https://upload.wikimedia.org/wikipedia/en/5/55/Michael_Jackson_-_Thriller.png' },
+  { id: '3', name: 'Shape of You', artist: 'Ed Sheeran', duration: 234, cover: 'https://upload.wikimedia.org/wikipedia/en/b/b4/Shape_Of_You_%28Official_Single_Cover%29_by_Ed_Sheeran.png' },
+  { id: '4', name: 'Blinding Lights', artist: 'The Weeknd', duration: 200, cover: 'https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png' },
+  { id: '5', name: 'Smells Like Teen Spirit', artist: 'Nirvana', duration: 301, cover: 'https://upload.wikimedia.org/wikipedia/en/b/b7/NirvanaNevermindalbumcover.jpg' },
 ];
 
 type DisplayMode = 'line' | 'karaoke';
@@ -30,6 +31,7 @@ export default function LyricsTest() {
   const [position, setPosition] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [displayMode, setDisplayMode] = useState<DisplayMode>('line');
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -94,6 +96,16 @@ export default function LyricsTest() {
   
   return (
     <div className="min-h-screen bg-kiosk-bg p-6">
+      {/* Fullscreen Karaoke */}
+      <FullscreenKaraoke
+        isOpen={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+        trackName={selectedTrack.name}
+        artistName={selectedTrack.artist}
+        albumCover={selectedTrack.cover}
+        position={position}
+        isPlaying={isPlaying}
+      />
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -125,6 +137,14 @@ export default function LyricsTest() {
             >
               <Mic2 className="w-4 h-4 mr-2" />
               {t('lyrics.karaokeMode')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFullscreen(true)}
+            >
+              <Maximize2 className="w-4 h-4 mr-2" />
+              {t('lyrics.fullscreen')}
             </Button>
           </div>
         </div>
