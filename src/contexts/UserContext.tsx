@@ -231,6 +231,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const hasPermission = (permission: keyof UserPermissions): boolean => {
+    if (!user) return false;
+    
+    // Check customPermissions first (overrides role defaults)
+    if (user.customPermissions && user.customPermissions[permission] !== undefined) {
+      return user.customPermissions[permission]!;
+    }
+    
+    // Fall back to role-based permissions
     return permissions[permission];
   };
 

@@ -108,7 +108,7 @@ export function SettingsNotificationBanner({
                     <p className="text-sm font-medium text-kiosk-text">
                       {notification.title}
                     </p>
-                    <p className="text-xs text-kiosk-text/60 mt-0.5">
+                    <p className="text-xs text-kiosk-text/85 mt-0.5">
                       {notification.message}
                     </p>
                   </div>
@@ -148,7 +148,7 @@ export function SettingsNotificationBanner({
           variant="ghost"
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full mt-2 h-8 text-xs text-kiosk-text/50 hover:text-kiosk-text"
+          className="w-full mt-2 h-8 text-xs text-kiosk-text/85 hover:text-kiosk-text"
         >
           {isExpanded ? (
             <>

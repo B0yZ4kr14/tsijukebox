@@ -27,7 +27,7 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
           "flex items-center gap-1 transition-colors",
           category === 'dashboard' 
             ? "text-cyan-400" 
-            : "text-kiosk-text/60 hover:text-cyan-400"
+            : "text-kiosk-text/85 hover:text-cyan-400"
         )}
       >
         <Home className="w-3.5 h-3.5" />
@@ -42,7 +42,7 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
             className={cn(
               "transition-colors",
               section 
-                ? "text-kiosk-text/60 hover:text-cyan-400" 
+                ? "text-kiosk-text/85 hover:text-cyan-400" 
                 : "text-cyan-400"
             )}
           >

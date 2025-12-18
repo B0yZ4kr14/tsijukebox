@@ -127,8 +127,8 @@ export function UnifiedDatabaseSection({ isDemoMode }: UnifiedDatabaseSectionPro
     >
       <Tabs defaultValue="config" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-kiosk-bg/50">
-          <TabsTrigger value="config" data-tour="database-config-tab">Configuração</TabsTrigger>
-          <TabsTrigger value="maintenance" data-tour="database-maintenance-tab">Manutenção</TabsTrigger>
+          <TabsTrigger value="config" data-tour="database-config-tab" className="text-kiosk-text/90 hover:text-white data-[state=active]:text-white">Configuração</TabsTrigger>
+          <TabsTrigger value="maintenance" data-tour="database-maintenance-tab" className="text-kiosk-text/90 hover:text-white data-[state=active]:text-white">Manutenção</TabsTrigger>
         </TabsList>
 
         <TabsContent value="config" className="space-y-4 mt-4">

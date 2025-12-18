@@ -266,7 +266,7 @@ export function DistributedBackupSection() {
                   <div className="w-12 h-12 rounded-lg bg-primary/20 border border-primary/50 flex items-center justify-center">
                     <HardDrive className="w-6 h-6 text-primary" />
                   </div>
-                  <span className="text-xs text-kiosk-text/60 mt-1">Master</span>
+                  <span className="text-xs text-kiosk-text/85 mt-1">Master</span>
                 </div>
 
                 <ArrowRight className="w-5 h-5 text-cyan-400 animate-pulse" />
@@ -339,7 +339,7 @@ export function DistributedBackupSection() {
             {isSyncing && (
               <div className="space-y-2">
                 <Progress value={syncProgress} className="h-2" />
-                <p className="text-xs text-center text-kiosk-text/50">
+                <p className="text-xs text-center text-kiosk-text/85">
                   Sincronizando... {syncProgress}%
                 </p>
               </div>

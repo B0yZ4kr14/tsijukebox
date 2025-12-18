@@ -167,14 +167,14 @@ export function ThemeSection() {
         <TabsList className="grid w-full grid-cols-2 mb-4 bg-kiosk-surface/50" data-tour="theme-tools">
           <TabsTrigger 
             value="customize" 
-            className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+            className="text-kiosk-text/90 hover:text-white data-[state=active]:bg-primary/20 data-[state=active]:text-white"
           >
             <Sliders className="w-4 h-4 mr-2" />
             Personalizar
           </TabsTrigger>
           <TabsTrigger 
             value="tools"
-            className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
+            className="text-kiosk-text/90 hover:text-white data-[state=active]:bg-primary/20 data-[state=active]:text-white"
           >
             <Eye className="w-4 h-4 mr-2" />
             Ferramentas

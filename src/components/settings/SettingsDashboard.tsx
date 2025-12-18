@@ -191,7 +191,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
           <Sparkles className="w-6 h-6" />
           Central de Configurações
         </h2>
-        <p className="text-kiosk-text/60 mt-1">Guia completo e status do sistema</p>
+        <p className="text-kiosk-text/85 mt-1">Guia completo e status do sistema</p>
       </motion.div>
 
       {/* Status Overview with Chart */}
@@ -239,7 +239,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
                   <span className="text-2xl font-bold text-kiosk-text">{configuredPercent}%</span>
-                  <span className="text-xs text-kiosk-text/60">configurado</span>
+                  <span className="text-xs text-kiosk-text/85">configurado</span>
                 </div>
               </div>
             </div>
@@ -279,7 +279,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
           {/* Progress Bar */}
           <div className="mt-4 pt-4 border-t border-kiosk-border">
             <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-kiosk-text/60">Progresso geral</span>
+              <span className="text-kiosk-text/85">Progresso geral</span>
               <span className="text-cyan-400">{overall.okCount} de {overall.total} categorias</span>
             </div>
             <Progress value={configuredPercent} className="h-2" />
@@ -335,7 +335,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
           </div>
 
           {filteredGuides.length === 0 && (
-            <div className="text-center py-8 text-kiosk-text/60">
+            <div className="text-center py-8 text-kiosk-text/85">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>Nenhum guia encontrado para "{searchQuery}"</p>
             </div>
@@ -367,7 +367,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <h3 className="text-sm font-semibold text-kiosk-text/60 mb-3 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3 flex items-center gap-2">
           <Zap className="w-4 h-4" />
           AÇÕES RÁPIDAS
         </h3>

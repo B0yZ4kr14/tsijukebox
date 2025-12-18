@@ -95,7 +95,7 @@ export function ColorPicker({ label, value, onChange, presets }: ColorPickerProp
       <div className="space-y-2 pt-2">
         {/* Hue */}
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground w-8">H</span>
+          <span className="text-xs text-kiosk-text/80 w-8">H</span>
           <Slider
             value={[hslValues.h]}
             min={0}
@@ -107,12 +107,12 @@ export function ColorPicker({ label, value, onChange, presets }: ColorPickerProp
               background: 'linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
             }}
           />
-          <span className="text-xs text-muted-foreground w-10 text-right">{hslValues.h}°</span>
+          <span className="text-xs text-kiosk-text/80 w-10 text-right">{hslValues.h}°</span>
         </div>
 
         {/* Saturation */}
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground w-8">S</span>
+          <span className="text-xs text-kiosk-text/80 w-8">S</span>
           <Slider
             value={[hslValues.s]}
             min={0}
@@ -121,12 +121,12 @@ export function ColorPicker({ label, value, onChange, presets }: ColorPickerProp
             onValueChange={([v]) => handleSliderChange('s', v)}
             className="flex-1"
           />
-          <span className="text-xs text-muted-foreground w-10 text-right">{hslValues.s}%</span>
+          <span className="text-xs text-kiosk-text/80 w-10 text-right">{hslValues.s}%</span>
         </div>
 
         {/* Lightness */}
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground w-8">L</span>
+          <span className="text-xs text-kiosk-text/80 w-8">L</span>
           <Slider
             value={[hslValues.l]}
             min={0}
@@ -135,7 +135,7 @@ export function ColorPicker({ label, value, onChange, presets }: ColorPickerProp
             onValueChange={([v]) => handleSliderChange('l', v)}
             className="flex-1"
           />
-          <span className="text-xs text-muted-foreground w-10 text-right">{hslValues.l}%</span>
+          <span className="text-xs text-kiosk-text/80 w-10 text-right">{hslValues.l}%</span>
         </div>
       </div>
 
