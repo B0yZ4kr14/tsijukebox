@@ -154,6 +154,72 @@ const NATIVE_ELEMENTS = [
     replacement: 'TableCell do Shadcn (@/components/ui/table)',
     severity: 'error'
   },
+
+  // ==================== ACCESSIBILITY CHECKS ====================
+  
+  // img sem alt - Erro crítico de acessibilidade (WCAG 1.1.1)
+  { 
+    pattern: /<img\s+(?![^>]*\balt\s*=)[^>]*>/gi, 
+    element: '<img> without alt attribute', 
+    replacement: 'Adicione alt="" para acessibilidade (WCAG 1.1.1)',
+    severity: 'error'
+  },
+  
+  // Links sem className - Warning para estilização consistente
+  { 
+    pattern: /<a\s+(?![^>]*className)[^>]*href=/gi, 
+    element: '<a> without className', 
+    replacement: 'Use NavLink com className para estilização consistente (@/components/NavLink)',
+    severity: 'warning'
+  },
+  
+  // Botões sem type explícito
+  { 
+    pattern: /<button\s+(?![^>]*\btype\s*=)[^>]*>/gi, 
+    element: '<button> without type attribute', 
+    replacement: 'Adicione type="button" ou type="submit" explícito',
+    severity: 'warning'
+  },
+  
+  // Links sem href válido (usar Button para ações)
+  { 
+    pattern: /<a\s+(?![^>]*\bhref\s*=)[^>]*>/gi, 
+    element: '<a> without href', 
+    replacement: 'Use Button para ações, Link apenas para navegação',
+    severity: 'error'
+  },
+  
+  // Inputs sem id ou aria-label (formulários acessíveis)
+  { 
+    pattern: /<input\s+(?![^>]*(id|aria-label|aria-labelledby)\s*=)[^>]*>/gi, 
+    element: '<input> without accessible label', 
+    replacement: 'Adicione id + label[htmlFor] ou aria-label para acessibilidade',
+    severity: 'warning'
+  },
+  
+  // Textarea sem id ou aria-label
+  { 
+    pattern: /<textarea\s+(?![^>]*(id|aria-label|aria-labelledby)\s*=)[^>]*>/gi, 
+    element: '<textarea> without accessible label', 
+    replacement: 'Adicione id + label[htmlFor] ou aria-label para acessibilidade',
+    severity: 'warning'
+  },
+  
+  // Elementos clicáveis sem role ou aria-label
+  { 
+    pattern: /<div\s+[^>]*onClick[^>]*(?![^>]*\b(role|aria-label)\s*=)[^>]*>/gi, 
+    element: '<div> with onClick without role', 
+    replacement: 'Use Button ou adicione role="button" e aria-label',
+    severity: 'warning'
+  },
+  
+  // Spans com onClick (deveria ser botão)
+  { 
+    pattern: /<span\s+[^>]*onClick[^>]*>/gi, 
+    element: '<span> with onClick', 
+    replacement: 'Use Button para elementos clicáveis (acessibilidade)',
+    severity: 'warning'
+  },
 ];
 
 // Diretórios para verificar
