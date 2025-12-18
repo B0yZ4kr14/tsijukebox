@@ -605,7 +605,18 @@
     "selectTrack": "Selecciona una canción para ver la letra",
     "loading": "Cargando letras...",
     "synced": "Sincronizado",
-    "notAvailable": "Letras no disponibles para esta pista"
+    "notSynced": "No sincronizado",
+    "notAvailable": "Letras no disponibles para esta pista",
+    "testPage": "Prueba de Letras",
+    "lineMode": "Modo Línea",
+    "karaokeMode": "Modo Karaoke",
+    "controls": "Controles",
+    "selectTrackLabel": "Seleccionar Pista",
+    "speed": "Velocidad",
+    "source": "Fuente",
+    "error": "Error al buscar",
+    "lines": "líneas",
+    "providedBy": "Proporcionado por"
   },
   "upload": {
     "audioPreview": "Vista Previa de Audio",
