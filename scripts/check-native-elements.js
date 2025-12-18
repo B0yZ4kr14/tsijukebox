@@ -13,6 +13,32 @@ const path = require('path');
 
 // Elementos nativos a detectar e seus substitutos Radix/Shadcn
 const NATIVE_ELEMENTS = [
+  // Form elements
+  { 
+    pattern: /<form[\s>]/gi, 
+    element: '<form>', 
+    replacement: 'Form do react-hook-form (@/components/ui/form)',
+    severity: 'warning'
+  },
+  { 
+    pattern: /<fieldset[\s>]/gi, 
+    element: '<fieldset>', 
+    replacement: 'FormItem ou Card do Shadcn (@/components/ui/form)',
+    severity: 'warning'
+  },
+  { 
+    pattern: /<legend[\s>]/gi, 
+    element: '<legend>', 
+    replacement: 'FormLabel do Shadcn (@/components/ui/form)',
+    severity: 'warning'
+  },
+  { 
+    pattern: /<label[\s>]/gi, 
+    element: '<label>', 
+    replacement: 'Label ou FormLabel do Shadcn (@/components/ui/label)',
+    severity: 'warning'
+  },
+  // Select/Dropdown elements
   { 
     pattern: /<select[\s>]/gi, 
     element: '<select>', 
@@ -158,13 +184,15 @@ const IGNORE_PATTERNS = [
   /src\/components\/ui\/collapsible\.tsx$/,
   /src\/components\/ui\/table\.tsx$/,
   /src\/components\/ui\/command\.tsx$/,
+  /src\/components\/ui\/form\.tsx$/,
+  /src\/components\/ui\/label\.tsx$/,
 ];
 
 // Padrões de exceção em conteúdo (comentários, strings)
 const CONTENT_EXCEPTIONS = [
-  /\/\/.*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td)/gi,      // Comentários inline
-  /\/\*[\s\S]*?<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td)[\s\S]*?\*\//gi,  // Comentários de bloco
-  /['"`].*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td).*['"`]/gi,  // Strings
+  /\/\/.*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td|form|fieldset|legend|label)/gi,      // Comentários inline
+  /\/\*[\s\S]*?<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td|form|fieldset|legend|label)[\s\S]*?\*\//gi,  // Comentários de bloco
+  /['"`].*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td|form|fieldset|legend|label).*['"`]/gi,  // Strings
   /WCAG Exception:/i,  // Exceções documentadas
 ];
 

@@ -78,6 +78,10 @@ Uma exceção de contraste é válida quando:
 3. O elemento é **redundante** (informação disponível por outros meios)
 4. O elemento está em **estado desabilitado** (intencionalmente dimmed)
 
+<!-- WCAG-EXCEPTIONS-START -->
+<!-- Auto-generated section - DO NOT EDIT MANUALLY -->
+<!-- Run: node scripts/generate-accessibility-docs.js -->
+
 #### Lista Completa de Exceções (13 total)
 
 | # | Arquivo | Opacidade | Elemento | Justificativa |
@@ -95,6 +99,8 @@ Uma exceção de contraste é válida quando:
 | 11 | `SpotifySearch.tsx` | `/30` | Music/Search icons | Ícones decorativos em estados vazios |
 | 12 | `SpotifyPanel.tsx` | `/40→/60` | Botão desconectado | Hover aumenta contraste; estado conectado usa `#1DB954` |
 | 13 | `AddToPlaylistModal.tsx` | `/30` | Loader2/Plus icons | Tornam-se `#FF0000` quando adicionado |
+
+<!-- WCAG-EXCEPTIONS-END -->
 
 #### Regras de Substituição Padrão
 

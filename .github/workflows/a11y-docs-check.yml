@@ -1,0 +1,40 @@
+name: Accessibility Docs Check
+
+on:
+  push:
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'docs/ACCESSIBILITY.md'
+      - 'scripts/generate-accessibility-docs.js'
+  pull_request:
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'docs/ACCESSIBILITY.md'
+      - 'scripts/generate-accessibility-docs.js'
+
+jobs:
+  check-accessibility-docs:
+    name: Check ACCESSIBILITY.md Sync
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Check WCAG Exceptions Documentation Sync
+        run: |
+          echo "🔍 Verificando sincronização da documentação de acessibilidade..."
+          node scripts/generate-accessibility-docs.js --check
+      
+      - name: Report Status
+        if: failure()
+        run: |
+          echo "::error::A documentação ACCESSIBILITY.md está desatualizada!"
+          echo "::error::Execute 'node scripts/generate-accessibility-docs.js' localmente e faça commit das alterações."
