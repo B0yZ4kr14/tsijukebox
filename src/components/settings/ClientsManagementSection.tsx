@@ -503,7 +503,7 @@ export function ClientsManagementSection() {
                     )}
                     
                     {client.lastSync && (
-                      <p className="text-xs text-kiosk-text/50 mt-1">
+                      <p className="text-xs text-kiosk-text/85 mt-1">
                         Última sincronização: {new Date(client.lastSync).toLocaleString('pt-BR')}
                       </p>
                     )}

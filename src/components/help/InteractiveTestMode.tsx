@@ -419,9 +419,9 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
                           {event.direction === 'down' && '↓'}
                           {event.direction === 'none' && '·'}
                         </span>
-                        <span className="text-sm text-kiosk-text/70">{event.action}</span>
-                        <span className="text-xs text-kiosk-text/50">{event.deltaX}px</span>
-                        <span className="ml-auto text-xs text-kiosk-text/50">
+                        <span className="text-sm text-kiosk-text/90">{event.action}</span>
+                        <span className="text-xs text-kiosk-text/85">{event.deltaX}px</span>
+                        <span className="ml-auto text-xs text-kiosk-text/85">
                           {event.timestamp.toLocaleTimeString()}
                         </span>
                       </motion.div>
