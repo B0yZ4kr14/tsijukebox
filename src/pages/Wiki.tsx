@@ -17,6 +17,7 @@ import { useGlobalSearch } from '@/hooks/useGlobalSearch';
 import { useReadArticles } from '@/hooks/useReadArticles';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
+import { formatBrandName } from '@/lib/utils';
 
 export default function Wiki() {
   const navigate = useNavigate();
@@ -258,8 +259,8 @@ function CategoryOverview({
       className="space-y-6"
     >
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold text-gold-neon">{category.title}</h1>
-        <p className="text-kiosk-text/70">{category.description}</p>
+        <h1 className="text-2xl font-bold text-gold-neon">{formatBrandName(category.title)}</h1>
+        <p className="text-kiosk-text/70">{formatBrandName(category.description)}</p>
       </header>
 
       <div className="grid gap-4">
@@ -278,8 +279,8 @@ function CategoryOverview({
                 >
                   <FileText className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-kiosk-text text-sm">{article.title}</p>
-                    <p className="text-xs text-kiosk-text/60">{article.description}</p>
+                    <p className="font-medium text-kiosk-text text-sm">{formatBrandName(article.title)}</p>
+                    <p className="text-xs text-kiosk-text/60">{formatBrandName(article.description)}</p>
                   </div>
                 </button>
               ))}
@@ -339,7 +340,7 @@ function WelcomeScreen({
                 </div>
               </div>
               <p className="text-sm text-kiosk-text/60 line-clamp-2">
-                {category.description}
+                {formatBrandName(category.description)}
               </p>
             </button>
           );

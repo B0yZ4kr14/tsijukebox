@@ -46,6 +46,7 @@ const IMPACT_COLORS = {
 
 // Prohibited patterns for simple mode
 const PROHIBITED_PATTERNS = [
+  // === COLOR & CONTRAST PATTERNS ===
   { 
     pattern: /className="[^"]*\bbg-white\b[^"]*"/g, 
     message: 'Use bg-kiosk-surface or bg-kiosk-bg instead of bg-white',
@@ -66,11 +67,123 @@ const PROHIBITED_PATTERNS = [
     message: 'Use variant="kiosk-outline" or add button-outline-neon class',
     severity: 'moderate'
   },
+  
+  // === IMAGES WITHOUT ALT ===
+  { 
+    pattern: /<img\s+(?![^>]*alt=)[^>]*>/gi, 
+    message: 'Image missing alt attribute - add alt="" for decorative or descriptive alt for informative images',
+    severity: 'serious'
+  },
+  { 
+    pattern: /<img[^>]*alt=""\s*[^>]*>/gi, 
+    message: 'Empty alt attribute - ensure this is intentional for decorative images only',
+    severity: 'minor'
+  },
+  
+  // === LINKS WITHOUT TEXT ===
+  { 
+    pattern: /<Link[^>]*>\s*<[^>]*Icon[^/]*\/>\s*<\/Link>/gi, 
+    message: 'Link with only icon - add aria-label or visible text for accessibility',
+    severity: 'serious'
+  },
+  { 
+    pattern: /<a\s+[^>]*>\s*<[^>]*Icon[^/]*\/>\s*<\/a>/gi, 
+    message: 'Anchor link with only icon - add aria-label or visible text',
+    severity: 'serious'
+  },
+  
+  // === BUTTONS WITHOUT ACCESSIBLE NAME ===
   { 
     pattern: /<(button|Button)[^>]*>[\s]*<[^>]*Icon[^>]*\/>[\s]*<\/(button|Button)>/g, 
     message: 'Icon-only button may be missing aria-label',
     severity: 'serious'
   },
+  { 
+    pattern: /<Button\s+[^>]*size="icon"[^>]*(?!aria-label)[^>]*>/gi, 
+    message: 'Button with size="icon" should have aria-label',
+    severity: 'serious'
+  },
+  
+  // === INPUTS WITHOUT LABELS ===
+  { 
+    pattern: /<Input[^>]*(?!aria-label|aria-labelledby|id=)[^>]*\/>/gi, 
+    message: 'Input may be missing accessible label - add aria-label, aria-labelledby, or associated label element',
+    severity: 'moderate'
+  },
+  { 
+    pattern: /<select[^>]*(?!aria-label|aria-labelledby)[^>]*>/gi, 
+    message: 'Select element may be missing accessible label',
+    severity: 'moderate'
+  },
+  { 
+    pattern: /<textarea[^>]*(?!aria-label|aria-labelledby)[^>]*>/gi, 
+    message: 'Textarea may be missing accessible label',
+    severity: 'moderate'
+  },
+  
+  // === CLICKABLE ELEMENTS WITHOUT ROLE ===
+  { 
+    pattern: /<div[^>]*onClick={[^}]*}[^>]*(?!role=)[^>]*>/gi, 
+    message: 'Clickable div should have role="button" and be keyboard accessible',
+    severity: 'moderate'
+  },
+  { 
+    pattern: /<span[^>]*onClick={[^}]*}[^>]*(?!role=)[^>]*>/gi, 
+    message: 'Clickable span should have role="button" and be keyboard accessible',
+    severity: 'moderate'
+  },
+  
+  // === COLOR-ONLY ERROR INDICATORS ===
+  { 
+    pattern: /className="[^"]*\btext-red-\d{3}\b[^"]*"[^>]*>\s*[^<]*error/gi, 
+    message: 'Error state using color only - consider adding icon or sr-only text for accessibility',
+    severity: 'moderate'
+  },
+  { 
+    pattern: /className="[^"]*\bborder-red-\d{3}\b[^"]*"[^>]*(?!aria-invalid)/gi, 
+    message: 'Red border may indicate error - consider adding aria-invalid="true"',
+    severity: 'minor'
+  },
+  
+  // === TABLES WITHOUT HEADERS ===
+  { 
+    pattern: /<Table[^>]*>(?:(?!<TableHeader|<thead).)*?<TableBody/gis, 
+    message: 'Table may be missing header row (<TableHeader> or <thead>)',
+    severity: 'moderate'
+  },
+  
+  // === FOCUS INDICATORS ===
+  { 
+    pattern: /focus:outline-none(?![^"]*focus:ring|[^"]*focus-visible)/g, 
+    message: 'Removing focus outline without alternative focus indicator may harm keyboard navigation',
+    severity: 'moderate'
+  },
+  
+  // === HEADING STRUCTURE ===
+  { 
+    pattern: /<h1[^>]*>[^<]*<\/h1>[\s\S]*?<h1[^>]*>/gi, 
+    message: 'Multiple h1 elements detected - page should have single main heading',
+    severity: 'moderate'
+  },
+  
+  // === MISSING LANG ATTRIBUTE ===
+  { 
+    pattern: /<html(?![^>]*lang=)[^>]*>/gi, 
+    message: 'HTML element missing lang attribute',
+    severity: 'serious'
+  },
+];
+
+// Positive patterns to count (accessibility best practices found)
+const POSITIVE_PATTERNS = [
+  { pattern: /aria-label=/g, name: 'aria-label' },
+  { pattern: /aria-labelledby=/g, name: 'aria-labelledby' },
+  { pattern: /aria-describedby=/g, name: 'aria-describedby' },
+  { pattern: /alt="[^"]+"/g, name: 'alt text' },
+  { pattern: /role="[^"]+"/g, name: 'role attribute' },
+  { pattern: /sr-only/g, name: 'screen reader text' },
+  { pattern: /tabIndex=/g, name: 'tabIndex' },
+  { pattern: /aria-hidden=/g, name: 'aria-hidden' },
 ];
 
 /**
@@ -163,6 +276,12 @@ async function runSimpleAudit() {
   const srcDir = path.join(process.cwd(), 'src');
   const results = [];
   const violations = [];
+  const positiveMatches = {};
+
+  // Initialize positive pattern counters
+  for (const { name } of POSITIVE_PATTERNS) {
+    positiveMatches[name] = 0;
+  }
 
   // Recursively find all TSX files
   function findTsxFiles(dir) {
@@ -189,6 +308,7 @@ async function runSimpleAudit() {
     const relativePath = path.relative(process.cwd(), file);
     const fileViolations = [];
 
+    // Check prohibited patterns
     for (const { pattern, message, severity } of PROHIBITED_PATTERNS) {
       // Reset regex state
       pattern.lastIndex = 0;
@@ -207,6 +327,15 @@ async function runSimpleAudit() {
           line: lineNumber,
           match: match[0].substring(0, 50) + (match[0].length > 50 ? '...' : ''),
         });
+      }
+    }
+
+    // Count positive patterns
+    for (const { pattern, name } of POSITIVE_PATTERNS) {
+      pattern.lastIndex = 0;
+      const matches = content.match(pattern);
+      if (matches) {
+        positiveMatches[name] += matches.length;
       }
     }
 
@@ -233,12 +362,24 @@ async function runSimpleAudit() {
     console.log(`${COLORS.green}✓ No CSS/pattern issues found!${COLORS.reset}`);
   }
 
+  // Print positive patterns summary
+  console.log(`\n${COLORS.bold}${COLORS.green}━━━ Accessibility Best Practices Found ━━━${COLORS.reset}`);
+  const totalPositive = Object.values(positiveMatches).reduce((sum, count) => sum + count, 0);
+  console.log(`${COLORS.green}✓ ${totalPositive} accessibility attributes found${COLORS.reset}`);
+  for (const [name, count] of Object.entries(positiveMatches)) {
+    if (count > 0) {
+      console.log(`  ${COLORS.dim}• ${name}: ${count}${COLORS.reset}`);
+    }
+  }
+
   results.push({
     route: 'src/**/*.tsx',
     name: 'Source Files',
     violations,
     passes: tsxFiles.length - Object.keys(fileGroups).length,
     incomplete: [],
+    positivePatterns: positiveMatches,
+    totalPositive,
   });
 
   return results;

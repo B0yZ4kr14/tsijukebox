@@ -18,7 +18,7 @@ import {
 import { WikiArticle as WikiArticleType, findArticleById, getArticlePath } from './wikiData';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
+import { formatBrandName } from '@/lib/utils';
 interface WikiArticleProps {
   article: WikiArticleType;
   onSelectArticle: (articleId: string) => void;
@@ -188,8 +188,8 @@ export function WikiArticleView({ article, onSelectArticle, isBookmarked, onTogg
       {/* Header */}
       <header className="flex items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-gold-neon">{article.title}</h1>
-          <p className="text-kiosk-text/70">{article.description}</p>
+          <h1 className="text-2xl font-bold text-gold-neon">{formatBrandName(article.title)}</h1>
+          <p className="text-kiosk-text/70">{formatBrandName(article.description)}</p>
         </div>
         {onToggleBookmark && (
           <Button
@@ -212,7 +212,7 @@ export function WikiArticleView({ article, onSelectArticle, isBookmarked, onTogg
 
       {/* Content */}
       <div className="prose prose-invert max-w-none">
-        <p className="text-kiosk-text/80 leading-relaxed">{article.content}</p>
+        <p className="text-kiosk-text/80 leading-relaxed">{formatBrandName(article.content)}</p>
       </div>
 
       {/* Steps */}
@@ -228,7 +228,7 @@ export function WikiArticleView({ article, onSelectArticle, isBookmarked, onTogg
                 <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium shrink-0">
                   {i + 1}
                 </span>
-                <span className="leading-relaxed pt-0.5">{step}</span>
+                <span className="leading-relaxed pt-0.5">{formatBrandName(step)}</span>
               </li>
             ))}
           </ol>
@@ -246,7 +246,7 @@ export function WikiArticleView({ article, onSelectArticle, isBookmarked, onTogg
             {article.tips.map((tip, i) => (
               <li key={i} className="flex gap-2 text-sm text-kiosk-text/70">
                 <span className="text-primary">•</span>
-                <span>{tip}</span>
+                <span>{formatBrandName(tip)}</span>
               </li>
             ))}
           </ul>
