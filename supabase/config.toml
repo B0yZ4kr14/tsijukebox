@@ -1,1 +1,4 @@
 project_id = "ynkqczsmcnxvapljofel"
+
+[functions.lyrics-search]
+verify_jwt = false

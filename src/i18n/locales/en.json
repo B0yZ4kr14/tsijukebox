@@ -605,7 +605,18 @@
     "selectTrack": "Select a song to view lyrics",
     "loading": "Loading lyrics...",
     "synced": "Synchronized",
-    "notAvailable": "Lyrics not available for this track"
+    "notSynced": "Not synchronized",
+    "notAvailable": "Lyrics not available for this track",
+    "testPage": "Lyrics Test",
+    "lineMode": "Line Mode",
+    "karaokeMode": "Karaoke Mode",
+    "controls": "Controls",
+    "selectTrackLabel": "Select Track",
+    "speed": "Speed",
+    "source": "Source",
+    "error": "Error fetching",
+    "lines": "lines",
+    "providedBy": "Provided by"
   },
   "upload": {
     "audioPreview": "Audio Preview",
