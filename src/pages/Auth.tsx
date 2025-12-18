@@ -84,20 +84,20 @@ export default function Auth() {
   const isSupabaseProvider = authConfig.provider === 'supabase';
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur">
+    <div className="min-h-screen bg-kiosk-bg flex items-center justify-center p-4">
+      <Card className="w-full max-w-md border-cyan-500/30 bg-[hsl(220_25%_10%)] backdrop-blur">
         <CardHeader className="text-center space-y-4">
           <LogoBrand size="sm" variant="metal" centered animate className="mb-2" />
           <div>
-            <CardDescription className="flex items-center justify-center gap-2 mt-2">
+            <CardDescription className="flex items-center justify-center gap-2 mt-2 text-kiosk-text/70">
               {isSupabaseProvider ? (
                 <>
-                  <Cloud className="w-4 h-4" />
+                  <Cloud className="w-4 h-4 icon-neon-blue" />
                   Lovable Cloud
                 </>
               ) : (
                 <>
-                  <Server className="w-4 h-4" />
+                  <Server className="w-4 h-4 icon-neon-blue" />
                   Autenticação Local
                 </>
               )}
@@ -107,15 +107,15 @@ export default function Auth() {
         <CardContent>
           {isSupabaseProvider ? (
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Entrar</TabsTrigger>
-                <TabsTrigger value="signup">Criar Conta</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-6 bg-[hsl(220_25%_14%)]">
+                <TabsTrigger value="login" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">Entrar</TabsTrigger>
+                <TabsTrigger value="signup" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">Criar Conta</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-label-yellow">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
@@ -126,12 +126,12 @@ export default function Auth() {
                         placeholder="seu@email.com"
                         required
                         autoComplete="email"
-                        className="pl-10 bg-background"
+                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Senha</Label>
+                    <Label htmlFor="password" className="text-label-yellow">Senha</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
@@ -142,7 +142,7 @@ export default function Auth() {
                         placeholder="••••••••"
                         required
                         autoComplete="current-password"
-                        className="pl-10 bg-background"
+                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                       />
                     </div>
                   </div>
@@ -159,7 +159,7 @@ export default function Auth() {
               <TabsContent value="signup">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email" className="text-label-yellow">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
@@ -170,12 +170,12 @@ export default function Auth() {
                         placeholder="seu@email.com"
                         required
                         autoComplete="email"
-                        className="pl-10 bg-background"
+                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Senha</Label>
+                    <Label htmlFor="signup-password" className="text-label-yellow">Senha</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
@@ -186,12 +186,12 @@ export default function Auth() {
                         placeholder="Mínimo 6 caracteres"
                         required
                         autoComplete="new-password"
-                        className="pl-10 bg-background"
+                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirmar Senha</Label>
+                    <Label htmlFor="confirm-password" className="text-label-yellow">Confirmar Senha</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                       <Input
@@ -202,7 +202,7 @@ export default function Auth() {
                         placeholder="Repita a senha"
                         required
                         autoComplete="new-password"
-                        className="pl-10 bg-background"
+                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                       />
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export default function Auth() {
           ) : (
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Usuário</Label>
+                <Label htmlFor="username" className="text-label-yellow">Usuário</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                   <Input
@@ -230,12 +230,12 @@ export default function Auth() {
                     placeholder="Digite o usuário"
                     required
                     autoComplete="username"
-                    className="pl-10 bg-background"
+                    className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="local-password">Senha</Label>
+                <Label htmlFor="local-password" className="text-label-yellow">Senha</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
                   <Input
@@ -246,7 +246,7 @@ export default function Auth() {
                     placeholder="Digite a senha"
                     required
                     autoComplete="current-password"
-                    className="pl-10 bg-background"
+                    className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
                   />
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function Auth() {
                 {isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
               
-              <p className="text-xs text-muted-foreground text-center mt-4">
+              <p className="text-xs text-kiosk-text/60 text-center mt-4">
                 Credenciais padrão: tsi / connect
               </p>
             </form>

@@ -19,15 +19,17 @@ export function LanguageSection() {
         {(Object.keys(languages) as Language[]).map((lang) => (
           <Button
             key={lang}
-            variant={language === lang ? 'default' : 'outline'}
+            variant={language === lang ? 'default' : 'ghost'}
             className={cn(
               "flex flex-col items-center gap-2 h-auto py-4 button-3d",
-              language === lang && "bg-kiosk-primary hover:bg-kiosk-primary/90"
+              language === lang 
+                ? "bg-kiosk-primary hover:bg-kiosk-primary/90" 
+                : "bg-[hsl(220_25%_12%)] border border-kiosk-border hover:bg-[hsl(220_25%_16%)]"
             )}
             onClick={() => setLanguage(lang)}
           >
             <span className="text-2xl">{languages[lang].flag}</span>
-            <span className="text-xs font-medium">{languages[lang].name}</span>
+            <span className="text-xs font-medium text-kiosk-text">{languages[lang].name}</span>
           </Button>
         ))}
       </div>

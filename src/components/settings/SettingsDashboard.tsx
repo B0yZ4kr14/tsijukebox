@@ -373,40 +373,40 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <Button
-            variant="outline"
-            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-green-500/50 hover:bg-green-500/5"
+            variant="ghost"
+            className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-green-500/50 hover:bg-green-500/10"
             onClick={() => navigate('/setup')}
           >
             <Rocket className="w-5 h-5 text-green-400" />
             <span className="text-xs font-bold text-neon-action-label-gold">Wizard de Setup</span>
           </Button>
           <Button
-            variant="outline"
-            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/5"
+            variant="ghost"
+            className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/10"
             onClick={handleResetTour}
           >
             <RefreshCw className="w-5 h-5 text-cyan-400" />
             <span className="text-xs font-bold text-neon-action-label">Reiniciar Tour</span>
           </Button>
           <Button
-            variant="outline"
-            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/5"
+            variant="ghost"
+            className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/10"
             onClick={() => navigate('/help')}
           >
             <HelpCircle className="w-5 h-5 text-cyan-400" />
             <span className="text-xs font-bold text-neon-action-label">Manual Completo</span>
           </Button>
           <Button
-            variant="outline"
-            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-purple-500/50 hover:bg-purple-500/5"
+            variant="ghost"
+            className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-purple-500/50 hover:bg-purple-500/10"
             onClick={() => navigate('/settings/diagnostics')}
           >
             <Stethoscope className="w-5 h-5 text-purple-400" />
             <span className="text-xs font-bold text-neon-action-label-purple">Diagnóstico</span>
           </Button>
           <Button
-            variant="outline"
-            className="h-auto py-3 flex-col gap-2 border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/5"
+            variant="ghost"
+            className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/10"
             onClick={() => navigate('/')}
           >
             <Sparkles className="w-5 h-5 text-cyan-400" />
