@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { BrandText } from '@/components/ui/BrandText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient } from '@/lib/api/spotify';
 import { youtubeMusicClient } from '@/lib/api/youtubeMusic';
@@ -269,7 +270,7 @@ export default function Settings() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-kiosk-text/60">Versão</span>
-                  <span className="text-kiosk-text"><span className="text-brand-inline">TSiJUKEBOX</span> Enterprise v4.0</span>
+                  <span className="text-kiosk-text"><BrandText /> Enterprise v4.0</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-kiosk-text/60">Modo</span>
@@ -561,7 +562,7 @@ export default function Settings() {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-gold-neon">{categoryTitles[activeCategory]}</h1>
-              <p className="text-kiosk-text/60 text-sm">Configurações do <span className="text-brand-inline">TSiJUKEBOX</span></p>
+              <p className="text-kiosk-text/85 text-sm">Configurações do <BrandText /></p>
             </div>
           </motion.header>
 
