@@ -25,7 +25,7 @@ const Switch = React.forwardRef<
         "pointer-events-none block h-5 w-5 rounded-full shadow-lg ring-0 transition-all duration-300 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0.5",
         variant === 'neon'
           ? "bg-gradient-to-br from-white to-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.4),0_0_12px_hsl(var(--neon-primary)/0.4)]"
-          : "bg-background",
+          : "bg-kiosk-surface",
       )}
     />
   </SwitchPrimitives.Root>

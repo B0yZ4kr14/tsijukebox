@@ -99,7 +99,7 @@ export default function YouTubeMusicBrowser() {
 
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
+              variant="kiosk-outline"
               onClick={() => navigate('/youtube-music/search')}
               className="gap-2"
             >
