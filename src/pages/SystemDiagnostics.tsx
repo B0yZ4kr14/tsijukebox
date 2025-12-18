@@ -528,10 +528,9 @@ export default function SystemDiagnostics() {
                   )}
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   onClick={exportReport}
                   disabled={Object.keys(results).length === 0}
-                  className="border-cyan-500/30 hover:border-cyan-500/50 text-foreground"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Exportar Relatório
@@ -539,10 +538,10 @@ export default function SystemDiagnostics() {
                 
                 {summary.error > 0 && (
                   <Button
-                    variant="outline"
+                    variant="kiosk-outline"
                     onClick={handleRepairAll}
                     disabled={isRunning}
-                    className="border-amber-500/30 hover:border-amber-500/50 text-amber-400"
+                    className="text-amber-400"
                   >
                     <Wrench className="w-4 h-4 mr-2" />
                     Reparar Todos ({summary.error})
@@ -622,9 +621,9 @@ export default function SystemDiagnostics() {
                         {showRepair && (
                           <Button
                             size="sm"
-                            variant="outline"
+                            variant="kiosk-outline"
                             onClick={() => repair.action()}
-                            className="h-7 text-xs border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                            className="h-7 text-xs text-amber-400 hover:bg-amber-500/10"
                             title={repair.description}
                           >
                             {repair.severity === 'auto' ? (

@@ -1,0 +1,45 @@
+name: WCAG Contrast Check
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+
+jobs:
+  contrast-check:
+    name: Check WCAG Contrast Compliance
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Run contrast check
+        run: node scripts/check-contrast.js
+        
+      - name: Generate JSON report
+        if: failure()
+        run: node scripts/check-contrast.js --json > contrast-report.json
+        continue-on-error: true
+        
+      - name: Upload contrast report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contrast-report
+          path: contrast-report.json
+          retention-days: 7

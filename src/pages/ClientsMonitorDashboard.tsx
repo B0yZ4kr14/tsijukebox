@@ -249,10 +249,10 @@ export default function ClientsMonitorDashboard() {
               </div>
 
               <Button
-                variant="outline"
+                variant="kiosk-outline"
                 size="sm"
                 onClick={handleRefreshAll}
-                className="ml-auto border-cyan-500/30"
+                className="ml-auto"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Atualizar Todos
@@ -430,7 +430,7 @@ export default function ClientsMonitorDashboard() {
                   <Building2 className="w-12 h-12 mx-auto mb-3 text-kiosk-text/30" />
                   <p className="text-kiosk-text/60">Nenhum cliente encontrado</p>
                   <Button
-                    variant="outline"
+                    variant="kiosk-outline"
                     className="mt-4"
                     onClick={() => navigate('/settings')}
                   >

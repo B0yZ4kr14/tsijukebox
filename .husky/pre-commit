@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Verificando problemas de contraste WCAG..."
+
+# Executar script de verificação de contraste
+node scripts/check-contrast.js
+
+# Verificar resultado
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit bloqueado: Problemas de contraste encontrados"
+  echo "💡 Corrija os erros acima antes de commitar"
+  echo ""
+  echo "Para ignorar temporariamente (não recomendado):"
+  echo "  git commit --no-verify"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Verificação de contraste passou!"
