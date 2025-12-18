@@ -85,6 +85,49 @@ const NATIVE_ELEMENTS = [
     replacement: 'SelectGroup do Radix (@/components/ui/select)',
     severity: 'error'
   },
+  // Elementos de tabela
+  { 
+    pattern: /<table[\s>]/gi, 
+    element: '<table>', 
+    replacement: 'Table do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<thead[\s>]/gi, 
+    element: '<thead>', 
+    replacement: 'TableHeader do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<tbody[\s>]/gi, 
+    element: '<tbody>', 
+    replacement: 'TableBody do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<tfoot[\s>]/gi, 
+    element: '<tfoot>', 
+    replacement: 'TableFooter do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<tr[\s>]/gi, 
+    element: '<tr>', 
+    replacement: 'TableRow do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<th[\s>]/gi, 
+    element: '<th>', 
+    replacement: 'TableHead do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<td[\s>]/gi, 
+    element: '<td>', 
+    replacement: 'TableCell do Shadcn (@/components/ui/table)',
+    severity: 'error'
+  },
 ];
 
 // Diretórios para verificar
@@ -119,9 +162,9 @@ const IGNORE_PATTERNS = [
 
 // Padrões de exceção em conteúdo (comentários, strings)
 const CONTENT_EXCEPTIONS = [
-  /\/\/.*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup)/gi,      // Comentários inline
-  /\/\*[\s\S]*?<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup)[\s\S]*?\*\//gi,  // Comentários de bloco
-  /['"`].*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup).*['"`]/gi,  // Strings
+  /\/\/.*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td)/gi,      // Comentários inline
+  /\/\*[\s\S]*?<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td)[\s\S]*?\*\//gi,  // Comentários de bloco
+  /['"`].*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup|table|thead|tbody|tfoot|tr|th|td).*['"`]/gi,  // Strings
   /WCAG Exception:/i,  // Exceções documentadas
 ];
 

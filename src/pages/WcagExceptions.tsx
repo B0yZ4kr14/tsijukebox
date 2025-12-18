@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button';
 import { 
   GripVertical, Cloud, Hand, Bookmark, Sparkles, 
   ArrowLeft, Copy, Check, Eye, EyeOff,
-  VolumeX, Library, Building2, Music, Search, Plus, Loader2
+  VolumeX, Library, Building2, Music, Search, Plus, Loader2, Wand2
 } from 'lucide-react';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { PageTitle } from '@/components/ui/PageTitle';
+import { WcagExceptionComment } from '@/components/ui/WcagExceptionComment';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -350,6 +351,13 @@ export default function WcagExceptions() {
                 {label} ({getCategoryCount(key)})
               </TabsTrigger>
             ))}
+            <TabsTrigger 
+              value="generator" 
+              className="data-[state=active]:bg-green-500/20 text-green-400"
+            >
+              <Wand2 className="w-4 h-4 mr-1" />
+              Gerar Nova
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="all">
@@ -374,6 +382,58 @@ export default function WcagExceptions() {
               )}
             </TabsContent>
           ))}
+
+          {/* Generator Tab */}
+          <TabsContent value="generator">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <WcagExceptionComment />
+              
+              <Card className="card-neon-border bg-kiosk-surface/30">
+                <CardHeader>
+                  <CardTitle className="text-gold-neon">Instruções de Uso</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <h4 className="text-kiosk-text/90 font-medium">1. Preencha os campos</h4>
+                    <p className="text-sm text-kiosk-text/75">
+                      Informe o arquivo, opacidade, elemento e justificativa para a exceção WCAG.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="text-kiosk-text/90 font-medium">2. Selecione a categoria</h4>
+                    <p className="text-sm text-kiosk-text/75">
+                      Escolha a categoria que melhor descreve o motivo da exceção.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="text-kiosk-text/90 font-medium">3. Escolha o formato</h4>
+                    <p className="text-sm text-kiosk-text/75">
+                      <strong>JSX Inline:</strong> Comentário curto para colocar acima do elemento<br />
+                      <strong>JSX Multi-linha:</strong> Comentário detalhado com todas as informações<br />
+                      <strong>JS/TS:</strong> Comentário para arquivos JavaScript/TypeScript
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="text-kiosk-text/90 font-medium">4. Copie e cole</h4>
+                    <p className="text-sm text-kiosk-text/75">
+                      Clique em "Copiar Comentário" e cole na linha anterior ao elemento com contraste reduzido.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-kiosk-bg/50 rounded-lg border border-amber-500/30">
+                    <p className="text-sm text-amber-400/90">
+                      <strong>Importante:</strong> Após adicionar o comentário, execute{' '}
+                      <code className="bg-kiosk-bg px-1 rounded text-cyan-400">npm run wcag:validate</code>{' '}
+                      para verificar se a exceção está corretamente documentada.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </Tabs>
         
         {/* Footer info */}
