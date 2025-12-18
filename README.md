@@ -3,6 +3,7 @@
 ![WCAG Status](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
 ![Accessibility](https://img.shields.io/badge/a11y-validated-blue?style=flat-square)
 ![Contrast Check](https://img.shields.io/badge/contrast-4.5:1+-brightgreen?style=flat-square)
+![Native Elements](https://img.shields.io/badge/native_elements-blocked-red?style=flat-square)
 
 > Sistema de Jukebox para kiosk com conformidade WCAG 2.1 AA
 
@@ -25,7 +26,22 @@ npm run a11y:simple
 
 # Verificação de contraste CSS
 npm run contrast
+
+# Verificar elementos HTML nativos
+node scripts/check-native-elements.js
 ```
+
+### Elementos HTML Nativos Bloqueados
+
+Este projeto bloqueia o uso de elementos HTML nativos que devem usar componentes Radix/Shadcn UI:
+
+| Elemento Nativo | Substituição |
+|-----------------|--------------|
+| `<select>` | `Select` de `@/components/ui/select` |
+| `<dialog>` | `Dialog` de `@/components/ui/dialog` |
+| `<progress>` | `Progress` de `@/components/ui/progress` |
+
+O pre-commit hook bloqueia commits contendo esses elementos.
 
 Consulte [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) para guia completo.
 

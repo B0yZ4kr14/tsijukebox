@@ -35,3 +35,28 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "✅ Todas as exceções WCAG estão documentadas!"
+
+echo ""
+echo "🔍 Verificando elementos HTML nativos..."
+
+# Executar verificador de elementos nativos
+node scripts/check-native-elements.js
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit bloqueado: Elementos HTML nativos detectados"
+  echo "💡 Use componentes Radix/Shadcn UI em vez de elementos nativos:"
+  echo "   <select> → Select (@/components/ui/select)"
+  echo "   <dialog> → Dialog (@/components/ui/dialog)"
+  echo "   <progress> → Progress (@/components/ui/progress)"
+  echo ""
+  echo "Para ignorar temporariamente (não recomendado):"
+  echo "  git commit --no-verify"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Nenhum elemento HTML nativo encontrado!"
+
+echo ""
+echo "🎉 Todas as verificações passaram!"

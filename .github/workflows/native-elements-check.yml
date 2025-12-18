@@ -1,0 +1,47 @@
+name: Native Elements Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check-native-elements:
+    name: Check Native HTML Elements
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Native Elements Check
+        run: node scripts/check-native-elements.js
+
+      - name: Upload results (on failure)
+        if: failure()
+        run: |
+          echo "## ❌ Native Elements Check Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Native HTML elements were detected in the codebase." >> $GITHUB_STEP_SUMMARY
+          echo "Please replace them with Radix/Shadcn UI components:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Native Element | Replacement |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|-------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| \`<select>\` | \`Select\` from \`@/components/ui/select\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| \`<dialog>\` | \`Dialog\` from \`@/components/ui/dialog\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| \`<progress>\` | \`Progress\` from \`@/components/ui/progress\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run \`node scripts/check-native-elements.js\` locally to see detailed violations." >> $GITHUB_STEP_SUMMARY
+
+      - name: Success summary
+        if: success()
+        run: |
+          echo "## ✅ Native Elements Check Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "No native HTML elements detected. All components are using Radix/Shadcn UI." >> $GITHUB_STEP_SUMMARY
