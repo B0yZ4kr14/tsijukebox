@@ -283,7 +283,7 @@ export function UserManagementSection() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+            <Button variant="kiosk-outline" onClick={() => setShowAddDialog(false)}>
               {t('common.cancel')}
             </Button>
             <Button onClick={handleAddUser}>{t('users.createUser')}</Button>
@@ -319,7 +319,7 @@ export function UserManagementSection() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingUser(null)}>
+            <Button variant="kiosk-outline" onClick={() => setEditingUser(null)}>
               {t('common.cancel')}
             </Button>
             <Button onClick={handleEditUser}>{t('common.save')}</Button>

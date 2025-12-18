@@ -80,11 +80,10 @@ export default function AdminLogs() {
 
                 {/* Manual refresh */}
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   size="icon"
                   onClick={() => refetch()}
                   disabled={isFetching}
-                  className="border-kiosk-surface/50"
                 >
                   <RefreshCw className={cn("w-4 h-4 icon-neon-blue", isFetching && "animate-spin")} />
                 </Button>

@@ -175,7 +175,7 @@ export default function YouTubeMusicPlaylistPage() {
                     Reproduzir
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="kiosk-outline"
                     onClick={handleShufflePlay}
                     disabled={isLoading || tracks.length === 0}
                     className="gap-2"

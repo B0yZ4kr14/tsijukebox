@@ -58,7 +58,7 @@ export function SpicetifySection() {
 
               <div className="flex gap-2 flex-wrap">
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   size="sm"
                   onClick={refresh}
                   disabled={isLoading}
@@ -68,7 +68,7 @@ export function SpicetifySection() {
                   Atualizar
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   size="sm"
                   onClick={backup}
                   disabled={isLoading}
@@ -78,7 +78,7 @@ export function SpicetifySection() {
                   Backup
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   size="sm"
                   onClick={restore}
                   disabled={isLoading}

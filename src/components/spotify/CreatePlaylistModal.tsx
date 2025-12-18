@@ -116,8 +116,8 @@ export function CreatePlaylistModal({ isOpen, onClose, onCreate, isCreating }: C
               <div className="flex gap-3 pt-4">
                 <Button
                   type="button"
-                  variant="outline"
-                  className="flex-1 border-kiosk-border text-kiosk-text"
+                  variant="kiosk-outline"
+                  className="flex-1"
                   onClick={handleClose}
                 >
                   Cancelar

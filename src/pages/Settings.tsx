@@ -377,7 +377,7 @@ export default function Settings() {
                         </Badge>
                       </div>
                       <Button
-                        variant="outline"
+                        variant="kiosk-outline"
                         size="sm"
                         onClick={handleSpotifyDisconnect}
                         className="border-red-500/50 text-red-400 hover:bg-red-500/10"

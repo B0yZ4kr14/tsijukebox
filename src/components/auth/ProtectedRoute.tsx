@@ -13,8 +13,8 @@ export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteP
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando...</div>
+      <div className="min-h-screen bg-kiosk-bg flex items-center justify-center">
+        <div className="animate-pulse text-kiosk-text/70">Carregando...</div>
       </div>
     );
   }
