@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { BrandText } from '@/components/ui/BrandText';
 import { useClientWebSocket } from '@/hooks/useClientWebSocket';
 import { cn } from '@/lib/utils';
 
@@ -141,7 +142,7 @@ export default function ClientsMonitorDashboard() {
                 Monitoramento de Clientes
               </h1>
               <p className="text-sm text-kiosk-text/60">
-                Status em tempo real dos terminais TSiJUKEBOX
+                Status em tempo real dos terminais <BrandText />
               </p>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { STORAGE_KEYS } from '@/lib/constants';
+import { formatBrandName } from '@/lib/utils';
 
 export interface TourStep {
   target: string;
@@ -162,7 +163,7 @@ export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourPro
               <h3 className="text-lg font-bold text-label-yellow">{step.title}</h3>
             </div>
             <p className="text-sm text-kiosk-text/80 leading-relaxed">
-              {step.description}
+              {formatBrandName(step.description)}
             </p>
           </div>
 

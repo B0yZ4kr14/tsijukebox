@@ -26,6 +26,7 @@ import {
   FileText,
   Code
 } from 'lucide-react';
+import { formatBrandInText } from '@/components/ui/BrandText';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -639,7 +640,7 @@ export default function Help() {
               <RotateCcw className="w-4 h-4 mr-2 icon-neon-blue" />
               Tour
             </Button>
-            <LogoBrand size="sm" />
+            <LogoBrand size="sm" variant="metal" />
           </div>
         </div>
       </div>
@@ -738,18 +739,18 @@ export default function Help() {
                         className="border border-border rounded-lg overflow-hidden bg-kiosk-surface/50"
                       >
                         <AccordionTrigger className="px-4 py-3 text-left text-kiosk-text hover:no-underline hover:bg-kiosk-surface/80">
-                          <span className="font-medium">{item.question}</span>
+                          <span className="font-medium">{formatBrandInText(item.question)}</span>
                         </AccordionTrigger>
                         <AccordionContent className="px-4 pb-4">
                           <div className="space-y-4">
-                            <p className="text-kiosk-text/80 leading-relaxed">{item.answer}</p>
+                            <p className="text-kiosk-text/80 leading-relaxed">{formatBrandInText(item.answer)}</p>
 
                             {item.steps && (
                               <div className="space-y-2">
                                 <p className="text-sm font-medium text-label-yellow">📋 Passo a passo:</p>
                                 <ol className="list-decimal list-inside space-y-2 text-sm text-kiosk-text/70">
                                   {item.steps.map((step, i) => (
-                                    <li key={i} className="leading-relaxed">{step}</li>
+                                    <li key={i} className="leading-relaxed">{formatBrandInText(step)}</li>
                                   ))}
                                 </ol>
                               </div>
@@ -760,7 +761,7 @@ export default function Help() {
                                 <p className="text-sm font-medium text-primary">💡 Dicas:</p>
                                 <ul className="text-sm text-kiosk-text/70 space-y-1">
                                   {item.tips.map((tip, i) => (
-                                    <li key={i} className="leading-relaxed">• {tip}</li>
+                                    <li key={i} className="leading-relaxed">• {formatBrandInText(tip)}</li>
                                   ))}
                                 </ul>
                               </div>

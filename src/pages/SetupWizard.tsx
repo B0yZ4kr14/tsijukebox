@@ -31,6 +31,7 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { BrandText } from '@/components/ui/BrandText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { STORAGE_KEYS } from '@/lib/constants';
 import { toast } from 'sonner';
@@ -58,7 +59,7 @@ const steps: WizardStep[] = [
   {
     id: 'welcome',
     title: 'Bem-vindo!',
-    description: 'Vamos configurar seu TSiJUKEBOX',
+    description: 'Vamos configurar seu sistema',
     icon: <Music className="w-8 h-8" />,
   },
   {
@@ -353,10 +354,10 @@ export default function SetupWizard() {
       case 'welcome':
         return (
           <div className="text-center space-y-6">
-            <LogoBrand size="xl" showTagline animate centered />
+            <LogoBrand size="xl" variant="metal" showTagline animate centered />
             <div className="space-y-3 max-w-md mx-auto">
               <p className="text-lg text-kiosk-text">
-                O TSiJUKEBOX é seu sistema de música inteligente.
+                O <BrandText /> é seu sistema de música inteligente.
               </p>
               <p className="text-kiosk-text/70">
                 Nas próximas telas, vamos configurar idioma, visual, conexões e integrações
@@ -797,7 +798,7 @@ export default function SetupWizard() {
             <div className="space-y-2">
               <h3 className="text-2xl font-bold text-kiosk-text">Configuração Concluída!</h3>
               <p className="text-kiosk-text/70">
-                Seu TSiJUKEBOX está pronto para uso.
+                Seu <BrandText /> está pronto para uso.
               </p>
             </div>
             <div className="p-4 rounded-lg card-option-dark-3d text-left space-y-2">
