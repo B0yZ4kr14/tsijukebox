@@ -252,7 +252,7 @@ export function UserManagementSection() {
           <Settings2 className="w-4 h-4 icon-neon-blue" />
           <span className="text-label-yellow text-sm font-medium">Permissões Avançadas</span>
         </div>
-        <ChevronDown className={`w-4 h-4 text-kiosk-text/60 transition-transform ${permissionsOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-kiosk-text/90 transition-transform ${permissionsOpen ? 'rotate-180' : ''}`} />
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-3 space-y-2 p-3 rounded-lg card-option-dark-3d">
         <p className="text-xs text-settings-hint mb-3">

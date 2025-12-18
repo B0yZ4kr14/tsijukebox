@@ -60,7 +60,7 @@ export default function SpotifySearchPage() {
             </Link>
             
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/50" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/85" />
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -71,7 +71,7 @@ export default function SpotifySearchPage() {
               {query && (
                 <button
                   onClick={clearSearch}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-kiosk-text/50 hover:text-kiosk-text"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-kiosk-text/85 hover:text-kiosk-text"
                   aria-label="Limpar busca"
                 >
                   <X className="w-5 h-5" />
@@ -92,14 +92,14 @@ export default function SpotifySearchPage() {
           {!isSearching && !hasResults && query.length >= 2 && (
             <div className="text-center py-12">
               <Music className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
-              <p className="text-kiosk-text/60">Nenhum resultado para "{query}"</p>
+              <p className="text-kiosk-text/85">Nenhum resultado para "{query}"</p>
             </div>
           )}
 
           {!isSearching && !query && (
             <div className="text-center py-12">
               <Search className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
-              <p className="text-kiosk-text/60">Busque por músicas, álbuns, artistas ou playlists</p>
+              <p className="text-kiosk-text/85">Busque por músicas, álbuns, artistas ou playlists</p>
             </div>
           )}
 
@@ -135,7 +135,7 @@ export default function SpotifySearchPage() {
                         className="w-24 h-24 rounded-lg mb-4 shadow-lg"
                       />
                       <h3 className="text-2xl font-bold text-kiosk-text mb-1">{results.tracks[0].name}</h3>
-                      <p className="text-kiosk-text/60">{results.tracks[0].artist} • Música</p>
+                      <p className="text-kiosk-text/85">{results.tracks[0].artist} • Música</p>
                     </div>
                   </section>
                 )}

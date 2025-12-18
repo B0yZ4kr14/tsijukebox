@@ -633,7 +633,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                       <Check className="w-5 h-5 text-primary" />
                     )}
                   </div>
-                  <p className="text-xs text-kiosk-text/70 mb-3">{eng.description}</p>
+                  <p className="text-xs text-kiosk-text/85 mb-3">{eng.description}</p>
                 </label>
               ))}
             </div>
@@ -651,7 +651,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                 <p className="text-xs text-label-orange mb-2">✅ Quando usar:</p>
                 <ul className="space-y-1">
                   {engine.useCases.map((use, i) => (
-                    <li key={i} className="text-xs text-kiosk-text/80 flex items-start gap-2">
+                    <li key={i} className="text-xs text-kiosk-text/90 flex items-start gap-2">
                       <span className="w-1 h-1 rounded-full bg-green-400 mt-1.5 shrink-0" />
                       {use}
                     </li>
@@ -749,30 +749,30 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
               {connectionStatus.success && connectionStatus.serverVersion && (
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="space-y-1">
-                    <p className="text-kiosk-text/60 text-xs">Servidor</p>
+                    <p className="text-kiosk-text/85 text-xs">Servidor</p>
                     <p className="text-kiosk-text font-mono">{connectionStatus.serverVersion}</p>
                   </div>
                   {connectionStatus.details?.databaseSize && (
                     <div className="space-y-1">
-                      <p className="text-kiosk-text/60 text-xs">Tamanho</p>
+                      <p className="text-kiosk-text/85 text-xs">Tamanho</p>
                       <p className="text-kiosk-text font-mono">{connectionStatus.details.databaseSize}</p>
                     </div>
                   )}
                   {connectionStatus.details?.uptime && (
                     <div className="space-y-1">
-                      <p className="text-kiosk-text/60 text-xs">Uptime</p>
+                      <p className="text-kiosk-text/85 text-xs">Uptime</p>
                       <p className="text-kiosk-text font-mono">{connectionStatus.details.uptime}</p>
                     </div>
                   )}
                   {connectionStatus.details?.encoding && (
                     <div className="space-y-1">
-                      <p className="text-kiosk-text/60 text-xs">Encoding</p>
+                      <p className="text-kiosk-text/85 text-xs">Encoding</p>
                       <p className="text-kiosk-text font-mono">{connectionStatus.details.encoding}</p>
                     </div>
                   )}
                   {connectionStatus.details?.maxConnections && (
                     <div className="space-y-1">
-                      <p className="text-kiosk-text/60 text-xs">Conexões</p>
+                      <p className="text-kiosk-text/85 text-xs">Conexões</p>
                       <p className="text-kiosk-text font-mono">
                         {connectionStatus.details.currentConnections} / {connectionStatus.details.maxConnections}
                       </p>

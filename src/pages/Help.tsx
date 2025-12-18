@@ -648,7 +648,7 @@ export default function Help() {
       <div className="max-w-6xl mx-auto p-4">
         {/* Search */}
         <div className="relative mb-6 no-print">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/85" />
           <Input
             placeholder="Buscar no manual..."
             value={searchQuery}
@@ -669,12 +669,12 @@ export default function Help() {
                   className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-left ${
                     selectedSection === section.id
                       ? 'bg-primary/20 text-primary'
-                      : 'hover:bg-kiosk-surface text-kiosk-text/70 hover:text-kiosk-text'
+                      : 'hover:bg-kiosk-surface text-kiosk-text/85 hover:text-kiosk-text'
                   }`}
                 >
                   {section.icon}
                   <span className="flex-1 text-sm font-medium">{section.title}</span>
-                  <span className="text-xs text-kiosk-text/50">{section.items.length}</span>
+                  <span className="text-xs text-kiosk-text/85">{section.items.length}</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               ))}
@@ -696,7 +696,7 @@ export default function Help() {
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-kiosk-text">{selectedSectionData.title}</h2>
-                      <p className="text-sm text-kiosk-text/70">{selectedSectionData.items.length} artigos</p>
+                      <p className="text-sm text-kiosk-text/85">{selectedSectionData.items.length} artigos</p>
                     </div>
                   </div>
 

@@ -203,11 +203,11 @@ export function NtpConfigSection() {
               ) : config.syncStatus === 'error' ? (
                 <AlertCircle className="w-3 h-3 text-destructive" />
               ) : (
-                <Clock className="w-3 h-3 text-kiosk-text/70" />
+                <Clock className="w-3 h-3 text-kiosk-text/90" />
               )}
               <span className={
                 config.syncStatus === 'synced' ? 'text-green-400' :
-                config.syncStatus === 'error' ? 'text-destructive' : 'text-kiosk-text/70'
+                config.syncStatus === 'error' ? 'text-destructive' : 'text-kiosk-text/90'
               }>
                 {getStatusText()}
               </span>

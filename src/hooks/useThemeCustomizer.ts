@@ -171,6 +171,25 @@ export const builtInPresets: ThemePreset[] = [
     isBuiltIn: true,
     createdAt: '2024-01-01T00:00:00Z',
   },
+  // Light Neon Theme - Cards claros/prateados com ícones neon
+  {
+    id: 'light-neon',
+    name: 'Light Neon',
+    colors: {
+      primary: '195 100% 45%',      // Cyan neon (mais saturado para fundo claro)
+      primaryGlow: '195 100% 55%',
+      accent: '45 100% 50%',        // Dourado
+      background: '220 15% 92%',    // Prata claro/pastel
+      surface: '220 20% 96%',       // Branco acinzentado
+      text: '220 25% 15%',          // Texto escuro
+      gradientEnabled: false,
+      gradientStart: '220 15% 90%',
+      gradientEnd: '220 20% 95%',
+      gradientAngle: 145,
+    },
+    isBuiltIn: true,
+    createdAt: '2024-01-01T00:00:00Z',
+  },
 ];
 
 export const defaultColors: CustomThemeColors = builtInPresets[0].colors;

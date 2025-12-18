@@ -3400,3 +3400,110 @@ body[data-gradient="true"] {
 .debug-contrast-panel::-webkit-scrollbar-thumb:hover {
   background: hsl(185 80% 50% / 0.7);
 }
+
+/* ========== LIGHT NEON THEME ========== */
+/* Theme applied via data-theme="custom" with light colors from useThemeCustomizer */
+
+/* Light theme adjustments - when background is light */
+[data-theme="custom"] {
+  /* Adjustments for custom theme mode */
+}
+
+/* When custom colors have light background, adjust neon effects */
+.light-neon-mode .icon-neon-blue,
+[data-light-mode="true"] .icon-neon-blue {
+  color: hsl(195 100% 40%);
+  filter: drop-shadow(0 0 6px hsl(195 100% 50% / 0.7)) drop-shadow(0 0 12px hsl(195 100% 45% / 0.5));
+}
+
+.light-neon-mode .text-label-yellow,
+[data-light-mode="true"] .text-label-yellow {
+  color: hsl(45 100% 35%);
+  text-shadow: 0 0 8px hsl(45 100% 50% / 0.5);
+}
+
+.light-neon-mode .text-gold-neon,
+[data-light-mode="true"] .text-gold-neon {
+  color: hsl(45 100% 38%);
+  text-shadow: 
+    0 0 8px hsl(45 100% 50% / 0.5),
+    0 0 16px hsl(45 100% 45% / 0.3);
+}
+
+.light-neon-mode .card-option-dark-3d,
+[data-light-mode="true"] .card-option-dark-3d {
+  background: linear-gradient(145deg, 
+    hsl(220 20% 95%) 0%, 
+    hsl(220 15% 90%) 100%);
+  border-color: hsl(195 60% 65% / 0.5);
+  box-shadow: 
+    0 4px 15px hsl(220 20% 70% / 0.3),
+    0 0 20px hsl(195 100% 50% / 0.1),
+    inset 0 1px 0 hsl(0 0% 100% / 0.6);
+}
+
+.light-neon-mode .card-option-dark-3d:hover,
+[data-light-mode="true"] .card-option-dark-3d:hover {
+  border-color: hsl(195 80% 55% / 0.6);
+  box-shadow: 
+    0 6px 25px hsl(220 20% 60% / 0.4),
+    0 0 30px hsl(195 100% 50% / 0.15);
+}
+
+.light-neon-mode .text-kiosk-text,
+[data-light-mode="true"] .text-kiosk-text {
+  color: hsl(220 25% 20%);
+}
+
+.light-neon-mode .bg-kiosk-surface,
+[data-light-mode="true"] .bg-kiosk-surface {
+  background-color: hsl(220 20% 96%);
+}
+
+.light-neon-mode .bg-kiosk-bg,
+[data-light-mode="true"] .bg-kiosk-bg {
+  background-color: hsl(220 15% 92%);
+}
+
+/* Light mode logo variant - mirror-dark works better on light backgrounds */
+.light-neon-mode .logo-tsi-metal,
+[data-light-mode="true"] .logo-tsi-metal {
+  color: hsl(200 20% 35%);
+}
+
+.light-neon-mode .logo-jukebox-metal,
+[data-light-mode="true"] .logo-jukebox-metal {
+  color: hsl(35 40% 32%);
+}
+
+/* High contrast text for light mode */
+.light-neon-mode .text-settings-label,
+[data-light-mode="true"] .text-settings-label {
+  color: hsl(220 25% 25%);
+}
+
+.light-neon-mode .text-settings-description,
+[data-light-mode="true"] .text-settings-description {
+  color: hsl(220 15% 35%);
+}
+
+.light-neon-mode .text-settings-hint,
+[data-light-mode="true"] .text-settings-hint {
+  color: hsl(220 10% 40%);
+}
+
+/* Light mode button adjustments */
+.light-neon-mode .button-primary-glow-3d,
+[data-light-mode="true"] .button-primary-glow-3d {
+  background: linear-gradient(145deg, hsl(195 80% 45%) 0%, hsl(195 85% 35%) 100%);
+  box-shadow: 
+    0 0 20px hsl(195 100% 50% / 0.35),
+    0 4px 15px hsl(220 20% 60% / 0.4);
+}
+
+.light-neon-mode .button-outline-neon,
+[data-light-mode="true"] .button-outline-neon {
+  background: linear-gradient(145deg, hsl(220 15% 95%) 0%, hsl(220 20% 90%) 100%);
+  border-color: hsl(195 100% 50% / 0.5);
+  color: hsl(195 100% 40%);
+}

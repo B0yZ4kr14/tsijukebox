@@ -1,0 +1,24 @@
+name: LogoBrand Variant Check
+
+on:
+  pull_request:
+    paths:
+      - 'src/pages/**/*.tsx'
+      - 'src/components/ui/LogoBrand.tsx'
+
+jobs:
+  check-logo-variants:
+    runs-on: ubuntu-latest
+    name: Check LogoBrand Variants
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run LogoBrand variant check
+        run: node scripts/logo-variant-check.js
