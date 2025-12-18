@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Music, Mic2, AlertCircle } from 'lucide-react';
+import { Music, Mic2, AlertCircle, Maximize2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/useTranslation';
+import { FullscreenKaraoke } from './FullscreenKaraoke';
 
 interface LyricsLine {
   time: number;
@@ -12,6 +14,7 @@ interface LyricsDisplayProps {
   trackId?: string;
   trackName?: string;
   artistName?: string;
+  albumCover?: string;
   position?: number;
   isPlaying?: boolean;
 }
@@ -19,7 +22,8 @@ interface LyricsDisplayProps {
 export function LyricsDisplay({ 
   trackId, 
   trackName, 
-  artistName, 
+  artistName,
+  albumCover,
   position = 0,
   isPlaying 
 }: LyricsDisplayProps) {
@@ -28,6 +32,7 @@ export function LyricsDisplay({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
   // Simulated lyrics fetch - replace with real API
@@ -117,11 +122,33 @@ export function LyricsDisplay({
 
   return (
     <div className="h-full flex flex-col">
+      {/* Fullscreen Karaoke Modal */}
+      <FullscreenKaraoke
+        isOpen={isFullscreen}
+        onClose={() => setIsFullscreen(false)}
+        trackName={trackName}
+        artistName={artistName}
+        albumCover={albumCover}
+        position={position}
+        isPlaying={isPlaying || false}
+      />
+
       {/* Header */}
       <div className="p-4 border-b border-cyan-500/10">
-        <div className="flex items-center gap-2 text-label-yellow">
-          <Mic2 className="w-4 h-4" />
-          <span className="text-sm font-semibold">{t('lyrics.title')}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-label-yellow">
+            <Mic2 className="w-4 h-4" />
+            <span className="text-sm font-semibold">{t('lyrics.title')}</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-kiosk-text/60 hover:text-kiosk-text"
+            onClick={() => setIsFullscreen(true)}
+            title={t('lyrics.fullscreen')}
+          >
+            <Maximize2 className="w-4 h-4" />
+          </Button>
         </div>
         <p className="text-sm text-kiosk-text/90 mt-1 truncate">{trackName}</p>
         <p className="text-xs text-kiosk-text/60 truncate">{artistName}</p>

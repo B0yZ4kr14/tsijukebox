@@ -260,7 +260,7 @@ export default function Auth() {
               </Button>
               
               <p className="text-xs text-kiosk-text/85 text-center mt-4">
-                Credenciais padrão: tsi / connect
+                Credenciais padrão: admin / admin ou tsi / connect
               </p>
             </form>
           )}

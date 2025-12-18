@@ -618,7 +618,8 @@
     "lines": "lines",
     "providedBy": "Provided by",
     "textOnly": "Text only",
-    "notSyncedGenius": "Lyrics via Genius (not synced)"
+    "notSyncedGenius": "Lyrics via Genius (not synced)",
+    "fullscreen": "Fullscreen"
   },
   "upload": {
     "audioPreview": "Audio Preview",

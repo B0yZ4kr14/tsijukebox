@@ -618,7 +618,8 @@
     "lines": "líneas",
     "providedBy": "Proporcionado por",
     "textOnly": "Solo texto",
-    "notSyncedGenius": "Letras vía Genius (sin sincronización)"
+    "notSyncedGenius": "Letras vía Genius (sin sincronización)",
+    "fullscreen": "Pantalla completa"
   },
   "upload": {
     "audioPreview": "Vista Previa de Audio",
