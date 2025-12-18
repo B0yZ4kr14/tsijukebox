@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { DatabaseConnectionHistory, addConnectionHistoryEntry } from './DatabaseConnectionHistory';
@@ -662,7 +663,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                 <p className="text-xs text-label-orange mb-2">⚠️ Limitações:</p>
                 <ul className="space-y-1">
                   {engine.limitations.map((lim, i) => (
-                    <li key={i} className="text-xs text-kiosk-text/80 flex items-start gap-2">
+                    <li key={i} className="text-xs text-kiosk-text/90 flex items-start gap-2">
                       <span className="w-1 h-1 rounded-full bg-amber-400 mt-1.5 shrink-0" />
                       {lim}
                     </li>
@@ -863,15 +864,20 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
               Transfira dados automaticamente de um motor para outro mantendo integridade referencial.
             </p>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-kiosk-surface">
+              <Badge variant="outline" className="bg-kiosk-surface text-white">
                 {engine.name}
               </Badge>
               <ArrowLeftRight className="w-4 h-4 text-kiosk-text/85" />
-              <select className="bg-kiosk-bg border border-kiosk-surface rounded px-2 py-1 text-sm text-kiosk-text">
-                {databaseEngines.filter(e => e.id !== selectedEngine).map(e => (
-                  <option key={e.id} value={e.id}>{e.name}</option>
-                ))}
-              </select>
+              <Select defaultValue={databaseEngines.filter(e => e.id !== selectedEngine)[0]?.id}>
+                <SelectTrigger className="w-32 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {databaseEngines.filter(e => e.id !== selectedEngine).map(e => (
+                    <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <Button variant="kiosk-outline" className="w-full button-outline-neon">
               Iniciar Migração
