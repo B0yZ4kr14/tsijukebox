@@ -31,6 +31,60 @@ const NATIVE_ELEMENTS = [
     replacement: 'Progress do Radix (@/components/ui/progress)',
     severity: 'error'
   },
+  { 
+    pattern: /<input\s+[^>]*type=['"]?checkbox['"]?/gi, 
+    element: '<input type="checkbox">', 
+    replacement: 'Checkbox do Radix (@/components/ui/checkbox)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<input\s+[^>]*type=['"]?radio['"]?/gi, 
+    element: '<input type="radio">', 
+    replacement: 'RadioGroup do Radix (@/components/ui/radio-group)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<input\s+[^>]*type=['"]?range['"]?/gi, 
+    element: '<input type="range">', 
+    replacement: 'Slider do Radix (@/components/ui/slider)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<details[\s>]/gi, 
+    element: '<details>', 
+    replacement: 'Accordion ou Collapsible do Radix (@/components/ui/accordion)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<summary[\s>]/gi, 
+    element: '<summary>', 
+    replacement: 'AccordionTrigger do Radix (@/components/ui/accordion)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<meter[\s>]/gi, 
+    element: '<meter>', 
+    replacement: 'Progress do Radix (@/components/ui/progress)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<datalist[\s>]/gi, 
+    element: '<datalist>', 
+    replacement: 'Combobox do Radix (Command + Popover)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<option[\s>]/gi, 
+    element: '<option>', 
+    replacement: 'SelectItem do Radix (@/components/ui/select)',
+    severity: 'error'
+  },
+  { 
+    pattern: /<optgroup[\s>]/gi, 
+    element: '<optgroup>', 
+    replacement: 'SelectGroup do Radix (@/components/ui/select)',
+    severity: 'error'
+  },
 ];
 
 // Diretórios para verificar
@@ -54,13 +108,20 @@ const IGNORE_PATTERNS = [
   /src\/components\/ui\/textarea\.tsx$/,
   /src\/components\/ui\/button\.tsx$/,
   /src\/components\/ui\/input-otp\.tsx$/,
+  /src\/components\/ui\/checkbox\.tsx$/,
+  /src\/components\/ui\/radio-group\.tsx$/,
+  /src\/components\/ui\/slider\.tsx$/,
+  /src\/components\/ui\/accordion\.tsx$/,
+  /src\/components\/ui\/collapsible\.tsx$/,
+  /src\/components\/ui\/table\.tsx$/,
+  /src\/components\/ui\/command\.tsx$/,
 ];
 
 // Padrões de exceção em conteúdo (comentários, strings)
 const CONTENT_EXCEPTIONS = [
-  /\/\/.*<(select|dialog|progress)/gi,      // Comentários inline
-  /\/\*[\s\S]*?<(select|dialog|progress)[\s\S]*?\*\//gi,  // Comentários de bloco
-  /['"`].*<(select|dialog|progress).*['"`]/gi,  // Strings
+  /\/\/.*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup)/gi,      // Comentários inline
+  /\/\*[\s\S]*?<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup)[\s\S]*?\*\//gi,  // Comentários de bloco
+  /['"`].*<(select|dialog|progress|input|details|summary|meter|datalist|option|optgroup).*['"`]/gi,  // Strings
   /WCAG Exception:/i,  // Exceções documentadas
 ];
 
