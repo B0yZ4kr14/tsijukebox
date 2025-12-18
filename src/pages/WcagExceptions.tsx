@@ -6,7 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { 
   GripVertical, Cloud, Hand, Bookmark, Sparkles, 
-  ArrowLeft, Copy, Check, Eye, EyeOff
+  ArrowLeft, Copy, Check, Eye, EyeOff,
+  VolumeX, Library, Building2, Music, Search, Plus, Loader2
 } from 'lucide-react';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { PageTitle } from '@/components/ui/PageTitle';
@@ -24,7 +25,9 @@ interface WcagException {
   category: 'decorative' | 'state-change' | 'disabled' | 'secondary';
 }
 
+// 13 exceções WCAG documentadas conforme ACCESSIBILITY.md
 const WCAG_EXCEPTIONS: WcagException[] = [
+  // 1. QueuePanel - GripVertical
   {
     id: 'queue-grip',
     file: 'QueuePanel.tsx',
@@ -35,6 +38,7 @@ const WCAG_EXCEPTIONS: WcagException[] = [
     hoverColor: 'opacity-100',
     category: 'state-change',
   },
+  // 2. CloudConnectionSection - Cloud icon
   {
     id: 'cloud-unconfigured',
     file: 'CloudConnectionSection.tsx',
@@ -44,6 +48,7 @@ const WCAG_EXCEPTIONS: WcagException[] = [
     hasHoverState: false,
     category: 'decorative',
   },
+  // 3. InteractiveTestMode - Gesture icons
   {
     id: 'gesture-demo',
     file: 'InteractiveTestMode.tsx',
@@ -53,6 +58,7 @@ const WCAG_EXCEPTIONS: WcagException[] = [
     hasHoverState: false,
     category: 'decorative',
   },
+  // 4. WikiArticle - Bookmark
   {
     id: 'bookmark-inactive',
     file: 'WikiArticle.tsx',
@@ -63,51 +69,97 @@ const WCAG_EXCEPTIONS: WcagException[] = [
     hoverColor: 'text-yellow-500',
     category: 'state-change',
   },
+  // 5. LogoBrand - Tagline
   {
-    id: 'search-placeholder',
-    file: 'SpotifySearch.tsx',
-    opacity: '/40',
-    element: 'Search placeholder text',
-    justification: 'Placeholder decorativo com texto principal visível',
+    id: 'logo-tagline',
+    file: 'LogoBrand.tsx',
+    opacity: '/60',
+    element: 'Tagline text',
+    justification: 'Texto secundário; logo principal tem contraste adequado',
     hasHoverState: false,
     category: 'secondary',
   },
+  // 6. AccessibilitySection - VolumeX
   {
-    id: 'setup-wizard-step',
-    file: 'SetupWizard.tsx',
-    opacity: '/50',
-    element: 'Step indicator',
-    justification: 'Indicador secundário de etapa, step principal é visível',
+    id: 'accessibility-volumex',
+    file: 'AccessibilitySection.tsx',
+    opacity: '/80',
+    element: 'VolumeX icon',
+    justification: 'Estado desabilitado distinto do ativado',
     hasHoverState: false,
-    category: 'secondary',
+    category: 'disabled',
   },
+  // 7. AccessibilitySection - Sparkles
   {
-    id: 'clients-monitor-bg',
-    file: 'ClientsMonitorDashboard.tsx',
+    id: 'accessibility-sparkles',
+    file: 'AccessibilitySection.tsx',
+    opacity: '/80',
+    element: 'Sparkles icon',
+    justification: 'Estado desabilitado distinto do ativado',
+    hasHoverState: false,
+    category: 'disabled',
+  },
+  // 8. YouTubeMusicBrowser - Library icon
+  {
+    id: 'youtube-library',
+    file: 'YouTubeMusicBrowser.tsx',
     opacity: '/30',
-    element: 'Background pattern',
-    justification: 'Elemento decorativo de background sem informação',
+    element: 'Library icon',
+    justification: 'Ícone decorativo em estado vazio',
     hasHoverState: false,
     category: 'decorative',
   },
+  // 9. SetupWizard - Achievement locked
   {
-    id: 'spotify-panel-tab',
-    file: 'SpotifyPanel.tsx',
-    opacity: '/50',
-    element: 'Inactive tab indicator',
-    justification: 'Tab inativa com contraste reduzido, tab ativa visível',
-    hasHoverState: true,
-    hoverColor: 'text-kiosk-text/90',
+    id: 'setup-achievement',
+    file: 'SetupWizard.tsx',
+    opacity: '/30',
+    element: 'Achievement locked badge',
+    justification: 'Estado bloqueado; desbloqueado usa yellow-400',
+    hasHoverState: false,
     category: 'state-change',
   },
+  // 10. ClientsMonitorDashboard - Building2
   {
-    id: 'youtube-modal-hint',
-    file: 'AddToPlaylistModal.tsx',
-    opacity: '/50',
-    element: 'Helper text',
-    justification: 'Texto de ajuda secundário, ação principal clara',
+    id: 'clients-building',
+    file: 'ClientsMonitorDashboard.tsx',
+    opacity: '/30',
+    element: 'Building2 icon',
+    justification: 'Ícone decorativo em estado vazio',
     hasHoverState: false,
-    category: 'secondary',
+    category: 'decorative',
+  },
+  // 11. SpotifySearch - Music/Search icons
+  {
+    id: 'spotify-search-icons',
+    file: 'SpotifySearch.tsx',
+    opacity: '/30',
+    element: 'Music/Search icons',
+    justification: 'Ícones decorativos em estados vazios',
+    hasHoverState: false,
+    category: 'decorative',
+  },
+  // 12. SpotifyPanel - Botão desconectado
+  {
+    id: 'spotify-disconnected',
+    file: 'SpotifyPanel.tsx',
+    opacity: '/40',
+    element: 'Disconnected button',
+    justification: 'Hover aumenta contraste; estado conectado usa #1DB954',
+    hasHoverState: true,
+    hoverColor: 'text-kiosk-text/60',
+    category: 'state-change',
+  },
+  // 13. AddToPlaylistModal - Loader2/Plus
+  {
+    id: 'playlist-modal-icons',
+    file: 'AddToPlaylistModal.tsx',
+    opacity: '/30',
+    element: 'Loader2/Plus icons',
+    justification: 'Tornam-se visíveis quando adicionado',
+    hasHoverState: true,
+    hoverColor: 'text-green-500',
+    category: 'state-change',
   },
 ];
 
@@ -117,7 +169,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
   
   const renderIcon = () => {
     const baseClass = `w-8 h-8 transition-all duration-300`;
-    const normalClass = `text-kiosk-text${exception.opacity}`;
+    const normalClass = `text-kiosk-text${exception.opacity.replace('opacity-', '/')}`;
     const hoverClass = isHovered && exception.hasHoverState 
       ? exception.hoverColor 
       : normalClass;
@@ -131,6 +183,24 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
         return <Hand className={`${baseClass} ${hoverClass}`} />;
       case 'bookmark-inactive':
         return <Bookmark className={`${baseClass} ${hoverClass}`} />;
+      case 'logo-tagline':
+        return <Sparkles className={`${baseClass} ${hoverClass}`} />;
+      case 'accessibility-volumex':
+        return <VolumeX className={`${baseClass} ${hoverClass}`} />;
+      case 'accessibility-sparkles':
+        return <Sparkles className={`${baseClass} ${hoverClass}`} />;
+      case 'youtube-library':
+        return <Library className={`${baseClass} ${hoverClass}`} />;
+      case 'setup-achievement':
+        return <Sparkles className={`${baseClass} ${hoverClass}`} />;
+      case 'clients-building':
+        return <Building2 className={`${baseClass} ${hoverClass}`} />;
+      case 'spotify-search-icons':
+        return <Music className={`${baseClass} ${hoverClass}`} />;
+      case 'spotify-disconnected':
+        return <Search className={`${baseClass} ${hoverClass}`} />;
+      case 'playlist-modal-icons':
+        return <Plus className={`${baseClass} ${hoverClass}`} />;
       default:
         return <Sparkles className={`${baseClass} ${hoverClass}`} />;
     }
