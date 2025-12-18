@@ -113,10 +113,10 @@ export function StorjSection() {
     <div className="space-y-6">
       <Tabs defaultValue="connection" className="w-full">
         <TabsList className="grid w-full grid-cols-4 bg-kiosk-surface/50">
-          <TabsTrigger value="connection">Conexão</TabsTrigger>
-          <TabsTrigger value="buckets" disabled={!isConnected}>Buckets</TabsTrigger>
-          <TabsTrigger value="files" disabled={!isConnected || !currentBucket}>Arquivos</TabsTrigger>
-          <TabsTrigger value="backup" disabled={!isConnected}>Backup</TabsTrigger>
+          <TabsTrigger value="connection">{t('storj.connection')}</TabsTrigger>
+          <TabsTrigger value="buckets" disabled={!isConnected}>{t('storj.buckets')}</TabsTrigger>
+          <TabsTrigger value="files" disabled={!isConnected || !currentBucket}>{t('storj.files')}</TabsTrigger>
+          <TabsTrigger value="backup" disabled={!isConnected}>{t('storj.backup')}</TabsTrigger>
         </TabsList>
 
         {/* Connection Tab */}
@@ -125,32 +125,32 @@ export function StorjSection() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gold-neon">
                 <Satellite className="w-5 h-5 icon-neon-blue" />
-                Conexão Storj DCS
+                {t('storj.connection')} Storj DCS
               </CardTitle>
               <CardDescription className="text-kiosk-text/85">
-                Armazenamento distribuído descentralizado S3-compatível
+                {t('storj.subtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-label-yellow font-semibold">Status</span>
+                <span className="text-label-yellow font-semibold">{t('storj.status')}</span>
                 {isConnected ? (
                   <Badge className="bg-green-600 text-white font-bold">
                     <Check className="w-3 h-3 mr-1" />
-                    Conectado
+                    {t('storj.connected')}
                   </Badge>
                 ) : (
                   <Badge variant="destructive" className="font-bold">
                     <X className="w-3 h-3 mr-1" />
-                    Desconectado
+                    {t('storj.disconnected')}
                   </Badge>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label className="text-label-yellow font-semibold flex items-center gap-2">
-                  Access Grant
-                  <InfoTooltip content="Token de acesso gerado no Storj DCS Console. Contém permissões para buckets e objetos." />
+                  {t('storj.accessGrant')}
+                  <InfoTooltip content={t('storj.accessGrantHint')} />
                 </Label>
                 <Input
                   type="password"
@@ -160,7 +160,7 @@ export function StorjSection() {
                   className="font-mono text-sm"
                 />
                 <p className="text-xs text-kiosk-text/85">
-                  Gere em: Storj Console → Access → Create S3 Credentials
+                  {t('storj.accessGrantPlaceholder')}
                 </p>
               </div>
 
@@ -174,22 +174,22 @@ export function StorjSection() {
                 ) : (
                   <Check className="w-4 h-4 mr-2" />
                 )}
-                Testar Conexão
+                {t('storj.testConnection')}
               </Button>
 
               {isConnected && stats && (
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-cyan-500/20">
                   <div className="text-center">
                     <p className="text-2xl font-bold text-kiosk-text">{stats.buckets_count}</p>
-                    <p className="text-xs text-kiosk-text/85">Buckets</p>
+                    <p className="text-xs text-kiosk-text/85">{t('storj.buckets')}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-kiosk-text">{stats.total_objects}</p>
-                    <p className="text-xs text-kiosk-text/85">Objetos</p>
+                    <p className="text-xs text-kiosk-text/85">{t('storj.objects')}</p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-kiosk-text">{formatBytes(stats.total_size)}</p>
-                    <p className="text-xs text-kiosk-text/85">Armazenado</p>
+                    <p className="text-xs text-kiosk-text/85">{t('storj.stored')}</p>
                   </div>
                 </div>
               )}
@@ -200,25 +200,25 @@ export function StorjSection() {
           <Card className="card-dark-neon-border">
             <CardHeader>
               <CardTitle className="text-label-yellow text-sm font-bold">
-                COMO CONFIGURAR
+                {t('storj.howToConfigure')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-kiosk-text/85">
               <div className="flex gap-2">
                 <span className="text-cyan-400 font-bold">1.</span>
-                <span>Acesse <a href="https://storj.io" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">storj.io</a> e crie uma conta</span>
+                <span>{t('storj.step1')}</span>
               </div>
               <div className="flex gap-2">
                 <span className="text-cyan-400 font-bold">2.</span>
-                <span>Navegue para Access → Create S3 Credentials</span>
+                <span>{t('storj.step2')}</span>
               </div>
               <div className="flex gap-2">
                 <span className="text-cyan-400 font-bold">3.</span>
-                <span>Selecione as permissões: Read, Write, List, Delete</span>
+                <span>{t('storj.step3')}</span>
               </div>
               <div className="flex gap-2">
                 <span className="text-cyan-400 font-bold">4.</span>
-                <span>Copie o Access Grant gerado e cole acima</span>
+                <span>{t('storj.step4')}</span>
               </div>
             </CardContent>
           </Card>
@@ -229,7 +229,7 @@ export function StorjSection() {
           <Card className="card-dark-neon-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-label-yellow text-sm font-bold">
-                BUCKETS ({buckets.length})
+                {t('storj.buckets').toUpperCase()} ({buckets.length})
               </CardTitle>
               <div className="flex gap-2">
                 <Button
@@ -245,30 +245,30 @@ export function StorjSection() {
                   <DialogTrigger asChild>
                     <Button size="sm" className="button-control-extreme-3d">
                       <Plus className="w-4 h-4 mr-1" />
-                      Novo Bucket
+                      {t('storj.newBucket')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="bg-kiosk-bg border-cyan-500/30">
                     <DialogHeader>
-                      <DialogTitle className="text-gold-neon">Criar Novo Bucket</DialogTitle>
+                      <DialogTitle className="text-gold-neon">{t('storj.createBucket')}</DialogTitle>
                       <DialogDescription className="text-kiosk-text/85">
-                        Buckets são containers para seus arquivos
+                        {t('storj.bucketDescription')}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <Label className="text-label-yellow">Nome do Bucket</Label>
+                        <Label className="text-label-yellow">{t('storj.bucketName')}</Label>
                         <Input
                           value={newBucketName}
                           onChange={(e) => setNewBucketName(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
                           placeholder="meu-bucket"
                         />
                         <p className="text-xs text-kiosk-text/85">
-                          Apenas letras minúsculas, números e hífens
+                          {t('storj.bucketNameHint')}
                         </p>
                       </div>
                       <div className="flex items-center justify-between">
-                        <Label className="text-kiosk-text">Ativar Versionamento</Label>
+                        <Label className="text-kiosk-text">{t('storj.enableVersioning')}</Label>
                         <Switch
                           checked={enableVersioning}
                           onCheckedChange={setEnableVersioning}
@@ -277,10 +277,10 @@ export function StorjSection() {
                     </div>
                     <DialogFooter>
                       <Button variant="ghost" onClick={() => setShowCreateBucket(false)}>
-                        Cancelar
+                        {t('storj.cancel')}
                       </Button>
                       <Button onClick={handleCreateBucket} disabled={!newBucketName || isLoading}>
-                        Criar Bucket
+                        {t('storj.createBucketButton')}
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -292,7 +292,7 @@ export function StorjSection() {
                 {buckets.length === 0 ? (
                   <div className="text-center py-8 text-kiosk-text/85">
                     <HardDrive className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Nenhum bucket encontrado</p>
+                    <p>{t('storj.noBuckets')}</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -310,7 +310,7 @@ export function StorjSection() {
                             <div>
                               <p className="font-bold text-kiosk-text">{bucket.name}</p>
                               <p className="text-xs text-kiosk-text/85">
-                                Criado: {new Date(bucket.created_at).toLocaleDateString('pt-BR')}
+                                {t('storj.created')}: {new Date(bucket.created_at).toLocaleDateString('pt-BR')}
                               </p>
                             </div>
                           </div>
@@ -318,13 +318,13 @@ export function StorjSection() {
                             {bucket.versioning_enabled && (
                               <Badge variant="outline" className="text-xs">
                                 <History className="w-3 h-3 mr-1" />
-                                Versioning
+                                {t('storj.versioning')}
                               </Badge>
                             )}
                             {bucket.object_lock_enabled && (
                               <Badge variant="outline" className="text-xs">
                                 <Lock className="w-3 h-3 mr-1" />
-                                Lock
+                                {t('storj.lock')}
                               </Badge>
                             )}
                             <Button
@@ -386,7 +386,7 @@ export function StorjSection() {
                   className="button-control-extreme-3d"
                 >
                   <Upload className="w-4 h-4 mr-1" />
-                  Upload
+                  {t('storj.upload')}
                 </Button>
               </div>
             </CardHeader>
@@ -394,7 +394,7 @@ export function StorjSection() {
               {uploadProgress && (
                 <div className="mb-4 p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <div className="flex justify-between mb-2 text-sm">
-                    <span className="text-kiosk-text">Enviando...</span>
+                    <span className="text-kiosk-text">{t('storj.sending')}</span>
                     <span className="text-cyan-400">{uploadProgress.percentage}%</span>
                   </div>
                   <Progress value={uploadProgress.percentage} className="h-2" />
@@ -405,16 +405,16 @@ export function StorjSection() {
                 {objects.length === 0 ? (
                   <div className="text-center py-8 text-kiosk-text/85">
                     <FileIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Nenhum arquivo encontrado</p>
+                    <p>{t('storj.noFiles')}</p>
                   </div>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow className="border-cyan-500/20">
-                        <TableHead className="text-label-yellow">Nome</TableHead>
-                        <TableHead className="text-label-yellow">Tamanho</TableHead>
-                        <TableHead className="text-label-yellow">Modificado</TableHead>
-                        <TableHead className="text-label-yellow text-right">Ações</TableHead>
+                        <TableHead className="text-label-yellow">{t('storj.name')}</TableHead>
+                        <TableHead className="text-label-yellow">{t('storj.size')}</TableHead>
+                        <TableHead className="text-label-yellow">{t('storj.modified')}</TableHead>
+                        <TableHead className="text-label-yellow text-right">{t('storj.actions')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

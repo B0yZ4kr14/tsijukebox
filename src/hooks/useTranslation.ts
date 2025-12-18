@@ -27,6 +27,9 @@ export function useT() {
     auth: (key: keyof TranslationKeys['auth']) => translate(language, `auth.${key}`),
     commandDeck: (key: keyof TranslationKeys['commandDeck']) => translate(language, `commandDeck.${key}`),
     system: (key: keyof TranslationKeys['system']) => translate(language, `system.${key}`),
+    spicetify: (key: keyof TranslationKeys['spicetify']) => translate(language, `spicetify.${key}`),
+    storj: (key: keyof TranslationKeys['storj']) => translate(language, `storj.${key}`),
+    localMusic: (key: keyof TranslationKeys['localMusic']) => translate(language, `localMusic.${key}`),
     language,
   };
 }

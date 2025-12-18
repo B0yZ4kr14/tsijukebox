@@ -16,9 +16,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLocalMusic } from '@/hooks/useLocalMusic';
+import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
 
 export function LocalMusicSection() {
+  const { t } = useTranslation();
   const {
     files,
     playlists,
@@ -66,7 +68,7 @@ export function LocalMusicSection() {
       );
       
       if (validFiles.length !== fileList.length) {
-        toast.warning('Alguns arquivos foram ignorados (apenas MP3 aceito)');
+        toast.warning(t('localMusic.someFilesIgnored'));
       }
       
       if (validFiles.length > 0) {
@@ -77,7 +79,7 @@ export function LocalMusicSection() {
 
   const handleCreatePlaylist = async () => {
     if (!newPlaylistName.trim()) {
-      toast.error('Nome da playlist é obrigatório');
+      toast.error(t('localMusic.playlistNameRequired'));
       return;
     }
     await createPlaylist(newPlaylistName.trim());
@@ -87,7 +89,7 @@ export function LocalMusicSection() {
 
   const handleRegisterInstance = async () => {
     if (!newInstanceUrl.trim() || !newInstanceName.trim()) {
-      toast.error('URL e nome são obrigatórios');
+      toast.error(t('localMusic.urlAndNameRequired'));
       return;
     }
     await registerInstance(newInstanceUrl.trim(), newInstanceName.trim());
@@ -128,7 +130,7 @@ export function LocalMusicSection() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-gold-neon font-bold">
             <Music className="w-5 h-5 icon-neon-blue" />
-            Música Local - Gerenciamento Premium
+            {t('localMusic.title')} - {t('localMusic.subtitle')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -136,27 +138,27 @@ export function LocalMusicSection() {
             <TabsList className="grid grid-cols-6 gap-1 h-auto bg-kiosk-surface/50 p-1">
               <TabsTrigger value="library" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <HardDrive className="w-3 h-3 mr-1" />
-                Biblioteca
+                {t('localMusic.library')}
               </TabsTrigger>
               <TabsTrigger value="upload" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <Upload className="w-3 h-3 mr-1" />
-                Upload
+                {t('localMusic.upload')}
               </TabsTrigger>
               <TabsTrigger value="playlists" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <List className="w-3 h-3 mr-1" />
-                Playlists
+                {t('localMusic.playlists')}
               </TabsTrigger>
               <TabsTrigger value="sync" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <Users className="w-3 h-3 mr-1" />
-                Sincronização
+                {t('localMusic.sync')}
               </TabsTrigger>
               <TabsTrigger value="instances" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <Server className="w-3 h-3 mr-1" />
-                Instâncias
+                {t('localMusic.instances')}
               </TabsTrigger>
               <TabsTrigger value="config" className="text-xs py-2 data-[state=active]:bg-primary/20">
                 <Settings className="w-3 h-3 mr-1" />
-                Config
+                {t('localMusic.config')}
               </TabsTrigger>
             </TabsList>
 
@@ -167,7 +169,7 @@ export function LocalMusicSection() {
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/50" />
                   <Input
-                    placeholder="Buscar músicas..."
+                    placeholder={t('localMusic.searchMusic')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 bg-kiosk-surface/50 border-cyan-500/20"
@@ -185,17 +187,17 @@ export function LocalMusicSection() {
                 
                 {selectedFiles.size > 0 && (
                   <div className="flex gap-2">
-                    <Badge variant="secondary">{selectedFiles.size} selecionado(s)</Badge>
-                    <Button variant="outline" size="sm" onClick={clearSelection}>Limpar</Button>
+                    <Badge variant="secondary">{selectedFiles.size} {t('localMusic.selected')}</Badge>
+                    <Button variant="outline" size="sm" onClick={clearSelection}>{t('localMusic.clear')}</Button>
                     <Button variant="destructive" size="sm" onClick={bulkDelete} disabled={isLoading}>
                       <Trash2 className="w-3 h-3 mr-1" />
-                      Excluir
+                      {t('localMusic.delete')}
                     </Button>
                   </div>
                 )}
                 
                 <Button variant="outline" size="sm" onClick={selectAll}>
-                  Selecionar todos
+                  {t('localMusic.selectAll')}
                 </Button>
                 
                 <Button variant="outline" size="sm" onClick={refreshFiles} disabled={isLoading}>
@@ -208,10 +210,10 @@ export function LocalMusicSection() {
                 {filteredFiles.length === 0 ? (
                   <div className="text-center py-12 text-kiosk-text/60">
                     <Music className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>Nenhuma música encontrada</p>
+                    <p>{t('localMusic.noMusic')}</p>
                     <Button variant="outline" className="mt-4" onClick={() => setActiveTab('upload')}>
                       <Upload className="w-4 h-4 mr-2" />
-                      Fazer upload
+                      {t('localMusic.uploadFiles')}
                     </Button>
                   </div>
                 ) : viewMode === 'list' ? (
@@ -253,7 +255,7 @@ export function LocalMusicSection() {
                           <DropdownMenuContent>
                             <DropdownMenuItem onClick={() => deleteFile(file.id)}>
                               <Trash2 className="w-4 h-4 mr-2" />
-                              Excluir
+                              {t('localMusic.delete')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -289,8 +291,8 @@ export function LocalMusicSection() {
 
               {/* Stats */}
               <div className="flex gap-4 text-sm text-kiosk-text/70">
-                <span>{files.length} arquivo(s)</span>
-                <span>{formatSize(files.reduce((acc, f) => acc + f.size, 0))} total</span>
+                <span>{files.length} {t('localMusic.files')}</span>
+                <span>{formatSize(files.reduce((acc, f) => acc + f.size, 0))} {t('localMusic.total')}</span>
               </div>
             </TabsContent>
 
@@ -311,14 +313,14 @@ export function LocalMusicSection() {
               >
                 <Upload className="w-12 h-12 mx-auto mb-4 icon-neon-blue" />
                 <p className="text-lg font-bold text-kiosk-text/90 mb-2">
-                  Arraste arquivos MP3 aqui
+                  {t('localMusic.dragAndDrop')}
                 </p>
                 <p className="text-kiosk-text/60 mb-4">
-                  ou clique para selecionar
+                  {t('localMusic.clickToSelect')}
                 </p>
                 <Button variant="outline" disabled={isUploading}>
                   <Upload className="w-4 h-4 mr-2" />
-                  Selecionar Arquivos
+                  {t('localMusic.selectFilesButton')}
                 </Button>
               </div>
 
@@ -335,12 +337,12 @@ export function LocalMusicSection() {
               )}
 
               <div className="p-4 rounded-lg bg-kiosk-surface/30 border border-cyan-500/10">
-                <p className="text-label-yellow text-sm font-bold mb-2">Formatos aceitos</p>
+                <p className="text-label-yellow text-sm font-bold mb-2">{t('localMusic.acceptedFormats')}</p>
                 <p className="text-kiosk-text/70 text-sm">
-                  Apenas arquivos <strong>.mp3</strong> (MPEG Audio Layer III)
+                  {t('localMusic.onlyMp3')}
                 </p>
                 <p className="text-kiosk-text/60 text-xs mt-2">
-                  Metadados ID3 serão extraídos automaticamente (título, artista, álbum, capa)
+                  {t('localMusic.metadataExtraction')}
                 </p>
               </div>
             </TabsContent>
@@ -353,26 +355,26 @@ export function LocalMusicSection() {
                   <DialogTrigger asChild>
                     <Button>
                       <Plus className="w-4 h-4 mr-2" />
-                      Nova Playlist
+                      {t('localMusic.newPlaylist')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Criar Playlist</DialogTitle>
+                      <DialogTitle>{t('localMusic.createPlaylist')}</DialogTitle>
                     </DialogHeader>
                     <Input
-                      placeholder="Nome da playlist"
+                      placeholder={t('localMusic.playlistName')}
                       value={newPlaylistName}
                       onChange={(e) => setNewPlaylistName(e.target.value)}
                     />
                     {selectedFiles.size > 0 && (
                       <p className="text-sm text-kiosk-text/70">
-                        {selectedFiles.size} música(s) selecionada(s) serão adicionadas
+                        {selectedFiles.size} {t('localMusic.tracksSelected')}
                       </p>
                     )}
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowPlaylistDialog(false)}>Cancelar</Button>
-                      <Button onClick={handleCreatePlaylist}>Criar</Button>
+                      <Button variant="outline" onClick={() => setShowPlaylistDialog(false)}>{t('common.cancel')}</Button>
+                      <Button onClick={handleCreatePlaylist}>{t('common.create')}</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -384,7 +386,7 @@ export function LocalMusicSection() {
                     <div key={playlist.id} className="flex items-center justify-between p-4 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                       <div>
                         <p className="font-bold text-kiosk-text/90">{playlist.name}</p>
-                        <p className="text-sm text-kiosk-text/60">{playlist.trackIds.length} faixa(s)</p>
+                        <p className="text-sm text-kiosk-text/60">{playlist.trackIds.length} {t('localMusic.tracks')}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button variant="ghost" size="icon">
