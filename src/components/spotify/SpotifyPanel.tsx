@@ -73,7 +73,7 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-        <p className="text-xs text-kiosk-text/75 truncate">{track.artist}</p>
+        <p className="text-xs text-kiosk-text/90 truncate">{track.artist}</p>
       </div>
       <Button
         variant="ghost"
@@ -119,7 +119,7 @@ function AlbumCard({ album, onPlay, isPlaying }: { album: SpotifyAlbum; onPlay: 
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{album.name}</p>
-        <p className="text-[10px] text-kiosk-text/75 truncate">{album.artist}</p>
+        <p className="text-[10px] text-kiosk-text/90 truncate">{album.artist}</p>
       </div>
     </button>
   );
@@ -155,7 +155,7 @@ function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlayli
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{playlist.name}</p>
-        <p className="text-[10px] text-kiosk-text/75 truncate">{playlist.tracksTotal} músicas</p>
+        <p className="text-[10px] text-kiosk-text/90 truncate">{playlist.tracksTotal} músicas</p>
       </div>
     </button>
   );
@@ -267,7 +267,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
             placeholder="Buscar músicas, artistas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/80 progress-track-3d"
+            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/85 progress-track-3d"
           />
         </div>
       </form>
@@ -329,7 +329,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-kiosk-text truncate">{playlist.name}</p>
-                            <p className="text-xs text-kiosk-text/75">{playlist.tracksTotal} músicas</p>
+                            <p className="text-xs text-kiosk-text/90">{playlist.tracksTotal} músicas</p>
                           </div>
                           <Play className="w-4 h-4 text-kiosk-text/85" />
                         </button>
@@ -382,7 +382,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
                 <>
                   <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Para Você</h3>
                   {!currentTrackId ? (
-                    <div className="text-center py-8 text-kiosk-text/75">
+                    <div className="text-center py-8 text-kiosk-text/90">
                       <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-60" />
                       <p className="text-sm">Toque uma música para ver recomendações</p>
                     </div>

@@ -44,7 +44,7 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           className={cn(
             "w-11 h-11 rounded-full shrink-0",
             "button-control-3d",
-            "text-kiosk-text/70 hover:text-kiosk-text",
+            "text-kiosk-text/90 hover:text-kiosk-text",
             "transition-all duration-200",
             muted && "text-destructive hover:text-destructive"
           )}
@@ -88,7 +88,7 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
 
       <motion.span 
         className={cn(
-          "text-xs font-bold text-kiosk-text/70 w-10 text-right tabular-nums",
+          "text-xs font-bold text-kiosk-text/90 w-10 text-right tabular-nums",
           "badge-3d px-1.5 py-0.5 rounded-md"
         )}
         key={muted ? 0 : volume}

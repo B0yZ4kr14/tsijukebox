@@ -64,7 +64,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                 <h2 className="text-lg font-bold text-kiosk-text">Adicionar à Playlist</h2>
                 <button
                   onClick={handleClose}
-                  className="text-kiosk-text/85 hover:text-kiosk-text"
+                  className="text-kiosk-text/90 hover:text-kiosk-text"
                 >
                   <X className="w-5 h-5" />
                 </button>

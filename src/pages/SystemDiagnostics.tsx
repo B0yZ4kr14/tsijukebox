@@ -484,7 +484,7 @@ export default function SystemDiagnostics() {
               variant="ghost"
               size="icon"
               onClick={() => navigate('/settings')}
-              className="text-kiosk-text/70 hover:text-kiosk-text"
+              className="text-kiosk-text/90 hover:text-kiosk-text"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -493,7 +493,7 @@ export default function SystemDiagnostics() {
                 <Zap className="w-6 h-6" />
                 Diagnóstico do Sistema
               </h1>
-              <p className="text-sm text-kiosk-text/60">
+              <p className="text-sm text-kiosk-text/85">
                 Verifique todas as conexões e APIs configuradas
               </p>
             </div>

@@ -33,7 +33,7 @@ export default function SpotifySearchPage() {
               <Search className="w-10 h-10 text-[#1DB954]" />
             </div>
             <h1 className="text-2xl font-bold text-kiosk-text">Conecte-se ao Spotify</h1>
-            <p className="text-kiosk-text/60">
+            <p className="text-kiosk-text/85">
               Para buscar músicas, álbuns e artistas, conecte sua conta do Spotify.
             </p>
             <Link to="/settings">
@@ -92,14 +92,14 @@ export default function SpotifySearchPage() {
           {!isSearching && !hasResults && query.length >= 2 && (
             <div className="text-center py-12">
               <Music className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
-              <p className="text-kiosk-text/85">Nenhum resultado para "{query}"</p>
+              <p className="text-kiosk-text/90">Nenhum resultado para "{query}"</p>
             </div>
           )}
 
           {!isSearching && !query && (
             <div className="text-center py-12">
               <Search className="w-12 h-12 text-kiosk-text/30 mx-auto mb-4" />
-              <p className="text-kiosk-text/85">Busque por músicas, álbuns, artistas ou playlists</p>
+              <p className="text-kiosk-text/90">Busque por músicas, álbuns, artistas ou playlists</p>
             </div>
           )}
 

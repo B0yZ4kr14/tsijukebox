@@ -238,7 +238,7 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label className="text-kiosk-text">Demo Mode</Label>
-                    <p className="text-xs text-kiosk-text/70">
+                    <p className="text-xs text-kiosk-text/90">
                       {isDemoMode ? 'Usando dados mockados' : 'Conectando ao backend real'}
                     </p>
                   </div>
@@ -269,36 +269,36 @@ export default function Settings() {
             >
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Versão</span>
+                  <span className="text-kiosk-text/85">Versão</span>
                   <span className="text-kiosk-text"><BrandText /> Enterprise v4.0</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Modo</span>
+                  <span className="text-kiosk-text/85">Modo</span>
                   <span className="text-kiosk-text">
                     {isDemoMode ? 'Demonstração' : 'Produção'}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Conexão</span>
+                  <span className="text-kiosk-text/85">Conexão</span>
                   <span className="text-kiosk-text">
                     {isDemoMode ? 'N/A' : useWebSocket ? 'WebSocket' : `Polling (${pollingInterval / 1000}s)`}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">API</span>
+                  <span className="text-kiosk-text/85">API</span>
                   <span className="text-kiosk-text font-mono text-xs truncate max-w-[200px]">
                     {isDemoMode ? 'Mock Data' : apiUrl}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-kiosk-text/60">Spotify</span>
+                  <span className="text-kiosk-text/85">Spotify</span>
                   <span className="text-kiosk-text">
                     {spotify.isConnected ? (
                       <span className="text-[#1DB954]">Conectado</span>
                     ) : spotify.clientId ? (
                       <span className="text-yellow-500">Configurado</span>
                     ) : (
-                      <span className="text-kiosk-text/40">Não configurado</span>
+                      <span className="text-kiosk-text/80">Não configurado</span>
                     )}
                   </span>
                 </div>
@@ -365,7 +365,7 @@ export default function Settings() {
                       )}
                       <div className="flex-1">
                         <p className="font-medium text-kiosk-text">{spotify.user.displayName}</p>
-                        <p className="text-sm text-kiosk-text/75">{spotify.user.email}</p>
+                        <p className="text-sm text-kiosk-text/90">{spotify.user.email}</p>
                         <Badge 
                           variant="secondary" 
                           className={`mt-1 ${

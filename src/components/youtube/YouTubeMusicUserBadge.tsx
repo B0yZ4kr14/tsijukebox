@@ -58,7 +58,7 @@ export function YouTubeMusicUserBadge({ user, size = 'md', showEmail = true, cla
           {user.name}
         </p>
         {showEmail && (
-          <p className={cn("text-kiosk-text/60 truncate", sizes.email)}>
+          <p className={cn("text-kiosk-text/85 truncate", sizes.email)}>
             {user.email}
           </p>
         )}

@@ -278,8 +278,8 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
                       <Hand className="w-12 h-12" />
                       <ChevronRight className="w-8 h-8 animate-pulse" />
                     </div>
-                    <p className="text-kiosk-text/85">Deslize horizontalmente para testar</p>
-                    <p className="text-xs text-kiosk-text/80">Mínimo: {GESTURE_THRESHOLD}px</p>
+                    <p className="text-kiosk-text/90">Deslize horizontalmente para testar</p>
+                    <p className="text-xs text-kiosk-text/85">Mínimo: {GESTURE_THRESHOLD}px</p>
                   </div>
                 </div>
                 
@@ -317,7 +317,7 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
               {gestureEvents[0] && (
                 <div className="grid grid-cols-4 gap-3 p-4 rounded-lg bg-kiosk-bg">
                   <div className="text-center">
-                    <p className="text-xs text-kiosk-text/85">Direção</p>
+                    <p className="text-xs text-kiosk-text/90">Direção</p>
                     <p className="text-sm font-medium text-kiosk-text">
                       {gestureEvents[0].direction === 'left' && '← Esquerda'}
                       {gestureEvents[0].direction === 'right' && '→ Direita'}
@@ -327,17 +327,17 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-kiosk-text/85">Delta X</p>
+                    <p className="text-xs text-kiosk-text/90">Delta X</p>
                     <p className={`text-sm font-medium ${Math.abs(gestureEvents[0].deltaX) >= GESTURE_THRESHOLD ? 'text-green-400' : 'text-kiosk-text'}`}>
                       {gestureEvents[0].deltaX}px
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-kiosk-text/85">Delta Y</p>
+                    <p className="text-xs text-kiosk-text/90">Delta Y</p>
                     <p className="text-sm font-medium text-kiosk-text">{gestureEvents[0].deltaY}px</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-kiosk-text/85">Duração</p>
+                    <p className="text-xs text-kiosk-text/90">Duração</p>
                     <p className="text-sm font-medium text-kiosk-text">{gestureEvents[0].duration}ms</p>
                   </div>
                 </div>

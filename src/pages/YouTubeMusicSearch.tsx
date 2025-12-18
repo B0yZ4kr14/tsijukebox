@@ -82,13 +82,13 @@ export default function YouTubeMusicSearch() {
             </Button>
             <div>
               <h1 className="text-xl font-bold text-kiosk-text">Buscar</h1>
-              <p className="text-sm text-kiosk-text/85">YouTube Music</p>
+              <p className="text-sm text-kiosk-text/90">YouTube Music</p>
             </div>
           </div>
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="relative max-w-xl">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/50" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/85" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}

@@ -54,7 +54,7 @@ export default function AdminLibrary() {
       <div className="space-y-6">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-gold-neon">Biblioteca</h2>
-          <p className="text-kiosk-text/70">Gerencie suas faixas de áudio</p>
+          <p className="text-kiosk-text/90">Gerencie suas faixas de áudio</p>
         </div>
 
         {/* Upload Area */}
@@ -72,7 +72,7 @@ export default function AdminLibrary() {
               {isUploading ? (
                 <>
                   <Loader2 className="w-10 h-10 icon-neon-blue animate-spin mb-4" />
-                  <p className="text-sm text-kiosk-text/70">Enviando arquivos...</p>
+                  <p className="text-sm text-kiosk-text/90">Enviando arquivos...</p>
                 </>
               ) : (
                 <>
@@ -107,7 +107,7 @@ export default function AdminLibrary() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-gold-neon">Faixas ({tracks.length})</CardTitle>
-                <CardDescription className="text-kiosk-text/70">Lista de todas as músicas disponíveis</CardDescription>
+                <CardDescription className="text-kiosk-text/90">Lista de todas as músicas disponíveis</CardDescription>
               </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -128,7 +128,7 @@ export default function AdminLibrary() {
             ) : filteredTracks.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <Music className="w-12 h-12 icon-neon-blue mb-4" />
-                <p className="text-kiosk-text/70">
+                <p className="text-kiosk-text/90">
                   {search ? 'Nenhuma faixa encontrada' : 'Biblioteca vazia'}
                 </p>
               </div>

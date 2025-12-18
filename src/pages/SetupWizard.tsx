@@ -512,7 +512,7 @@ export default function SetupWizard() {
                 >
                   <Server className="w-6 h-6 mb-2 text-cyan-400" />
                   <p className="font-medium text-kiosk-text">Servidor Real</p>
-                  <p className="text-xs text-kiosk-text/85">Conectar ao backend</p>
+                  <p className="text-xs text-kiosk-text/90">Conectar ao backend</p>
                 </button>
                 <button
                   onClick={() => setWizardData(prev => ({ ...prev, useDemoMode: true }))}
@@ -522,7 +522,7 @@ export default function SetupWizard() {
                 >
                   <Sparkles className="w-6 h-6 mb-2 text-yellow-400" />
                   <p className="font-medium text-kiosk-text">Modo Demo</p>
-                  <p className="text-xs text-kiosk-text/85">Usar dados simulados</p>
+                  <p className="text-xs text-kiosk-text/90">Usar dados simulados</p>
                 </button>
               </div>
 
@@ -573,14 +573,14 @@ export default function SetupWizard() {
                     )}
                   </Button>
                   
-                  <p className="text-xs text-kiosk-text/85">
+                  <p className="text-xs text-kiosk-text/90">
                     Endereço do servidor FastAPI que controla a reprodução
                   </p>
                 </motion.div>
               )}
 
               {wizardData.useDemoMode && (
-                <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-sm text-kiosk-text/80">
+                <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-sm text-kiosk-text/85">
                   💡 <strong>Modo Demo:</strong> Perfeito para testar a interface. Você pode conectar ao servidor real depois nas Configurações.
                 </div>
               )}
@@ -648,7 +648,7 @@ export default function SetupWizard() {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-kiosk-text">{option.label}</p>
-                    <p className="text-xs text-kiosk-text/85">{option.description}</p>
+                    <p className="text-xs text-kiosk-text/90">{option.description}</p>
                   </div>
                   {wizardData.musicProvider === option.value && (
                     <Check className="w-5 h-5 text-cyan-400" />
@@ -657,7 +657,7 @@ export default function SetupWizard() {
               ))}
             </RadioGroup>
             
-            <p className="text-xs text-center text-kiosk-text/85">
+            <p className="text-xs text-center text-kiosk-text/90">
               Você pode configurar outros provedores depois nas Configurações
             </p>
           </div>
@@ -701,7 +701,7 @@ export default function SetupWizard() {
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-kiosk-background/50 text-xs text-kiosk-text/85 space-y-1">
+              <div className="p-3 rounded bg-kiosk-background/50 text-xs text-kiosk-text/90 space-y-1">
                 <p><strong>Como obter:</strong></p>
                 <ol className="list-decimal list-inside space-y-0.5">
                   <li>Acesse developer.spotify.com</li>
@@ -711,7 +711,7 @@ export default function SetupWizard() {
               </div>
             </div>
 
-            <p className="text-xs text-center text-kiosk-text/85">
+            <p className="text-xs text-center text-kiosk-text/90">
               Você pode pular e configurar depois em Configurações → Integrações
             </p>
           </div>
@@ -778,12 +778,12 @@ export default function SetupWizard() {
                 )}
               </Button>
               
-              <p className="text-xs text-kiosk-text/85">
+              <p className="text-xs text-kiosk-text/90">
                 Obtenha sua chave gratuita em openweathermap.org
               </p>
             </div>
 
-            <p className="text-xs text-center text-kiosk-text/85">
+            <p className="text-xs text-center text-kiosk-text/90">
               Você pode pular e configurar depois em Configurações.
             </p>
           </div>
@@ -839,7 +839,7 @@ export default function SetupWizard() {
       <div className="p-4">
         {/* Progress percentage */}
         <div className="flex items-center justify-between mb-2 px-2">
-          <span className="text-xs text-kiosk-text/85">Progresso</span>
+          <span className="text-xs text-kiosk-text/90">Progresso</span>
           <span className="text-xs font-medium text-cyan-400">{progressPercent}%</span>
         </div>
         
@@ -914,7 +914,7 @@ export default function SetupWizard() {
                 {steps[currentStep].icon}
               </motion.div>
               <h2 className="text-2xl font-bold text-gold-neon">{steps[currentStep].title}</h2>
-              <p className="text-kiosk-text/70">{steps[currentStep].description}</p>
+              <p className="text-kiosk-text/90">{steps[currentStep].description}</p>
             </div>
 
             {/* Step Content */}

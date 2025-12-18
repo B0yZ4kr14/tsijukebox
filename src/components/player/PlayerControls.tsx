@@ -169,7 +169,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           className={cn(
             "w-9 h-9 rounded-full relative overflow-hidden",
             "button-stop-extreme-3d",
-            "text-kiosk-text/50 hover:text-destructive",
+            "text-kiosk-text/85 hover:text-destructive",
             "transition-all duration-200",
             !canControl && "opacity-50 cursor-not-allowed"
           )}

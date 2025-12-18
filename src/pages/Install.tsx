@@ -136,7 +136,7 @@ export default function Install() {
               <h2 className="text-xl font-semibold text-green-400">
                 App Instalado!
               </h2>
-              <p className="text-kiosk-text/70">
+              <p className="text-kiosk-text/90">
                 O app está instalado no seu dispositivo. 
                 Você pode acessá-lo pela tela inicial.
               </p>

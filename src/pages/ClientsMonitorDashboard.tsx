@@ -325,12 +325,12 @@ export default function ClientsMonitorDashboard() {
 
                 {filteredClients.length === 0 && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-kiosk-text/85">Nenhum cliente encontrado</p>
+                    <p className="text-kiosk-text/90">Nenhum cliente encontrado</p>
                   </div>
                 )}
               </div>
 
-              <p className="text-xs text-center text-kiosk-text/85 mt-2">
+              <p className="text-xs text-center text-kiosk-text/90 mt-2">
                 Clique nos marcadores para ver detalhes. Mapa interativo em desenvolvimento.
               </p>
             </Card>

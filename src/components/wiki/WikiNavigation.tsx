@@ -276,7 +276,7 @@ export function WikiNavigation({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Buscar artigos..."
-          className="pl-9 pr-9 h-9 bg-kiosk-bg/50 border-cyan-500/20 text-white placeholder:text-kiosk-text/70 focus:border-cyan-500/50"
+          className="pl-9 pr-9 h-9 bg-kiosk-bg/50 border-cyan-500/20 text-white placeholder:text-kiosk-text/85 focus:border-cyan-500/50"
         />
         {(searchQuery || categoryFilter) && (
           <Button
@@ -300,7 +300,7 @@ export function WikiNavigation({
             "h-6 px-2 text-[10px] rounded-full border transition-all",
             !categoryFilter 
               ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-400" 
-              : "bg-transparent border-kiosk-border text-kiosk-text/85 hover:border-cyan-500/30"
+              : "bg-transparent border-kiosk-border text-kiosk-text/90 hover:border-cyan-500/30"
           )}
         >
           <Filter className="w-3 h-3 mr-1" />
@@ -316,7 +316,7 @@ export function WikiNavigation({
               "h-6 px-2 text-[10px] rounded-full border transition-all",
               categoryFilter === cat.id 
                 ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-400" 
-                : "bg-transparent border-kiosk-border text-kiosk-text/85 hover:border-cyan-500/30"
+                : "bg-transparent border-kiosk-border text-kiosk-text/90 hover:border-cyan-500/30"
             )}
           >
             {cat.title.split(' ')[0]}
@@ -368,7 +368,7 @@ export function WikiNavigation({
       <ScrollArea className="h-[calc(100vh-380px)]">
         <nav className="space-y-1 pr-4">
           {filteredCategories.length === 0 ? (
-            <div className="text-center py-8 text-kiosk-text/85">
+            <div className="text-center py-8 text-kiosk-text/90">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">Nenhum artigo encontrado</p>
               <p className="text-xs mt-1">Tente outros termos de busca</p>

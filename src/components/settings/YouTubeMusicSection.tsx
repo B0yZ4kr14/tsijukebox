@@ -70,7 +70,7 @@ export function YouTubeMusicSection() {
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-kiosk-text truncate">{youtubeMusic.user.name}</p>
-              <p className="text-xs text-kiosk-text/70 truncate">{youtubeMusic.user.email}</p>
+              <p className="text-xs text-kiosk-text/90 truncate">{youtubeMusic.user.email}</p>
             </div>
           </div>
         )}
@@ -98,7 +98,7 @@ export function YouTubeMusicSection() {
         </div>
 
         <div className="pt-2 border-t border-cyan-500/20">
-          <p className="text-xs text-kiosk-text/70">
+          <p className="text-xs text-kiosk-text/90">
             Conecte sua conta do YouTube Music para acessar playlists, músicas curtidas e histórico.
             <a 
               href="https://music.youtube.com" 

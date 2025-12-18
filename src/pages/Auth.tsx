@@ -89,7 +89,7 @@ export default function Auth() {
         <CardHeader className="text-center space-y-4">
           <LogoBrand size="sm" variant="metal" centered animate className="mb-2" />
           <div>
-            <CardDescription className="flex items-center justify-center gap-2 mt-2 text-kiosk-text/70">
+            <CardDescription className="flex items-center justify-center gap-2 mt-2 text-kiosk-text/90">
               {isSupabaseProvider ? (
                 <>
                   <Cloud className="w-4 h-4 icon-neon-blue" />
