@@ -1,4 +1,3 @@
 project_id = "ynkqczsmcnxvapljofel"
 
-[functions.lyrics-search]
-verify_jwt = false
+# Removed verify_jwt = false for security - all functions now require authentication
