@@ -3,6 +3,7 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Volume, Volume1, Volume2, VolumeX } from 'lucide-react';
 import { useVolume } from '@/hooks/useVolume';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/lib/utils';
 
 interface VolumeSliderProps {
@@ -12,6 +13,7 @@ interface VolumeSliderProps {
 
 export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
   const { setVolume, toggleMute, isLoading } = useVolume();
+  const { t } = useTranslation();
 
   const getVolumeIcon = () => {
     if (muted || volume === 0) return VolumeX;
@@ -38,8 +40,9 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           size="icon"
           onClick={() => toggleMute(!muted)}
           disabled={isLoading}
+          aria-label={muted ? t('player.unmute') : t('player.mute')}
           className={cn(
-            "w-9 h-9 rounded-full shrink-0",
+            "w-11 h-11 rounded-full shrink-0",
             "button-control-3d",
             "text-kiosk-text/70 hover:text-kiosk-text",
             "transition-all duration-200",
@@ -75,6 +78,10 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           max={100}
           step={1}
           disabled={isLoading}
+          aria-label={t('player.volume')}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={muted ? 0 : volume}
           className="relative z-10"
         />
       </div>

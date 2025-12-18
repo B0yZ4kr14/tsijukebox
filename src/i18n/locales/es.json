@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skipToContent": "Saltar al contenido principal"
+  },
   "common": {
     "save": "Guardar",
     "cancel": "Cancelar",
@@ -40,6 +43,10 @@
     "previous": "Anterior",
     "volume": "Volumen",
     "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "stop": "Detener reproducción",
+    "previousTrack": "Pista anterior",
+    "nextTrack": "Siguiente pista",
     "addToQueue": "Agregar a la Cola",
     "removeFromQueue": "Quitar de la Cola",
     "clearQueue": "Limpiar Cola",
@@ -47,7 +54,6 @@
     "trackAdded": "Canción agregada a la cola",
     "trackRemoved": "Canción quitada de la cola",
     "swipeHint": "Desliza para cambiar de pista",
-    "nextTrack": "Siguiente pista",
     "prevTrack": "Pista anterior",
     "paused": "Pausado",
     "playing": "Reproduciendo"
@@ -153,6 +159,8 @@
     "reboot": "Reboot",
     "help": "Help",
     "admin": "Admin",
+    "expand": "Expandir panel de comandos",
+    "collapse": "Contraer panel de comandos",
     "tooltips": {
       "dashboard": "Abrir panel de métricas",
       "datasource": "Abrir fuente de datos",

@@ -271,6 +271,8 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
             playSound(newState ? 'open' : 'close');
           }}
           className="command-deck-toggle-circular"
+          aria-label={isExpanded ? t('commandDeck.collapse') : t('commandDeck.expand')}
+          aria-expanded={isExpanded}
           initial={{ scale: 0, rotate: -180 }}
           animate={{ 
             scale: 1, 

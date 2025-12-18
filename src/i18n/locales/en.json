@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skipToContent": "Skip to main content"
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -40,6 +43,10 @@
     "previous": "Previous",
     "volume": "Volume",
     "mute": "Mute",
+    "unmute": "Unmute",
+    "stop": "Stop playback",
+    "previousTrack": "Previous track",
+    "nextTrack": "Next track",
     "addToQueue": "Add to Queue",
     "removeFromQueue": "Remove from Queue",
     "clearQueue": "Clear Queue",
@@ -47,7 +54,6 @@
     "trackAdded": "Track added to queue",
     "trackRemoved": "Track removed from queue",
     "swipeHint": "Swipe to change track",
-    "nextTrack": "Next track",
     "prevTrack": "Previous track",
     "paused": "Paused",
     "playing": "Playing"
@@ -153,6 +159,8 @@
     "reboot": "Reboot",
     "help": "Help",
     "admin": "Admin",
+    "expand": "Expand command panel",
+    "collapse": "Collapse command panel",
     "tooltips": {
       "dashboard": "Open metrics panel",
       "datasource": "Open data source",

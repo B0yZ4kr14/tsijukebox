@@ -6,6 +6,7 @@ import { useRipple } from '@/hooks/useRipple';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/lib/utils';
 
 interface PlayerControlsProps {
@@ -21,6 +22,7 @@ const buttonVariants = {
 export function PlayerControls({ isPlaying }: PlayerControlsProps) {
   const { play, pause, next, prev, stop, isLoading } = usePlayer();
   const { soundEnabled, animationsEnabled } = useSettings();
+  const { t } = useTranslation();
   
   // Ripples individuais para cada botão
   const prevRipple = useRipple();
@@ -73,6 +75,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           size="icon"
           onClick={handlePrev}
           disabled={isLoading}
+          aria-label={t('player.previousTrack')}
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
@@ -92,6 +95,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           size="icon"
           onClick={handlePlayPause}
           disabled={isLoading}
+          aria-label={isPlaying ? t('player.pause') : t('player.play')}
           className={cn(
             "w-16 h-16 md:w-18 md:h-18 rounded-full relative z-10 overflow-hidden",
             "button-play-chrome-neon",
@@ -121,6 +125,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           size="icon"
           onClick={handleNext}
           disabled={isLoading}
+          aria-label={t('player.nextTrack')}
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
@@ -145,6 +150,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           size="icon"
           onClick={handleStop}
           disabled={isLoading}
+          aria-label={t('player.stop')}
           className={cn(
             "w-9 h-9 rounded-full relative overflow-hidden",
             "button-stop-extreme-3d",

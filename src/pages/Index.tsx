@@ -17,6 +17,7 @@ import { DigitalClock } from '@/components/player/DigitalClock';
 import { WeatherWidget } from '@/components/player/WeatherWidget';
 import { SpotifyPanel, SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { SkipLink } from '@/components/ui/SkipLink';
 import { GuidedTour, useTourSteps, isTourComplete } from '@/components/tour/GuidedTour';
 import { useStatus } from '@/hooks/useStatus';
 import { usePlayer } from '@/hooks/usePlayer';
@@ -216,6 +217,7 @@ export default function Index() {
 
   return (
     <KioskLayout>
+      <SkipLink />
       <div 
         className="h-screen flex flex-col relative"
         {...touchHandlers}
@@ -318,7 +320,7 @@ export default function Index() {
         </header>
 
         {/* Main Content - centralized container */}
-        <main className="flex-1 flex flex-col items-center justify-start pt-4 gap-2 px-4 pb-32 touch-pan-y">
+        <main id="main-content" className="flex-1 flex flex-col items-center justify-start pt-4 gap-2 px-4 pb-32 touch-pan-y">
           {/* Centralized container for all player elements */}
           <div className="w-full max-w-md flex flex-col items-center gap-3">
             {/* Now Playing */}

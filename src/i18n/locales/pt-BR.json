@@ -1,4 +1,7 @@
 {
+  "accessibility": {
+    "skipToContent": "Pular para o conteúdo principal"
+  },
   "common": {
     "save": "Salvar",
     "cancel": "Cancelar",
@@ -39,7 +42,11 @@
     "next": "Próxima",
     "previous": "Anterior",
     "volume": "Volume",
-    "mute": "Mudo",
+    "mute": "Silenciar",
+    "unmute": "Ativar som",
+    "stop": "Parar reprodução",
+    "previousTrack": "Faixa anterior",
+    "nextTrack": "Próxima faixa",
     "addToQueue": "Adicionar à Fila",
     "removeFromQueue": "Remover da Fila",
     "clearQueue": "Limpar Fila",
@@ -47,7 +54,6 @@
     "trackAdded": "Música adicionada à fila",
     "trackRemoved": "Música removida da fila",
     "swipeHint": "Deslize para mudar de faixa",
-    "nextTrack": "Próxima faixa",
     "prevTrack": "Faixa anterior",
     "paused": "Pausado",
     "playing": "Reproduzindo"
@@ -153,6 +159,8 @@
     "reboot": "Reboot",
     "help": "Help",
     "admin": "Admin",
+    "expand": "Expandir painel de comandos",
+    "collapse": "Recolher painel de comandos",
     "tooltips": {
       "dashboard": "Abrir painel de métricas",
       "datasource": "Abrir fonte de dados",

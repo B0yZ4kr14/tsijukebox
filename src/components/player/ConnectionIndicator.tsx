@@ -117,6 +117,7 @@ export function ConnectionIndicator({ connectionType, isSpotifyActive = false, c
             <Icon className="w-3 h-3" />
           )}
           <span className="hidden sm:inline font-medium">{config.label}</span>
+          <span className="sr-only">{config.description}</span>
           
           {/* Spotify active indicator dot */}
           {effectiveType === 'spotify' && (
