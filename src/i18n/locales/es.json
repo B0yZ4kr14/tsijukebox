@@ -53,6 +53,7 @@
     "repeatTrack": "Repetición: Pista actual",
     "repeatContext": "Repetición: Playlist",
     "openQueue": "Abrir cola de reproducción",
+    "closeQueue": "Cerrar cola de reproducción",
     "addToQueue": "Agregar a la Cola",
     "removeFromQueue": "Quitar de la Cola",
     "clearQueue": "Limpiar Cola",
@@ -62,7 +63,12 @@
     "swipeHint": "Desliza para cambiar de pista",
     "prevTrack": "Pista anterior",
     "paused": "Pausado",
-    "playing": "Reproduciendo"
+    "playing": "Reproduciendo",
+    "playTrack": "Reproducir pista"
+  },
+  "permissions": {
+    "noPlaybackControl": "No tienes permiso para controlar la reproducción",
+    "noQueueModify": "No tienes permiso para modificar la cola"
   },
   "settings": {
     "title": "Configuración",

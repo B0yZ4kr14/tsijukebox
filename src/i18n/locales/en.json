@@ -53,6 +53,7 @@
     "repeatTrack": "Repeat: Current track",
     "repeatContext": "Repeat: Playlist",
     "openQueue": "Open playback queue",
+    "closeQueue": "Close playback queue",
     "addToQueue": "Add to Queue",
     "removeFromQueue": "Remove from Queue",
     "clearQueue": "Clear Queue",
@@ -62,7 +63,12 @@
     "swipeHint": "Swipe to change track",
     "prevTrack": "Previous track",
     "paused": "Paused",
-    "playing": "Playing"
+    "playing": "Playing",
+    "playTrack": "Play track"
+  },
+  "permissions": {
+    "noPlaybackControl": "You don't have permission to control playback",
+    "noQueueModify": "You don't have permission to modify the queue"
   },
   "settings": {
     "title": "Settings",

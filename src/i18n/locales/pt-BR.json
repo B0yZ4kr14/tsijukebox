@@ -53,6 +53,7 @@
     "repeatTrack": "Repetição: Faixa atual",
     "repeatContext": "Repetição: Playlist",
     "openQueue": "Abrir fila de reprodução",
+    "closeQueue": "Fechar fila de reprodução",
     "addToQueue": "Adicionar à Fila",
     "removeFromQueue": "Remover da Fila",
     "clearQueue": "Limpar Fila",
@@ -62,7 +63,12 @@
     "swipeHint": "Deslize para mudar de faixa",
     "prevTrack": "Faixa anterior",
     "paused": "Pausado",
-    "playing": "Reproduzindo"
+    "playing": "Reproduzindo",
+    "playTrack": "Reproduzir faixa"
+  },
+  "permissions": {
+    "noPlaybackControl": "Você não tem permissão para controlar a reprodução",
+    "noQueueModify": "Você não tem permissão para modificar a fila"
   },
   "settings": {
     "title": "Configurações",

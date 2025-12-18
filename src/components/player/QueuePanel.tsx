@@ -3,6 +3,8 @@ import { X, Trash2, Music, GripVertical, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { QueueItem, PlaybackQueue } from '@/lib/api/types';
+import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   DndContext,
   closestCenter,
@@ -43,6 +45,9 @@ interface QueueTrackItemBaseProps {
   showDragHandle?: boolean;
   isDragging?: boolean;
   dragHandleProps?: Record<string, unknown>;
+  canRemove?: boolean;
+  playLabel?: string;
+  removeLabel?: string;
 }
 
 function QueueTrackItemBase({ 
@@ -53,6 +58,9 @@ function QueueTrackItemBase({
   showDragHandle = false,
   isDragging = false,
   dragHandleProps,
+  canRemove = true,
+  playLabel = 'Play track',
+  removeLabel = 'Remove from queue',
 }: QueueTrackItemBaseProps) {
   return (
     <div className={`group flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors ${isDragging ? 'opacity-50 bg-kiosk-surface/30' : ''}`}>
@@ -79,7 +87,7 @@ function QueueTrackItemBase({
       {/* Info */}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-kiosk-text truncate">{item.title}</p>
-        <p className="text-xs text-kiosk-text/60 truncate">{item.artist}</p>
+        <p className="text-xs text-kiosk-text/85 truncate">{item.artist}</p>
       </div>
       
       {/* Actions */}
@@ -89,16 +97,18 @@ function QueueTrackItemBase({
             variant="ghost"
             size="icon"
             onClick={onPlay}
+            aria-label={playLabel}
             className="w-8 h-8 text-kiosk-text/50 hover:text-[#1DB954]"
           >
             <Play className="w-4 h-4" />
           </Button>
         )}
-        {onRemove && (
+        {canRemove && onRemove && (
           <Button
             variant="ghost"
             size="icon"
             onClick={onRemove}
+            aria-label={removeLabel}
             className="w-8 h-8 text-kiosk-text/50 hover:text-destructive"
           >
             <X className="w-4 h-4" />
@@ -113,10 +123,16 @@ function SortableQueueItem({
   item,
   onPlay,
   onRemove,
+  canRemove,
+  playLabel,
+  removeLabel,
 }: {
   item: QueueItem;
   onPlay: () => void;
-  onRemove: () => void;
+  onRemove?: () => void;
+  canRemove?: boolean;
+  playLabel?: string;
+  removeLabel?: string;
 }) {
   const {
     attributes,
@@ -142,6 +158,9 @@ function SortableQueueItem({
         showDragHandle={true}
         isDragging={isDragging}
         dragHandleProps={{ ...attributes, ...listeners }}
+        canRemove={canRemove}
+        playLabel={playLabel}
+        removeLabel={removeLabel}
       />
     </div>
   );
@@ -158,6 +177,11 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
   isLoading,
 }, ref) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const { hasPermission } = useUser();
+  const { t } = useTranslation();
+  
+  const canRemove = hasPermission('canRemoveFromQueue');
+  const canPlay = hasPermission('canControlPlayback');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -209,21 +233,23 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
             <h2 className="text-lg font-bold text-kiosk-text">Fila de Reprodução</h2>
           </div>
           <div className="flex items-center gap-2">
-            {queue && queue.next.length > 0 && (
+            {canRemove && queue && queue.next.length > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onClearQueue}
+                aria-label={t('player.clearQueue')}
                 className="text-kiosk-text/50 hover:text-destructive"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                Limpar
+                {t('player.clearQueue')}
               </Button>
             )}
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
+              aria-label={t('common.close')}
               className="w-8 h-8 text-kiosk-text/50 hover:text-kiosk-text"
             >
               <X className="w-5 h-5" />
@@ -286,8 +312,11 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                         <SortableQueueItem
                           key={item.id}
                           item={item}
-                          onPlay={() => item.uri && onPlayItem(item.uri)}
-                          onRemove={() => onRemoveItem(item.id)}
+                          onPlay={() => canPlay && item.uri && onPlayItem(item.uri)}
+                          onRemove={canRemove ? () => onRemoveItem(item.id) : undefined}
+                          canRemove={canRemove}
+                          playLabel={t('player.play')}
+                          removeLabel={t('player.removeFromQueue')}
                         />
                       ))}
                     </div>
