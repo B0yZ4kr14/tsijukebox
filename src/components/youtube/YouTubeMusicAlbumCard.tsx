@@ -124,8 +124,8 @@ export function YouTubeMusicAlbumCard({ album, onClick, onPlay, className, isPla
       {/* Info */}
       <div className="space-y-1">
         <h3 className="font-semibold text-kiosk-text truncate">{album.title}</h3>
-        <p className="text-sm text-kiosk-text/60 truncate">{album.artist}</p>
-        <p className="text-xs text-kiosk-text/40">
+        <p className="text-sm text-kiosk-text/85 truncate">{album.artist}</p>
+        <p className="text-xs text-kiosk-text/80">
           {album.year} • {album.trackCount} faixas
         </p>
       </div>

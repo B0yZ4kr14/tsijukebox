@@ -89,7 +89,7 @@ export function AddToPlaylistModal({
             Adicionar à Playlist
           </DialogTitle>
           {track && (
-            <DialogDescription className="text-kiosk-text/60">
+            <DialogDescription className="text-kiosk-text/85">
               {track.title} - {track.artist}
             </DialogDescription>
           )}
@@ -164,7 +164,7 @@ export function AddToPlaylistModal({
               <ScrollArea className="h-[300px] pr-4">
                 <div className="space-y-2">
                   {playlists.length === 0 ? (
-                    <p className="text-center text-kiosk-text/60 py-8">
+                    <p className="text-center text-kiosk-text/85 py-8">
                       Nenhuma playlist encontrada
                     </p>
                   ) : (
@@ -197,7 +197,7 @@ export function AddToPlaylistModal({
                           <p className="font-medium text-kiosk-text truncate">
                             {playlist.title}
                           </p>
-                          <p className="text-sm text-kiosk-text/60">
+                          <p className="text-sm text-kiosk-text/85">
                             {playlist.trackCount} faixas
                           </p>
                         </div>

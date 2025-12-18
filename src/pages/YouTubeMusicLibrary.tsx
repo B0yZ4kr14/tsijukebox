@@ -77,7 +77,7 @@ export default function YouTubeMusicLibrary() {
             </Button>
             <div>
               <h1 className="text-xl font-bold text-kiosk-text">Sua Biblioteca</h1>
-              <p className="text-sm text-kiosk-text/60">YouTube Music</p>
+              <p className="text-sm text-kiosk-text/85">YouTube Music</p>
             </div>
           </div>
 
@@ -125,7 +125,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                   <div>
                     <h2 className="font-semibold text-kiosk-text">Músicas Curtidas</h2>
-                    <p className="text-sm text-kiosk-text/60">{likedSongs.length} músicas</p>
+                    <p className="text-sm text-kiosk-text/85">{likedSongs.length} músicas</p>
                   </div>
                 </div>
 
@@ -136,7 +136,7 @@ export default function YouTubeMusicLibrary() {
                     ))}
                   </div>
                 ) : likedSongs.length === 0 ? (
-                  <div className="text-center py-12 text-kiosk-text/60">
+                  <div className="text-center py-12 text-kiosk-text/85">
                     <Heart className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma música curtida</p>
                   </div>
@@ -170,7 +170,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                   <div>
                     <h2 className="font-semibold text-kiosk-text">Tocadas Recentemente</h2>
-                    <p className="text-sm text-kiosk-text/60">{recentlyPlayed.length} músicas</p>
+                    <p className="text-sm text-kiosk-text/85">{recentlyPlayed.length} músicas</p>
                   </div>
                 </div>
 
@@ -181,7 +181,7 @@ export default function YouTubeMusicLibrary() {
                     ))}
                   </div>
                 ) : recentlyPlayed.length === 0 ? (
-                  <div className="text-center py-12 text-kiosk-text/60">
+                  <div className="text-center py-12 text-kiosk-text/85">
                     <Clock className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma música tocada recentemente</p>
                   </div>
@@ -219,7 +219,7 @@ export default function YouTubeMusicLibrary() {
                     ))}
                   </div>
                 ) : albums.length === 0 ? (
-                  <div className="text-center py-12 text-kiosk-text/60">
+                  <div className="text-center py-12 text-kiosk-text/85">
                     <Disc className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhum álbum salvo</p>
                   </div>
@@ -254,7 +254,7 @@ export default function YouTubeMusicLibrary() {
                     ))}
                   </div>
                 ) : playlists.length === 0 ? (
-                  <div className="text-center py-12 text-kiosk-text/60">
+                  <div className="text-center py-12 text-kiosk-text/85">
                     <Music className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma playlist encontrada</p>
                   </div>

@@ -46,6 +46,28 @@ const IMPACT_COLORS = {
 
 // Prohibited patterns for simple mode
 const PROHIBITED_PATTERNS = [
+  // === LOW CONTRAST TEXT PATTERNS (CRITICAL) ===
+  { 
+    pattern: /text-kiosk-text\/[1-4][0-9]/g, 
+    message: 'Very low contrast text (under 50%) - upgrade to /85 or higher for WCAG compliance',
+    severity: 'critical'
+  },
+  { 
+    pattern: /text-kiosk-text\/5[0-9]/g, 
+    message: 'Low contrast text (50-59%) - upgrade to /85 for better readability',
+    severity: 'serious'
+  },
+  { 
+    pattern: /text-kiosk-text\/6[0-9]/g, 
+    message: 'Medium-low contrast text (60-69%) - upgrade to /85 for WCAG AA compliance',
+    severity: 'moderate'
+  },
+  { 
+    pattern: /text-kiosk-text\/7[0-4]/g, 
+    message: 'Borderline contrast text (70-74%) - consider upgrading to /90 for better accessibility',
+    severity: 'minor'
+  },
+  
   // === COLOR & CONTRAST PATTERNS ===
   { 
     pattern: /className="[^"]*\bbg-white\b[^"]*"/g, 

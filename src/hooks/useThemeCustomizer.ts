@@ -253,6 +253,20 @@ export function applyCustomColors(colors: CustomThemeColors) {
   root.style.setProperty('--custom-text', colors.text);
   root.setAttribute('data-theme', 'custom');
   
+  // Detect if this is a light theme (background lightness > 50%)
+  const bgParts = colors.background.split(' ');
+  const lightness = parseFloat(bgParts[2]?.replace('%', '') || '10');
+  const isLightMode = lightness > 50;
+  
+  // Apply light mode class for CSS conditional styling
+  if (isLightMode) {
+    root.setAttribute('data-light-mode', 'true');
+    document.body.classList.add('light-neon-mode');
+  } else {
+    root.removeAttribute('data-light-mode');
+    document.body.classList.remove('light-neon-mode');
+  }
+  
   // Apply gradient if enabled
   if (colors.gradientEnabled) {
     const gradient = `linear-gradient(${colors.gradientAngle}deg, hsl(${colors.gradientStart}), hsl(${colors.gradientEnd}))`;
@@ -273,7 +287,10 @@ export function clearCustomColors() {
   root.style.removeProperty('--custom-surface');
   root.style.removeProperty('--custom-text');
   root.style.removeProperty('--custom-gradient');
+  root.removeAttribute('data-theme');
+  root.removeAttribute('data-light-mode');
   document.body.removeAttribute('data-gradient');
+  document.body.classList.remove('light-neon-mode');
 }
 
 // Convert HSL string to HEX

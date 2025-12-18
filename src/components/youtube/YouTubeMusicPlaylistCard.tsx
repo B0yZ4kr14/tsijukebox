@@ -175,7 +175,7 @@ export function YouTubeMusicPlaylistCard({ playlist, onClick, onPlay, className,
       {/* Info */}
       <div className="space-y-1">
         <h3 className="font-semibold text-kiosk-text truncate">{playlist.title}</h3>
-        <p className="text-sm text-kiosk-text/60 truncate">
+        <p className="text-sm text-kiosk-text/85 truncate">
           {playlist.trackCount} faixas
         </p>
       </div>

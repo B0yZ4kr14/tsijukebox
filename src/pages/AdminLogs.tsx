@@ -28,7 +28,7 @@ export default function AdminLogs() {
       <div className="space-y-6">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-gold-neon">Logs do Sistema</h2>
-          <p className="text-kiosk-text/70">Visualize os logs de atividade do sistema</p>
+          <p className="text-kiosk-text/90">Visualize os logs de atividade do sistema</p>
         </div>
 
         <Card className="card-admin-extreme-3d">
@@ -36,7 +36,7 @@ export default function AdminLogs() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-gold-neon">Registros</CardTitle>
-                <CardDescription className="text-kiosk-text/70">
+                <CardDescription className="text-kiosk-text/90">
                   {filteredLogs.length} entradas {levelFilter !== 'ALL' && `(filtrado: ${levelFilter})`}
                 </CardDescription>
               </div>
@@ -100,7 +100,7 @@ export default function AdminLogs() {
             ) : filteredLogs.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <FileText className="w-12 h-12 icon-neon-blue mb-4" />
-                <p className="text-kiosk-text/70">Nenhum log encontrado</p>
+                <p className="text-kiosk-text/90">Nenhum log encontrado</p>
               </div>
             ) : (
               <div className="max-h-[600px] overflow-auto">

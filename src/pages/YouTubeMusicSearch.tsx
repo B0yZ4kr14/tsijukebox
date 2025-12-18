@@ -82,7 +82,7 @@ export default function YouTubeMusicSearch() {
             </Button>
             <div>
               <h1 className="text-xl font-bold text-kiosk-text">Buscar</h1>
-              <p className="text-sm text-kiosk-text/60">YouTube Music</p>
+              <p className="text-sm text-kiosk-text/85">YouTube Music</p>
             </div>
           </div>
 
@@ -116,7 +116,7 @@ export default function YouTubeMusicSearch() {
               <Loader2 className="w-8 h-8 animate-spin text-[#FF0000]" />
             </div>
           ) : !hasResults ? (
-            <div className="text-center py-20 text-kiosk-text/60">
+            <div className="text-center py-20 text-kiosk-text/85">
               <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p className="text-lg">Busque por músicas, álbuns ou playlists</p>
               <p className="text-sm">Digite algo no campo de busca acima</p>

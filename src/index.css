@@ -3507,3 +3507,85 @@ body[data-gradient="true"] {
   border-color: hsl(195 100% 50% / 0.5);
   color: hsl(195 100% 40%);
 }
+
+/* Light Neon Mode - Enhanced Card Styling */
+.light-neon-mode .card-neon-border,
+[data-light-mode="true"] .card-neon-border {
+  background: linear-gradient(145deg, hsl(220 20% 96%) 0%, hsl(220 15% 93%) 100%);
+  border-color: hsl(195 80% 60% / 0.4);
+  box-shadow: 
+    0 4px 15px hsl(220 20% 60% / 0.2),
+    0 0 20px hsl(195 100% 55% / 0.15);
+}
+
+.light-neon-mode .card-option-dark-3d,
+[data-light-mode="true"] .card-option-dark-3d {
+  background: linear-gradient(145deg, hsl(220 20% 97%) 0%, hsl(220 15% 94%) 100%);
+  border-color: hsl(195 60% 70% / 0.3);
+  box-shadow: 
+    0 2px 8px hsl(220 20% 70% / 0.2),
+    inset 0 1px 0 hsl(0 0% 100% / 0.8);
+}
+
+.light-neon-mode .card-option-selected-3d,
+[data-light-mode="true"] .card-option-selected-3d {
+  background: linear-gradient(145deg, hsl(195 70% 95%) 0%, hsl(195 60% 92%) 100%);
+  border-color: hsl(195 100% 50% / 0.6);
+  box-shadow: 
+    0 4px 15px hsl(195 100% 50% / 0.25),
+    0 0 30px hsl(195 100% 55% / 0.15),
+    inset 0 1px 0 hsl(0 0% 100% / 0.9);
+}
+
+/* Light mode input fields */
+.light-neon-mode input,
+.light-neon-mode textarea,
+.light-neon-mode select,
+[data-light-mode="true"] input,
+[data-light-mode="true"] textarea,
+[data-light-mode="true"] select {
+  background-color: hsl(220 15% 98%);
+  color: hsl(220 25% 20%);
+  border-color: hsl(195 60% 70% / 0.4);
+}
+
+.light-neon-mode input:focus,
+.light-neon-mode textarea:focus,
+.light-neon-mode select:focus,
+[data-light-mode="true"] input:focus,
+[data-light-mode="true"] textarea:focus,
+[data-light-mode="true"] select:focus {
+  border-color: hsl(195 100% 50%);
+  box-shadow: 0 0 0 3px hsl(195 100% 50% / 0.2);
+}
+
+/* Light mode icons - keep neon effects but adjust for light bg */
+.light-neon-mode .icon-neon-blue,
+[data-light-mode="true"] .icon-neon-blue {
+  color: hsl(195 100% 45%);
+  filter: drop-shadow(0 0 4px hsl(195 100% 50%)) drop-shadow(0 0 8px hsl(195 100% 45% / 0.5));
+}
+
+/* Light mode text label colors */
+.light-neon-mode .text-label-yellow,
+[data-light-mode="true"] .text-label-yellow {
+  color: hsl(40 100% 38%);
+  text-shadow: none;
+}
+
+.light-neon-mode .text-gold-neon,
+[data-light-mode="true"] .text-gold-neon {
+  color: hsl(40 100% 35%);
+  text-shadow: 0 0 6px hsl(40 100% 50% / 0.3);
+}
+
+/* Light mode muted text - ensure readability */
+.light-neon-mode .text-kiosk-text\/85,
+[data-light-mode="true"] .text-kiosk-text\/85 {
+  color: hsl(220 15% 30%);
+}
+
+.light-neon-mode .text-kiosk-text\/90,
+[data-light-mode="true"] .text-kiosk-text\/90 {
+  color: hsl(220 15% 25%);
+}

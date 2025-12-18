@@ -146,14 +146,14 @@ export default function YouTubeMusicPlaylistPage() {
                   </div>
                 ) : (
                   <>
-                    <p className="text-sm text-kiosk-text/60 uppercase tracking-wide mb-1">Playlist</p>
+                    <p className="text-sm text-kiosk-text/85 uppercase tracking-wide mb-1">Playlist</p>
                     <h1 className="text-3xl font-bold text-kiosk-text mb-2">
                       {playlist?.title || 'Playlist'}
                     </h1>
                     {playlist?.description && (
-                      <p className="text-kiosk-text/70 mb-4">{playlist.description}</p>
+                      <p className="text-kiosk-text/90 mb-4">{playlist.description}</p>
                     )}
-                    <div className="flex items-center gap-4 text-sm text-kiosk-text/60">
+                    <div className="flex items-center gap-4 text-sm text-kiosk-text/85">
                       <span>{tracks.length} músicas</span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
@@ -198,7 +198,7 @@ export default function YouTubeMusicPlaylistPage() {
               ))}
             </div>
           ) : tracks.length === 0 ? (
-            <div className="text-center py-12 text-kiosk-text/60">
+            <div className="text-center py-12 text-kiosk-text/85">
               <Music className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p>Esta playlist está vazia</p>
             </div>

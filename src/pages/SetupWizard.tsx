@@ -359,7 +359,7 @@ export default function SetupWizard() {
               <p className="text-lg text-kiosk-text">
                 O <BrandText /> é seu sistema de música inteligente.
               </p>
-              <p className="text-kiosk-text/70">
+              <p className="text-kiosk-text/90">
                 Nas próximas telas, vamos configurar idioma, visual, conexões e integrações
                 para deixar tudo do seu jeito.
               </p>
@@ -376,7 +376,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="appearance" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Escolha o idioma da interface:
             </p>
             <RadioGroup
@@ -409,7 +409,7 @@ export default function SetupWizard() {
       case 'theme':
         return (
           <div className="space-y-6">
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Escolha a cor que mais combina com você:
             </p>
             <RadioGroup
@@ -446,7 +446,7 @@ export default function SetupWizard() {
       case 'accessibility':
         return (
           <div className="space-y-6">
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Ajuste para sua melhor experiência visual:
             </p>
             
@@ -454,7 +454,7 @@ export default function SetupWizard() {
               <div className="flex items-center justify-between p-4 rounded-lg card-option-dark-3d">
                 <div>
                   <Label className="text-kiosk-text font-medium">Modo Alto Contraste</Label>
-                  <p className="text-xs text-kiosk-text/70">Cores mais fortes e visíveis</p>
+                  <p className="text-xs text-kiosk-text/90">Cores mais fortes e visíveis</p>
                 </div>
                 <Switch
                   checked={wizardData.highContrast}
@@ -466,7 +466,7 @@ export default function SetupWizard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-kiosk-text font-medium">Tamanho da Fonte</Label>
-                    <p className="text-xs text-kiosk-text/70">{wizardData.fontSize}%</p>
+                    <p className="text-xs text-kiosk-text/90">{wizardData.fontSize}%</p>
                   </div>
                   <span className="text-lg font-mono text-label-yellow">{wizardData.fontSize}%</span>
                 </div>
@@ -485,7 +485,7 @@ export default function SetupWizard() {
                 style={{ fontSize: `${wizardData.fontSize}%` }}
               >
                 <p className="font-bold">Prévia do Texto</p>
-                <p className="text-sm text-kiosk-text/70">Este é o tamanho que os textos terão.</p>
+                <p className="text-sm text-kiosk-text/90">Este é o tamanho que os textos terão.</p>
               </div>
             </div>
           </div>
@@ -497,7 +497,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="connections" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Configure a conexão com o servidor de música:
             </p>
 
@@ -512,7 +512,7 @@ export default function SetupWizard() {
                 >
                   <Server className="w-6 h-6 mb-2 text-cyan-400" />
                   <p className="font-medium text-kiosk-text">Servidor Real</p>
-                  <p className="text-xs text-kiosk-text/60">Conectar ao backend</p>
+                  <p className="text-xs text-kiosk-text/85">Conectar ao backend</p>
                 </button>
                 <button
                   onClick={() => setWizardData(prev => ({ ...prev, useDemoMode: true }))}
@@ -522,7 +522,7 @@ export default function SetupWizard() {
                 >
                   <Sparkles className="w-6 h-6 mb-2 text-yellow-400" />
                   <p className="font-medium text-kiosk-text">Modo Demo</p>
-                  <p className="text-xs text-kiosk-text/60">Usar dados simulados</p>
+                  <p className="text-xs text-kiosk-text/85">Usar dados simulados</p>
                 </button>
               </div>
 
@@ -573,7 +573,7 @@ export default function SetupWizard() {
                     )}
                   </Button>
                   
-                  <p className="text-xs text-kiosk-text/50">
+                  <p className="text-xs text-kiosk-text/85">
                     Endereço do servidor FastAPI que controla a reprodução
                   </p>
                 </motion.div>
@@ -594,7 +594,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="integrations" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Escolha seu serviço de música preferido:
             </p>
             
@@ -648,7 +648,7 @@ export default function SetupWizard() {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-kiosk-text">{option.label}</p>
-                    <p className="text-xs text-kiosk-text/60">{option.description}</p>
+                    <p className="text-xs text-kiosk-text/85">{option.description}</p>
                   </div>
                   {wizardData.musicProvider === option.value && (
                     <Check className="w-5 h-5 text-cyan-400" />
@@ -657,7 +657,7 @@ export default function SetupWizard() {
               ))}
             </RadioGroup>
             
-            <p className="text-xs text-center text-kiosk-text/50">
+            <p className="text-xs text-center text-kiosk-text/85">
               Você pode configurar outros provedores depois nas Configurações
             </p>
           </div>
@@ -669,7 +669,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="integrations" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Conecte sua conta do Spotify (opcional):
             </p>
 
@@ -681,7 +681,7 @@ export default function SetupWizard() {
               
               <div className="space-y-3">
                 <div>
-                  <Label className="text-xs text-kiosk-text/70">Client ID</Label>
+                  <Label className="text-xs text-kiosk-text/90">Client ID</Label>
                   <Input
                     placeholder="Cole seu Client ID aqui"
                     value={wizardData.spotifyClientId}
@@ -690,7 +690,7 @@ export default function SetupWizard() {
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-kiosk-text/70">Client Secret</Label>
+                  <Label className="text-xs text-kiosk-text/90">Client Secret</Label>
                   <Input
                     type="password"
                     placeholder="Cole seu Client Secret aqui"
@@ -701,7 +701,7 @@ export default function SetupWizard() {
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-kiosk-background/50 text-xs text-kiosk-text/60 space-y-1">
+              <div className="p-3 rounded bg-kiosk-background/50 text-xs text-kiosk-text/85 space-y-1">
                 <p><strong>Como obter:</strong></p>
                 <ol className="list-decimal list-inside space-y-0.5">
                   <li>Acesse developer.spotify.com</li>
@@ -711,7 +711,7 @@ export default function SetupWizard() {
               </div>
             </div>
 
-            <p className="text-xs text-center text-kiosk-text/50">
+            <p className="text-xs text-center text-kiosk-text/85">
               Você pode pular e configurar depois em Configurações → Integrações
             </p>
           </div>
@@ -720,7 +720,7 @@ export default function SetupWizard() {
       case 'weather':
         return (
           <div className="space-y-6">
-            <p className="text-center text-kiosk-text/70">
+            <p className="text-center text-kiosk-text/90">
               Configure o widget de clima (opcional):
             </p>
 
@@ -778,12 +778,12 @@ export default function SetupWizard() {
                 )}
               </Button>
               
-              <p className="text-xs text-kiosk-text/50">
+              <p className="text-xs text-kiosk-text/85">
                 Obtenha sua chave gratuita em openweathermap.org
               </p>
             </div>
 
-            <p className="text-xs text-center text-kiosk-text/50">
+            <p className="text-xs text-center text-kiosk-text/85">
               Você pode pular e configurar depois em Configurações.
             </p>
           </div>
@@ -797,13 +797,13 @@ export default function SetupWizard() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-bold text-kiosk-text">Configuração Concluída!</h3>
-              <p className="text-kiosk-text/70">
+              <p className="text-kiosk-text/90">
                 Seu <BrandText /> está pronto para uso.
               </p>
             </div>
             <div className="p-4 rounded-lg card-option-dark-3d text-left space-y-2">
               <p className="text-sm text-label-yellow">Resumo:</p>
-              <ul className="text-sm text-kiosk-text/70 space-y-1">
+              <ul className="text-sm text-kiosk-text/90 space-y-1">
                 <li>• Idioma: {languages.find(l => l.code === wizardData.language)?.name}</li>
                 <li>• Tema: {wizardData.theme === 'blue' ? 'Azul Neon' : wizardData.theme === 'green' ? 'Verde Tech' : 'Roxo Vibrante'}</li>
                 <li>• Fonte: {wizardData.fontSize}%</li>
@@ -839,7 +839,7 @@ export default function SetupWizard() {
       <div className="p-4">
         {/* Progress percentage */}
         <div className="flex items-center justify-between mb-2 px-2">
-          <span className="text-xs text-kiosk-text/50">Progresso</span>
+          <span className="text-xs text-kiosk-text/85">Progresso</span>
           <span className="text-xs font-medium text-cyan-400">{progressPercent}%</span>
         </div>
         

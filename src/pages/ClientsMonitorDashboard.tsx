@@ -132,7 +132,7 @@ export default function ClientsMonitorDashboard() {
               variant="ghost"
               size="icon"
               onClick={() => navigate('/settings')}
-              className="text-kiosk-text/70 hover:text-kiosk-text"
+              className="text-kiosk-text/90 hover:text-kiosk-text"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -141,7 +141,7 @@ export default function ClientsMonitorDashboard() {
                 <Building2 className="w-6 h-6" />
                 Monitoramento de Clientes
               </h1>
-              <p className="text-sm text-kiosk-text/60">
+              <p className="text-sm text-kiosk-text/85">
                 Status em tempo real dos terminais <BrandText />
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function ClientsMonitorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-kiosk-text">{stats.total}</p>
-                <p className="text-xs text-kiosk-text/60">Total</p>
+                <p className="text-xs text-kiosk-text/85">Total</p>
               </div>
             </div>
           </Card>
@@ -175,7 +175,7 @@ export default function ClientsMonitorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-400">{stats.online}</p>
-                <p className="text-xs text-kiosk-text/60">Online</p>
+                <p className="text-xs text-kiosk-text/85">Online</p>
               </div>
             </div>
           </Card>
@@ -187,7 +187,7 @@ export default function ClientsMonitorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-red-400">{stats.offline}</p>
-                <p className="text-xs text-kiosk-text/60">Offline</p>
+                <p className="text-xs text-kiosk-text/85">Offline</p>
               </div>
             </div>
           </Card>
@@ -199,7 +199,7 @@ export default function ClientsMonitorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-yellow-400">{stats.unknown}</p>
-                <p className="text-xs text-kiosk-text/60">Desconhecido</p>
+                <p className="text-xs text-kiosk-text/85">Desconhecido</p>
               </div>
             </div>
           </Card>
@@ -313,7 +313,7 @@ export default function ClientsMonitorDashboard() {
                           className="absolute top-6 left-1/2 -translate-x-1/2 z-10 w-48 p-3 rounded-lg bg-kiosk-surface border border-cyan-500/30 shadow-xl"
                         >
                           <p className="font-medium text-sm text-kiosk-text truncate">{client.name}</p>
-                          <p className="text-xs text-kiosk-text/60">{client.city}</p>
+                          <p className="text-xs text-kiosk-text/85">{client.city}</p>
                           <Badge className={cn("mt-2 text-xs", statusBadgeColors[client.status])}>
                             {client.status}
                           </Badge>
@@ -325,12 +325,12 @@ export default function ClientsMonitorDashboard() {
 
                 {filteredClients.length === 0 && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-kiosk-text/50">Nenhum cliente encontrado</p>
+                    <p className="text-kiosk-text/85">Nenhum cliente encontrado</p>
                   </div>
                 )}
               </div>
 
-              <p className="text-xs text-center text-kiosk-text/50 mt-2">
+              <p className="text-xs text-center text-kiosk-text/85 mt-2">
                 Clique nos marcadores para ver detalhes. Mapa interativo em desenvolvimento.
               </p>
             </Card>
@@ -368,7 +368,7 @@ export default function ClientsMonitorDashboard() {
                     </div>
 
                     {client.city && (
-                      <p className="text-xs text-kiosk-text/60 flex items-center gap-1 mb-2">
+                      <p className="text-xs text-kiosk-text/85 flex items-center gap-1 mb-2">
                         <MapPin className="w-3 h-3" />
                         {client.address}, {client.city}
                       </p>
@@ -380,7 +380,7 @@ export default function ClientsMonitorDashboard() {
                     {metrics && (
                       <div className="space-y-2 pt-2 border-t border-kiosk-border">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-kiosk-text/60 flex items-center gap-1">
+                          <span className="text-kiosk-text/85 flex items-center gap-1">
                             <Cpu className="w-3 h-3" /> CPU
                           </span>
                           <span className={cn(
@@ -390,7 +390,7 @@ export default function ClientsMonitorDashboard() {
                         <Progress value={metrics.cpu} className="h-1" />
 
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-kiosk-text/60 flex items-center gap-1">
+                          <span className="text-kiosk-text/85 flex items-center gap-1">
                             <HardDrive className="w-3 h-3" /> Memória
                           </span>
                           <span className={cn(
@@ -400,7 +400,7 @@ export default function ClientsMonitorDashboard() {
                         <Progress value={metrics.memory} className="h-1" />
 
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-kiosk-text/60 flex items-center gap-1">
+                          <span className="text-kiosk-text/85 flex items-center gap-1">
                             <Thermometer className="w-3 h-3" /> Temp
                           </span>
                           <span className={cn(
@@ -411,7 +411,7 @@ export default function ClientsMonitorDashboard() {
                     )}
 
                     <div className="flex items-center justify-between mt-3 pt-2 border-t border-kiosk-border">
-                      <span className="text-xs text-kiosk-text/50">v{client.version}</span>
+                      <span className="text-xs text-kiosk-text/85">v{client.version}</span>
                       <Button
                         size="sm"
                         variant="ghost"
