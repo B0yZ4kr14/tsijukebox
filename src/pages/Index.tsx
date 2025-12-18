@@ -16,6 +16,8 @@ import { UserBadge } from '@/components/player/UserBadge';
 import { DigitalClock } from '@/components/player/DigitalClock';
 import { WeatherWidget } from '@/components/player/WeatherWidget';
 import { SpotifyPanel, SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
+import { LibraryPanel, LibraryPanelToggle } from '@/components/player/LibraryPanel';
+import { SideInfoPanel, SideInfoPanelToggle } from '@/components/player/SideInfoPanel';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { SkipLink } from '@/components/ui/SkipLink';
 import { GuidedTour, useTourSteps, isTourComplete } from '@/components/tour/GuidedTour';
@@ -31,7 +33,7 @@ import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Download, Wifi, WifiOff, Music, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Wifi, WifiOff, Music, Settings, Library, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Index() {
@@ -48,6 +50,8 @@ export default function Index() {
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [showQueue, setShowQueue] = useState(false);
   const [showSpotifyPanel, setShowSpotifyPanel] = useState(false);
+  const [showLibraryPanel, setShowLibraryPanel] = useState(false);
+  const [showSideInfoPanel, setShowSideInfoPanel] = useState(false);
   const [showTour, setShowTour] = useState(() => !isTourComplete());
   const tourSteps = useTourSteps();
 
@@ -292,6 +296,11 @@ export default function Index() {
 
               <div className="w-px h-6 bg-kiosk-text/20" />
 
+              <SideInfoPanelToggle 
+                onClick={() => setShowSideInfoPanel(!showSideInfoPanel)}
+                isOpen={showSideInfoPanel}
+              />
+
               <SpotifyPanelToggle 
                 onClick={() => {
                   if (spotify.isConnected) {
@@ -303,6 +312,11 @@ export default function Index() {
                 }} 
                 isOpen={showSpotifyPanel}
                 isConnected={spotify.isConnected}
+              />
+
+              <LibraryPanelToggle 
+                onClick={() => setShowLibraryPanel(!showLibraryPanel)}
+                isOpen={showLibraryPanel}
               />
 
               {canInstall && (
@@ -400,6 +414,33 @@ export default function Index() {
           onClose={() => setShowSpotifyPanel(false)}
           currentTrackId={status?.track?.id}
           currentAlbumId={status?.track?.albumId}
+        />
+
+        {/* Side Info Panel - Left (Queue, Lyrics, Info) */}
+        <SideInfoPanel
+          isOpen={showSideInfoPanel}
+          onClose={() => setShowSideInfoPanel(false)}
+          currentTrack={status?.track ? {
+            id: status.track.id,
+            title: status.track.title,
+            artist: status.track.artist,
+            album: status.track.album,
+            albumId: status.track.albumId,
+            cover: status.track.cover,
+            duration: status.track.duration,
+            position: status.track.position,
+            genre: status.track.genre,
+          } : null}
+          queue={queue}
+          onPlayItem={(uri) => api.playSpotifyUri(uri)}
+          onRemoveItem={removeFromQueue}
+          isPlaying={status?.playing}
+        />
+
+        {/* Library Panel - Right (Playlists, Search, Albums, Artists) */}
+        <LibraryPanel
+          isOpen={showLibraryPanel}
+          onClose={() => setShowLibraryPanel(false)}
         />
 
         {/* Guided Tour for new users */}

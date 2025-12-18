@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Music, Upload, Trash2, Plus, RefreshCw, Users, Server, 
   Settings, FolderSync, CheckCircle, XCircle, Clock,
   HardDrive, List, Grid, Play, MoreVertical, Search
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,7 +60,44 @@ export function LocalMusicSection() {
   const [newInstanceName, setNewInstanceName] = useState('');
   const [showPlaylistDialog, setShowPlaylistDialog] = useState(false);
   const [showInstanceDialog, setShowInstanceDialog] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    const validFiles = droppedFiles.filter(f => 
+      f.type === 'audio/mpeg' || f.name.toLowerCase().endsWith('.mp3')
+    );
+    
+    if (validFiles.length !== droppedFiles.length) {
+      toast.warning(t('localMusic.someFilesIgnored'));
+    }
+    
+    if (validFiles.length > 0) {
+      uploadFiles(validFiles);
+    }
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -308,20 +347,58 @@ export function LocalMusicSection() {
               />
               
               <div 
-                className="border-2 border-dashed border-cyan-500/30 rounded-lg p-12 text-center cursor-pointer hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-colors"
+                className={cn(
+                  "border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all duration-300",
+                  isDragging 
+                    ? "border-cyan-400 bg-cyan-500/10 scale-[1.02] shadow-lg shadow-cyan-500/20" 
+                    : "border-cyan-500/30 hover:border-cyan-500/50 hover:bg-cyan-500/5"
+                )}
                 onClick={() => fileInputRef.current?.click()}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
               >
-                <Upload className="w-12 h-12 mx-auto mb-4 icon-neon-blue" />
-                <p className="text-lg font-bold text-kiosk-text/90 mb-2">
-                  {t('localMusic.dragAndDrop')}
-                </p>
-                <p className="text-kiosk-text/60 mb-4">
-                  {t('localMusic.clickToSelect')}
-                </p>
-                <Button variant="outline" disabled={isUploading}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  {t('localMusic.selectFilesButton')}
-                </Button>
+                {isDragging ? (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="flex flex-col items-center"
+                  >
+                    <motion.div
+                      animate={{ 
+                        y: [0, -10, 0],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 0.5, 
+                        repeat: Infinity 
+                      }}
+                    >
+                      <Upload className="w-16 h-16 text-cyan-400" />
+                    </motion.div>
+                    <p className="text-xl font-bold text-cyan-400 mt-4">
+                      {t('localMusic.dropFilesHere')}
+                    </p>
+                    <p className="text-kiosk-text/60 mt-2">
+                      {t('localMusic.releaseToUpload')}
+                    </p>
+                  </motion.div>
+                ) : (
+                  <>
+                    <Upload className="w-12 h-12 mx-auto mb-4 icon-neon-blue" />
+                    <p className="text-lg font-bold text-kiosk-text/90 mb-2">
+                      {t('localMusic.dragAndDrop')}
+                    </p>
+                    <p className="text-kiosk-text/60 mb-4">
+                      {t('localMusic.clickToSelect')}
+                    </p>
+                    <Button variant="outline" disabled={isUploading}>
+                      <Upload className="w-4 h-4 mr-2" />
+                      {t('localMusic.selectFilesButton')}
+                    </Button>
+                  </>
+                )}
               </div>
 
               {isUploading && uploadProgress && (

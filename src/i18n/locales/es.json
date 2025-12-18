@@ -468,10 +468,22 @@
     "install": "Instalar",
     "update": "Actualizar Spicetify",
     "apply": "Aplicar Cambios",
-    "clear": "Limpiar Spicetify",
+    "clear": "Eliminar todas las modificaciones",
     "advancedCommands": "Comandos Avanzados",
+    "advancedWarning": "Use con precaución. Algunos comandos pueden requerir reiniciar Spotify.",
     "documentation": "Documentación",
-    "visitMarketplace": "Visitar Marketplace"
+    "visitMarketplace": "Abrir Marketplace en navegador",
+    "by": "por",
+    "installToManageThemes": "Instale Spicetify para gestionar temas",
+    "installToManageExtensions": "Instale Spicetify para gestionar extensiones",
+    "installToManageSnippets": "Instale Spicetify para gestionar snippets",
+    "installToManageApps": "Instale Spicetify para gestionar apps",
+    "installToAccessMarketplace": "Instale Spicetify para acceder al Marketplace",
+    "installToUseAdvanced": "Instale Spicetify para usar comandos avanzados",
+    "exploreMarketplace": "Explorar Marketplace",
+    "noItemsFound": "No se encontraron elementos",
+    "saveConfig": "Guardar configuración",
+    "restoreBackup": "Restaurar respaldo"
   },
   "storj": {
     "title": "Storj Cloud Storage",
@@ -584,6 +596,8 @@
     "compressFiles": "Comprimir archivos",
     "compressFilesHint": "Reducir tamaño de archivos antes de enviar",
     "saveConfig": "Guardar Configuración",
-    "replicateConfigToAll": "Replicar Configs a Todas las Instancias"
+    "replicateConfigToAll": "Replicar Configs a Todas las Instancias",
+    "dropFilesHere": "¡Suelte los archivos aquí!",
+    "releaseToUpload": "Suelte para subir"
   }
 }
