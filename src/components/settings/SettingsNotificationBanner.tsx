@@ -77,7 +77,7 @@ export function SettingsNotificationBanner({
           variant="ghost"
           size="sm"
           onClick={dismissAll}
-          className="text-xs text-kiosk-text/50 hover:text-kiosk-text h-7"
+          className="text-xs text-kiosk-text/85 hover:text-kiosk-text h-7"
         >
           Dispensar todas
         </Button>
@@ -118,7 +118,7 @@ export function SettingsNotificationBanner({
                       variant="ghost"
                       size="sm"
                       onClick={() => dismiss(notification.id)}
-                      className="h-6 w-6 p-0 text-kiosk-text/40 hover:text-kiosk-text flex-shrink-0"
+                      className="h-6 w-6 p-0 text-kiosk-text/80 hover:text-kiosk-text flex-shrink-0"
                     >
                       <X className="w-3 h-3" />
                     </Button>

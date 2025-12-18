@@ -100,19 +100,19 @@ export function SettingsSidebar({ activeCategory, onCategoryChange }: SettingsSi
               exit={{ opacity: 0, height: 0 }}
             >
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/40" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
                 <Input
                   placeholder="Buscar..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-8 bg-kiosk-bg/50 border-kiosk-surface/50 text-sm h-9 text-kiosk-text placeholder:text-kiosk-text/40"
+                  className="pl-9 pr-8 bg-kiosk-bg/50 border-kiosk-surface/50 text-sm h-9 text-kiosk-text placeholder:text-kiosk-text/80"
                 />
                 {searchQuery && (
                   <Button 
                     size="icon" 
                     variant="ghost" 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-kiosk-text/50 hover:text-kiosk-text"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-kiosk-text/85 hover:text-kiosk-text"
                   >
                     <X className="w-3 h-3" />
                   </Button>

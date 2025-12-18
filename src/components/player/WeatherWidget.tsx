@@ -37,9 +37,9 @@ export function WeatherWidget() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Cloud className="w-5 h-5 text-kiosk-text/50" />
-              <span className="text-xs text-kiosk-text/60 font-medium">--°C</span>
-              <Settings className="w-3 h-3 text-kiosk-text/40" />
+              <Cloud className="w-5 h-5 text-kiosk-text/85" />
+              <span className="text-xs text-kiosk-text/80 font-medium">--°C</span>
+              <Settings className="w-3 h-3 text-kiosk-text/80" />
             </motion.button>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="bg-kiosk-surface border-kiosk-surface/50">

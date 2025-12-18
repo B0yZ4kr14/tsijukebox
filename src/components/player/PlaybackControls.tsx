@@ -52,7 +52,7 @@ export function PlaybackControls({
                   "w-9 h-9 rounded-full transition-all duration-300 relative",
                   shuffle
                     ? "text-[#1DB954] hover:text-[#1DB954]/80 bg-[#1DB954]/15 hover:bg-[#1DB954]/25 shadow-[0_0_20px_rgba(29,185,84,0.4)] border border-[#1DB954]/30"
-                    : "text-kiosk-text/50 hover:text-kiosk-text hover:bg-kiosk-surface/50"
+                    : "text-kiosk-text/85 hover:text-kiosk-text hover:bg-kiosk-surface/50"
                 )}
               >
                 <Shuffle className={cn(
@@ -94,7 +94,7 @@ export function PlaybackControls({
                   "w-9 h-9 rounded-full transition-all duration-300 relative",
                   repeat !== 'off'
                     ? "text-[#1DB954] hover:text-[#1DB954]/80 bg-[#1DB954]/15 hover:bg-[#1DB954]/25 shadow-[0_0_20px_rgba(29,185,84,0.4)] border border-[#1DB954]/30"
-                    : "text-kiosk-text/50 hover:text-kiosk-text hover:bg-kiosk-surface/50"
+                    : "text-kiosk-text/85 hover:text-kiosk-text hover:bg-kiosk-surface/50"
                 )}
               >
                 {repeat === 'track' ? (
@@ -142,7 +142,7 @@ export function PlaybackControls({
                 onClick={onQueueOpen}
                 disabled={disabled}
                 aria-label={t('player.openQueue')}
-                className="w-9 h-9 rounded-full text-kiosk-text/50 hover:text-kiosk-text hover:bg-kiosk-surface/50 transition-all duration-200"
+                className="w-9 h-9 rounded-full text-kiosk-text/85 hover:text-kiosk-text hover:bg-kiosk-surface/50 transition-all duration-200"
               >
                 <ListMusic className="w-4 h-4" />
               </Button>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle, Music, Keyboard, Palette, Plug, Shield, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -75,7 +75,7 @@ export default function Wiki() {
                 <Book className="w-6 h-6 icon-neon-blue" />
                 <div>
                   <h1 className="text-xl font-bold text-gold-neon">Wiki</h1>
-                  <p className="text-xs text-kiosk-text/60">
+                  <p className="text-xs text-kiosk-text/80">
                     {totalArticles} artigos em {wikiCategories.length} categorias
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export default function Wiki() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <LogoBrand size="sm" />
+              <LogoBrand size="sm" variant="metal" />
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function Wiki() {
                         clearBookmarks();
                         toast.success('Favoritos limpos');
                       }}
-                      className="h-6 w-6 p-0 text-kiosk-text/50 hover:text-red-400"
+                      className="h-6 w-6 p-0 text-kiosk-text/80 hover:text-red-400"
                     >
                       <Trash2 className="w-3 h-3" />
                     </Button>
@@ -280,7 +280,7 @@ function CategoryOverview({
                   <FileText className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-kiosk-text text-sm">{formatBrandName(article.title)}</p>
-                    <p className="text-xs text-kiosk-text/60">{formatBrandName(article.description)}</p>
+                    <p className="text-xs text-kiosk-text/80">{formatBrandName(article.description)}</p>
                   </div>
                 </button>
               ))}
@@ -322,6 +322,19 @@ function WelcomeScreen({
           const articleCount = category.subSections.reduce(
             (acc, sub) => acc + sub.articles.length, 0
           );
+          // Map category icons
+          const getCategoryIcon = (id: string) => {
+            const iconMap: Record<string, React.ReactNode> = {
+              'playback': <Music className="w-5 h-5 icon-neon-blue" />,
+              'shortcuts': <Keyboard className="w-5 h-5 icon-neon-blue" />,
+              'customization': <Palette className="w-5 h-5 icon-neon-blue" />,
+              'integrations': <Plug className="w-5 h-5 icon-neon-blue" />,
+              'administration': <Shield className="w-5 h-5 icon-neon-blue" />,
+              'troubleshooting': <Terminal className="w-5 h-5 icon-neon-blue" />,
+              'faq': <HelpCircle className="w-5 h-5 icon-neon-blue" />,
+            };
+            return iconMap[id] || <Book className="w-5 h-5 icon-neon-blue" />;
+          };
           return (
             <button
               key={category.id}
@@ -329,17 +342,17 @@ function WelcomeScreen({
               className="p-6 rounded-xl bg-kiosk-surface/50 border border-border hover:border-primary/30 transition-all text-left group"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                  <Book className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                  {getCategoryIcon(category.id)}
                 </div>
                 <div>
                   <h3 className="font-semibold text-kiosk-text group-hover:text-primary transition-colors">
                     {category.title}
                   </h3>
-                  <p className="text-xs text-kiosk-text/50">{articleCount} artigos</p>
+                  <p className="text-xs text-kiosk-text/85">{articleCount} artigos</p>
                 </div>
               </div>
-              <p className="text-sm text-kiosk-text/60 line-clamp-2">
+              <p className="text-sm text-kiosk-text/80 line-clamp-2">
                 {formatBrandName(category.description)}
               </p>
             </button>

@@ -158,7 +158,7 @@ export default function Index() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <LogoBrand size="xl" showTagline animate />
+              <LogoBrand size="xl" variant="metal" showTagline animate />
             </motion.div>
             <motion.div
               initial={{ opacity: 0 }}

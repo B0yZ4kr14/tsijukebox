@@ -103,7 +103,7 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <LogoBrand size="md" animate />
+        <LogoBrand size="md" variant="metal" animate />
       </motion.div>
 
       {/* Header */}
@@ -350,11 +350,11 @@ export default function Dashboard() {
                     </span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-                      <p className="text-xs text-kiosk-text/60 truncate">{track.artist}</p>
+                      <p className="text-xs text-kiosk-text/80 truncate">{track.artist}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-kiosk-text">{track.plays}</p>
-                      <p className="text-xs text-kiosk-text/50">plays</p>
+                      <p className="text-xs text-kiosk-text/85">plays</p>
                     </div>
                   </motion.div>
                 ))}

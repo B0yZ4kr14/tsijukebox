@@ -67,7 +67,7 @@ function QueueTrackItemBase({
       {/* Drag handle */}
       {showDragHandle && dragHandleProps ? (
         <div {...dragHandleProps} className="touch-none">
-          <GripVertical className="w-4 h-4 text-kiosk-text/40 cursor-grab active:cursor-grabbing" />
+          <GripVertical className="w-4 h-4 text-kiosk-text/80 cursor-grab active:cursor-grabbing" />
         </div>
       ) : (
         <GripVertical className="w-4 h-4 text-kiosk-text/20 opacity-0 group-hover:opacity-100" />
@@ -79,7 +79,7 @@ function QueueTrackItemBase({
           <img src={item.cover} alt={item.album} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Music className="w-5 h-5 text-kiosk-text/50" />
+            <Music className="w-5 h-5 text-kiosk-text/85" />
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ function QueueTrackItemBase({
             size="icon"
             onClick={onPlay}
             aria-label={playLabel}
-            className="w-8 h-8 text-kiosk-text/50 hover:text-[#1DB954]"
+            className="w-8 h-8 text-kiosk-text/85 hover:text-[#1DB954]"
           >
             <Play className="w-4 h-4" />
           </Button>
@@ -109,7 +109,7 @@ function QueueTrackItemBase({
             size="icon"
             onClick={onRemove}
             aria-label={removeLabel}
-            className="w-8 h-8 text-kiosk-text/50 hover:text-destructive"
+            className="w-8 h-8 text-kiosk-text/85 hover:text-destructive"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -239,7 +239,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                 size="sm"
                 onClick={onClearQueue}
                 aria-label={t('player.clearQueue')}
-                className="text-kiosk-text/50 hover:text-destructive"
+                className="text-kiosk-text/85 hover:text-destructive"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
                 {t('player.clearQueue')}
@@ -250,7 +250,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
               size="icon"
               onClick={onClose}
               aria-label={t('common.close')}
-              className="w-8 h-8 text-kiosk-text/50 hover:text-kiosk-text"
+              className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -263,7 +263,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
             {/* Now Playing */}
             {queue?.current && (
               <section>
-                <h3 className="text-xs font-semibold text-kiosk-text/50 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-semibold text-kiosk-text/85 uppercase tracking-wider mb-2">
                   Tocando Agora
                 </h3>
                 <div className="p-3 rounded-lg bg-[#1DB954]/10 border border-[#1DB954]/20">
@@ -273,13 +273,13 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                         <img src={queue.current.cover} alt={queue.current.album} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Music className="w-6 h-6 text-kiosk-text/50" />
+                          <Music className="w-6 h-6 text-kiosk-text/85" />
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-kiosk-text truncate">{queue.current.title}</p>
-                      <p className="text-sm text-kiosk-text/60 truncate">{queue.current.artist}</p>
+                      <p className="text-sm text-kiosk-text/80 truncate">{queue.current.artist}</p>
                     </div>
                   </div>
                 </div>
@@ -288,11 +288,11 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
 
             {/* Next Up - Sortable */}
             <section>
-              <h3 className="text-xs font-semibold text-kiosk-text/50 uppercase tracking-wider mb-2">
+              <h3 className="text-xs font-semibold text-kiosk-text/85 uppercase tracking-wider mb-2">
                 Próximas ({queue?.next.length || 0})
               </h3>
               {!queue || queue.next.length === 0 ? (
-                <div className="text-center py-8 text-kiosk-text/40">
+                <div className="text-center py-8 text-kiosk-text/80">
                   <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">A fila está vazia</p>
                 </div>
@@ -335,7 +335,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
             {/* History */}
             {queue && queue.history.length > 0 && (
               <section>
-                <h3 className="text-xs font-semibold text-kiosk-text/50 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-semibold text-kiosk-text/85 uppercase tracking-wider mb-2">
                   Histórico
                 </h3>
                 <div className="space-y-1 opacity-60">

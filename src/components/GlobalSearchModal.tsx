@@ -90,7 +90,7 @@ export function GlobalSearchModal({
         {/* Search Input */}
         <div className="p-4 border-b border-kiosk-border">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/50" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/85" />
             <Input
               ref={inputRef}
               value={query}
@@ -112,7 +112,7 @@ export function GlobalSearchModal({
 
           {/* Source Filters */}
           <div className="flex items-center gap-2 mt-3">
-            <Filter className="w-4 h-4 text-kiosk-text/50" />
+            <Filter className="w-4 h-4 text-kiosk-text/85" />
             <Toggle
               pressed={filters.sources.includes('help')}
               onPressedChange={() => toggleSource('help')}
@@ -137,7 +137,7 @@ export function GlobalSearchModal({
         {/* Results */}
         <ScrollArea className="max-h-[400px]">
           {query.length < 2 ? (
-            <div className="p-8 text-center text-kiosk-text/50">
+            <div className="p-8 text-center text-kiosk-text/85">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Digite pelo menos 2 caracteres para pesquisar</p>
               <p className="text-sm mt-2">
@@ -148,14 +148,14 @@ export function GlobalSearchModal({
               </p>
             </div>
           ) : results.length === 0 ? (
-            <div className="p-8 text-center text-kiosk-text/50">
+            <div className="p-8 text-center text-kiosk-text/85">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Nenhum resultado encontrado para "{query}"</p>
               <p className="text-sm mt-2">Tente outros termos ou ajuste os filtros</p>
             </div>
           ) : (
             <div className="p-2">
-              <p className="px-2 py-1 text-xs text-kiosk-text/50">
+              <p className="px-2 py-1 text-xs text-kiosk-text/85">
                 {results.length} resultado{results.length !== 1 ? 's' : ''} encontrado{results.length !== 1 ? 's' : ''}
               </p>
               <AnimatePresence>
@@ -185,16 +185,16 @@ export function GlobalSearchModal({
                           <span className="font-medium text-kiosk-text truncate">
                             {highlightMatch(result.title, query)}
                           </span>
-                          <ChevronRight className="w-4 h-4 text-kiosk-text/50 group-hover:text-primary transition-colors" />
+                          <ChevronRight className="w-4 h-4 text-kiosk-text/85 group-hover:text-primary transition-colors" />
                         </div>
-                        <p className="text-sm text-kiosk-text/60 line-clamp-2 mt-1">
+                        <p className="text-sm text-kiosk-text/80 line-clamp-2 mt-1">
                           {highlightMatch(result.description, query)}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge variant="outline" className="text-xs">
                             {result.source === 'help' ? 'Help' : 'Wiki'}
                           </Badge>
-                          <span className="text-xs text-kiosk-text/60">
+                          <span className="text-xs text-kiosk-text/80">
                             {result.path}
                           </span>
                         </div>
@@ -208,7 +208,7 @@ export function GlobalSearchModal({
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-3 border-t border-kiosk-border flex items-center justify-between text-xs text-kiosk-text/50">
+        <div className="p-3 border-t border-kiosk-border flex items-center justify-between text-xs text-kiosk-text/85">
           <div className="flex items-center gap-4">
             <span>
               <kbd className="px-1.5 py-0.5 bg-kiosk-surface rounded">↑</kbd>

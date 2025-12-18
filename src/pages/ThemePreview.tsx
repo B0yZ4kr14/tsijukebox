@@ -91,7 +91,7 @@ export default function ThemePreview() {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <LogoBrand size="md" animate />
+          <LogoBrand size="md" variant="metal" animate />
         </motion.div>
 
         {/* Header */}
@@ -315,7 +315,7 @@ export default function ThemePreview() {
                       style={{ background: `hsl(${preset.colors.gradientStart})` }}
                       title="Cor inicial"
                     />
-                    <span className="text-kiosk-text/50 text-xs">→</span>
+                    <span className="text-kiosk-text/85 text-xs">→</span>
                     <div 
                       className="w-6 h-6 rounded-full shadow-lg"
                       style={{ background: `hsl(${preset.colors.gradientEnd})` }}
@@ -374,28 +374,28 @@ export default function ThemePreview() {
                         className="w-full h-10 rounded-lg mb-1 shadow-lg"
                         style={{ background: `hsl(${currentPreset.colors.primary})` }}
                       />
-                      <span className="text-xs text-kiosk-text/60">Primary</span>
+                      <span className="text-xs text-kiosk-text/80">Primary</span>
                     </div>
                     <div className="text-center">
                       <div 
                         className="w-full h-10 rounded-lg mb-1 shadow-lg"
                         style={{ background: `hsl(${currentPreset.colors.primaryGlow})` }}
                       />
-                      <span className="text-xs text-kiosk-text/60">Glow</span>
+                      <span className="text-xs text-kiosk-text/80">Glow</span>
                     </div>
                     <div className="text-center">
                       <div 
                         className="w-full h-10 rounded-lg mb-1 shadow-lg"
                         style={{ background: `hsl(${currentPreset.colors.accent})` }}
                       />
-                      <span className="text-xs text-kiosk-text/60">Accent</span>
+                      <span className="text-xs text-kiosk-text/80">Accent</span>
                     </div>
                     <div className="text-center">
                       <div 
                         className="w-full h-10 rounded-lg mb-1 shadow-lg border border-white/10"
                         style={{ background: `hsl(${currentPreset.colors.background})` }}
                       />
-                      <span className="text-xs text-kiosk-text/60">Background</span>
+                      <span className="text-xs text-kiosk-text/80">Background</span>
                     </div>
                     <div className="text-center">
                       <div 

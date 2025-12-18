@@ -155,7 +155,7 @@ export function WeatherConfigSection() {
                 size="icon"
                 onClick={refresh}
                 disabled={isLoading}
-                className="text-kiosk-text/50 hover:text-kiosk-text"
+                className="text-kiosk-text/85 hover:text-kiosk-text"
               >
                 <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               </Button>
@@ -188,7 +188,7 @@ export function WeatherConfigSection() {
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full px-3 text-kiosk-text/50 hover:text-kiosk-text"
+              className="absolute right-0 top-0 h-full px-3 text-kiosk-text/85 hover:text-kiosk-text"
               onClick={() => setShowApiKey(!showApiKey)}
               aria-label={showApiKey ? 'Ocultar chave de API' : 'Mostrar chave de API'}
             >

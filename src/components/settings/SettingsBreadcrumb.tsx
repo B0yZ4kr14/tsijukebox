@@ -36,7 +36,7 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
       
       {category !== 'dashboard' && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/40" />
+          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/80" />
           <button
             onClick={() => onNavigateToCategory(category)}
             className={cn(
@@ -53,7 +53,7 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
       
       {section && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/40" />
+          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/80" />
           <span className="text-kiosk-text">{section}</span>
         </>
       )}

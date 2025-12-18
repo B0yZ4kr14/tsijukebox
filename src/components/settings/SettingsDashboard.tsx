@@ -303,7 +303,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
 
           {/* Search */}
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/40" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
             <Input
               placeholder="Buscar nos guias..."
               value={searchQuery}
