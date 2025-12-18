@@ -7,6 +7,7 @@ import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUser } from '@/contexts/UserContext';
 import { cn } from '@/lib/utils';
 
 interface PlayerControlsProps {
@@ -23,6 +24,9 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
   const { play, pause, next, prev, stop, isLoading } = usePlayer();
   const { soundEnabled, animationsEnabled } = useSettings();
   const { t } = useTranslation();
+  const { hasPermission } = useUser();
+  
+  const canControl = hasPermission('canControlPlayback');
   
   // Ripples individuais para cada botão
   const prevRipple = useRipple();
@@ -74,13 +78,16 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handlePrev}
-          disabled={isLoading}
+          disabled={isLoading || !canControl}
           aria-label={t('player.previousTrack')}
+          aria-disabled={!canControl}
+          title={!canControl ? t('permissions.noPlaybackControl') : undefined}
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
-            "transition-all duration-200"
+            "transition-all duration-200",
+            !canControl && "opacity-50 cursor-not-allowed"
           )}
         >
           <RippleContainer ripples={prevRipple.ripples} color="cyan" />
@@ -94,12 +101,15 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handlePlayPause}
-          disabled={isLoading}
+          disabled={isLoading || !canControl}
           aria-label={isPlaying ? t('player.pause') : t('player.play')}
+          aria-disabled={!canControl}
+          title={!canControl ? t('permissions.noPlaybackControl') : undefined}
           className={cn(
             "w-16 h-16 md:w-18 md:h-18 rounded-full relative z-10 overflow-hidden",
             "button-play-chrome-neon",
-            "transition-all duration-300"
+            "transition-all duration-300",
+            !canControl && "opacity-50 cursor-not-allowed"
           )}
         >
           <RippleContainer ripples={playRipple.ripples} color="primary" />
@@ -124,13 +134,16 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handleNext}
-          disabled={isLoading}
+          disabled={isLoading || !canControl}
           aria-label={t('player.nextTrack')}
+          aria-disabled={!canControl}
+          title={!canControl ? t('permissions.noPlaybackControl') : undefined}
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
             "text-kiosk-text hover:text-kiosk-primary",
-            "transition-all duration-200"
+            "transition-all duration-200",
+            !canControl && "opacity-50 cursor-not-allowed"
           )}
         >
           <RippleContainer ripples={nextRipple.ripples} color="cyan" />
@@ -149,13 +162,16 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handleStop}
-          disabled={isLoading}
+          disabled={isLoading || !canControl}
           aria-label={t('player.stop')}
+          aria-disabled={!canControl}
+          title={!canControl ? t('permissions.noPlaybackControl') : undefined}
           className={cn(
             "w-9 h-9 rounded-full relative overflow-hidden",
             "button-stop-extreme-3d",
             "text-kiosk-text/50 hover:text-destructive",
-            "transition-all duration-200"
+            "transition-all duration-200",
+            !canControl && "opacity-50 cursor-not-allowed"
           )}
         >
           <RippleContainer ripples={stopRipple.ripples} color="stop" />
