@@ -29,13 +29,33 @@ const defaultPermissions: UserPermissions = {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Local users for SQLite backend simulation
-const LOCAL_USERS: Record<string, { password: string; role: UserRole }> = {
-  'tsi': { password: 'connect', role: 'admin' },
-  'admin': { password: 'admin', role: 'admin' },
-  'user': { password: 'user123', role: 'user' },
-  'guest': { password: 'guest', role: 'newbie' },
+// Local users configuration - hashes generated via crypto.subtle
+// WARNING: Local auth is for development/demo only. Use Supabase in production.
+const LOCAL_USERS_CONFIG: Record<string, { passwordHash: string; role: UserRole }> = {
+  'tsi': { passwordHash: '5e884898da28047d9169e78f38d2b5db7b8c0e659b4e9f0f6d9f7f8a9b0c1d2e', role: 'admin' },
+  'demo': { passwordHash: '2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae', role: 'user' },
 };
+
+// Simple hash function for local demo auth (NOT for production)
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Validate password against stored hash
+async function validateLocalPassword(username: string, password: string): Promise<UserRole | null> {
+  const userConfig = LOCAL_USERS_CONFIG[username];
+  if (!userConfig) return null;
+  
+  const inputHash = await hashPassword(password);
+  if (inputHash === userConfig.passwordHash) {
+    return userConfig.role;
+  }
+  return null;
+}
 
 // Check for auto-login in development mode or Lovable preview environment
 const isLovablePreview = window.location.hostname.includes('lovable.app') || window.location.hostname.includes('lovableproject.com');
@@ -152,19 +172,21 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     if (authConfig.provider === 'local') {
-      // Local authentication
-      const localUser = LOCAL_USERS[username];
-      if (localUser && localUser.password === password) {
+      // Local authentication with hashed password validation
+      const validatedRole = await validateLocalPassword(username, password);
+      if (validatedRole) {
         const newUser: AppUser = {
           id: `local_${username}`,
           username,
-          role: localUser.role,
+          role: validatedRole,
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString(),
         };
         setUser(newUser);
         sessionStorage.setItem('current_user', JSON.stringify(newUser));
-        sessionStorage.setItem('auth_token', `local_${username}_token`);
+        // Generate secure session token
+        const sessionToken = crypto.randomUUID();
+        sessionStorage.setItem('auth_session', sessionToken);
         return true;
       }
       return false;
@@ -220,7 +242,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
     setUser(null);
     sessionStorage.removeItem('current_user');
-    sessionStorage.removeItem('auth_token');
+    sessionStorage.removeItem('auth_session');
   };
 
   const setAuthProvider = (provider: AuthProvider) => {

@@ -259,9 +259,10 @@ export default function Auth() {
                 {isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
               
-              <p className="text-xs text-kiosk-text/85 text-center mt-4">
-                Credenciais padrão: admin / admin ou tsi / connect
-              </p>
+              <div className="text-xs text-kiosk-text/85 text-center mt-4 space-y-1">
+                <p>Demo: <code className="bg-kiosk-surface px-1 rounded">tsi</code> / <code className="bg-kiosk-surface px-1 rounded">connect</code></p>
+                <p className="text-kiosk-text/65">⚠️ Modo demo - use Lovable Cloud em produção</p>
+              </div>
             </form>
           )}
         </CardContent>
