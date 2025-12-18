@@ -539,7 +539,7 @@ export default function SetupWizard() {
                       setWizardData(prev => ({ ...prev, backendUrl: e.target.value }));
                       setBackendTestResult(null);
                     }}
-                    className="bg-background/50"
+                    className="bg-kiosk-surface/50"
                   />
                   
                   {/* Test Connection Button */}
@@ -685,7 +685,7 @@ export default function SetupWizard() {
                     placeholder="Cole seu Client ID aqui"
                     value={wizardData.spotifyClientId}
                     onChange={(e) => setWizardData(prev => ({ ...prev, spotifyClientId: e.target.value }))}
-                    className="bg-background/50 mt-1"
+                    className="bg-kiosk-surface/50 mt-1"
                   />
                 </div>
                 <div>
@@ -695,7 +695,7 @@ export default function SetupWizard() {
                     placeholder="Cole seu Client Secret aqui"
                     value={wizardData.spotifyClientSecret}
                     onChange={(e) => setWizardData(prev => ({ ...prev, spotifyClientSecret: e.target.value }))}
-                    className="bg-background/50 mt-1"
+                    className="bg-kiosk-surface/50 mt-1"
                   />
                 </div>
               </div>
@@ -735,7 +735,7 @@ export default function SetupWizard() {
                   setWizardData(prev => ({ ...prev, weatherApiKey: e.target.value }));
                   setWeatherTestResult(null);
                 }}
-                className="bg-background/50"
+                className="bg-kiosk-surface/50"
               />
               <Input
                 placeholder="Cidade (ex: São Paulo, BR)"
@@ -744,7 +744,7 @@ export default function SetupWizard() {
                   setWizardData(prev => ({ ...prev, weatherCity: e.target.value }));
                   setWeatherTestResult(null);
                 }}
-                className="bg-background/50"
+                className="bg-kiosk-surface/50"
               />
               
               {/* Test Weather API Button */}

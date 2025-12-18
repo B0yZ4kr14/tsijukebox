@@ -34,7 +34,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-kiosk-bg">
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-64 bg-sidebar border-r border-sidebar-border">
         <div className="p-4 border-b border-sidebar-border">
@@ -62,7 +62,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-sidebar-border space-y-2">
           <Link to="/">
-            <Button variant="outline" className="w-full justify-start" size="sm">
+            <Button variant="kiosk-outline" className="w-full justify-start" size="sm">
               <Home className="w-4 h-4 mr-2" />
               Voltar ao Kiosk
             </Button>

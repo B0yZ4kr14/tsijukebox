@@ -125,7 +125,7 @@ export function AddToPlaylistModal({
               </div>
               <div className="flex gap-2">
                 <Button
-                  variant="outline"
+                  variant="kiosk-outline"
                   onClick={() => setIsCreating(false)}
                   className="flex-1"
                   disabled={isLoading}
@@ -153,7 +153,7 @@ export function AddToPlaylistModal({
               exit={{ opacity: 0, x: 20 }}
             >
               <Button
-                variant="outline"
+                variant="kiosk-outline"
                 onClick={() => setIsCreating(true)}
                 className="w-full mb-4 border-dashed border-[#FF0000]/50 text-[#FF0000] hover:bg-[#FF0000]/10"
               >

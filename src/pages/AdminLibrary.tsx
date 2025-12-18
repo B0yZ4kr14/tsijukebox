@@ -81,7 +81,7 @@ export default function AdminLibrary() {
                     Arraste arquivos MP3 aqui ou
                   </p>
                   <Button
-                    variant="outline"
+                    variant="kiosk-outline"
                     size="sm"
                     onClick={() => fileInputRef.current?.click()}
                   >
