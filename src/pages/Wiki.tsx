@@ -67,7 +67,7 @@ export default function Wiki() {
                 variant="ghost"
                 size="icon"
                 onClick={() => navigate(-1)}
-                className="text-kiosk-text/90 hover:text-kiosk-text"
+                className="text-kiosk-text/85 hover:text-kiosk-text"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
@@ -260,7 +260,7 @@ function CategoryOverview({
     >
       <header className="space-y-2">
         <h1 className="text-2xl font-bold text-gold-neon">{formatBrandName(category.title)}</h1>
-        <p className="text-kiosk-text/90">{formatBrandName(category.description)}</p>
+        <p className="text-kiosk-text/85">{formatBrandName(category.description)}</p>
       </header>
 
       <div className="grid gap-4">
@@ -311,7 +311,7 @@ function WelcomeScreen({
         <h1 className="text-2xl font-bold text-gold-neon mb-2">
           Bem-vindo à Wiki
         </h1>
-        <p className="text-kiosk-text/70 max-w-lg mx-auto">
+        <p className="text-kiosk-text/90 max-w-lg mx-auto">
           Documentação completa sobre todas as funcionalidades do sistema. 
           Selecione uma categoria na navegação ou use a busca para encontrar o que precisa.
         </p>
@@ -349,7 +349,7 @@ function WelcomeScreen({
                   <h3 className="font-semibold text-kiosk-text group-hover:text-primary transition-colors">
                     {category.title}
                   </h3>
-                  <p className="text-xs text-kiosk-text/85">{articleCount} artigos</p>
+                  <p className="text-xs text-kiosk-text/90">{articleCount} artigos</p>
                 </div>
               </div>
               <p className="text-sm text-kiosk-text/80 line-clamp-2">

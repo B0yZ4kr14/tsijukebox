@@ -92,7 +92,7 @@ export function SpicetifySection() {
           )}
 
           {error && (
-            <p className="text-sm text-kiosk-text/70">
+            <p className="text-sm text-kiosk-text/90">
               {error}. <a href="https://spicetify.app" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline font-semibold">Instalar Spicetify</a>
             </p>
           )}
@@ -117,7 +117,7 @@ export function SpicetifySection() {
                 >
                   <span className="font-bold text-kiosk-text">{theme.name}</span>
                   {theme.author && (
-                    <span className="text-xs text-kiosk-text/70">por {theme.author}</span>
+                    <span className="text-xs text-kiosk-text/90">por {theme.author}</span>
                   )}
                 </Button>
               ))}
@@ -139,7 +139,7 @@ export function SpicetifySection() {
                   <div>
                     <p className="font-bold text-kiosk-text">{ext.name}</p>
                     {ext.description && (
-                      <p className="text-xs text-kiosk-text/70">{ext.description}</p>
+                      <p className="text-xs text-kiosk-text/90">{ext.description}</p>
                     )}
                   </div>
                   <Switch

@@ -14,7 +14,7 @@ export function ProtectedRoute({ children, requiredPermission }: ProtectedRouteP
   if (isLoading) {
     return (
       <div className="min-h-screen bg-kiosk-bg flex items-center justify-center">
-        <div className="animate-pulse text-kiosk-text/70">Carregando...</div>
+        <div className="animate-pulse text-kiosk-text/90">Carregando...</div>
       </div>
     );
   }

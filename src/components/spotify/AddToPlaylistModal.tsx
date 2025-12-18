@@ -64,7 +64,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                 <h2 className="text-lg font-bold text-kiosk-text">Adicionar à Playlist</h2>
                 <button
                   onClick={handleClose}
-                  className="text-kiosk-text/90 hover:text-kiosk-text"
+                  className="text-kiosk-text/85 hover:text-kiosk-text"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -80,12 +80,12 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                   />
                 ) : (
                   <div className="w-12 h-12 rounded bg-kiosk-surface flex items-center justify-center">
-                    <Music className="w-6 h-6 text-kiosk-text/85" />
+                    <Music className="w-6 h-6 text-kiosk-text/90" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-kiosk-text truncate">{track.name}</p>
-                  <p className="text-sm text-kiosk-text/85 truncate">{track.artist}</p>
+                  <p className="text-sm text-kiosk-text/90 truncate">{track.artist}</p>
                 </div>
               </div>
             </div>
@@ -93,7 +93,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
             {/* Search */}
             <div className="p-4 border-b border-kiosk-border">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/85" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -107,10 +107,10 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
             <ScrollArea className="h-64">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="w-6 h-6 animate-spin text-kiosk-text/85" />
+                  <Loader2 className="w-6 h-6 animate-spin text-kiosk-text/90" />
                 </div>
               ) : filteredPlaylists.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-kiosk-text/85">
+                <div className="flex flex-col items-center justify-center h-full text-kiosk-text/90">
                   <Music className="w-8 h-8 mb-2" />
                   <p>Nenhuma playlist encontrada</p>
                 </div>
@@ -134,12 +134,12 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                         />
                       ) : (
                         <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center">
-                          <Music className="w-5 h-5 text-kiosk-text/85" />
+                          <Music className="w-5 h-5 text-kiosk-text/90" />
                         </div>
                       )}
                       <div className="flex-1 text-left min-w-0">
                         <p className="font-medium text-kiosk-text truncate">{playlist.name}</p>
-                        <p className="text-xs text-kiosk-text/85">{playlist.tracksTotal} faixas</p>
+                        <p className="text-xs text-kiosk-text/90">{playlist.tracksTotal} faixas</p>
                       </div>
                       {selectedId === playlist.id && (
                         <Check className="w-5 h-5 text-[#1DB954]" />

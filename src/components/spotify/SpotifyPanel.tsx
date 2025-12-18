@@ -60,7 +60,7 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
           />
         ) : (
           <div className="w-full h-full bg-kiosk-surface rounded flex items-center justify-center">
-            <Music2 className="w-4 h-4 text-kiosk-text/85" />
+            <Music2 className="w-4 h-4 text-kiosk-text/90" />
           </div>
         )}
         <button
@@ -73,7 +73,7 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-        <p className="text-xs text-kiosk-text/90 truncate">{track.artist}</p>
+        <p className="text-xs text-kiosk-text/85 truncate">{track.artist}</p>
       </div>
       <Button
         variant="ghost"
@@ -104,7 +104,7 @@ function AlbumCard({ album, onPlay, isPlaying }: { album: SpotifyAlbum; onPlay: 
           />
         ) : (
           <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-            <Disc3 className="w-8 h-8 text-kiosk-text/85" />
+            <Disc3 className="w-8 h-8 text-kiosk-text/90" />
           </div>
         )}
         {isPlaying ? (
@@ -119,7 +119,7 @@ function AlbumCard({ album, onPlay, isPlaying }: { album: SpotifyAlbum; onPlay: 
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{album.name}</p>
-        <p className="text-[10px] text-kiosk-text/90 truncate">{album.artist}</p>
+        <p className="text-[10px] text-kiosk-text/85 truncate">{album.artist}</p>
       </div>
     </button>
   );
@@ -140,7 +140,7 @@ function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlayli
           />
         ) : (
           <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-            <ListMusic className="w-8 h-8 text-kiosk-text/85" />
+            <ListMusic className="w-8 h-8 text-kiosk-text/90" />
           </div>
         )}
         {isPlaying ? (
@@ -155,7 +155,7 @@ function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlayli
       </div>
       <div className="text-left">
         <p className="text-xs font-medium text-kiosk-text truncate">{playlist.name}</p>
-        <p className="text-[10px] text-kiosk-text/90 truncate">{playlist.tracksTotal} músicas</p>
+        <p className="text-[10px] text-kiosk-text/85 truncate">{playlist.tracksTotal} músicas</p>
       </div>
     </button>
   );
@@ -261,13 +261,13 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
       {/* Search */}
       <form onSubmit={handleSearch} className="p-4 border-b border-kiosk-surface">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/85" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
           <Input
             type="text"
             placeholder="Buscar músicas, artistas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/85 progress-track-3d"
+            className="pl-10 bg-kiosk-surface border-kiosk-surface/50 text-kiosk-text placeholder:text-kiosk-text/90 progress-track-3d"
           />
         </div>
       </form>
@@ -311,7 +311,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
               {/* Playlists Tab */}
               {activeTab === 'playlists' && (
                 <>
-                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Suas Playlists</h3>
+                  <h3 className="text-sm font-semibold text-kiosk-text/90 mb-3">Suas Playlists</h3>
                   {playlistsLoading ? <LoadingSkeleton /> : (
                     <div className="space-y-1">
                       {playlists.map((playlist) => (
@@ -324,14 +324,14 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
                             <img src={playlist.imageUrl} alt={playlist.name} className="w-10 h-10 object-cover rounded shadow-lg" />
                           ) : (
                             <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center">
-                              <ListMusic className="w-4 h-4 text-kiosk-text/85" />
+                              <ListMusic className="w-4 h-4 text-kiosk-text/90" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-kiosk-text truncate">{playlist.name}</p>
-                            <p className="text-xs text-kiosk-text/90">{playlist.tracksTotal} músicas</p>
+                            <p className="text-xs text-kiosk-text/85">{playlist.tracksTotal} músicas</p>
                           </div>
-                          <Play className="w-4 h-4 text-kiosk-text/85" />
+                          <Play className="w-4 h-4 text-kiosk-text/90" />
                         </button>
                       ))}
                     </div>
@@ -342,7 +342,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
               {/* Liked Songs Tab */}
               {activeTab === 'liked' && (
                 <>
-                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Músicas Curtidas</h3>
+                  <h3 className="text-sm font-semibold text-kiosk-text/90 mb-3">Músicas Curtidas</h3>
                   {libraryLoading ? <LoadingSkeleton /> : (
                     <div className="space-y-1">
                       {likedTracks.slice(0, 30).map((track) => (
@@ -361,7 +361,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
               {/* Recent Tab */}
               {activeTab === 'recent' && (
                 <>
-                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Tocadas Recentemente</h3>
+                  <h3 className="text-sm font-semibold text-kiosk-text/90 mb-3">Tocadas Recentemente</h3>
                   {libraryLoading ? <LoadingSkeleton /> : (
                     <div className="space-y-1">
                       {recentlyPlayed.slice(0, 30).map((track, idx) => (
@@ -380,9 +380,9 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
               {/* Recommendations Tab */}
               {activeTab === 'recommendations' && (
                 <>
-                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Para Você</h3>
+                  <h3 className="text-sm font-semibold text-kiosk-text/90 mb-3">Para Você</h3>
                   {!currentTrackId ? (
-                    <div className="text-center py-8 text-kiosk-text/90">
+                    <div className="text-center py-8 text-kiosk-text/85">
                       <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-60" />
                       <p className="text-sm">Toque uma música para ver recomendações</p>
                     </div>
@@ -404,7 +404,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
               {/* New Releases Tab */}
               {activeTab === 'releases' && (
                 <>
-                  <h3 className="text-sm font-semibold text-kiosk-text/85 mb-3">Novos Lançamentos</h3>
+                  <h3 className="text-sm font-semibold text-kiosk-text/90 mb-3">Novos Lançamentos</h3>
                   {browseLoading ? <LoadingSkeleton /> : (
                     <div className="grid grid-cols-2 gap-2">
                       {newReleases.slice(0, 20).map((album) => (

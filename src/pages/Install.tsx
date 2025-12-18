@@ -136,7 +136,7 @@ export default function Install() {
               <h2 className="text-xl font-semibold text-green-400">
                 App Instalado!
               </h2>
-              <p className="text-kiosk-text/90">
+              <p className="text-kiosk-text/85">
                 O app está instalado no seu dispositivo. 
                 Você pode acessá-lo pela tela inicial.
               </p>
@@ -190,7 +190,7 @@ export default function Install() {
                         <div className="w-10 h-10 rounded-full bg-kiosk-primary/20 flex items-center justify-center flex-shrink-0">
                           <step.icon className="w-5 h-5 text-kiosk-primary" />
                         </div>
-                        <p className="text-kiosk-text/90 text-sm">{step.text}</p>
+                        <p className="text-kiosk-text/85 text-sm">{step.text}</p>
                       </motion.div>
                     ))}
                   </CardContent>
@@ -204,7 +204,7 @@ export default function Install() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                <h3 className="text-sm font-medium text-kiosk-text/85 text-center uppercase tracking-wider">
+                <h3 className="text-sm font-medium text-kiosk-text/90 text-center uppercase tracking-wider">
                   Benefícios
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
@@ -222,7 +222,7 @@ export default function Install() {
                       transition={{ delay: 0.8 + index * 0.05 }}
                     >
                       <benefit.icon className="w-4 h-4 text-kiosk-primary" />
-                      <span className="text-sm text-kiosk-text/90">{benefit.text}</span>
+                      <span className="text-sm text-kiosk-text/85">{benefit.text}</span>
                     </motion.div>
                   ))}
                 </div>

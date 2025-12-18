@@ -111,7 +111,7 @@ export default function ThemePreview() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gold-neon">Preview de Temas</h1>
-            <p className="text-kiosk-text/90 text-sm">
+            <p className="text-kiosk-text/85 text-sm">
               {builtInPresets.length} presets disponíveis • {solidThemes.length} sólidos + {gradientThemes.length} gradientes
             </p>
           </div>
@@ -315,7 +315,7 @@ export default function ThemePreview() {
                       style={{ background: `hsl(${preset.colors.gradientStart})` }}
                       title="Cor inicial"
                     />
-                    <span className="text-kiosk-text/90 text-xs">→</span>
+                    <span className="text-kiosk-text/85 text-xs">→</span>
                     <div 
                       className="w-6 h-6 rounded-full shadow-lg"
                       style={{ background: `hsl(${preset.colors.gradientEnd})` }}

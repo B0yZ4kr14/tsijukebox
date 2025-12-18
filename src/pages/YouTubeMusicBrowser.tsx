@@ -92,7 +92,7 @@ export default function YouTubeMusicBrowser() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-kiosk-text">YouTube Music</h1>
-                <p className="text-sm text-kiosk-text/85">Navegue sua biblioteca</p>
+                <p className="text-sm text-kiosk-text/90">Navegue sua biblioteca</p>
               </div>
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function YouTubeMusicBrowser() {
                 >
                   <item.icon className="w-8 h-8 mb-2" />
                   <p className="font-semibold">{item.title}</p>
-                  <p className="text-sm text-white/85">{item.count} itens</p>
+                  <p className="text-sm text-white/90">{item.count} itens</p>
                 </motion.button>
               ))}
             </div>

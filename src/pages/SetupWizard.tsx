@@ -359,7 +359,7 @@ export default function SetupWizard() {
               <p className="text-lg text-kiosk-text">
                 O <BrandText /> é seu sistema de música inteligente.
               </p>
-              <p className="text-kiosk-text/90">
+              <p className="text-kiosk-text/85">
                 Nas próximas telas, vamos configurar idioma, visual, conexões e integrações
                 para deixar tudo do seu jeito.
               </p>
@@ -376,7 +376,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="appearance" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/90">
+            <p className="text-center text-kiosk-text/85">
               Escolha o idioma da interface:
             </p>
             <RadioGroup
@@ -409,7 +409,7 @@ export default function SetupWizard() {
       case 'theme':
         return (
           <div className="space-y-6">
-            <p className="text-center text-kiosk-text/90">
+            <p className="text-center text-kiosk-text/85">
               Escolha a cor que mais combina com você:
             </p>
             <RadioGroup
@@ -446,7 +446,7 @@ export default function SetupWizard() {
       case 'accessibility':
         return (
           <div className="space-y-6">
-            <p className="text-center text-kiosk-text/90">
+            <p className="text-center text-kiosk-text/85">
               Ajuste para sua melhor experiência visual:
             </p>
             
@@ -454,7 +454,7 @@ export default function SetupWizard() {
               <div className="flex items-center justify-between p-4 rounded-lg card-option-dark-3d">
                 <div>
                   <Label className="text-kiosk-text font-medium">Modo Alto Contraste</Label>
-                  <p className="text-xs text-kiosk-text/90">Cores mais fortes e visíveis</p>
+                  <p className="text-xs text-kiosk-text/85">Cores mais fortes e visíveis</p>
                 </div>
                 <Switch
                   checked={wizardData.highContrast}
@@ -466,7 +466,7 @@ export default function SetupWizard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-kiosk-text font-medium">Tamanho da Fonte</Label>
-                    <p className="text-xs text-kiosk-text/90">{wizardData.fontSize}%</p>
+                    <p className="text-xs text-kiosk-text/85">{wizardData.fontSize}%</p>
                   </div>
                   <span className="text-lg font-mono text-label-yellow">{wizardData.fontSize}%</span>
                 </div>
@@ -485,7 +485,7 @@ export default function SetupWizard() {
                 style={{ fontSize: `${wizardData.fontSize}%` }}
               >
                 <p className="font-bold">Prévia do Texto</p>
-                <p className="text-sm text-kiosk-text/90">Este é o tamanho que os textos terão.</p>
+                <p className="text-sm text-kiosk-text/85">Este é o tamanho que os textos terão.</p>
               </div>
             </div>
           </div>
@@ -497,7 +497,7 @@ export default function SetupWizard() {
             <div className="flex justify-center mb-4">
               <SettingsIllustration type="connections" size="md" animated />
             </div>
-            <p className="text-center text-kiosk-text/90">
+            <p className="text-center text-kiosk-text/85">
               Configure a conexão com o servidor de música:
             </p>
 
