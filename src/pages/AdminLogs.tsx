@@ -122,12 +122,12 @@ export default function AdminLogs() {
                             log.level === 'ERROR' && "bg-destructive text-destructive-foreground",
                             log.level === 'WARNING' && "bg-yellow-500 text-black",
                             log.level === 'INFO' && "bg-blue-500 text-white",
-                            log.level === 'DEBUG' && "bg-muted text-muted-foreground"
+                            log.level === 'DEBUG' && "bg-muted text-kiosk-text/85"
                           )}>
                             {log.level}
                           </span>
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-muted-foreground">
+                        <TableCell className="font-mono text-xs text-kiosk-text/85">
                           {log.timestamp}
                         </TableCell>
                         <TableCell className="text-sm">

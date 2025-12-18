@@ -108,14 +108,14 @@ export default function Admin() {
                 )}
                 <div>
                   <p className="font-medium">{status.track.title}</p>
-                  <p className="text-sm text-muted-foreground">{status.track.artist}</p>
+                  <p className="text-sm text-kiosk-text/85">{status.track.artist}</p>
                   {status.track.album && (
-                    <p className="text-sm text-muted-foreground">{status.track.album}</p>
+                    <p className="text-sm text-kiosk-text/85">{status.track.album}</p>
                   )}
                 </div>
               </div>
             ) : (
-              <p className="text-muted-foreground">Nenhuma faixa em reprodução</p>
+              <p className="text-kiosk-text/85">Nenhuma faixa em reprodução</p>
             )}
           </CardContent>
         </Card>
@@ -151,11 +151,11 @@ export default function Admin() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="truncate">{log.message}</p>
-                    <p className="text-xs text-muted-foreground">{log.module} • {log.timestamp}</p>
+                    <p className="text-xs text-kiosk-text/85">{log.module} • {log.timestamp}</p>
                   </div>
                 </div>
               )) ?? (
-                <p className="text-muted-foreground">Nenhum log disponível</p>
+                <p className="text-kiosk-text/85">Nenhum log disponível</p>
               )}
             </div>
           </CardContent>

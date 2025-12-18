@@ -104,7 +104,7 @@ export function ContrastDebugPanel() {
 
         {/* Scanning indicator */}
         {isScanning && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+          <div className="flex items-center gap-2 text-xs text-kiosk-text/85 mb-3">
             <RefreshCw className="w-3 h-3 animate-spin" />
             <span>Escaneando...</span>
           </div>
@@ -118,18 +118,18 @@ export function ContrastDebugPanel() {
               <span className="text-xs font-medium text-kiosk-text">
                 {getTypeLabel(currentIssue.type)}
               </span>
-              <span className="text-xs text-muted-foreground ml-auto">
+              <span className="text-xs text-kiosk-text/85 ml-auto">
                 {currentIssueIndex + 1}/{issues.length}
               </span>
             </div>
             
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-kiosk-text/85 mb-2">
               {currentIssue.details}
             </p>
 
             {currentIssue.ratio && (
               <div className="flex items-center gap-2 text-xs mb-2">
-                <span className="text-muted-foreground">Ratio:</span>
+                <span className="text-kiosk-text/85">Ratio:</span>
                 <span className={
                   currentIssue.ratio < 3 ? 'text-red-400' : 
                   currentIssue.ratio < 4.5 ? 'text-yellow-400' : 'text-green-400'
@@ -146,7 +146,7 @@ export function ContrastDebugPanel() {
             )}
 
             {/* Element info */}
-            <div className="mt-2 text-[10px] text-muted-foreground font-mono truncate">
+            <div className="mt-2 text-[10px] text-kiosk-text/85 font-mono truncate">
               &lt;{currentIssue.element.tagName.toLowerCase()}
               {currentIssue.element.className && ` class="${currentIssue.element.className.slice(0, 50)}..."`}
               &gt;
@@ -195,7 +195,7 @@ export function ContrastDebugPanel() {
         </div>
 
         {/* Shortcut hint */}
-        <p className="text-[10px] text-muted-foreground text-center mt-2">
+        <p className="text-[10px] text-kiosk-text/85 text-center mt-2">
           Atalho: <kbd className="px-1 py-0.5 rounded bg-[hsl(220_25%_20%)] text-cyan-400">Ctrl+Shift+C</kbd>
         </p>
       </motion.div>
