@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LogoDownload } from '@/components/ui/LogoDownload';
+import { BrandText } from '@/components/ui/BrandText';
 
 // Color data for the palette
 const neonColors = [
@@ -294,6 +295,101 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                 <div className="flex items-center justify-between p-3 bg-kiosk-bg/30 rounded">
                   <span className="text-kiosk-text/70">Bold (700)</span>
                   <span className="font-bold text-kiosk-text text-lg">TSiJUKEBOX</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* BrandText Component */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader>
+                <CardTitle className="text-gold-neon flex items-center gap-2">
+                  <Type className="w-5 h-5 icon-neon-blue" />
+                  Componente BrandText
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Componente React para renderizar "TSiJUKEBOX" com cores da logo e shimmer metálico
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Tamanhos */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-kiosk-text/70">Tamanhos Disponíveis</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+                      <div key={size} className="p-4 bg-kiosk-bg/50 rounded-lg text-center">
+                        <BrandText size={size} />
+                        <Badge variant="outline" className="mt-2 text-xs">{size}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Exemplos em Contexto */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-kiosk-text/70">Exemplos em Contexto</h4>
+                  
+                  {/* Em título */}
+                  <div className="p-4 bg-kiosk-bg/50 rounded-lg">
+                    <h2 className="text-xl font-bold text-kiosk-text">
+                      Bem-vindo ao <BrandText size="lg" />
+                    </h2>
+                    <code className="text-xs text-cyan-400 mt-2 block">
+                      {`<h2>Bem-vindo ao <BrandText size="lg" /></h2>`}
+                    </code>
+                  </div>
+                  
+                  {/* Em parágrafo */}
+                  <div className="p-4 bg-kiosk-bg/50 rounded-lg">
+                    <p className="text-kiosk-text/80">
+                      O <BrandText /> é um sistema de jukebox inteligente 
+                      para ambientes comerciais.
+                    </p>
+                    <code className="text-xs text-cyan-400 mt-2 block">
+                      {`<p>O <BrandText /> é um sistema...</p>`}
+                    </code>
+                  </div>
+                  
+                  {/* Em card header */}
+                  <div className="p-4 bg-kiosk-surface rounded-lg border border-kiosk-border/30">
+                    <div className="flex items-center gap-2">
+                      <Music className="w-5 h-5 icon-neon-blue" />
+                      <span className="font-semibold"><BrandText size="md" /></span>
+                    </div>
+                    <p className="text-sm text-kiosk-text/60 mt-1">Player de música</p>
+                    <code className="text-xs text-cyan-400 mt-2 block">
+                      {`<CardTitle><BrandText size="md" /></CardTitle>`}
+                    </code>
+                  </div>
+                </div>
+                
+                {/* Dark/Light Mode Demo */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-kiosk-text/70">Suporte a Temas</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-slate-900 rounded-lg text-center">
+                      <p className="text-xs text-slate-400 mb-2">Dark Mode</p>
+                      <BrandText size="lg" />
+                    </div>
+                    <div className="p-4 bg-slate-100 rounded-lg text-center">
+                      <p className="text-xs text-slate-600 mb-2">Light Mode</p>
+                      <span className="inline text-lg">
+                        <span className="text-brand-tsi">TSi</span>
+                        <span className="text-brand-jukebox">JUKEBOX</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Uso do Código */}
+                <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
+                  <p className="text-cyan-400">{`import { BrandText } from '@/components/ui/BrandText';`}</p>
+                  <Separator className="bg-kiosk-border/30 my-3" />
+                  <p className="text-kiosk-text/70">{`// Uso básico`}</p>
+                  <p className="text-green-400">{`<BrandText />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Com tamanho`}</p>
+                  <p className="text-green-400">{`<BrandText size="xl" />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Sem shimmer (acessibilidade)`}</p>
+                  <p className="text-green-400">{`<BrandText noShimmer />`}</p>
                 </div>
               </CardContent>
             </Card>

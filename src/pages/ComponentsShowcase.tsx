@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { BrandText, BrandTextSize } from '@/components/ui/BrandText';
 import { CodePlayground, PropDefinition } from '@/components/docs/CodePlayground';
 
 // Component categories
@@ -137,6 +138,36 @@ const showcaseComponents = {
           size={props.size as 'sm' | 'md' | 'lg' | 'xl'}
           variant={props.variant as 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal'}
           animate={props.animate as boolean}
+        />
+      ),
+    },
+    {
+      id: 'brand-text',
+      title: 'BrandText',
+      description: 'Texto estilizado da marca TSiJUKEBOX com shimmer metálico',
+      code: `<BrandText 
+  size={size} 
+  noShimmer={noShimmer}
+/>`,
+      props: [
+        { 
+          name: 'size', 
+          type: 'select' as const, 
+          default: 'md',
+          options: ['sm', 'md', 'lg', 'xl'],
+          description: 'Tamanho do texto'
+        },
+        { 
+          name: 'noShimmer', 
+          type: 'boolean' as const, 
+          default: false,
+          description: 'Desativar animação shimmer'
+        },
+      ],
+      renderPreview: (props: Record<string, unknown>) => (
+        <BrandText 
+          size={props.size as BrandTextSize}
+          noShimmer={props.noShimmer as boolean}
         />
       ),
     },
