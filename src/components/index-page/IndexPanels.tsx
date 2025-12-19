@@ -4,11 +4,11 @@ import { SideInfoPanel } from '@/components/player/SideInfoPanel';
 import { LibraryPanel } from '@/components/player/LibraryPanel';
 import { CommandDeck } from '@/components/player/CommandDeck';
 import { GuidedTour, type TourStep } from '@/components/tour/GuidedTour';
-import type { SystemStatus, QueueItem } from '@/lib/api/types';
+import type { SystemStatus, PlaybackQueue } from '@/lib/api/types';
 
 interface IndexPanelsProps {
   status: SystemStatus | undefined;
-  queue: QueueItem[];
+  queue: PlaybackQueue | null;
   showQueue: boolean;
   showSpotifyPanel: boolean;
   showSideInfoPanel: boolean;
@@ -24,7 +24,7 @@ interface IndexPanelsProps {
   onPlayItem: (uri: string) => void;
   onRemoveItem: (id: string) => void;
   onClearQueue: () => void;
-  onReorderQueue: (items: QueueItem[]) => void;
+  onReorderQueue: (fromIndex: number, toIndex: number) => void;
 }
 
 export function IndexPanels({
@@ -81,7 +81,7 @@ export function IndexPanels({
           artist: status.track.artist,
           album: status.track.album,
           albumId: status.track.albumId,
-          cover: status.track.cover,
+          cover: status.track.cover ?? undefined,
           duration: status.track.duration,
           position: status.track.position,
           genre: status.track.genre,

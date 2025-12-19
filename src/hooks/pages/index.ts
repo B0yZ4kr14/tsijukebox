@@ -1,0 +1,1 @@
+export { useIndexPage } from './useIndexPage';
