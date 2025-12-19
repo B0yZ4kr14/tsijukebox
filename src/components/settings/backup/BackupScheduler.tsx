@@ -40,7 +40,7 @@ export function BackupScheduler({
   };
 
   return (
-    <div className="space-y-4 p-4 rounded-lg card-option-dark-3d">
+    <div className="space-y-4 p-4 rounded-lg card-option-dark-3d" data-testid="backup-scheduler">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 icon-neon-blue" />
@@ -50,6 +50,7 @@ export function BackupScheduler({
           checked={config.enabled}
           onCheckedChange={(enabled) => onChange({ ...config, enabled })}
           disabled={disabled}
+          data-testid="schedule-toggle"
         />
       </div>
 
@@ -64,7 +65,7 @@ export function BackupScheduler({
                 onValueChange={(v) => onChange({ ...config, frequency: v as SyncSchedule })}
                 disabled={disabled}
               >
-                <SelectTrigger className="bg-kiosk-surface/50">
+                <SelectTrigger className="bg-kiosk-surface/50" data-testid="schedule-frequency">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -85,6 +86,7 @@ export function BackupScheduler({
                 onChange={(e) => onChange({ ...config, time: e.target.value })}
                 className="bg-kiosk-surface/50"
                 disabled={disabled}
+                data-testid="schedule-time"
               />
             </div>
           </div>
@@ -100,6 +102,7 @@ export function BackupScheduler({
               onChange={(e) => onChange({ ...config, retention: parseInt(e.target.value) || 7 })}
               className="bg-kiosk-surface/50 w-24"
               disabled={disabled}
+              data-testid="schedule-retention"
             />
           </div>
 
@@ -114,6 +117,7 @@ export function BackupScheduler({
                     checked={config.providers.includes(provider)}
                     onCheckedChange={(checked) => handleProviderToggle(provider, checked === true)}
                     disabled={disabled}
+                    data-testid={`schedule-provider-${provider}`}
                   />
                   <Label 
                     htmlFor={`schedule-${provider}`} 
