@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music, Play } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LogoDownload } from '@/components/ui/LogoDownload';
 import { BrandText, BrandTextWeight } from '@/components/ui/BrandText';
 import { BrandTagline, TaglineVariant, BrandWithTagline, BrandAnimationType } from '@/components/ui/BrandTagline';
 import { BrandLogo, LogoAnimationType } from '@/components/ui/BrandLogo';
+import { SplashScreen, SplashVariant } from '@/components/ui/SplashScreen';
 
 // Color data for the palette
 const neonColors = [
@@ -109,6 +111,21 @@ function downloadFile(content: string, filename: string, type: string) {
 }
 
 export default function BrandGuidelines() {
+  // State for replay animations
+  const [animationKeys, setAnimationKeys] = useState<Record<string, number>>({
+    brandLogo: 0,
+    brandWithTagline: 0,
+    splashDemo: 0,
+  });
+  const [showSplashDemo, setShowSplashDemo] = useState(false);
+
+  const replayAnimation = (key: string) => {
+    setAnimationKeys(prev => ({
+      ...prev,
+      [key]: prev[key] + 1
+    }));
+  };
+
   const exportAsJSON = () => {
     const palette = {
       version: '4.0',
@@ -472,30 +489,43 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
           <TabsContent value="animations" className="space-y-8">
             {/* BrandLogo Animations */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
-                  <Play className="w-5 h-5 icon-neon-blue" />
-                  Animações do BrandLogo
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
-                  Animações de entrada para splash screens e loading states
-                </CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-gold-neon flex items-center gap-2">
+                    <Play className="w-5 h-5 icon-neon-blue" />
+                    Animações do BrandLogo
+                  </CardTitle>
+                  <CardDescription className="text-kiosk-text/60">
+                    Animações de entrada para splash screens e loading states
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => replayAnimation('brandLogo')}
+                  className="gap-2"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Replay
+                </Button>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Animation Types Demo */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-kiosk-text/70">Tipos de Animação</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                    {(['fade', 'slide-up', 'scale', 'cascade', 'splash'] as LogoAnimationType[]).map((anim) => (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {(['fade', 'slide-up', 'scale', 'cascade', 'splash', 'glitch'] as LogoAnimationType[]).map((anim) => (
                       <div key={anim} className="p-6 bg-kiosk-bg/50 rounded-lg text-center min-h-[140px] flex flex-col items-center justify-center">
                         <BrandLogo 
-                          key={`${anim}-${Date.now()}`}
+                          key={`${anim}-${animationKeys.brandLogo}`}
                           size="sm" 
-                          variant="metal" 
+                          variant={anim === 'glitch' ? 'metal' : 'metal'} 
                           animate={anim}
-                          taglineVariant="subtle"
+                          taglineVariant={anim === 'glitch' ? 'accent' : 'subtle'}
                         />
-                        <Badge variant="outline" className="mt-4 text-xs">{anim}</Badge>
+                        <Badge variant="outline" className={`mt-4 text-xs ${anim === 'glitch' ? 'border-purple-500 text-purple-400' : ''}`}>
+                          {anim}
+                        </Badge>
                       </div>
                     ))}
                   </div>
@@ -506,7 +536,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <h4 className="text-sm font-medium text-kiosk-text/70">Exemplo: Splash Screen</h4>
                   <div className="p-12 bg-gradient-to-b from-kiosk-bg to-kiosk-surface rounded-lg flex items-center justify-center">
                     <BrandLogo 
-                      key={`splash-demo-${Date.now()}`}
+                      key={`splash-demo-${animationKeys.brandLogo}`}
                       size="xl" 
                       variant="metal" 
                       animate="splash"
@@ -517,23 +547,82 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
               </CardContent>
             </Card>
 
-            {/* BrandWithTagline Animations */}
-            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+            {/* SplashScreen Component Demo */}
+            <Card className="bg-kiosk-surface/30 border-purple-500/30">
               <CardHeader>
                 <CardTitle className="text-gold-neon flex items-center gap-2">
-                  <Type className="w-5 h-5 icon-neon-blue" />
-                  Animações do BrandWithTagline
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  Componente SplashScreen
                 </CardTitle>
                 <CardDescription className="text-kiosk-text/60">
-                  Versão texto com animações para headers e loading states
+                  Tela de splash completa com progress bar e transição
                 </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {(['default', 'minimal', 'cyberpunk', 'elegant'] as SplashVariant[]).map((variant) => (
+                    <Dialog key={variant}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                          <span className="text-sm font-medium">{variant}</span>
+                          <span className="text-xs text-kiosk-text/50">Clique para demo</span>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl h-[500px] p-0 overflow-hidden">
+                        <div className="relative w-full h-full">
+                          <SplashScreen
+                            variant={variant}
+                            logoAnimation={variant === 'cyberpunk' ? 'glitch' : 'splash'}
+                            duration={5000}
+                            allowSkip
+                            onComplete={() => toast.success('Splash completado!')}
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  ))}
+                </div>
+
+                {/* Code Example */}
+                <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
+                  <p className="text-cyan-400">{`import { SplashScreen } from '@/components/ui';`}</p>
+                  <Separator className="bg-kiosk-border/30 my-3" />
+                  <p className="text-kiosk-text/70">{`// SplashScreen básico`}</p>
+                  <p className="text-green-400">{`<SplashScreen onComplete={() => setReady(true)} />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// SplashScreen cyberpunk com glitch`}</p>
+                  <p className="text-green-400">{`<SplashScreen variant="cyberpunk" logoAnimation="glitch" />`}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* BrandWithTagline Animations */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-gold-neon flex items-center gap-2">
+                    <Type className="w-5 h-5 icon-neon-blue" />
+                    Animações do BrandWithTagline
+                  </CardTitle>
+                  <CardDescription className="text-kiosk-text/60">
+                    Versão texto com animações para headers e loading states
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => replayAnimation('brandWithTagline')}
+                  className="gap-2"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Replay
+                </Button>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                   {(['fade', 'slide-up', 'slide-down', 'scale', 'cascade'] as BrandAnimationType[]).map((anim) => (
                     <div key={anim} className="p-6 bg-kiosk-bg/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center">
                       <BrandWithTagline 
-                        key={`text-${anim}-${Date.now()}`}
+                        key={`text-${anim}-${animationKeys.brandWithTagline}`}
                         brandSize="lg"
                         brandWeight="bold"
                         animate={anim}
@@ -553,10 +642,12 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
-                  <p className="text-cyan-400">{`import { BrandLogo, BrandWithTagline } from '@/components/ui';`}</p>
+                  <p className="text-cyan-400">{`import { BrandLogo, BrandWithTagline, SplashScreen } from '@/components/ui';`}</p>
                   <Separator className="bg-kiosk-border/30 my-3" />
                   <p className="text-kiosk-text/70">{`// Splash Screen com animação elegante`}</p>
                   <p className="text-green-400">{`<BrandLogo size="xl" variant="metal" animate="splash" />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Efeito Glitch cyberpunk`}</p>
+                  <p className="text-purple-400">{`<BrandLogo size="lg" variant="metal" animate="glitch" />`}</p>
                   <p className="text-kiosk-text/70 mt-2">{`// Loading State com slide-up`}</p>
                   <p className="text-green-400">{`<BrandWithTagline animate="slide-up" taglineVariant="neon" />`}</p>
                   <p className="text-kiosk-text/70 mt-2">{`// Header com cascade`}</p>

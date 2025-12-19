@@ -3984,3 +3984,87 @@ body[data-gradient="true"] {
 .permission-toggle-off .permission-toggle-thumb {
   box-shadow: 0 0 10px hsl(350 100% 50% / 0.8);
 }
+
+/* ========== GLITCH EFFECT - CYBERPUNK DISTORTION ========== */
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  10% { transform: skew(-2deg); }
+  20% { transform: skew(0deg); }
+  30% { transform: skew(2deg); }
+  40% { transform: skew(0deg); }
+  100% { transform: skew(0deg); }
+}
+
+@keyframes glitch-clip-1 {
+  0% { clip-path: inset(40% 0 61% 0); }
+  20% { clip-path: inset(92% 0 1% 0); }
+  40% { clip-path: inset(43% 0 1% 0); }
+  60% { clip-path: inset(25% 0 58% 0); }
+  80% { clip-path: inset(54% 0 7% 0); }
+  100% { clip-path: inset(58% 0 43% 0); }
+}
+
+@keyframes glitch-clip-2 {
+  0% { clip-path: inset(25% 0 58% 0); }
+  20% { clip-path: inset(54% 0 7% 0); }
+  40% { clip-path: inset(58% 0 43% 0); }
+  60% { clip-path: inset(40% 0 61% 0); }
+  80% { clip-path: inset(92% 0 1% 0); }
+  100% { clip-path: inset(43% 0 1% 0); }
+}
+
+@keyframes glitch-color-shift {
+  0% { 
+    text-shadow: 2px 0 hsl(195 100% 60%), -2px 0 hsl(0 100% 60%);
+    transform: translate(0);
+  }
+  20% { 
+    text-shadow: -2px 0 hsl(195 100% 60%), 2px 0 hsl(0 100% 60%);
+    transform: translate(-2px, 1px);
+  }
+  40% { 
+    text-shadow: 2px 0 hsl(45 100% 60%), -2px 0 hsl(195 100% 60%);
+    transform: translate(2px, -1px);
+  }
+  60% { 
+    text-shadow: -2px 0 hsl(45 100% 60%), 2px 0 hsl(0 100% 60%);
+    transform: translate(1px, 2px);
+  }
+  80% { 
+    text-shadow: 2px 0 hsl(0 100% 60%), -2px 0 hsl(45 100% 60%);
+    transform: translate(-1px, -2px);
+  }
+  100% { 
+    text-shadow: 2px 0 hsl(195 100% 60%), -2px 0 hsl(0 100% 60%);
+    transform: translate(0);
+  }
+}
+
+.brand-logo-glitch-container {
+  animation: glitch-skew 0.5s infinite linear;
+}
+
+.brand-logo-glitch-container > * {
+  animation: glitch-color-shift 0.3s infinite steps(2);
+}
+
+/* Glitch scanlines overlay */
+.glitch-scanlines {
+  position: relative;
+}
+
+.glitch-scanlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    hsl(0 0% 0% / 0.1) 2px,
+    hsl(0 0% 0% / 0.1) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}

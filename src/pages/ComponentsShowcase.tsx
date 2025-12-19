@@ -258,7 +258,7 @@ const showcaseComponents = {
           name: 'animate', 
           type: 'select' as const, 
           default: 'none',
-          options: ['none', 'fade', 'slide-up', 'scale', 'cascade', 'splash'],
+          options: ['none', 'fade', 'slide-up', 'scale', 'cascade', 'splash', 'glitch'],
           description: 'Tipo de animação de entrada'
         },
         { 

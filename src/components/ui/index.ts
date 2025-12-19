@@ -59,6 +59,8 @@ export { BrandTagline, BrandWithTagline } from './BrandTagline';
 export type { TaglineVariant, TaglineSize, BrandAnimationType } from './BrandTagline';
 export { BrandLogo } from './BrandLogo';
 export type { LogoVariant, LogoSize, LogoAnimationType } from './BrandLogo';
+export { SplashScreen } from './SplashScreen';
+export type { SplashVariant } from './SplashScreen';
 export { HighContrastToggle } from './HighContrastToggle';
 export { InfoTooltip } from './InfoTooltip';
 export { LogoBrand } from './LogoBrand';

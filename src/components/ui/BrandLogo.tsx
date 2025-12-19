@@ -6,7 +6,7 @@ import { BrandTagline, TaglineVariant, TaglineSize } from './BrandTagline';
 
 export type LogoVariant = 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal' | 'brand';
 export type LogoSize = 'sm' | 'md' | 'lg' | 'xl';
-export type LogoAnimationType = 'none' | 'fade' | 'slide-up' | 'scale' | 'cascade' | 'splash';
+export type LogoAnimationType = 'none' | 'fade' | 'slide-up' | 'scale' | 'cascade' | 'splash' | 'glitch';
 
 interface BrandLogoProps {
   size?: LogoSize;
@@ -47,6 +47,13 @@ const animations: Record<LogoAnimationType, Variants> = {
       scale: 1, 
       y: 0, 
       transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
+    }
+  },
+  glitch: {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { duration: 0.1 }
     }
   }
 };
@@ -124,6 +131,8 @@ export function BrandLogo({
     </>
   );
 
+  const isGlitch = animate === 'glitch';
+
   if (!shouldAnimate) {
     return (
       <div className={cn(
@@ -141,6 +150,7 @@ export function BrandLogo({
       className={cn(
         'flex flex-col gap-2',
         centered && 'items-center justify-center',
+        isGlitch && 'brand-logo-glitch-container glitch-scanlines relative',
         className
       )}
       initial="hidden"
