@@ -313,7 +313,10 @@
       0 0 12px hsl(200 25% 50% / 0.2);
   }
 
-  /* TSiJUKEBOX inline text - negrito + azul neon */
+  /* TSiJUKEBOX inline text - DEPRECATED
+   * Use text-brand-tsi + text-brand-jukebox via <BrandText /> component instead
+   * This class will be removed in future versions
+   */
   .text-brand-inline {
     font-weight: 700;
     color: hsl(195 100% 65%);
@@ -3130,15 +3133,16 @@ body[data-gradient="true"] {
    INLINE BRAND TEXT - TSi (Silver) + JUKEBOX (Gold)
    Para uso em textos que mencionam a marca
    Herda font-size do contexto
+   Com suporte a dark/light mode
    ======================================== */
 
-/* Texto inline TSi - Prata/Steel */
+/* Light Mode - Cores mais escuras para contraste em fundos claros */
 .text-brand-tsi {
   background: linear-gradient(
     180deg,
-    hsl(210 20% 70%) 0%,
-    hsl(210 18% 55%) 50%,
-    hsl(210 20% 65%) 100%
+    hsl(210 25% 35%) 0%,
+    hsl(210 22% 28%) 50%,
+    hsl(210 25% 32%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3146,18 +3150,42 @@ body[data-gradient="true"] {
   font-weight: 700;
 }
 
-/* Texto inline JUKEBOX - Dourado/Âmbar */
 .text-brand-jukebox {
   background: linear-gradient(
     180deg,
-    hsl(45 100% 55%) 0%,
-    hsl(38 90% 42%) 50%,
-    hsl(45 100% 50%) 100%
+    hsl(40 90% 35%) 0%,
+    hsl(35 85% 30%) 50%,
+    hsl(40 90% 32%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
+}
+
+/* Dark Mode - Cores mais brilhantes para contraste em fundos escuros */
+.dark .text-brand-tsi {
+  background: linear-gradient(
+    180deg,
+    hsl(210 20% 75%) 0%,
+    hsl(210 18% 60%) 50%,
+    hsl(210 20% 70%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .text-brand-jukebox {
+  background: linear-gradient(
+    180deg,
+    hsl(45 100% 58%) 0%,
+    hsl(38 90% 45%) 50%,
+    hsl(45 100% 52%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Hover - reflexo metálico mais intenso */

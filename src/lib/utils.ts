@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Formata automaticamente "TSiJUKEBOX" em texto para React nodes com estilo neon azul
+ * Formata automaticamente "TSiJUKEBOX" em texto para React nodes com estilo da marca
+ * TSi em prata/steel, JUKEBOX em dourado/âmbar (herda tamanho da fonte)
  * @param text - Texto que pode conter "TSiJUKEBOX"
  * @returns React nodes com TSiJUKEBOX formatado ou texto original
  */
@@ -17,7 +18,10 @@ export function formatBrandName(text: string): React.ReactNode {
   const parts = text.split(/(TSiJUKEBOX)/g);
   return parts.map((part, i) => 
     part === 'TSiJUKEBOX' 
-      ? React.createElement('span', { key: i, className: 'text-brand-inline' }, 'TSiJUKEBOX')
+      ? React.createElement('span', { key: i, className: 'inline' }, [
+          React.createElement('span', { key: `${i}-tsi`, className: 'text-brand-tsi' }, 'TSi'),
+          React.createElement('span', { key: `${i}-jukebox`, className: 'text-brand-jukebox' }, 'JUKEBOX')
+        ])
       : part
   );
 }
