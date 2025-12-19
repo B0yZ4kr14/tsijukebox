@@ -20,7 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Animações: splash, glitch, fade, scale
   - Skip com clique
 - **Animação Glitch**: Efeito cyberpunk de distorção para BrandLogo
-- **Animação Hologram**: Efeito 3D flutuante com reflexos
+- **Animação Hologram**: Efeito 3D futurista completo com:
+  - Flutuação 3D com rotação sutil (`hologram-float` 6s)
+  - Hue shift gradual cyan-gold (`hologram-hue` 8s)
+  - Scanlines holográficas animadas (`hologram-scanlines` 3s)
+  - Glow pulsante ao redor do container (`hologram-glow-pulse` 4s)
+  - Reflexos invertidos abaixo do texto (pseudo-elementos ::after)
+  - Suporte a `prefers-reduced-motion` para acessibilidade
 - **Animação Typing**: Efeito typewriter para BrandText
 - **useSplashScreen Hook**: Gerenciamento de estado do splash
 - Brand Guidelines page with color palette, typography, and logo usage
