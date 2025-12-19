@@ -37,6 +37,12 @@ export class PlayerPage {
   readonly trackArtist: Locator;
   readonly trackAlbum: Locator;
 
+  // Voice Control
+  readonly voiceControlButton: Locator;
+  readonly voiceControlFeedback: Locator;
+  readonly voiceControlTranscript: Locator;
+  readonly voiceControlContainer: Locator;
+
   constructor(page: Page) {
     this.page = page;
     
@@ -73,6 +79,12 @@ export class PlayerPage {
     this.trackTitle = page.getByTestId('track-title');
     this.trackArtist = page.getByTestId('track-artist');
     this.trackAlbum = page.getByTestId('track-album');
+
+    // Voice Control
+    this.voiceControlButton = page.getByTestId('voice-control-button');
+    this.voiceControlFeedback = page.getByTestId('voice-control-feedback');
+    this.voiceControlTranscript = page.getByTestId('voice-control-transcript');
+    this.voiceControlContainer = page.getByTestId('voice-control-container');
   }
 
   async goto() {
@@ -186,6 +198,42 @@ export class PlayerPage {
 
   async isQueueEmpty(): Promise<boolean> {
     return await this.queueEmpty.isVisible();
+  }
+
+  // Voice Control actions
+  async enableVoiceControl() {
+    await this.page.evaluate(() => {
+      localStorage.setItem('tsijukebox-voice-control', JSON.stringify({
+        enabled: true,
+        language: 'pt-BR',
+        continuousListening: false,
+        wakeWord: ''
+      }));
+    });
+  }
+
+  async disableVoiceControl() {
+    await this.page.evaluate(() => {
+      localStorage.setItem('tsijukebox-voice-control', JSON.stringify({
+        enabled: false,
+        language: 'pt-BR',
+        continuousListening: false,
+        wakeWord: ''
+      }));
+    });
+  }
+
+  async toggleVoiceControl() {
+    await this.voiceControlButton.click();
+  }
+
+  async isVoiceControlListening(): Promise<boolean> {
+    const listening = await this.voiceControlButton.getAttribute('data-listening');
+    return listening === 'true';
+  }
+
+  async isVoiceControlVisible(): Promise<boolean> {
+    return await this.voiceControlButton.isVisible();
   }
 }
 

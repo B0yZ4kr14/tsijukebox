@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Volume2, SkipForward, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useVoiceControl } from '@/hooks/player/useVoiceControl';
+import { useSoundEffects } from '@/hooks/common/useSoundEffects';
 import { cn } from '@/lib/utils';
 
 interface VoiceControlButtonProps {
@@ -50,16 +51,38 @@ export function VoiceControlButton({
     toggleListening 
   } = useVoiceControl();
 
+  const { playSound } = useSoundEffects();
   const [showCommandFeedback, setShowCommandFeedback] = useState(false);
+  const prevListeningRef = useRef(isListening);
+  const prevErrorRef = useRef(error);
 
-  // Show feedback when command is recognized
+  // Sound feedback when command is recognized
   useEffect(() => {
     if (lastCommand && showFeedback) {
+      playSound('success');
       setShowCommandFeedback(true);
       const timer = setTimeout(() => setShowCommandFeedback(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [lastCommand, showFeedback]);
+  }, [lastCommand, showFeedback, playSound]);
+
+  // Sound feedback for listening state changes
+  useEffect(() => {
+    if (isListening && !prevListeningRef.current) {
+      playSound('open');
+    } else if (!isListening && prevListeningRef.current) {
+      playSound('close');
+    }
+    prevListeningRef.current = isListening;
+  }, [isListening, playSound]);
+
+  // Sound feedback for errors
+  useEffect(() => {
+    if (error && error !== prevErrorRef.current) {
+      playSound('error');
+    }
+    prevErrorRef.current = error;
+  }, [error, playSound]);
 
   if (!isSupported || !settings.enabled) {
     return null;
@@ -78,14 +101,17 @@ export function VoiceControlButton({
   };
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative', className)} data-testid="voice-control-container">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              data-testid="voice-control-button"
+              data-listening={isListening}
               variant="ghost"
               size="icon"
               onClick={toggleListening}
+              aria-label={isListening ? 'Parar de ouvir' : 'Ativar controle por voz'}
               className={cn(
                 sizeClasses[size],
                 'rounded-full transition-all duration-300',
@@ -140,6 +166,7 @@ export function VoiceControlButton({
       <AnimatePresence>
         {isListening && transcript && (
           <motion.div
+            data-testid="voice-control-transcript"
             className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 rounded-lg bg-kiosk-surface border border-kiosk-border shadow-lg whitespace-nowrap z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -155,6 +182,7 @@ export function VoiceControlButton({
       <AnimatePresence>
         {showCommandFeedback && lastCommand && (
           <motion.div
+            data-testid="voice-control-feedback"
             className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-2 rounded-lg bg-green-500/90 text-white shadow-lg flex items-center gap-2 z-50"
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
