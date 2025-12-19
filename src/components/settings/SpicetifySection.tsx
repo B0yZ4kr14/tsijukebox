@@ -139,17 +139,17 @@ export function SpicetifySection() {
                   <>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                       <span className="text-label-yellow font-semibold">{t('spicetify.currentTheme')}</span>
-                      <span className="text-kiosk-text/90 font-medium">{currentTheme || t('spicetify.default')}</span>
+                      <span className="text-description-visible font-medium">{currentTheme || t('spicetify.default')}</span>
                     </div>
 
                     <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                       <span className="text-label-yellow font-semibold">{t('spicetify.spotifyPath')}</span>
-                      <span className="text-kiosk-text/90 text-xs font-mono">{config?.spotify_path || 'N/A'}</span>
+                      <span className="text-description-visible text-xs font-mono">{config?.spotify_path || 'N/A'}</span>
                     </div>
 
                     <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                       <span className="text-label-yellow font-semibold">{t('spicetify.prefsPath')}</span>
-                      <span className="text-kiosk-text/90 text-xs font-mono">{config?.prefs_path || 'N/A'}</span>
+                      <span className="text-description-visible text-xs font-mono">{config?.prefs_path || 'N/A'}</span>
                     </div>
 
                     {/* Config Toggles */}
@@ -157,7 +157,7 @@ export function SpicetifySection() {
                       <p className="text-label-yellow text-sm font-bold">{t('spicetify.config')}</p>
                       
                       <div className="flex items-center justify-between">
-                        <span className="text-kiosk-text/90 text-sm">{t('spicetify.injectCss')}</span>
+                        <span className="text-description-visible text-sm">{t('spicetify.injectCss')}</span>
                         <Switch 
                           checked={config?.inject_css ?? true}
                           onCheckedChange={(v) => updateConfig('inject_css', v)}
@@ -166,7 +166,7 @@ export function SpicetifySection() {
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <span className="text-kiosk-text/90 text-sm">{t('spicetify.replaceColors')}</span>
+                        <span className="text-description-visible text-sm">{t('spicetify.replaceColors')}</span>
                         <Switch 
                           checked={config?.replace_colors ?? true}
                           onCheckedChange={(v) => updateConfig('replace_colors', v)}
@@ -175,7 +175,7 @@ export function SpicetifySection() {
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <span className="text-kiosk-text/90 text-sm">{t('spicetify.overwriteAssets')}</span>
+                        <span className="text-description-visible text-sm">{t('spicetify.overwriteAssets')}</span>
                         <Switch 
                           checked={config?.overwrite_assets ?? false}
                           onCheckedChange={(v) => updateConfig('overwrite_assets', v)}
@@ -202,7 +202,7 @@ export function SpicetifySection() {
                 )}
 
                 {error && (
-                    <p className="text-sm text-kiosk-text/90 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                    <p className="text-sm text-description-visible p-3 rounded-lg bg-red-500/10 border border-red-500/20">
                     {error}. <a href="https://spicetify.app" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline font-semibold">{t('spicetify.installSpicetify')}</a>
                   </p>
                 )}
@@ -212,9 +212,9 @@ export function SpicetifySection() {
             {/* THEMES TAB */}
             <TabsContent value="themes" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/90 text-center py-8">{t('spicetify.installToManageThemes')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToManageThemes')}</p>
               ) : themes.length === 0 ? (
-                <p className="text-kiosk-text/90 text-center py-8">{t('spicetify.noThemes')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.noThemes')}</p>
               ) : (
                 <ScrollArea className="h-[400px]">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -250,9 +250,9 @@ export function SpicetifySection() {
             {/* EXTENSIONS TAB */}
             <TabsContent value="extensions" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/90 text-center py-8">{t('spicetify.installToManageExtensions')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToManageExtensions')}</p>
               ) : extensions.length === 0 ? (
-                <p className="text-kiosk-text/90 text-center py-8">{t('spicetify.noExtensions')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.noExtensions')}</p>
               ) : (
                 <ScrollArea className="h-[400px]">
                   <div className="space-y-3">
@@ -292,7 +292,7 @@ export function SpicetifySection() {
             {/* SNIPPETS TAB */}
             <TabsContent value="snippets" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/90 text-center py-8">{t('spicetify.installToManageSnippets')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToManageSnippets')}</p>
               ) : (
                 <>
                   {/* Add new snippet */}
@@ -367,10 +367,10 @@ export function SpicetifySection() {
             {/* CUSTOM APPS TAB */}
             <TabsContent value="apps" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/80 text-center py-8">{t('spicetify.installToManageApps')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToManageApps')}</p>
               ) : customApps.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-kiosk-text/80 mb-4">{t('spicetify.noApps')}</p>
+                  <p className="text-description-visible mb-4">{t('spicetify.noApps')}</p>
                   <Button variant="outline" onClick={() => setActiveTab('marketplace')}>
                     <ShoppingBag className="w-4 h-4 mr-2" />
                     {t('spicetify.exploreMarketplace')}
@@ -384,8 +384,8 @@ export function SpicetifySection() {
                         <div className="flex items-center gap-3">
                           <Play className="w-5 h-5 icon-neon-blue" />
                           <div>
-                            <p className="font-bold text-kiosk-text/90">{app.name}</p>
-                            <p className="text-xs text-kiosk-text/60 font-mono">{app.path}</p>
+                            <p className="font-bold text-description-visible">{app.name}</p>
+                            <p className="text-xs text-secondary-visible font-mono">{app.path}</p>
                           </div>
                         </div>
                         <Switch
@@ -403,13 +403,13 @@ export function SpicetifySection() {
             {/* MARKETPLACE TAB */}
             <TabsContent value="marketplace" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/80 text-center py-8">{t('spicetify.installToAccessMarketplace')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToAccessMarketplace')}</p>
               ) : (
                 <>
                   {/* Search and filters */}
                   <div className="flex gap-3">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/50" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
                       <Input
                         placeholder={t('spicetify.searchMarketplace')}
                         value={marketplaceSearch}
@@ -448,10 +448,10 @@ export function SpicetifySection() {
                             )}
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
-                                <p className="font-bold text-kiosk-text/90">{item.name}</p>
-                                <p className="text-xs text-kiosk-text/60">{t('spicetify.by')} {item.author}</p>
+                                <p className="font-bold text-description-visible">{item.name}</p>
+                                <p className="text-xs text-secondary-visible">{t('spicetify.by')} {item.author}</p>
                                 {item.description && (
-                                  <p className="text-sm text-kiosk-text/70 mt-1 line-clamp-2">{item.description}</p>
+                                  <p className="text-sm text-description-visible mt-1 line-clamp-2">{item.description}</p>
                                 )}
                                 <div className="flex gap-1 mt-2 flex-wrap">
                                   {item.tags?.slice(0, 3).map((tag) => (
@@ -461,7 +461,7 @@ export function SpicetifySection() {
                               </div>
                             </div>
                             <div className="flex items-center justify-between mt-3 pt-3 border-t border-cyan-500/10">
-                              <div className="flex items-center gap-2 text-kiosk-text/60 text-xs">
+                              <div className="flex items-center gap-2 text-secondary-visible text-xs">
                                 <Zap className="w-3 h-3" />
                                 {item.stars || 0} stars
                               </div>
@@ -490,7 +490,7 @@ export function SpicetifySection() {
                         </Card>
                       ))}
                       {filteredMarketplace.length === 0 && (
-                        <div className="col-span-2 text-center py-8 text-kiosk-text/60">
+                        <div className="col-span-2 text-center py-8 text-description-visible">
                           {t('spicetify.noItemsFound')}
                         </div>
                       )}
@@ -512,7 +512,7 @@ export function SpicetifySection() {
             {/* ADVANCED TAB */}
             <TabsContent value="advanced" className="space-y-4 mt-4">
               {!isInstalled ? (
-                <p className="text-kiosk-text/80 text-center py-8">{t('spicetify.installToUseAdvanced')}</p>
+                <p className="text-description-visible text-center py-8">{t('spicetify.installToUseAdvanced')}</p>
               ) : (
                 <div className="space-y-4">
                   <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30">
@@ -520,7 +520,7 @@ export function SpicetifySection() {
                       <Zap className="w-4 h-4" />
                       {t('spicetify.advancedCommands')}
                     </p>
-                    <p className="text-kiosk-text/70 text-xs mt-1">
+                    <p className="text-description-visible text-xs mt-1">
                       {t('spicetify.advancedWarning')}
                     </p>
                   </div>
@@ -534,7 +534,7 @@ export function SpicetifySection() {
                     >
                       <RefreshCw className="w-5 h-5 icon-neon-blue" />
                       <span className="font-bold">Update</span>
-                      <span className="text-xs text-kiosk-text/60">{t('spicetify.update')}</span>
+                      <span className="text-xs text-secondary-visible">{t('spicetify.update')}</span>
                     </Button>
                     
                     <Button 
@@ -545,7 +545,7 @@ export function SpicetifySection() {
                     >
                       <Check className="w-5 h-5 text-green-400" />
                       <span className="font-bold">Apply</span>
-                      <span className="text-xs text-kiosk-text/60">{t('spicetify.apply')}</span>
+                      <span className="text-xs text-secondary-visible">{t('spicetify.apply')}</span>
                     </Button>
                     
                     <Button 
@@ -556,7 +556,7 @@ export function SpicetifySection() {
                     >
                       <Archive className="w-5 h-5 icon-neon-blue" />
                       <span className="font-bold">Backup</span>
-                      <span className="text-xs text-kiosk-text/60">{t('spicetify.saveConfig')}</span>
+                      <span className="text-xs text-secondary-visible">{t('spicetify.saveConfig')}</span>
                     </Button>
                     
                     <Button 
@@ -567,7 +567,7 @@ export function SpicetifySection() {
                     >
                       <Download className="w-5 h-5 icon-neon-blue" />
                       <span className="font-bold">Restore</span>
-                      <span className="text-xs text-kiosk-text/60">{t('spicetify.restoreBackup')}</span>
+                      <span className="text-xs text-secondary-visible">{t('spicetify.restoreBackup')}</span>
                     </Button>
                     
                     <Button 
@@ -578,7 +578,7 @@ export function SpicetifySection() {
                     >
                       <Trash2 className="w-5 h-5 text-red-400" />
                       <span className="font-bold text-red-400">Clear</span>
-                      <span className="text-xs text-kiosk-text/60">{t('spicetify.clear')}</span>
+                      <span className="text-xs text-secondary-visible">{t('spicetify.clear')}</span>
                     </Button>
                   </div>
 
