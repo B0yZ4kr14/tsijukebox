@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
   Search, 
@@ -38,7 +38,7 @@ import { LogoDownload } from '@/components/ui/LogoDownload';
 import { resetTour } from '@/components/tour/GuidedTour';
 import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
 import { GlobalSearchModal } from '@/components/GlobalSearchModal';
-import { useGlobalSearch } from '@/hooks';
+import { useGlobalSearch, useBackNavigation } from '@/hooks';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 
@@ -822,8 +822,7 @@ const helpSections: HelpSection[] = [
 ];
 
 export default function Help() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { goBack, navigate } = useBackNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>('getting-started');
   const [showInteractiveTest, setShowInteractiveTest] = useState<'keyboard' | 'gestures' | null>(null);
@@ -905,14 +904,7 @@ export default function Help() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {
-                if (location.key !== 'default') {
-                  navigate(-1);
-                } else {
-                  navigate('/');
-                  toast.info('Redirecionando para a página inicial');
-                }
-              }}
+              onClick={goBack}
               className="text-kiosk-text/90 hover:text-kiosk-text"
               aria-label="Voltar"
             >

@@ -24,3 +24,4 @@ export {
   type ThemePreset 
 } from './useThemeCustomizer';
 export { useWikiBookmarks } from './useWikiBookmarks';
+export { useBackNavigation } from './useBackNavigation';

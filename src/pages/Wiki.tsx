@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle, Music, Keyboard, Palette, Plug, Shield, Terminal, WifiOff, CloudOff, FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,15 +12,14 @@ import { WikiArticleView } from '@/components/wiki/WikiArticle';
 import { WikiSearch } from '@/components/wiki/WikiSearch';
 import { GlobalSearchModal } from '@/components/GlobalSearchModal';
 import { wikiCategories, findArticleById, getTotalArticleCount } from '@/components/wiki/wikiData';
-import { useWikiBookmarks, useGlobalSearch, useReadArticles } from '@/hooks';
+import { useWikiBookmarks, useGlobalSearch, useReadArticles, useBackNavigation } from '@/hooks';
 import { useWikiOffline } from '@/hooks/common/useWikiOffline';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 import { formatBrandName } from '@/lib/utils';
 
 export default function Wiki() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { goBack, navigate } = useBackNavigation();
   const [searchParams] = useSearchParams();
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -108,14 +107,7 @@ export default function Wiki() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {
-                  if (location.key !== 'default') {
-                    navigate(-1);
-                  } else {
-                    navigate('/');
-                    toast.info('Redirecionando para a página inicial');
-                  }
-                }}
+                onClick={goBack}
                 className="text-kiosk-text/85 hover:text-kiosk-text"
                 aria-label="Voltar"
               >

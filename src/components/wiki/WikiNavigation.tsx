@@ -91,6 +91,7 @@ export function WikiNavigation({
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [highlightedArticle, setHighlightedArticle] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -496,7 +497,11 @@ export function WikiNavigation({
                                             )}
                                             
                                             <button
-                                              onClick={() => onSelectArticle(article.id)}
+                                              onClick={() => {
+                                                onSelectArticle(article.id);
+                                                setHighlightedArticle(article.id);
+                                                setTimeout(() => setHighlightedArticle(null), 1500);
+                                              }}
                                               className={cn(
                                                 "w-full flex items-center gap-2 py-1 rounded text-left text-xs transition-all",
                                                 showTreeLines ? "pl-5 pr-2" : "px-3",
@@ -504,7 +509,9 @@ export function WikiNavigation({
                                                   ? "bg-primary/20 text-primary"
                                                   : "hover:bg-kiosk-surface/30 text-description-visible hover:text-kiosk-text",
                                                 // Highlight new articles (only if not read)
-                                                NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)) && "bg-green-500/5 hover:bg-green-500/10"
+                                                NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)) && "bg-green-500/5 hover:bg-green-500/10",
+                                                // Highlight pulse animation
+                                                highlightedArticle === article.id && "animate-highlight-pulse"
                                               )}
                                             >
                                               <span className={cn(

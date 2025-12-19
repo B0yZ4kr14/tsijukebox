@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
   RefreshCw, 
@@ -30,7 +29,7 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { useA11yStats } from '@/hooks';
+import { useA11yStats, useBackNavigation } from '@/hooks';
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -46,8 +45,7 @@ import {
 } from 'recharts';
 
 export default function A11yDashboard() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { goBack } = useBackNavigation();
   const {
     stats,
     isLoading,
@@ -91,14 +89,7 @@ export default function A11yDashboard() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {
-              if (location.key !== 'default') {
-                navigate(-1);
-              } else {
-                navigate('/');
-                toast.info('Redirecionando para a página inicial');
-              }
-            }}
+            onClick={goBack}
             className="text-nav-neon-white hover:text-kiosk-text"
             aria-label="Voltar"
           >

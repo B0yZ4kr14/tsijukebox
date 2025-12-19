@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,7 +12,7 @@ import {
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { WcagExceptionComment } from '@/components/ui/WcagExceptionComment';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useBackNavigation } from '@/hooks';
 import { toast } from 'sonner';
 
 interface WcagException {
@@ -283,8 +283,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
 };
 
 export default function WcagExceptions() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { goBack } = useBackNavigation();
   
   const categories = {
     'decorative': { label: 'Decorativos', description: 'Ícones puramente visuais sem informação crítica', color: 'text-purple-400' },
@@ -304,14 +303,7 @@ export default function WcagExceptions() {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => {
-              if (location.key !== 'default') {
-                navigate(-1);
-              } else {
-                navigate('/');
-                toast.info('Redirecionando para a página inicial');
-              }
-            }}
+            onClick={goBack}
             className="text-nav-neon-white hover:text-kiosk-text"
             aria-label="Voltar"
           >
