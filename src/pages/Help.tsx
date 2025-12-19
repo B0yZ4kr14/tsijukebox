@@ -39,6 +39,7 @@ import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
 import { GlobalSearchModal } from '@/components/GlobalSearchModal';
 import { useGlobalSearch, useBackNavigation } from '@/hooks';
 import { BackButton } from '@/components/ui/BackButton';
+import { Home } from 'lucide-react';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 
@@ -911,6 +912,15 @@ export default function Help() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Voltar ao Player */}
+            <Button
+              onClick={() => navigate('/')}
+              variant="outline"
+              className="button-outline-neon"
+            >
+              <Home className="w-4 h-4 mr-2 icon-neon-blue" />
+              Player
+            </Button>
             {/* Global Search Button */}
             <Button
               onClick={() => globalSearch.setIsOpen(true)}

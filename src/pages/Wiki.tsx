@@ -5,6 +5,7 @@ import { Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCirc
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Home } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { WikiNavigation } from '@/components/wiki/WikiNavigation';
@@ -136,6 +137,16 @@ export default function Wiki() {
               <div className="w-64">
                 <WikiSearch onSelectArticle={setSelectedArticle} />
               </div>
+              {/* Voltar ao Player */}
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                size="sm"
+                className="button-outline-neon"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Player
+              </Button>
               {/* Global Search Button */}
               <Button
                 onClick={() => globalSearch.setIsOpen(true)}

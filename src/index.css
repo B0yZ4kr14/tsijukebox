@@ -3081,42 +3081,44 @@ body[data-gradient="true"] {
 .logo-tsi-metal {
   background: linear-gradient(
     180deg,
-    hsl(200 15% 32%) 0%,
-    hsl(200 20% 48%) 25%,
-    hsl(200 12% 24%) 50%,
-    hsl(200 18% 42%) 75%,
-    hsl(200 10% 22%) 100%
+    hsl(210 15% 82%) 0%,
+    hsl(210 12% 70%) 25%,
+    hsl(210 18% 55%) 50%,
+    hsl(210 12% 65%) 75%,
+    hsl(210 15% 78%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 1px 0 hsl(195 60% 60% / 0.3))
-    drop-shadow(0 2px 0 hsl(0 0% 5% / 0.8))
-    drop-shadow(0 4px 8px hsl(0 0% 0% / 0.5));
+    drop-shadow(0 1px 0 hsl(210 20% 90% / 0.5))
+    drop-shadow(0 2px 0 hsl(0 0% 5% / 0.6))
+    drop-shadow(0 4px 8px hsl(0 0% 0% / 0.4))
+    drop-shadow(0 0 12px hsl(210 30% 70% / 0.3));
   letter-spacing: -0.02em;
   font-weight: 900;
   text-transform: uppercase;
   transition: filter 0.3s ease;
 }
 
-/* JUKEBOX METAL - Bronze/Gold com mais contraste */
+/* JUKEBOX METAL - Gold/Amber vibrante */
 .logo-jukebox-metal {
   background: linear-gradient(
     180deg,
-    hsl(35 40% 28%) 0%,
-    hsl(40 55% 45%) 25%,
-    hsl(35 35% 20%) 50%,
-    hsl(38 48% 38%) 75%,
-    hsl(32 30% 18%) 100%
+    hsl(45 90% 68%) 0%,
+    hsl(42 85% 55%) 25%,
+    hsl(38 80% 45%) 50%,
+    hsl(42 85% 52%) 75%,
+    hsl(45 90% 62%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 1px 0 hsl(45 60% 55% / 0.3))
-    drop-shadow(0 2px 0 hsl(30 20% 5% / 0.8))
-    drop-shadow(0 4px 8px hsl(0 0% 0% / 0.5));
+    drop-shadow(0 1px 0 hsl(45 100% 75% / 0.5))
+    drop-shadow(0 2px 0 hsl(30 50% 15% / 0.6))
+    drop-shadow(0 4px 8px hsl(0 0% 0% / 0.4))
+    drop-shadow(0 0 12px hsl(45 100% 55% / 0.4));
   letter-spacing: 0.06em;
   margin-left: 0.08em;
   font-weight: 900;
@@ -3128,29 +3130,156 @@ body[data-gradient="true"] {
 .logo-tsi-metal:hover {
   background: linear-gradient(
     180deg,
-    hsl(200 18% 38%) 0%,
-    hsl(200 25% 55%) 25%,
-    hsl(200 14% 28%) 50%,
-    hsl(200 22% 48%) 75%,
-    hsl(200 12% 26%) 100%
+    hsl(210 18% 88%) 0%,
+    hsl(210 15% 76%) 25%,
+    hsl(210 20% 62%) 50%,
+    hsl(210 15% 72%) 75%,
+    hsl(210 18% 84%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: 
+    drop-shadow(0 1px 0 hsl(210 25% 95% / 0.6))
+    drop-shadow(0 2px 0 hsl(0 0% 5% / 0.5))
+    drop-shadow(0 4px 10px hsl(0 0% 0% / 0.35))
+    drop-shadow(0 0 18px hsl(210 35% 80% / 0.5));
 }
 
 .logo-jukebox-metal:hover {
   background: linear-gradient(
     180deg,
-    hsl(35 45% 34%) 0%,
-    hsl(40 60% 52%) 25%,
-    hsl(35 40% 24%) 50%,
-    hsl(38 55% 45%) 75%,
-    hsl(32 35% 22%) 100%
+    hsl(45 95% 74%) 0%,
+    hsl(42 90% 62%) 25%,
+    hsl(38 85% 52%) 50%,
+    hsl(42 90% 58%) 75%,
+    hsl(45 95% 68%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: 
+    drop-shadow(0 1px 0 hsl(45 100% 80% / 0.6))
+    drop-shadow(0 2px 0 hsl(30 50% 15% / 0.5))
+    drop-shadow(0 4px 10px hsl(0 0% 0% / 0.35))
+    drop-shadow(0 0 18px hsl(45 100% 60% / 0.6));
+}
+
+/* ========================================
+   BRAND VARIANT - Silver TSi + Gold JUKEBOX
+   Cores oficiais baseadas na logo principal
+   ======================================== */
+
+.logo-container-brand {
+  position: relative;
+  padding: 8px 0 24px 0;
+}
+
+.logo-container-brand::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(210 30% 70%) 20%,
+    hsl(210 40% 80%) 40%,
+    hsl(45 90% 65%) 60%,
+    hsl(45 100% 55%) 80%,
+    transparent 100%
+  );
+  border-radius: 1px;
+  box-shadow:
+    0 0 8px hsl(210 40% 70% / 0.4),
+    0 0 8px hsl(45 100% 55% / 0.4);
+}
+
+/* TSi BRAND - Prata/Steel claro e brilhante */
+.logo-tsi-brand {
+  background: linear-gradient(
+    180deg,
+    hsl(210 20% 88%) 0%,
+    hsl(210 15% 78%) 20%,
+    hsl(210 22% 65%) 50%,
+    hsl(210 15% 75%) 80%,
+    hsl(210 20% 85%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: 
+    drop-shadow(0 1px 0 hsl(0 0% 100% / 0.4))
+    drop-shadow(0 2px 0 hsl(210 20% 25% / 0.5))
+    drop-shadow(0 4px 10px hsl(0 0% 0% / 0.3))
+    drop-shadow(0 0 15px hsl(210 40% 75% / 0.4));
+  letter-spacing: -0.02em;
+  font-weight: 900;
+  text-transform: uppercase;
+  transition: filter 0.3s ease;
+}
+
+/* JUKEBOX BRAND - Dourado/Âmbar vibrante */
+.logo-jukebox-brand {
+  background: linear-gradient(
+    180deg,
+    hsl(48 95% 72%) 0%,
+    hsl(45 90% 60%) 20%,
+    hsl(40 85% 48%) 50%,
+    hsl(45 90% 58%) 80%,
+    hsl(48 95% 68%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: 
+    drop-shadow(0 1px 0 hsl(50 100% 80% / 0.5))
+    drop-shadow(0 2px 0 hsl(35 60% 20% / 0.5))
+    drop-shadow(0 4px 10px hsl(0 0% 0% / 0.3))
+    drop-shadow(0 0 15px hsl(45 100% 55% / 0.5));
+  letter-spacing: 0.06em;
+  margin-left: 0.08em;
+  font-weight: 900;
+  text-transform: uppercase;
+  transition: filter 0.3s ease;
+}
+
+/* Hover BRAND */
+.logo-tsi-brand:hover {
+  filter: 
+    drop-shadow(0 1px 0 hsl(0 0% 100% / 0.5))
+    drop-shadow(0 2px 0 hsl(210 20% 25% / 0.4))
+    drop-shadow(0 4px 12px hsl(0 0% 0% / 0.25))
+    drop-shadow(0 0 22px hsl(210 50% 80% / 0.6));
+}
+
+.logo-jukebox-brand:hover {
+  filter: 
+    drop-shadow(0 1px 0 hsl(50 100% 85% / 0.6))
+    drop-shadow(0 2px 0 hsl(35 60% 20% / 0.4))
+    drop-shadow(0 4px 12px hsl(0 0% 0% / 0.25))
+    drop-shadow(0 0 22px hsl(45 100% 60% / 0.7));
+}
+
+/* Animate BRAND */
+.logo-animate-brand {
+  animation: logo-shimmer-brand 4s ease-in-out infinite;
+}
+
+@keyframes logo-shimmer-brand {
+  0%, 100% {
+    filter: 
+      drop-shadow(0 0 10px hsl(210 40% 75% / 0.3))
+      drop-shadow(0 0 10px hsl(45 100% 55% / 0.3));
+  }
+  50% {
+    filter: 
+      drop-shadow(0 0 18px hsl(210 50% 80% / 0.5))
+      drop-shadow(0 0 18px hsl(45 100% 60% / 0.5));
+  }
 }
 
 /* ========================================

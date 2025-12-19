@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 interface LogoBrandProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal';
+  variant?: 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal' | 'brand';
   showTagline?: boolean;
   centered?: boolean;
   animate?: boolean;
@@ -39,6 +39,7 @@ export function LogoBrand({
       case 'mirror-dark': return 'logo-container-mirror';
       case 'silver': return 'logo-container-silver';
       case 'metal': return 'logo-container-metal';
+      case 'brand': return 'logo-container-brand';
       default: return 'logo-container-3d';
     }
   };
@@ -48,6 +49,7 @@ export function LogoBrand({
       case 'ultra': return 'logo-animate-ultra';
       case 'bulge': return 'logo-animate-bulge';
       case 'mirror': return 'logo-animate-mirror';
+      case 'brand': return 'logo-animate-brand';
       default: return 'logo-animate';
     }
   };
@@ -60,6 +62,7 @@ export function LogoBrand({
       case 'mirror-dark': return 'logo-tsi-mirror-dark';
       case 'silver': return 'logo-tsi-silver';
       case 'metal': return 'logo-tsi-metal';
+      case 'brand': return 'logo-tsi-brand';
       default: return 'logo-tsi';
     }
   };
@@ -72,6 +75,7 @@ export function LogoBrand({
       case 'mirror-dark': return 'logo-jukebox-mirror-dark';
       case 'silver': return 'logo-jukebox-silver';
       case 'metal': return 'logo-jukebox-metal';
+      case 'brand': return 'logo-jukebox-brand';
       default: return 'logo-jukebox';
     }
   };

@@ -35,5 +35,18 @@ tqdm>=4.66.0
 # SSH/GPG management
 paramiko>=3.4.0
 
+# HTTP client
+requests>=2.31.0
+httpx>=0.27.0
+
+# Template rendering (for landing page)
+jinja2>=3.1.0
+
+# Process management
+supervisor>=4.2.0
+
 # Optional: IPFS support
 # ipfshttpclient>=0.8.0
+
+# Optional: Storj support
+# uplink-python>=1.0.0
