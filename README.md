@@ -5,17 +5,21 @@
   
   **Sistema Kiosk Musical PWA com Integração Spotify/YouTube Music**
   
+  [![GitHub](https://img.shields.io/badge/GitHub-TSiJUKEBOX-181717?style=flat-square&logo=github)](https://github.com/B0yZ4kr14/TSiJUKEBOX)
   ![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
   ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
   ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript)
-  ![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen?style=flat-square)
-  ![Unit Tests](https://img.shields.io/badge/unit_tests-129-blue?style=flat-square)
-  ![E2E Tests](https://img.shields.io/badge/e2e_tests-53-purple?style=flat-square)
   ![Vite](https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite)
   ![Tailwind](https://img.shields.io/badge/Tailwind-3.x-38bdf8?style=flat-square&logo=tailwindcss)
   ![WCAG](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
   ![Contrast](https://img.shields.io/badge/contrast-4.5:1+-brightgreen?style=flat-square)
+  
+  <!-- Dynamic Coverage Badges (updated by CI) -->
+  ![Coverage](https://img.shields.io/endpoint?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage/badges/coverage.json&style=flat-square)
+  ![Unit Tests](https://img.shields.io/endpoint?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage/badges/unit-tests.json&style=flat-square)
+  ![E2E Tests](https://img.shields.io/endpoint?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage/badges/e2e-tests.json&style=flat-square)
+  ![Tests Status](https://img.shields.io/endpoint?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage/badges/status.json&style=flat-square)
   
   [📖 Documentação](docs/README.md) •
   [🚀 Quick Start](docs/GETTING-STARTED.md) •
@@ -49,10 +53,10 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/yourusername/tsijukebox.git
+git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
 
 # Instale as dependências
-cd tsijukebox && npm install
+cd TSiJUKEBOX && npm install
 
 # Inicie o servidor de desenvolvimento
 npm run dev
@@ -171,6 +175,11 @@ node scripts/merge-coverage.js
 | Vitest HTML | `coverage/vitest/index.html` |
 | Playwright HTML | `playwright-report/index.html` |
 | Combinado | `coverage/combined/index.html` |
+| Badges | `coverage/combined/badges/` |
+
+### Coverage Threshold
+
+O pipeline CI exige **cobertura mínima de 70%**. Builds falham se a cobertura cair abaixo deste limite.
 
 ---
 
@@ -183,6 +192,7 @@ node scripts/merge-coverage.js
 | [Developer Guide](docs/DEVELOPER-GUIDE.md) | Guia para desenvolvedores |
 | [API Reference](docs/API-REFERENCE.md) | Referência de APIs |
 | [Design System](docs/DESIGN-SYSTEM.md) | Sistema de design |
+| [GitHub Integration](docs/GITHUB-INTEGRATION.md) | Integração GitHub e CI/CD |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Solução de problemas |
 | [Changelog](docs/CHANGELOG.md) | Histórico de versões |
 
@@ -204,4 +214,6 @@ Este projeto está sob **Domínio Público** — veja [LICENSE](LICENSE) e [CRED
   <sub>Desenvolvido com 💙 e ☕ por <strong>B0.y_Z4kr14</strong></sub>
   <br><br>
   <strong>TSiJUKEBOX Enterprise</strong> — <em>A música, amplificada.</em>
+  
+  [🐛 Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) · [✨ Request Feature](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)
 </div>
