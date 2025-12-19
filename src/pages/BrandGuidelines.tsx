@@ -94,7 +94,62 @@ function ColorSwatch({ color, showCopy = true }: { color: typeof neonColors[0] |
   );
 }
 
+// Helper function to download files
+function downloadFile(content: string, filename: string, type: string) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function BrandGuidelines() {
+  const exportAsJSON = () => {
+    const palette = {
+      version: '4.0',
+      name: 'TSiJUKEBOX Design System',
+      neon: neonColors.reduce((acc, c) => ({ 
+        ...acc, 
+        [c.name.toLowerCase().replace(/\s+/g, '_')]: { 
+          hsl: c.hsl, 
+          hex: c.hex, 
+          cssVar: c.cssVar,
+          tailwind: c.tailwind 
+        }
+      }), {}),
+      base: baseColors.reduce((acc, c) => ({ 
+        ...acc, 
+        [c.name.toLowerCase().replace(/\s+/g, '_')]: { 
+          hsl: c.hsl, 
+          hex: c.hex, 
+          cssVar: c.cssVar,
+          tailwind: c.tailwind,
+          usage: c.usage 
+        }
+      }), {})
+    };
+    downloadFile(JSON.stringify(palette, null, 2), 'tsijukebox-palette.json', 'application/json');
+    toast.success('Paleta JSON exportada!');
+  };
+
+  const exportAsCSS = () => {
+    const cssContent = `/* TSiJUKEBOX Design System v4.0 */
+/* Generated: ${new Date().toISOString()} */
+
+:root {
+  /* Neon Colors */
+${neonColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
+
+  /* Base Colors */
+${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
+}
+`;
+    downloadFile(cssContent, 'tsijukebox-palette.css', 'text/css');
+    toast.success('Paleta CSS exportada!');
+  };
+
   return (
     <div className="min-h-screen bg-kiosk-bg">
       {/* Header */}
@@ -356,6 +411,43 @@ export default function BrandGuidelines() {
           {/* Downloads Tab */}
           <TabsContent value="downloads" className="space-y-8">
             <LogoDownload />
+            
+            {/* Export Palette */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader>
+                <CardTitle className="text-gold-neon flex items-center gap-2">
+                  <Palette className="w-5 h-5 icon-neon-blue" />
+                  Exportar Paleta de Cores
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Baixe a paleta completa para usar em seus projetos
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid md:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-3 h-auto py-4"
+                  onClick={exportAsJSON}
+                >
+                  <Download className="w-5 h-5 icon-neon-blue" />
+                  <div className="text-left">
+                    <div className="font-semibold">Download JSON</div>
+                    <div className="text-xs text-kiosk-text/60">Formato estruturado para desenvolvimento</div>
+                  </div>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-3 h-auto py-4"
+                  onClick={exportAsCSS}
+                >
+                  <Download className="w-5 h-5 icon-neon-blue" />
+                  <div className="text-left">
+                    <div className="font-semibold">Download CSS</div>
+                    <div className="text-xs text-kiosk-text/60">Variáveis CSS prontas para usar</div>
+                  </div>
+                </Button>
+              </CardContent>
+            </Card>
             
             {/* Additional Resources */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">

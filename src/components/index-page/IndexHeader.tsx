@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { SystemMonitor } from '@/components/player/SystemMonitor';
 import { WeatherWidget } from '@/components/player/WeatherWidget';
@@ -10,7 +9,8 @@ import { SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { LibraryPanelToggle } from '@/components/player/LibraryPanel';
 import { SideInfoPanelToggle } from '@/components/player/SideInfoPanel';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Palette } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { SystemStatus } from '@/lib/api/types';
 import type { ConnectionType } from '@/lib/constants/connectionTypes';
 
@@ -111,6 +111,18 @@ export function IndexHeader({
             onClick={onLibraryToggle}
             isOpen={showLibraryPanel}
           />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="w-10 h-10 rounded-full hover:bg-kiosk-surface/50"
+            aria-label="Brand Guidelines"
+          >
+            <Link to="/brand">
+              <Palette className="w-5 h-5 icon-neon-blue" />
+            </Link>
+          </Button>
 
           {canInstall && (
             <Button
