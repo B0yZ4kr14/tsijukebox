@@ -47,7 +47,8 @@ export function LocalLoginForm({ onSubmit, isLoading }: LocalLoginFormProps) {
       </Button>
       
       <div className="text-xs text-description-visible text-center mt-4 space-y-1">
-        <p>Demo: <code className="bg-kiosk-surface px-1 rounded">tsi</code> / <code className="bg-kiosk-surface px-1 rounded">connect</code></p>
+        <p>Admin: <code className="bg-kiosk-surface px-1 rounded">admin</code> / <code className="bg-kiosk-surface px-1 rounded">admin</code></p>
+        <p>Demo: <code className="bg-kiosk-surface px-1 rounded">demo</code> / <code className="bg-kiosk-surface px-1 rounded">demo</code></p>
         <p className="text-description-visible">⚠️ Modo demo - use Lovable Cloud em produção</p>
       </div>
     </form>
