@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle, Music, Keyboard, Palette, Plug, Shield, Terminal, WifiOff, CloudOff, FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import { formatBrandName } from '@/lib/utils';
 
 export default function Wiki() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -107,8 +108,15 @@ export default function Wiki() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate(-1)}
+                onClick={() => {
+                  if (location.key !== 'default') {
+                    navigate(-1);
+                  } else {
+                    navigate('/');
+                  }
+                }}
                 className="text-kiosk-text/85 hover:text-kiosk-text"
+                aria-label="Voltar"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
