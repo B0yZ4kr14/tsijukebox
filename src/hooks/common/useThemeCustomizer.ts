@@ -24,18 +24,18 @@ export interface ThemePreset {
   createdAt: string;
 }
 
-// Built-in presets
+// Built-in presets - Only 2 variants: Dark Neon and Light Neon Silver
 export const builtInPresets: ThemePreset[] = [
   {
-    id: 'blue',
-    name: 'Neon Azul',
+    id: 'dark-neon',
+    name: 'Dark Neon',
     colors: {
-      primary: '195 100% 50%',
+      primary: '195 100% 50%',      // Cyan neon
       primaryGlow: '195 100% 60%',
-      accent: '210 100% 55%',
-      background: '240 10% 10%',
-      surface: '240 10% 15%',
-      text: '0 0% 96%',
+      accent: '45 100% 50%',        // Gold accent
+      background: '240 10% 10%',    // Dark background
+      surface: '240 10% 15%',       // Dark surface
+      text: '0 0% 96%',             // White text
       gradientEnabled: false,
       gradientStart: '240 15% 8%',
       gradientEnd: '220 20% 15%',
@@ -45,143 +45,15 @@ export const builtInPresets: ThemePreset[] = [
     createdAt: '2024-01-01T00:00:00Z',
   },
   {
-    id: 'green',
-    name: 'Neon Verde',
+    id: 'light-neon-silver',
+    name: 'Light Neon Silver',
     colors: {
-      primary: '145 100% 45%',
-      primaryGlow: '145 100% 55%',
-      accent: '160 100% 50%',
-      background: '240 10% 10%',
-      surface: '240 10% 15%',
-      text: '0 0% 96%',
-      gradientEnabled: false,
-      gradientStart: '140 15% 8%',
-      gradientEnd: '160 20% 15%',
-      gradientAngle: 145,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'purple',
-    name: 'Neon Roxo',
-    colors: {
-      primary: '280 100% 60%',
-      primaryGlow: '280 100% 70%',
-      accent: '300 100% 65%',
-      background: '240 10% 10%',
-      surface: '240 10% 15%',
-      text: '0 0% 96%',
-      gradientEnabled: false,
-      gradientStart: '280 15% 8%',
-      gradientEnd: '300 20% 15%',
-      gradientAngle: 145,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'orange',
-    name: 'Neon Laranja',
-    colors: {
-      primary: '25 100% 55%',
-      primaryGlow: '25 100% 65%',
-      accent: '35 100% 60%',
-      background: '240 10% 10%',
-      surface: '240 10% 15%',
-      text: '0 0% 96%',
-      gradientEnabled: false,
-      gradientStart: '25 15% 8%',
-      gradientEnd: '35 20% 15%',
-      gradientAngle: 145,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'pink',
-    name: 'Neon Rosa',
-    colors: {
-      primary: '330 100% 60%',
-      primaryGlow: '330 100% 70%',
-      accent: '340 100% 65%',
-      background: '240 10% 10%',
-      surface: '240 10% 15%',
-      text: '0 0% 96%',
-      gradientEnabled: false,
-      gradientStart: '330 15% 8%',
-      gradientEnd: '340 20% 15%',
-      gradientAngle: 145,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  // New gradient presets
-  {
-    id: 'aurora',
-    name: 'Aurora Boreal',
-    colors: {
-      primary: '170 100% 50%',
-      primaryGlow: '170 100% 60%',
-      accent: '280 100% 60%',
-      background: '240 15% 8%',
-      surface: '240 15% 12%',
-      text: '0 0% 96%',
-      gradientEnabled: true,
-      gradientStart: '170 50% 8%',
-      gradientEnd: '280 40% 15%',
-      gradientAngle: 135,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'sunset',
-    name: 'Pôr do Sol',
-    colors: {
-      primary: '25 100% 55%',
-      primaryGlow: '25 100% 65%',
-      accent: '350 100% 60%',
-      background: '240 15% 8%',
-      surface: '240 15% 12%',
-      text: '0 0% 96%',
-      gradientEnabled: true,
-      gradientStart: '25 50% 10%',
-      gradientEnd: '350 40% 12%',
-      gradientAngle: 180,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  {
-    id: 'ocean',
-    name: 'Oceano Profundo',
-    colors: {
-      primary: '200 100% 50%',
-      primaryGlow: '200 100% 60%',
-      accent: '180 100% 45%',
-      background: '210 30% 6%',
-      surface: '210 30% 10%',
-      text: '0 0% 96%',
-      gradientEnabled: true,
-      gradientStart: '210 50% 5%',
-      gradientEnd: '200 40% 12%',
-      gradientAngle: 160,
-    },
-    isBuiltIn: true,
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-  // Light Neon Theme - Cards claros/prateados com ícones neon
-  {
-    id: 'light-neon',
-    name: 'Light Neon',
-    colors: {
-      primary: '195 100% 45%',      // Cyan neon (mais saturado para fundo claro)
+      primary: '195 100% 45%',      // Cyan neon (adjusted for light bg)
       primaryGlow: '195 100% 55%',
-      accent: '45 100% 50%',        // Dourado
-      background: '220 15% 92%',    // Prata claro/pastel
-      surface: '220 20% 96%',       // Branco acinzentado
-      text: '220 25% 15%',          // Texto escuro
+      accent: '45 100% 50%',        // Gold accent
+      background: '220 15% 92%',    // Silver/light background
+      surface: '220 20% 96%',       // White-silver surface
+      text: '220 25% 15%',          // Dark text
       gradientEnabled: false,
       gradientStart: '220 15% 90%',
       gradientEnd: '220 20% 95%',
