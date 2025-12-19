@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle, Music, Keyboard, Palette, Plug, Shield, Terminal, WifiOff, CloudOff, FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -113,6 +113,7 @@ export default function Wiki() {
                     navigate(-1);
                   } else {
                     navigate('/');
+                    toast.info('Redirecionando para a página inicial');
                   }
                 }}
                 className="text-kiosk-text/85 hover:text-kiosk-text"
@@ -318,32 +319,58 @@ export default function Wiki() {
           {/* Content Area */}
           <div className="lg:col-span-3 wiki-content">
             <ScrollArea className="h-[calc(100vh-180px)]">
-              {article ? (
-                <WikiArticleView 
-                  article={article} 
-                  onSelectArticle={setSelectedArticle}
-                  isBookmarked={isBookmarked(article.id)}
-                  onToggleBookmark={() => {
-                    toggleBookmark(article.id);
-                    toast.success(isBookmarked(article.id) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
-                  }}
-                  onArticleViewed={markAsRead}
-                  onSaveOffline={handleSaveOffline}
-                  onRemoveOffline={handleRemoveOffline}
-                  isSavedOffline={isArticleSaved(article.id)}
-                  isOfflineMode={isOffline}
-                />
-              ) : selectedCategory ? (
-                <CategoryOverview 
-                  categoryId={selectedCategory}
-                  onSelectArticle={setSelectedArticle}
-                />
-              ) : (
-                <WelcomeScreen 
-                  onSelectCategory={setSelectedCategory}
-                  onSelectArticle={setSelectedArticle}
-                />
-              )}
+              <AnimatePresence mode="wait">
+                {article ? (
+                  <motion.div
+                    key={`article-${article.id}`}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
+                    <WikiArticleView 
+                      article={article} 
+                      onSelectArticle={setSelectedArticle}
+                      isBookmarked={isBookmarked(article.id)}
+                      onToggleBookmark={() => {
+                        toggleBookmark(article.id);
+                        toast.success(isBookmarked(article.id) ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
+                      }}
+                      onArticleViewed={markAsRead}
+                      onSaveOffline={handleSaveOffline}
+                      onRemoveOffline={handleRemoveOffline}
+                      isSavedOffline={isArticleSaved(article.id)}
+                      isOfflineMode={isOffline}
+                    />
+                  </motion.div>
+                ) : selectedCategory ? (
+                  <motion.div
+                    key={`category-${selectedCategory}`}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
+                    <CategoryOverview 
+                      categoryId={selectedCategory}
+                      onSelectArticle={setSelectedArticle}
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="welcome"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                  >
+                    <WelcomeScreen 
+                      onSelectCategory={setSelectedCategory}
+                      onSelectArticle={setSelectedArticle}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </ScrollArea>
           </div>
         </div>
