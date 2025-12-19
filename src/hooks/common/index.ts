@@ -25,9 +25,3 @@ export {
 } from './useThemeCustomizer';
 export { useWikiBookmarks } from './useWikiBookmarks';
 export { useBackNavigation } from './useBackNavigation';
-export { 
-  useSplashScreen, 
-  type SplashScreenConfig, 
-  type SplashScreenState, 
-  type UseSplashScreenReturn 
-} from './useSplashScreen';
