@@ -10,9 +10,20 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     coverage: {
-      reporter: ['text', 'json', 'html'],
-      include: ['src/hooks/**/*.ts'],
-      exclude: ['src/hooks/**/index.ts'],
+      reporter: ['text', 'json', 'html', 'lcov'],
+      reportsDirectory: './coverage/vitest',
+      include: [
+        'src/hooks/**/*.ts',
+        'src/components/**/*.tsx',
+        'src/contexts/**/*.tsx',
+        'src/lib/**/*.ts',
+      ],
+      exclude: [
+        'src/**/index.ts',
+        'src/**/*.test.{ts,tsx}',
+        'src/test/**',
+        'src/integrations/**',
+      ],
     },
   },
   resolve: {

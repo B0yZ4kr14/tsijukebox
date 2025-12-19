@@ -20,7 +20,7 @@ export function LocalLoginForm({ onSubmit, isLoading }: LocalLoginFormProps) {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="local-login-form">
       <AuthFormField
         name="username"
         label="Usuário"
@@ -30,6 +30,7 @@ export function LocalLoginForm({ onSubmit, isLoading }: LocalLoginFormProps) {
         control={control}
         autoComplete="username"
         disabled={isLoading}
+        data-testid="username-input"
       />
       <AuthFormField
         name="password"
@@ -40,8 +41,9 @@ export function LocalLoginForm({ onSubmit, isLoading }: LocalLoginFormProps) {
         control={control}
         autoComplete="current-password"
         disabled={isLoading}
+        data-testid="local-password-input"
       />
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading} data-testid="local-login-button">
         <Lock className="w-4 h-4 mr-2" />
         {isLoading ? 'Entrando...' : 'Entrar'}
       </Button>
