@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { useSettingsStatus, SettingsCategoryId, StatusLevel } from '@/hooks/useSettingsStatus';
+import { useSettingsStatus, SettingsCategoryId, StatusLevel, type CategoryStatus } from '@/hooks';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';

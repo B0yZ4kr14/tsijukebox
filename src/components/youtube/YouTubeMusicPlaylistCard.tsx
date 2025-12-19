@@ -4,8 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { YouTubeMusicPlaylist } from '@/lib/api/youtubeMusic';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useRipple } from '@/hooks/useRipple';
-import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useRipple, useSoundEffects } from '@/hooks';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 

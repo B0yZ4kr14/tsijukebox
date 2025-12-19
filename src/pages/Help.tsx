@@ -36,7 +36,7 @@ import { LogoBrand } from '@/components/ui/LogoBrand';
 import { resetTour } from '@/components/tour/GuidedTour';
 import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
 import { GlobalSearchModal } from '@/components/GlobalSearchModal';
-import { useGlobalSearch } from '@/hooks/useGlobalSearch';
+import { useGlobalSearch } from '@/hooks';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 

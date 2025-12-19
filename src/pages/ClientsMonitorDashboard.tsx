@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { BrandText } from '@/components/ui/BrandText';
-import { useClientWebSocket } from '@/hooks/useClientWebSocket';
+import { useClientWebSocket } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 interface JukeboxClient {

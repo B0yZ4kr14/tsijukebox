@@ -14,7 +14,7 @@ import {
   hslToHex,
   builtInPresets,
   defaultColors 
-} from '@/hooks/useThemeCustomizer';
+} from '@/hooks';
 import { useSettings } from '@/contexts/SettingsContext';
 import { toast } from 'sonner';
 import {

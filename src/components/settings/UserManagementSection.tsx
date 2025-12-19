@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { SettingsSection } from './SettingsSection';
 import { toast } from 'sonner';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import type { AppUser, UserRole, UserPermissions, rolePermissions } from '@/types/user';
 import {
   Dialog,

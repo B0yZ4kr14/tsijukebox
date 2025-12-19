@@ -4,7 +4,7 @@ import { Play, Pause, X, Check, Music, FileAudio } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 
 interface AudioWaveformPreviewProps {
   file: File | null;

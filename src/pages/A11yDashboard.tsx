@@ -29,7 +29,7 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { useA11yStats } from '@/hooks/useA11yStats';
+import { useA11yStats } from '@/hooks';
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -324,7 +324,7 @@ export default function A11yDashboard() {
                       className="p-4 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20"
                     >
                       <p className="text-kiosk-text/85 text-sm capitalize">{type}</p>
-                      <p className="text-2xl font-bold text-kiosk-text">{count}</p>
+                      <p className="text-2xl font-bold text-kiosk-text">{count as number}</p>
                     </div>
                   ))}
                 </div>

@@ -8,8 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { SettingsSection } from './SettingsSection';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useWeather } from '@/hooks/useWeather';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useWeather, useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 
 export function WeatherConfigSection() {

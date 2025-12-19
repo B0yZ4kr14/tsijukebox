@@ -42,8 +42,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useStorjClient } from '@/hooks/useStorjClient';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useStorjClient, useTranslation } from '@/hooks';
 import { InfoTooltip } from '@/components/ui/InfoTooltip';
 
 export function StorjSection() {
