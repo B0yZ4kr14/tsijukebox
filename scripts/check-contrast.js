@@ -16,27 +16,45 @@ const strictMode = args.includes('--strict');
 
 // Padrões problemáticos conhecidos
 const PROBLEMATIC_PATTERNS = [
+  // Background patterns
   { pattern: /bg-background(?![/\-])/g, issue: 'bg-background pode resultar em fundo branco - usar bg-kiosk-surface ou bg-kiosk-bg', severity: 'error' },
   { pattern: /bg-white(?![/\-])/g, issue: 'bg-white é branco puro - usar bg-kiosk-surface', severity: 'error' },
   { pattern: /bg-muted(?![/\-])/g, issue: 'bg-muted pode ter contraste baixo em dark mode - usar bg-kiosk-surface', severity: 'error' },
   { pattern: /bg-card(?![/\-])/g, issue: 'bg-card pode ter contraste baixo - verificar tema', severity: 'warning' },
-  { pattern: /text-foreground(?![/\-])/g, issue: 'text-foreground pode ser escuro em dark mode - usar text-kiosk-text', severity: 'warning' },
-  { pattern: /text-muted-foreground(?![/\-])/g, issue: 'text-muted-foreground pode ter baixo contraste - usar text-kiosk-text/70', severity: 'warning' },
-  { pattern: /variant=["']outline["'](?!.*kiosk)/g, issue: 'Button outline pode ter fundo claro - usar variant="kiosk-outline"', severity: 'error' },
   { pattern: /bg-background\/50/g, issue: 'bg-background/50 pode ser claro - usar bg-kiosk-surface/50', severity: 'error' },
+  
+  // Text foreground patterns
+  { pattern: /text-foreground(?![/\-])/g, issue: 'text-foreground pode ser escuro em dark mode - usar text-kiosk-text', severity: 'warning' },
+  { pattern: /text-muted-foreground(?![/\-])/g, issue: 'text-muted-foreground pode ter baixo contraste - usar text-secondary-visible', severity: 'warning' },
+  
+  // Button variant patterns
+  { pattern: /variant=["']outline["'](?!.*kiosk)/g, issue: 'Button outline pode ter fundo claro - usar variant="kiosk-outline"', severity: 'error' },
+  
+  // NEW: Opacity-based patterns for WCAG AA compliance
+  { pattern: /text-kiosk-text\/[1-3][0-9](?!\d)/g, issue: 'Opacidade muito baixa (10-39%) - usar text-secondary-visible', severity: 'error' },
+  { pattern: /text-kiosk-text\/4[0-9](?!\d)/g, issue: 'Opacidade baixa (40-49%) - usar text-secondary-visible', severity: 'error' },
+  { pattern: /text-kiosk-text\/5[0-9](?!\d)/g, issue: 'Opacidade baixa (50-59%) - usar text-description-visible', severity: 'error' },
+  { pattern: /text-kiosk-text\/6[0-9](?!\d)/g, issue: 'Opacidade moderada (60-69%) - usar text-description-visible', severity: 'warning' },
+  { pattern: /text-kiosk-text\/7[0-4](?!\d)/g, issue: 'Opacidade abaixo do ideal (70-74%) - considerar text-description-visible', severity: 'warning' },
 ];
 
 // Padrões aceitáveis (exceções)
 const ACCEPTABLE_PATTERNS = [
-  /Badge.*variant=["']outline["']/,  // Badges podem usar outline
-  /ring-offset-background/,           // Ring offset é aceitável
-  /\*.*bg-white/,                     // Comentários
-  /\/\/.*bg-white/,                   // Comentários inline
-  /glow.*bg-white/i,                  // Efeitos de glow
-  /shadow.*bg-white/i,                // Efeitos de shadow
-  /demo.*bg-white/i,                  // Demonstrações
-  /ContrastDebug/,                    // Arquivos de debug
-  /ThemePreview/,                     // Preview de temas
+  /Badge.*variant=["']outline["']/,   // Badges podem usar outline
+  /ring-offset-background/,            // Ring offset é aceitável
+  /\*.*bg-white/,                      // Comentários
+  /\/\/.*bg-white/,                    // Comentários inline
+  /glow.*bg-white/i,                   // Efeitos de glow
+  /shadow.*bg-white/i,                 // Efeitos de shadow
+  /demo.*bg-white/i,                   // Demonstrações
+  /ContrastDebug/,                     // Arquivos de debug
+  /ThemePreview/,                      // Preview de temas
+  /WCAG Exception/i,                   // Exceções WCAG documentadas
+  /wcag-exception/i,                   // Exceções WCAG documentadas
+  /group-hover:/,                      // Estados de hover em grupo
+  /hover:text-/,                       // Estados de hover
+  /data-\[state=active\]/,             // Estados ativos
+  /opacity-100/,                       // Opacidade total
 ];
 
 // Arquivos a ignorar
@@ -45,6 +63,8 @@ const IGNORED_FILES = [
   'ContrastDebugPanel.tsx',
   'ThemePreview.tsx',
   'check-contrast.js',
+  'WcagExceptions.tsx',
+  'WcagExceptionComment.tsx',
 ];
 
 // Diretórios a verificar
@@ -181,7 +201,8 @@ function main() {
     console.log(`   • Use ${colors.green}variant="kiosk-outline"${colors.reset} em vez de ${colors.red}variant="outline"${colors.reset} para botões`);
     console.log(`   • Use ${colors.green}bg-kiosk-surface${colors.reset} ou ${colors.green}bg-kiosk-bg${colors.reset} em vez de ${colors.red}bg-background${colors.reset}`);
     console.log(`   • Use ${colors.green}text-kiosk-text${colors.reset} em vez de ${colors.red}text-foreground${colors.reset}`);
-    console.log(`   • Use ${colors.green}text-kiosk-text/70${colors.reset} em vez de ${colors.red}text-muted-foreground${colors.reset}\n`);
+    console.log(`   • Use ${colors.green}text-secondary-visible${colors.reset} em vez de ${colors.red}text-kiosk-text/[40-59]${colors.reset}`);
+    console.log(`   • Use ${colors.green}text-description-visible${colors.reset} em vez de ${colors.red}text-kiosk-text/[60-74]${colors.reset}\n`);
   }
   
   // Em modo strict, warnings também causam falha

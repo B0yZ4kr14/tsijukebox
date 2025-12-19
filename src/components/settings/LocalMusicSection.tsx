@@ -229,7 +229,7 @@ export function LocalMusicSection() {
               {/* Toolbar */}
               <div className="flex items-center gap-3 flex-wrap">
                 <div className="relative flex-1 min-w-[200px]">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-description-visible" />
                   <Input
                     placeholder={t('localMusic.searchMusic')}
                     value={searchQuery}
@@ -270,7 +270,7 @@ export function LocalMusicSection() {
               {/* File list */}
               <ScrollArea className="h-[350px]">
                 {filteredFiles.length === 0 ? (
-                  <div className="text-center py-12 text-kiosk-text/85">
+                  <div className="text-center py-12 text-description-visible">
                     <Music className="w-12 h-12 mx-auto mb-3 opacity-60" />
                     <p>{t('localMusic.noMusic')}</p>
                     <Button variant="outline" className="mt-4" onClick={() => setActiveTab('upload')}>
@@ -297,7 +297,7 @@ export function LocalMusicSection() {
                           <img src={file.coverUrl} alt={file.album} className="w-10 h-10 rounded object-cover" />
                         ) : (
                           <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center">
-                            <Music className="w-5 h-5 text-kiosk-text/80" />
+                            <Music className="w-5 h-5 text-description-visible" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
@@ -339,7 +339,7 @@ export function LocalMusicSection() {
                             <img src={file.coverUrl} alt={file.album} className="w-full aspect-square rounded object-cover mb-2" />
                           ) : (
                             <div className="w-full aspect-square rounded bg-kiosk-surface flex items-center justify-center mb-2">
-                              <Music className="w-8 h-8 text-kiosk-text/80" />
+                              <Music className="w-8 h-8 text-description-visible" />
                             </div>
                           )}
                           <p className="font-bold text-sm text-kiosk-text/95 truncate">{file.title}</p>
@@ -352,7 +352,7 @@ export function LocalMusicSection() {
               </ScrollArea>
 
               {/* Stats */}
-              <div className="flex gap-4 text-sm text-kiosk-text/85 font-medium">
+              <div className="flex gap-4 text-sm text-description-visible font-medium">
                 <span>{files.length} {t('localMusic.files')}</span>
                 <span>{formatSize(files.reduce((acc, f) => acc + f.size, 0))} {t('localMusic.total')}</span>
               </div>
@@ -403,7 +403,7 @@ export function LocalMusicSection() {
                     <p className="text-xl font-bold text-cyan-400 mt-4">
                       {t('localMusic.dropFilesHere')}
                     </p>
-                    <p className="text-kiosk-text/60 mt-2">
+                    <p className="text-secondary-visible mt-2">
                       {t('localMusic.releaseToUpload')}
                     </p>
                   </motion.div>
@@ -429,7 +429,7 @@ export function LocalMusicSection() {
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-kiosk-text/90">{uploadProgress.file}</span>
-                      <span className="text-sm text-kiosk-text/70">{uploadProgress.percentage}%</span>
+                      <span className="text-sm text-description-visible">{uploadProgress.percentage}%</span>
                     </div>
                     <Progress value={uploadProgress.percentage} />
                   </CardContent>
@@ -438,10 +438,10 @@ export function LocalMusicSection() {
 
               <div className="p-4 rounded-lg bg-kiosk-surface/30 border border-cyan-500/10">
                 <p className="text-label-yellow text-sm font-bold mb-2">{t('localMusic.acceptedFormats')}</p>
-                <p className="text-kiosk-text/70 text-sm">
+                <p className="text-description-visible text-sm">
                   {t('localMusic.onlyMp3')}
                 </p>
-                <p className="text-kiosk-text/60 text-xs mt-2">
+                <p className="text-secondary-visible text-xs mt-2">
                   {t('localMusic.metadataExtraction')}
                 </p>
               </div>
@@ -468,7 +468,7 @@ export function LocalMusicSection() {
                       onChange={(e) => setNewPlaylistName(e.target.value)}
                     />
                     {selectedFiles.size > 0 && (
-                      <p className="text-sm text-kiosk-text/70">
+                      <p className="text-sm text-description-visible">
                         {selectedFiles.size} {t('localMusic.tracksSelected')}
                       </p>
                     )}
@@ -486,7 +486,7 @@ export function LocalMusicSection() {
                     <div key={playlist.id} className="flex items-center justify-between p-4 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                       <div>
                         <p className="font-bold text-kiosk-text/90">{playlist.name}</p>
-                        <p className="text-sm text-kiosk-text/60">{playlist.trackIds.length} {t('localMusic.tracks')}</p>
+                        <p className="text-sm text-secondary-visible">{playlist.trackIds.length} {t('localMusic.tracks')}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button variant="ghost" size="icon">
@@ -499,7 +499,7 @@ export function LocalMusicSection() {
                     </div>
                   ))}
                   {playlists.length === 0 && (
-                    <p className="text-center py-8 text-kiosk-text/60">Nenhuma playlist criada</p>
+                    <p className="text-center py-8 text-secondary-visible">Nenhuma playlist criada</p>
                   )}
                 </div>
               </ScrollArea>
@@ -512,7 +512,7 @@ export function LocalMusicSection() {
                   <Users className="w-4 h-4" />
                   Sincronização para Usuários do Sistema
                 </p>
-                <p className="text-kiosk-text/70 text-xs mt-1">
+                <p className="text-description-visible text-xs mt-1">
                   Copia músicas para /home/$user/Music/ de todos os usuários cadastrados no sistema (requer root)
                 </p>
               </div>
@@ -530,13 +530,13 @@ export function LocalMusicSection() {
                         {getSyncStatusIcon(user.syncStatus)}
                         <div>
                           <p className="font-bold text-kiosk-text/90">{user.username}</p>
-                          <p className="text-xs text-kiosk-text/60 font-mono">{user.homePath}/Music/</p>
+                          <p className="text-xs text-secondary-visible font-mono">{user.homePath}/Music/</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-kiosk-text/70">{user.filesCount} arquivo(s)</p>
+                        <p className="text-sm text-description-visible">{user.filesCount} arquivo(s)</p>
                         {user.lastSync && (
-                          <p className="text-xs text-kiosk-text/50">
+                          <p className="text-xs text-secondary-visible">
                             Último sync: {new Date(user.lastSync).toLocaleString()}
                           </p>
                         )}
@@ -552,7 +552,7 @@ export function LocalMusicSection() {
                     </div>
                   ))}
                   {syncStatus.length === 0 && (
-                    <p className="text-center py-8 text-kiosk-text/60">Nenhum usuário encontrado</p>
+                    <p className="text-center py-8 text-secondary-visible">Nenhum usuário encontrado</p>
                   )}
                 </div>
               </ScrollArea>
@@ -607,7 +607,7 @@ export function LocalMusicSection() {
                         }`} />
                         <div>
                           <p className="font-bold text-kiosk-text/90">{instance.name}</p>
-                          <p className="text-xs text-kiosk-text/60 font-mono">{instance.url}</p>
+                          <p className="text-xs text-secondary-visible font-mono">{instance.url}</p>
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -631,7 +631,7 @@ export function LocalMusicSection() {
                     </div>
                   ))}
                   {instances.length === 0 && (
-                    <p className="text-center py-8 text-kiosk-text/60">Nenhuma instância registrada</p>
+                    <p className="text-center py-8 text-secondary-visible">Nenhuma instância registrada</p>
                   )}
                 </div>
               </ScrollArea>
@@ -643,7 +643,7 @@ export function LocalMusicSection() {
                 <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <div>
                     <p className="text-label-yellow font-semibold">Auto Sync</p>
-                    <p className="text-xs text-kiosk-text/60">Sincronizar automaticamente novos uploads</p>
+                    <p className="text-xs text-secondary-visible">Sincronizar automaticamente novos uploads</p>
                   </div>
                   <Switch 
                     checked={replicationSettings?.autoSync ?? false}
@@ -654,7 +654,7 @@ export function LocalMusicSection() {
                 <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <div>
                     <p className="text-label-yellow font-semibold">Incluir Capas</p>
-                    <p className="text-xs text-kiosk-text/60">Transferir artwork dos álbuns</p>
+                    <p className="text-xs text-secondary-visible">Transferir artwork dos álbuns</p>
                   </div>
                   <Switch 
                     checked={replicationSettings?.includeCovers ?? true}
@@ -665,7 +665,7 @@ export function LocalMusicSection() {
                 <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <div>
                     <p className="text-label-yellow font-semibold">Compressão</p>
-                    <p className="text-xs text-kiosk-text/60">Comprimir transferências de rede</p>
+                    <p className="text-xs text-secondary-visible">Comprimir transferências de rede</p>
                   </div>
                   <Switch 
                     checked={replicationSettings?.compressTransfer ?? true}

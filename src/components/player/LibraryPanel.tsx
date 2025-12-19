@@ -82,7 +82,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="w-8 h-8 text-kiosk-text/80 hover:text-kiosk-text"
+              className="w-8 h-8 text-description-visible hover:text-kiosk-text"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -91,7 +91,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
           {/* Search */}
           <div className="p-4 border-b border-cyan-500/10">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/50" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
               <Input
                 placeholder={t('spotify.search')}
                 value={searchQuery}
@@ -136,9 +136,9 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                     </div>
                     <div className="flex-1 text-left">
                       <p className="font-semibold text-kiosk-text">{t('spotify.liked')}</p>
-                      <p className="text-xs text-kiosk-text/70">{likedTracks.length} {t('spotify.songs')}</p>
+                      <p className="text-xs text-description-visible">{likedTracks.length} {t('spotify.songs')}</p>
                     </div>
-                    <Play className="w-5 h-5 text-kiosk-text/50 group-hover:text-[#1DB954] transition-colors" />
+                    <Play className="w-5 h-5 text-secondary-visible group-hover:text-[#1DB954] transition-colors" />
                   </button>
 
                   {/* User Playlists */}
@@ -160,15 +160,15 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                             <img src={playlist.imageUrl} alt={playlist.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-                              <Music className="w-5 h-5 text-kiosk-text/40" />
+                              <Music className="w-5 h-5 text-secondary-visible" />
                             </div>
                           )}
                         </div>
                         <div className="flex-1 text-left min-w-0">
                           <p className="font-medium text-kiosk-text truncate">{playlist.name}</p>
-                          <p className="text-xs text-kiosk-text/60">{playlist.tracksTotal || 0} {t('spotify.songs')}</p>
+                          <p className="text-xs text-description-visible">{playlist.tracksTotal || 0} {t('spotify.songs')}</p>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-kiosk-text/30 group-hover:text-kiosk-text/60 transition-colors" />
+                        <ChevronRight className="w-4 h-4 text-secondary-visible group-hover:text-description-visible transition-colors" />
                       </button>
                     ))
                   )}
@@ -185,12 +185,12 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                       <div className="w-8 h-8 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mx-auto" />
                     </div>
                   ) : searchQuery.length < 3 ? (
-                    <div className="text-center py-12 text-kiosk-text/60">
+                    <div className="text-center py-12 text-description-visible">
                       <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>{t('spotify.search')}</p>
                     </div>
                   ) : results.tracks.length === 0 ? (
-                    <div className="text-center py-12 text-kiosk-text/60">
+                    <div className="text-center py-12 text-description-visible">
                       <Music className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>Nenhum resultado encontrado</p>
                     </div>
@@ -206,13 +206,13 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                               <img src={track.albumImageUrl} alt={track.name} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-                                <Music className="w-4 h-4 text-kiosk-text/40" />
+                                <Music className="w-4 h-4 text-secondary-visible" />
                               </div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-                            <p className="text-xs text-kiosk-text/60 truncate">
+                            <p className="text-xs text-description-visible truncate">
                               {track.artists?.map((a) => a.name).join(', ')}
                             </p>
                           </div>
@@ -247,7 +247,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
               <ScrollArea className="h-full">
                 <div className="p-4 grid grid-cols-2 gap-3">
                   {albums.length === 0 ? (
-                    <div className="col-span-2 text-center py-12 text-kiosk-text/60">
+                    <div className="col-span-2 text-center py-12 text-description-visible">
                       <Disc3 className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>Nenhum álbum salvo</p>
                     </div>
@@ -263,12 +263,12 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                             <img src={album.imageUrl} alt={album.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-                              <Disc3 className="w-8 h-8 text-kiosk-text/40" />
+                              <Disc3 className="w-8 h-8 text-secondary-visible" />
                             </div>
                           )}
                         </div>
                         <p className="text-sm font-medium text-kiosk-text truncate">{album.name}</p>
-                        <p className="text-xs text-kiosk-text/60 truncate">{album.artist}</p>
+                        <p className="text-xs text-description-visible truncate">{album.artist}</p>
                       </button>
                     ))
                   )}
@@ -281,7 +281,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
               <ScrollArea className="h-full">
                 <div className="p-4 grid grid-cols-2 gap-3">
                   {artists.length === 0 ? (
-                    <div className="col-span-2 text-center py-12 text-kiosk-text/60">
+                    <div className="col-span-2 text-center py-12 text-description-visible">
                       <User2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>Nenhum artista seguido</p>
                     </div>
@@ -297,7 +297,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                             <img src={artist.imageUrl} alt={artist.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-kiosk-surface flex items-center justify-center">
-                              <User2 className="w-6 h-6 text-kiosk-text/40" />
+                              <User2 className="w-6 h-6 text-secondary-visible" />
                             </div>
                           )}
                         </div>
@@ -330,7 +330,7 @@ export function LibraryPanelToggle({
       className={`w-10 h-10 rounded-full transition-all ${
         isOpen 
           ? 'bg-cyan-500/20 text-cyan-400' 
-          : 'bg-kiosk-surface/50 text-kiosk-text/70 hover:text-cyan-400'
+          : 'bg-kiosk-surface/50 text-description-visible hover:text-cyan-400'
       }`}
     >
       <ListMusic className="w-5 h-5" />
