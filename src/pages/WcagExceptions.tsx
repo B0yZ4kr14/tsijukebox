@@ -12,7 +12,7 @@ import {
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { WcagExceptionComment } from '@/components/ui/WcagExceptionComment';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface WcagException {
@@ -284,6 +284,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
 
 export default function WcagExceptions() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const categories = {
     'decorative': { label: 'Decorativos', description: 'Ícones puramente visuais sem informação crítica', color: 'text-purple-400' },
@@ -303,8 +304,16 @@ export default function WcagExceptions() {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (location.key !== 'default') {
+                navigate(-1);
+              } else {
+                navigate('/');
+                toast.info('Redirecionando para a página inicial');
+              }
+            }}
             className="text-nav-neon-white hover:text-kiosk-text"
+            aria-label="Voltar"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

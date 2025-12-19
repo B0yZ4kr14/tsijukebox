@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 import { 
   ArrowLeft, 
   RefreshCw, 
@@ -46,6 +47,7 @@ import {
 
 export default function A11yDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     stats,
     isLoading,
@@ -89,7 +91,14 @@ export default function A11yDashboard() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (location.key !== 'default') {
+                navigate(-1);
+              } else {
+                navigate('/');
+                toast.info('Redirecionando para a página inicial');
+              }
+            }}
             className="text-nav-neon-white hover:text-kiosk-text"
             aria-label="Voltar"
           >

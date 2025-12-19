@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -823,6 +823,7 @@ const helpSections: HelpSection[] = [
 
 export default function Help() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>('getting-started');
   const [showInteractiveTest, setShowInteractiveTest] = useState<'keyboard' | 'gestures' | null>(null);
@@ -904,8 +905,16 @@ export default function Help() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                if (location.key !== 'default') {
+                  navigate(-1);
+                } else {
+                  navigate('/');
+                  toast.info('Redirecionando para a página inicial');
+                }
+              }}
               className="text-kiosk-text/90 hover:text-kiosk-text"
+              aria-label="Voltar"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
