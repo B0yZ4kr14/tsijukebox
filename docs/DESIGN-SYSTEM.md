@@ -189,8 +189,45 @@
 import { LogoBrand } from '@/components/ui/LogoBrand';
 
 // Tamanhos: sm, md, lg, xl
-// Variantes: default, ultra, bulge, mirror, mirror-dark, silver, metal
+// Variantes: default, ultra, bulge, mirror, mirror-dark, silver, metal, hologram
 <LogoBrand size="lg" variant="metal" showTagline animate />
+```
+
+### BrandLogo (Recomendado)
+
+```tsx
+import { BrandLogo } from '@/components/ui';
+
+// Componente unificado com LogoBrand + Tagline
+<BrandLogo 
+  size="lg" 
+  variant="metal" 
+  animate="cascade"
+  showTagline
+  taglineVariant="neon"
+/>
+```
+
+### BrandText
+
+```tsx
+import { BrandText } from '@/components/ui';
+
+// Texto "TSiJUKEBOX" com shimmer e typing
+<BrandText size="xl" animate="typing" typingSpeed={80} />
+```
+
+### SplashScreen
+
+```tsx
+import { SplashScreen } from '@/components/ui';
+
+<SplashScreen 
+  variant="cyberpunk"
+  logoAnimation="glitch"
+  duration={3000}
+  onComplete={() => setLoaded(true)}
+/>
 ```
 
 ### PageTitle
@@ -224,6 +261,35 @@ import { SettingsSection } from '@/components/settings/SettingsSection';
 
 ---
 
+## Brand Components API
+
+Veja [BRAND-COMPONENTS.md](./BRAND-COMPONENTS.md) para documentação completa.
+
+### Tipos de Animação
+
+| Animação | Duração | Descrição |
+|----------|---------|-----------|
+| `none` | - | Sem animação |
+| `fade` | 0.8s | Fade in suave |
+| `slide-up` | 0.6s | Desliza de baixo |
+| `scale` | 0.5s | Escala de 70% a 100% |
+| `cascade` | staggered | Elementos em sequência |
+| `splash` | 0.8s | Scale + slide elegante |
+| `glitch` | continuous | Distorção cyberpunk |
+
+### Variantes de Logo
+
+| Variante | Descrição |
+|----------|-----------|
+| `default` | Estilo padrão neon |
+| `metal` | Metal escuro premium |
+| `hologram` | Efeito 3D flutuante |
+| `ultra` | Ultra brilhante |
+| `mirror` | Reflexo espelhado |
+| `silver` | Metálico prateado |
+
+---
+
 ## Referência Rápida de Contraste
 
 | Elemento | Classe Recomendada | Ratio Mínimo |
@@ -254,4 +320,4 @@ import { SettingsSection } from '@/components/settings/SettingsSection';
 ---
 
 **Última atualização:** Dezembro 2024  
-**Versão do Design System:** 4.0
+**Versão do Design System:** 4.1

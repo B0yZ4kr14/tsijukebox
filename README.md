@@ -36,6 +36,9 @@
 | ♿ **WCAG 2.1 AA** | Acessibilidade validada com 13 exceções documentadas | ✅ |
 | 🌤️ **Weather Widget** | Previsão do tempo integrada | ✅ |
 | 🔍 **Global Search** | Busca unificada em todo o sistema | ✅ |
+| 🎨 **Brand System** | Componentes de marca com animações (splash, glitch, hologram) | ✅ NEW |
+| 🖼️ **Splash Screen** | Tela de carregamento customizável com variantes | ✅ NEW |
+| ⌨️ **Typing Animation** | Efeito typewriter no logo para splash screens | ✅ NEW |
 
 ---
 
@@ -72,10 +75,38 @@ Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
 |--------|-------------|
 | **Frontend** | React 18 + TypeScript + Vite |
 | **Estilização** | Tailwind CSS + shadcn/ui |
-| **Animações** | Framer Motion |
+| **Animações** | Framer Motion + CSS Keyframes (glitch, hologram, cascade) |
 | **Backend** | Lovable Cloud (Supabase) |
 | **Integrações** | Spotify API, YouTube Music, Spicetify CLI |
 | **PWA** | Vite PWA Plugin + Workbox |
+
+---
+
+## 🎨 Brand Components
+
+TSiJUKEBOX inclui um sistema completo de componentes de marca:
+
+### Quick Usage
+
+```tsx
+import { BrandLogo, SplashScreen } from '@/components/ui';
+
+// Splash Screen para inicialização
+<SplashScreen 
+  variant="cyberpunk" 
+  logoAnimation="glitch"
+  onComplete={() => setLoaded(true)}
+/>
+
+// Logo com animação para headers
+<BrandLogo 
+  size="lg" 
+  variant="metal" 
+  animate="cascade"
+/>
+```
+
+Veja o [Design System](docs/DESIGN-SYSTEM.md) e [Brand Components](docs/BRAND-COMPONENTS.md) para documentação completa.
 
 ---
 

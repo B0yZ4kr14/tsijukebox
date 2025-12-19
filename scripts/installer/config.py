@@ -59,13 +59,26 @@ class Config:
     """Configuração principal do instalador"""
     
     # Versão
-    VERSION = '1.0.0'
+    VERSION = '4.1.0'
     
     # Diretórios de instalação
     INSTALL_DIR = Path('/var/www/jukebox')
     DATA_DIR = Path('/var/lib/jukebox')
     CONFIG_DIR = Path('/etc/jukebox')
     LOG_DIR = Path('/var/log/jukebox')
+    
+    # Configuração de Brand (NEW)
+    BRAND_CONFIG = {
+        'splash_enabled': True,
+        'splash_variant': 'default',    # default, minimal, cyberpunk, elegant
+        'splash_duration': 3000,        # ms
+        'logo_variant': 'metal',        # default, ultra, metal, hologram, mirror, etc.
+        'logo_animation': 'splash',     # none, fade, slide-up, glitch, splash, cascade
+        'tagline_variant': 'neon',      # default, subtle, accent, neon, gradient
+    }
+    
+    # Presets de Brand disponíveis
+    BRAND_PRESETS = ['default', 'minimal', 'cyberpunk', 'elegant', 'hologram']
     
     # Usuário do sistema
     DEFAULT_USER = 'tsi'

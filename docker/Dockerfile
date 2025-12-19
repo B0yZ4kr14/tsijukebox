@@ -10,7 +10,7 @@ FROM node:20-alpine AS builder
 
 LABEL maintainer="B0.y_Z4kr14 <b0yz4kr14@proton.me>"
 LABEL description="TSiJUKEBOX Enterprise - Music System for Kiosk"
-LABEL version="4.0.0"
+LABEL version="4.1.0"
 
 # Install build dependencies
 RUN apk add --no-cache \
@@ -36,10 +36,24 @@ ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_PUBLISHABLE_KEY
 ARG VITE_API_BASE_URL
 
+# Build arguments for Brand Configuration (NEW)
+ARG VITE_SPLASH_ENABLED=true
+ARG VITE_SPLASH_VARIANT=default
+ARG VITE_SPLASH_DURATION=3000
+ARG VITE_LOGO_VARIANT=metal
+ARG VITE_LOGO_ANIMATION=splash
+
 # Set environment variables for build
 ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
 ENV VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+# Brand environment variables (NEW)
+ENV VITE_SPLASH_ENABLED=$VITE_SPLASH_ENABLED
+ENV VITE_SPLASH_VARIANT=$VITE_SPLASH_VARIANT
+ENV VITE_SPLASH_DURATION=$VITE_SPLASH_DURATION
+ENV VITE_LOGO_VARIANT=$VITE_LOGO_VARIANT
+ENV VITE_LOGO_ANIMATION=$VITE_LOGO_ANIMATION
 
 # Build the application
 RUN npm run build
@@ -51,7 +65,7 @@ FROM nginx:alpine AS production
 
 LABEL maintainer="B0.y_Z4kr14 <b0yz4kr14@proton.me>"
 LABEL description="TSiJUKEBOX Enterprise - Production Image"
-LABEL version="4.0.0"
+LABEL version="4.1.0"
 
 # Install runtime dependencies
 RUN apk add --no-cache \

@@ -10,14 +10,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **BrandText**: Componente de texto com shimmer e animação de typing
+- **BrandTagline**: Tagline com variantes neon, gradient, accent, subtle
+- **BrandWithTagline**: Combinação com animações de entrada (fade, slide-up, cascade)
+- **BrandLogo**: Componente unificado LogoBrand + Tagline com 8+ variantes
+- **SplashScreen**: Tela de splash completa com:
+  - Progress bar animada
+  - Variantes: default, minimal, cyberpunk, elegant
+  - Animações: splash, glitch, fade, scale
+  - Skip com clique
+- **Animação Glitch**: Efeito cyberpunk de distorção para BrandLogo
+- **Animação Hologram**: Efeito 3D flutuante com reflexos
+- **Animação Typing**: Efeito typewriter para BrandText
+- **useSplashScreen Hook**: Gerenciamento de estado do splash
 - Brand Guidelines page with color palette, typography, and logo usage
 - Export color palette as JSON and CSS
 - Python installer with logging and validators utilities
 - Comprehensive documentation suite
+- Brand setup module for installer (brand_setup.py)
+- GitHub workflow for brand components CI
 
 ### Changed
 - Improved authentication provider toggle on login page
 - Enhanced system checker with more hardware detection
+- LogoBrand atualizado com variantes hologram e metal
+- Docker configs with brand environment variables
+- Updated installer config with brand configuration
 
 ### Fixed
 - Auth provider toggle visibility on login page

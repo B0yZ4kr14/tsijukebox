@@ -54,9 +54,36 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-anon-key
 # Optional: API
 VITE_API_BASE_URL=http://localhost:3000
 
+# Brand Configuration (NEW)
+VITE_SPLASH_ENABLED=true
+VITE_SPLASH_VARIANT=default    # default, minimal, cyberpunk, elegant
+VITE_SPLASH_DURATION=3000      # milliseconds
+VITE_LOGO_VARIANT=metal        # default, ultra, metal, hologram, mirror, silver
+VITE_LOGO_ANIMATION=splash     # none, fade, slide-up, scale, cascade, splash, glitch
+
 # Monitoring (optional)
 GRAFANA_USER=admin
 GRAFANA_PASSWORD=secure-password
+```
+
+### Brand Configuration (NEW)
+
+| Variable | Default | Options | Description |
+|----------|---------|---------|-------------|
+| `VITE_SPLASH_ENABLED` | `true` | `true`, `false` | Enable splash screen |
+| `VITE_SPLASH_VARIANT` | `default` | `default`, `minimal`, `cyberpunk`, `elegant` | Splash visual theme |
+| `VITE_SPLASH_DURATION` | `3000` | Number (ms) | Splash duration |
+| `VITE_LOGO_VARIANT` | `metal` | `default`, `metal`, `hologram`, `ultra`, `mirror`, `silver` | Logo style |
+| `VITE_LOGO_ANIMATION` | `splash` | `none`, `fade`, `slide-up`, `scale`, `cascade`, `splash`, `glitch` | Logo animation |
+
+### Example with Cyberpunk Theme
+
+```bash
+docker run -d \
+  -e VITE_SPLASH_VARIANT=cyberpunk \
+  -e VITE_LOGO_ANIMATION=glitch \
+  -e VITE_LOGO_VARIANT=metal \
+  tsijukebox/app:latest
 ```
 
 ---

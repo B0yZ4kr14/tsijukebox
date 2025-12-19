@@ -38,10 +38,12 @@ Se aplicável, adicione mockups, wireframes ou exemplos visuais.
 
 - [ ] Player/Reprodução
 - [ ] Interface/UI
+- [ ] **Brand/Splash Screen** (logos, animações, splash)
 - [ ] Integrações (Spotify, YouTube, etc.)
 - [ ] Acessibilidade
 - [ ] Performance
 - [ ] Documentação
+- [ ] Docker/Deployment
 - [ ] Outra: _________
 
 ## 📊 Prioridade Sugerida

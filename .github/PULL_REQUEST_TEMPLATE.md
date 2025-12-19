@@ -57,6 +57,12 @@ Fixes #
 - [ ] Linting passa sem erros (`npm run lint`)
 - [ ] Sem novos warnings
 
+### Brand Components (se aplicável)
+- [ ] Testei todas as variantes do componente (se BrandLogo/SplashScreen)
+- [ ] Animações funcionam corretamente
+- [ ] Animações respeitam `prefers-reduced-motion`
+- [ ] Documentação atualizada em `docs/BRAND-COMPONENTS.md`
+
 ### Acessibilidade (se aplicável)
 - [ ] Validação WCAG passa (`npm run wcag:validate`)
 - [ ] Verificação de contraste passa (`npm run contrast`)

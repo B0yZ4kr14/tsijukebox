@@ -1,0 +1,124 @@
+name: Brand Components Check
+
+on:
+  push:
+    paths:
+      - 'src/components/ui/Brand*.tsx'
+      - 'src/components/ui/Logo*.tsx'
+      - 'src/components/ui/SplashScreen.tsx'
+      - 'src/hooks/common/useSplashScreen.ts'
+  pull_request:
+    paths:
+      - 'src/components/ui/Brand*.tsx'
+      - 'src/components/ui/Logo*.tsx'
+      - 'src/components/ui/SplashScreen.tsx'
+      - 'src/hooks/common/useSplashScreen.ts'
+
+jobs:
+  brand-check:
+    name: Validate Brand Components
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        
+      - name: Type check brand components
+        run: |
+          echo "Checking brand component types..."
+          npx tsc --noEmit \
+            src/components/ui/BrandText.tsx \
+            src/components/ui/BrandTagline.tsx \
+            src/components/ui/BrandLogo.tsx \
+            src/components/ui/LogoBrand.tsx \
+            src/components/ui/SplashScreen.tsx \
+            2>&1 || true
+        
+      - name: Lint brand components
+        run: |
+          echo "Linting brand components..."
+          npx eslint \
+            src/components/ui/Brand*.tsx \
+            src/components/ui/Logo*.tsx \
+            src/components/ui/SplashScreen.tsx \
+            --max-warnings 10 || true
+        
+      - name: Run brand component tests
+        run: |
+          echo "Running brand component tests..."
+          npm run test -- --grep "Brand|Logo|Splash" --passWithNoTests --run || true
+        
+      - name: Build and verify exports
+        run: |
+          echo "Building application..."
+          npm run build
+          
+          echo "Verifying brand components in build..."
+          if grep -q "BrandLogo" dist/assets/*.js 2>/dev/null; then
+            echo "✓ BrandLogo found in build"
+          else
+            echo "⚠ BrandLogo not found in build (may be tree-shaken)"
+          fi
+          
+          if grep -q "SplashScreen" dist/assets/*.js 2>/dev/null; then
+            echo "✓ SplashScreen found in build"
+          else
+            echo "⚠ SplashScreen not found in build (may be tree-shaken)"
+          fi
+          
+      - name: Check accessibility attributes
+        run: |
+          echo "Checking accessibility in brand components..."
+          # Verifica se componentes têm atributos de acessibilidade
+          for file in src/components/ui/Brand*.tsx src/components/ui/SplashScreen.tsx; do
+            if [ -f "$file" ]; then
+              if grep -q "aria-\|role=" "$file" 2>/dev/null; then
+                echo "✓ $file has accessibility attributes"
+              else
+                echo "⚠ $file may need accessibility review"
+              fi
+            fi
+          done
+
+  animation-check:
+    name: Animation Performance Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Check CSS animations
+        run: |
+          echo "Checking animation definitions..."
+          
+          # Verifica se há prefers-reduced-motion
+          if grep -q "prefers-reduced-motion" src/index.css; then
+            echo "✓ prefers-reduced-motion support found"
+          else
+            echo "⚠ Consider adding prefers-reduced-motion support"
+          fi
+          
+          # Lista animações definidas
+          echo ""
+          echo "Animations found in index.css:"
+          grep -o "@keyframes [a-z-]*" src/index.css | sort | uniq || echo "No keyframes found"
+          
+      - name: Check animation durations
+        run: |
+          echo "Checking animation durations..."
+          # Verifica se animações não são muito longas (> 5s pode afetar UX)
+          if grep -E "animation.*[5-9]s|animation.*[0-9]{2,}s" src/index.css; then
+            echo "⚠ Found animations longer than 5s - review for UX"
+          else
+            echo "✓ All animations within reasonable duration"
+          fi

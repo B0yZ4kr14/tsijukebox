@@ -38,6 +38,7 @@ from spicetify_setup import SpicetifySetup
 from auth_setup import AuthSetup
 from docker_setup import DockerSetup
 from landing_server import LandingServer
+from brand_setup import configure_brand, BrandSetup, BRAND_PRESETS
 
 
 def check_root():
@@ -447,6 +448,16 @@ async def run_auto_install(config: dict, analytics=None):
     
     # 5. Configurar firewall (UFW)
     configure_firewall(analytics)
+    
+    # 5.1 Configurar Brand Components (NEW)
+    brand_preset = config.get('brand_preset', 'default')
+    brand_config_dict = BRAND_PRESETS.get(brand_preset, BRAND_PRESETS['default'])
+    # Permitir override de configurações específicas
+    brand_config_dict.update({
+        k: v for k, v in config.items() 
+        if k.startswith('splash_') or k.startswith('logo_') or k.startswith('tagline_')
+    })
+    configure_brand(brand_config_dict, analytics)
     
     # 6. Instalar Nginx
     install_nginx(analytics)
