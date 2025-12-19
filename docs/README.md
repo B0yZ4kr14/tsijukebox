@@ -9,10 +9,19 @@
 </p>
 
 <p align="center">
-  <a href="GETTING-STARTED.md">Quick Start</a> •
-  <a href="INSTALLATION.md">Installation</a> •
-  <a href="DEVELOPER-GUIDE.md">Developer Guide</a> •
-  <a href="API-REFERENCE.md">API Reference</a>
+  <img src="https://img.shields.io/badge/version-4.0.0-blue?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/license-Public_Domain-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility" alt="WCAG">
+  <img src="https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript" alt="TypeScript">
+</p>
+
+<p align="center">
+  <a href="GETTING-STARTED.md">🚀 Quick Start</a> •
+  <a href="INSTALLATION.md">📦 Installation</a> •
+  <a href="DEVELOPER-GUIDE.md">👨‍💻 Developer Guide</a> •
+  <a href="CONTRIBUTING.md">🤝 Contributing</a> •
+  <a href="API-REFERENCE.md">📖 API Reference</a>
 </p>
 
 ---
@@ -46,6 +55,7 @@
 | Document | Audience | Description |
 |----------|----------|-------------|
 | [**Developer Guide**](DEVELOPER-GUIDE.md) | Developers | Architecture and contribution guide |
+| [**Contributing Guide**](CONTRIBUTING.md) | Developers | How to contribute to the project |
 | [**Hooks Architecture**](HOOKS-ARCHITECTURE.md) | Developers | React hooks organization |
 | [**API Reference**](API-REFERENCE.md) | Developers | Complete API documentation |
 | [**Backend Endpoints**](BACKEND-ENDPOINTS.md) | Developers | Edge functions documentation |
@@ -57,6 +67,8 @@
 |----------|----------|-------------|
 | [**Changelog**](CHANGELOG.md) | All | Version history and updates |
 | [**Credits**](CREDITS.md) | All | Authorship and licensing |
+| [**Code of Conduct**](../CODE_OF_CONDUCT.md) | All | Community guidelines |
+| [**License**](../LICENSE) | All | Public Domain dedication |
 
 ---
 
@@ -161,12 +173,19 @@ tsijukebox/
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our [Developer Guide](DEVELOPER-GUIDE.md) for:
+We welcome contributions! Please read our:
 
-- Code style guidelines
-- Pull request process
-- Testing requirements
-- Architecture decisions
+- [**Contributing Guide**](CONTRIBUTING.md) - How to contribute
+- [**Code of Conduct**](../CODE_OF_CONDUCT.md) - Community guidelines
+- [**Developer Guide**](DEVELOPER-GUIDE.md) - Architecture and code style
+
+### Quick Contribution Steps
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
@@ -174,7 +193,7 @@ We welcome contributions! Please read our [Developer Guide](DEVELOPER-GUIDE.md) 
 
 TSiJUKEBOX is released under **Public Domain** dedication.
 
-See [CREDITS.md](CREDITS.md) for full authorship and licensing details.
+See [LICENSE](../LICENSE) and [CREDITS.md](CREDITS.md) for full authorship and licensing details.
 
 ---
 
@@ -189,7 +208,7 @@ See [CREDITS.md](CREDITS.md) for full authorship and licensing details.
 ---
 
 <p align="center">
-  <strong>TSiJUKEBOX</strong> - Enterprise Music System
+  <strong>TSiJUKEBOX Enterprise</strong> — A música, amplificada.
   <br>
   Made with 🎵 by B0.y_Z4kr14
 </p>
