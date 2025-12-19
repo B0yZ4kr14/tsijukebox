@@ -34,20 +34,23 @@ export function BackupCard({
   });
 
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg card-option-dark-3d">
+    <div 
+      className="flex items-center justify-between p-3 rounded-lg card-option-dark-3d"
+      data-testid={`backup-card-${backup.id}`}
+    >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="p-2 rounded-lg bg-kiosk-surface/50">
+        <div className="p-2 rounded-lg bg-kiosk-surface/50" data-testid="backup-provider-icon">
           {providerIcons[backup.provider]}
         </div>
         
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-kiosk-text font-medium truncate">
+          <p className="text-sm text-kiosk-text font-medium truncate" data-testid="backup-name">
             {backup.name}
           </p>
           <div className="flex items-center gap-2 text-xs text-kiosk-text/70">
-            <span>{backup.size}</span>
+            <span data-testid="backup-size">{backup.size}</span>
             <span>•</span>
-            <span>{formattedDate}</span>
+            <span data-testid="backup-date">{formattedDate}</span>
           </div>
         </div>
         
@@ -59,6 +62,7 @@ export function BackupCard({
               ? 'border-green-500/50 text-green-400'
               : 'border-blue-500/50 text-blue-400'
           )}
+          data-testid="backup-type-badge"
         >
           {backup.type === 'full' ? 'Full' : 'Inc'}
         </Badge>
@@ -71,6 +75,7 @@ export function BackupCard({
               backup.status === 'pending' && 'border-yellow-500/50 text-yellow-400',
               backup.status === 'syncing' && 'border-cyan-500/50 text-cyan-400'
             )}
+            data-testid="backup-status-badge"
           >
             {backup.status}
           </Badge>
@@ -85,6 +90,7 @@ export function BackupCard({
           disabled={disabled || isLoading}
           className="w-8 h-8 hover:bg-green-500/20 hover:text-green-400"
           title="Restaurar"
+          data-testid={`backup-restore-${backup.id}`}
         >
           <Upload className="w-4 h-4" />
         </Button>
@@ -95,6 +101,7 @@ export function BackupCard({
           disabled={disabled || isLoading}
           className="w-8 h-8 hover:bg-red-500/20 hover:text-red-400"
           title="Excluir"
+          data-testid={`backup-delete-${backup.id}`}
         >
           <Trash2 className="w-4 h-4" />
         </Button>

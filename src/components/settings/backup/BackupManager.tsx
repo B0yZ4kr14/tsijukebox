@@ -76,18 +76,18 @@ export function BackupManager({
       description={t('backupLocal.description')}
       instructions={instructions}
     >
-      <div className="space-y-4">
+      <div className="space-y-4" data-testid="backup-manager">
         {showTabs ? (
-          <Tabs defaultValue={defaultProvider} className="w-full">
+          <Tabs defaultValue={defaultProvider} className="w-full" data-testid="backup-tabs">
             <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${providers.length}, 1fr)` }}>
               {providers.includes('local') && (
-                <TabsTrigger value="local">Local</TabsTrigger>
+                <TabsTrigger value="local" data-testid="backup-tab-local">Local</TabsTrigger>
               )}
               {providers.includes('cloud') && (
-                <TabsTrigger value="cloud">Nuvem</TabsTrigger>
+                <TabsTrigger value="cloud" data-testid="backup-tab-cloud">Nuvem</TabsTrigger>
               )}
               {providers.includes('distributed') && (
-                <TabsTrigger value="distributed">Distribuído</TabsTrigger>
+                <TabsTrigger value="distributed" data-testid="backup-tab-distributed">Distribuído</TabsTrigger>
               )}
             </TabsList>
 
@@ -171,7 +171,10 @@ export function BackupManager({
 
         {/* Demo Warning */}
         {isDemoMode && (
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+          <div 
+            className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30"
+            data-testid="backup-demo-warning"
+          >
             <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
             <p className="text-xs text-yellow-400">
               {t('backupLocal.demoWarning')}
