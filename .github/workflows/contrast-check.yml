@@ -28,8 +28,8 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Run contrast check
-        run: node scripts/check-contrast.js
+      - name: Run contrast check (strict mode)
+        run: node scripts/check-contrast.js --strict
         
       - name: Generate JSON report
         if: failure()

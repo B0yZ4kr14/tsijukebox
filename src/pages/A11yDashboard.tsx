@@ -90,7 +90,7 @@ export default function A11yDashboard() {
             variant="ghost"
             size="icon"
             onClick={() => navigate(-1)}
-            className="text-kiosk-text/85 hover:text-kiosk-text"
+            className="text-nav-neon-white hover:text-kiosk-text"
             aria-label="Voltar"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -100,7 +100,7 @@ export default function A11yDashboard() {
               <Accessibility className="w-6 h-6 icon-neon-blue" />
               Dashboard de Acessibilidade
             </h1>
-            <p className="text-kiosk-text/85 text-sm">
+            <p className="text-description-visible text-sm">
               Estatísticas WCAG e conformidade do projeto
             </p>
           </div>
@@ -152,7 +152,7 @@ export default function A11yDashboard() {
                     <FileCode className="w-8 h-8 icon-neon-blue" />
                   </div>
                 </div>
-                <p className="text-kiosk-text/85 text-sm mt-2">
+                <p className="text-description-visible text-sm mt-2">
                   {stats.conformingElements.toLocaleString()} conformes
                 </p>
               </CardContent>
@@ -195,7 +195,7 @@ export default function A11yDashboard() {
                     <Eye className="w-8 h-8 icon-neon-blue" />
                   </div>
                 </div>
-                <p className="text-kiosk-text/85 text-sm mt-2">
+                <p className="text-description-visible text-sm mt-2">
                   WCAG AA requer 4.5:1
                 </p>
               </CardContent>
@@ -250,7 +250,7 @@ export default function A11yDashboard() {
                   <BarChart3 className="w-5 h-5 icon-neon-blue" />
                   Distribuição de Opacidades
                 </CardTitle>
-                <CardDescription className="text-kiosk-text/85">
+                <CardDescription className="text-description-visible">
                   Classes de opacidade text-*/* usadas
                 </CardDescription>
               </CardHeader>
@@ -298,7 +298,7 @@ export default function A11yDashboard() {
                         </span>
                       </div>
                       <Progress value={item.percentage} className="h-3" />
-                      <div className="flex justify-between mt-1 text-xs text-kiosk-text/85">
+                      <div className="flex justify-between mt-1 text-xs text-description-visible">
                         <span>{item.covered} cobertos</span>
                         <span>{item.missing} faltando</span>
                       </div>
@@ -323,7 +323,7 @@ export default function A11yDashboard() {
                       key={type}
                       className="p-4 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20"
                     >
-                      <p className="text-kiosk-text/85 text-sm capitalize">{type}</p>
+                      <p className="text-description-visible text-sm capitalize">{type}</p>
                       <p className="text-2xl font-bold text-kiosk-text">{count as number}</p>
                     </div>
                   ))}
@@ -339,7 +339,7 @@ export default function A11yDashboard() {
                 <FileCode className="w-5 h-5 icon-neon-blue" />
                 Lista de Violações
               </CardTitle>
-              <CardDescription className="text-kiosk-text/85">
+              <CardDescription className="text-description-visible">
                 Problemas detectados no último scan
               </CardDescription>
             </CardHeader>
@@ -364,19 +364,19 @@ export default function A11yDashboard() {
                             <span className="ml-1 capitalize">{violation.severity}</span>
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-kiosk-text/85 capitalize">
+                        <TableCell className="text-description-visible capitalize">
                           {violation.type}
                         </TableCell>
                         <TableCell className="font-mono text-xs text-cyan-400">
                           {violation.file}
                           {violation.line && `:${violation.line}`}
                         </TableCell>
-                        <TableCell className="text-kiosk-text/85">
+                        <TableCell className="text-description-visible">
                           <code className="bg-kiosk-surface/50 px-2 py-1 rounded text-xs">
                             {violation.element}
                           </code>
                         </TableCell>
-                        <TableCell className="text-kiosk-text/85 text-sm">
+                        <TableCell className="text-description-visible text-sm">
                           {violation.message}
                         </TableCell>
                       </TableRow>
@@ -388,7 +388,7 @@ export default function A11yDashboard() {
           </Card>
 
           {/* Scan Info */}
-          <div className="mt-6 text-center text-kiosk-text/85 text-sm">
+          <div className="mt-6 text-center text-description-visible text-sm">
             <p>
               Último scan: {stats.lastScanDate?.toLocaleString('pt-BR')} • 
               WCAG Exceptions documentadas: {stats.wcagExceptionsCount} • 
@@ -401,8 +401,8 @@ export default function A11yDashboard() {
       {!stats && !isLoading && (
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <Accessibility className="w-16 h-16 text-kiosk-text/75 mx-auto mb-4" />
-            <p className="text-kiosk-text/90">Clique em "Executar Scan" para analisar a acessibilidade</p>
+            <Accessibility className="w-16 h-16 text-secondary-visible mx-auto mb-4" />
+            <p className="text-nav-neon-white">Clique em "Executar Scan" para analisar a acessibilidade</p>
           </div>
         </div>
       )}

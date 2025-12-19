@@ -234,7 +234,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
         <div className="flex items-center gap-4">
           {/* Normal State */}
           <div className="flex flex-col items-center p-4 bg-kiosk-bg/50 rounded-lg flex-1">
-            <span className="text-xs text-kiosk-text/85 mb-2 flex items-center gap-1">
+            <span className="text-xs text-description-visible mb-2 flex items-center gap-1">
               <EyeOff className="w-3 h-3" /> Normal
             </span>
             <div className={`text-kiosk-text${exception.opacity}`}>{renderIcon()}</div>
@@ -254,7 +254,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
           {/* Hover State */}
           {exception.hasHoverState && (
             <div className="flex flex-col items-center p-4 bg-kiosk-bg/50 rounded-lg border border-cyan-500/30 flex-1">
-              <span className="text-xs text-kiosk-text/85 mb-2 flex items-center gap-1">
+              <span className="text-xs text-description-visible mb-2 flex items-center gap-1">
                 <Eye className="w-3 h-3" /> Hover
               </span>
               <div className={exception.hoverColor}>{renderIcon()}</div>
@@ -262,7 +262,7 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
           )}
         </div>
         
-        <p className="text-sm text-kiosk-text/85">{exception.justification}</p>
+        <p className="text-sm text-description-visible">{exception.justification}</p>
         
         <div className="relative">
           <div className="p-2 bg-kiosk-bg rounded text-xs font-mono text-cyan-400/80 pr-10 overflow-x-auto">
@@ -304,7 +304,7 @@ export default function WcagExceptions() {
             variant="ghost" 
             size="icon"
             onClick={() => navigate(-1)}
-            className="text-kiosk-text/85 hover:text-kiosk-text"
+            className="text-nav-neon-white hover:text-kiosk-text"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -328,8 +328,8 @@ export default function WcagExceptions() {
                   {getCategoryCount(key)}
                 </Badge>
                 <div>
-                  <h4 className="text-kiosk-text/90 font-medium">{label}</h4>
-                  <p className="text-sm text-kiosk-text/75">{description}</p>
+                  <h4 className="text-nav-neon-white font-medium">{label}</h4>
+                  <p className="text-sm text-description-visible">{description}</p>
                 </div>
               </div>
             ))}
@@ -376,7 +376,7 @@ export default function WcagExceptions() {
                 ))}
               </div>
               {getCategoryCount(category) === 0 && (
-                <div className="text-center py-12 text-kiosk-text/60">
+                <div className="text-center py-12 text-description-visible">
                   Nenhuma exceção nesta categoria
                 </div>
               )}
@@ -394,22 +394,22 @@ export default function WcagExceptions() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <h4 className="text-kiosk-text/90 font-medium">1. Preencha os campos</h4>
-                    <p className="text-sm text-kiosk-text/75">
+                    <h4 className="text-nav-neon-white font-medium">1. Preencha os campos</h4>
+                    <p className="text-sm text-description-visible">
                       Informe o arquivo, opacidade, elemento e justificativa para a exceção WCAG.
                     </p>
                   </div>
                   
                   <div className="space-y-2">
-                    <h4 className="text-kiosk-text/90 font-medium">2. Selecione a categoria</h4>
-                    <p className="text-sm text-kiosk-text/75">
+                    <h4 className="text-nav-neon-white font-medium">2. Selecione a categoria</h4>
+                    <p className="text-sm text-description-visible">
                       Escolha a categoria que melhor descreve o motivo da exceção.
                     </p>
                   </div>
                   
                   <div className="space-y-2">
-                    <h4 className="text-kiosk-text/90 font-medium">3. Escolha o formato</h4>
-                    <p className="text-sm text-kiosk-text/75">
+                    <h4 className="text-nav-neon-white font-medium">3. Escolha o formato</h4>
+                    <p className="text-sm text-description-visible">
                       <strong>JSX Inline:</strong> Comentário curto para colocar acima do elemento<br />
                       <strong>JSX Multi-linha:</strong> Comentário detalhado com todas as informações<br />
                       <strong>JS/TS:</strong> Comentário para arquivos JavaScript/TypeScript
@@ -417,8 +417,8 @@ export default function WcagExceptions() {
                   </div>
                   
                   <div className="space-y-2">
-                    <h4 className="text-kiosk-text/90 font-medium">4. Copie e cole</h4>
-                    <p className="text-sm text-kiosk-text/75">
+                    <h4 className="text-nav-neon-white font-medium">4. Copie e cole</h4>
+                    <p className="text-sm text-description-visible">
                       Clique em "Copiar Comentário" e cole na linha anterior ao elemento com contraste reduzido.
                     </p>
                   </div>
@@ -440,7 +440,7 @@ export default function WcagExceptions() {
         <Card className="card-neon-border bg-kiosk-surface/30 mt-8">
           <CardContent className="p-4">
             <h3 className="text-gold-neon font-medium mb-2">Como Documentar uma Nova Exceção</h3>
-            <ol className="text-sm text-kiosk-text/85 space-y-2 list-decimal list-inside">
+            <ol className="text-sm text-description-visible space-y-2 list-decimal list-inside">
               <li>Adicione um comentário WCAG na linha anterior ao elemento</li>
               <li>Inclua a opacidade, elemento e justificativa</li>
               <li>Execute <code className="bg-kiosk-bg px-1 rounded text-cyan-400">npm run wcag:validate</code> para verificar</li>
