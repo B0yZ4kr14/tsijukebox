@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Download } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { LogoDownload } from '@/components/ui/LogoDownload';
 import { BrandText } from '@/components/ui/BrandText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient } from '@/lib/api/spotify';
@@ -304,6 +305,17 @@ export default function Settings() {
                     )}
                   </span>
                 </div>
+              </div>
+              
+              <Separator className="bg-kiosk-border my-4" />
+              
+              {/* Logo Download */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4 text-kiosk-primary" />
+                  <Label className="text-kiosk-text">Download da Logo</Label>
+                </div>
+                <LogoDownload compact showPreview={false} />
               </div>
             </SettingsSection>
           </>

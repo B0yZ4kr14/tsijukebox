@@ -24,7 +24,8 @@ import {
   BookOpen,
   Download,
   FileText,
-  Code
+  Code,
+  Image
 } from 'lucide-react';
 import { formatBrandInText } from '@/components/ui/BrandText';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { LogoDownload } from '@/components/ui/LogoDownload';
 import { resetTour } from '@/components/tour/GuidedTour';
 import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
 import { GlobalSearchModal } from '@/components/GlobalSearchModal';
@@ -252,6 +254,33 @@ const helpSections: HelpSection[] = [
         question: 'Como configurar backup na nuvem?',
         answer: 'O sistema suporta backup para diversos provedores: AWS S3, Google Drive, Dropbox, MEGA, OneDrive e Storj.',
         tips: ['Configure as credenciais do provedor escolhido em Configurações > Cloud Backup']
+      }
+    ]
+  },
+  {
+    id: 'resources',
+    title: 'Recursos & Downloads',
+    icon: <Image className="w-5 h-5 icon-neon-blue" />,
+    items: [
+      {
+        id: 'logo-download',
+        question: 'Como baixar a logo do TSiJUKEBOX?',
+        answer: 'A logo oficial está disponível em formato vetorial (SVG) para máxima qualidade e escalabilidade, além de PNG em múltiplos tamanhos para uso em documentos e redes sociais.',
+        tips: [
+          'SVG é ideal para web e impressão em qualquer tamanho',
+          'PNG 1024px é recomendado para apresentações',
+          'Use o botão "Copiar SVG" para inserir diretamente em editores de código'
+        ]
+      },
+      {
+        id: 'export-docs',
+        question: 'Como exportar a documentação?',
+        answer: 'Use o menu de exportação no canto superior direito desta página para baixar toda a documentação em Markdown ou HTML.',
+        steps: [
+          'Clique no ícone de download no topo da página',
+          'Escolha o formato: Markdown (.md) ou HTML (.html)',
+          'O arquivo será baixado automaticamente'
+        ]
       }
     ]
   },
@@ -1030,6 +1059,13 @@ export default function Help() {
                         <Hand className="w-4 h-4 mr-2" />
                         👆 Testar Gestos de Toque
                       </Button>
+                    </div>
+                  )}
+
+                  {/* Logo Download Component for Resources section */}
+                  {selectedSection === 'resources' && (
+                    <div className="mb-6 no-print">
+                      <LogoDownload showPreview={true} />
                     </div>
                   )}
 
