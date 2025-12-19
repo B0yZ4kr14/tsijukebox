@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { BrandText } from '@/components/ui/BrandText';
 
 type BackupStrategy = 'round-robin' | 'mirror-all' | 'primary-secondary';
 type SyncSchedule = 'hourly' | 'daily' | 'weekly';
@@ -140,7 +141,7 @@ export function DistributedBackupSection() {
     <SettingsSection
       icon={<Cloud className="w-5 h-5 icon-neon-blue" />}
       title="Backup Distribuído"
-      description={<>Redundância entre clientes <span className="text-brand-inline">TSiJUKEBOX</span></>}
+      description={<>Redundância entre clientes <BrandText /></>}
     >
       <div className="space-y-4">
         {/* Enable Toggle */}
@@ -367,7 +368,7 @@ export function DistributedBackupSection() {
             {clients.length === 0 && (
               <p className="text-xs text-amber-400 flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3" />
-                Cadastre clientes <span className="text-brand-inline">TSiJUKEBOX</span> para usar backup distribuído
+                Cadastre clientes <BrandText /> para usar backup distribuído
               </p>
             )}
           </>

@@ -7,12 +7,14 @@ interface BrandTextProps {
 
 /**
  * Componente reutilizável para renderizar "TSiJUKEBOX"
- * com estilo neon azul negrito em qualquer parte da aplicação
+ * com cores da logo: TSi em prata/steel, JUKEBOX em dourado/âmbar
+ * Herda o tamanho da fonte do contexto
  */
 export function BrandText({ className }: BrandTextProps) {
   return (
-    <span className={cn('text-brand-inline', className)}>
-      TSiJUKEBOX
+    <span className={cn('inline', className)}>
+      <span className="text-brand-tsi">TSi</span>
+      <span className="text-brand-jukebox">JUKEBOX</span>
     </span>
   );
 }

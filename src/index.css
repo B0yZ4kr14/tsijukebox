@@ -3077,53 +3077,87 @@ body[data-gradient="true"] {
     0 0 12px hsl(45 100% 50% / 0.3);
 }
 
-/* TSi METAL - Chrome/Steel com mais contraste */
+/* TSi METAL - Chrome/Steel escuro clássico */
 .logo-tsi-metal {
   background: linear-gradient(
     180deg,
-    hsl(210 15% 82%) 0%,
-    hsl(210 12% 70%) 25%,
-    hsl(210 18% 55%) 50%,
-    hsl(210 12% 65%) 75%,
-    hsl(210 15% 78%) 100%
+    hsl(210 20% 70%) 0%,
+    hsl(210 15% 55%) 25%,
+    hsl(210 20% 40%) 50%,
+    hsl(210 15% 50%) 75%,
+    hsl(210 20% 65%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 1px 0 hsl(210 20% 90% / 0.5))
+    drop-shadow(0 1px 0 hsl(210 20% 80% / 0.5))
     drop-shadow(0 2px 0 hsl(0 0% 5% / 0.6))
     drop-shadow(0 4px 8px hsl(0 0% 0% / 0.4))
-    drop-shadow(0 0 12px hsl(210 30% 70% / 0.3));
+    drop-shadow(0 0 12px hsl(210 30% 50% / 0.3));
   letter-spacing: -0.02em;
   font-weight: 900;
   text-transform: uppercase;
   transition: filter 0.3s ease;
 }
 
-/* JUKEBOX METAL - Gold/Amber vibrante */
+/* JUKEBOX METAL - Gold/Amber escuro clássico */
 .logo-jukebox-metal {
   background: linear-gradient(
     180deg,
-    hsl(45 90% 68%) 0%,
-    hsl(42 85% 55%) 25%,
-    hsl(38 80% 45%) 50%,
-    hsl(42 85% 52%) 75%,
-    hsl(45 90% 62%) 100%
+    hsl(45 100% 55%) 0%,
+    hsl(40 95% 45%) 25%,
+    hsl(35 90% 35%) 50%,
+    hsl(40 95% 42%) 75%,
+    hsl(45 100% 50%) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: 
-    drop-shadow(0 1px 0 hsl(45 100% 75% / 0.5))
+    drop-shadow(0 1px 0 hsl(45 100% 65% / 0.5))
     drop-shadow(0 2px 0 hsl(30 50% 15% / 0.6))
     drop-shadow(0 4px 8px hsl(0 0% 0% / 0.4))
-    drop-shadow(0 0 12px hsl(45 100% 55% / 0.4));
+    drop-shadow(0 0 12px hsl(45 100% 50% / 0.4));
   letter-spacing: 0.06em;
   margin-left: 0.08em;
   font-weight: 900;
   text-transform: uppercase;
   transition: filter 0.3s ease;
+}
+
+/* ========================================
+   INLINE BRAND TEXT - TSi (Silver) + JUKEBOX (Gold)
+   Para uso em textos que mencionam a marca
+   Herda font-size do contexto
+   ======================================== */
+
+/* Texto inline TSi - Prata/Steel */
+.text-brand-tsi {
+  background: linear-gradient(
+    180deg,
+    hsl(210 20% 70%) 0%,
+    hsl(210 18% 55%) 50%,
+    hsl(210 20% 65%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Texto inline JUKEBOX - Dourado/Âmbar */
+.text-brand-jukebox {
+  background: linear-gradient(
+    180deg,
+    hsl(45 100% 55%) 0%,
+    hsl(38 90% 42%) 50%,
+    hsl(45 100% 50%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
 /* Hover - reflexo metálico mais intenso */

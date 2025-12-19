@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { BrandText } from '@/components/ui/BrandText';
 import {
   Dialog,
   DialogContent,
@@ -407,7 +408,7 @@ export function ClientsManagementSection() {
   return (
     <SettingsSection
       icon={<Building2 className="w-5 h-5 icon-neon-blue" />}
-      title={<>Clientes <span className="text-brand-inline">TSiJUKEBOX</span></>}
+      title={<>Clientes <BrandText /></>}
       description="Gerencie múltiplos terminais e replique configurações"
       data-tour="clients-management"
     >
@@ -451,7 +452,7 @@ export function ClientsManagementSection() {
           <div className="text-center py-8 text-kiosk-text/90">
             <Building2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">Nenhum cliente cadastrado</p>
-            <p className="text-xs mt-1">Adicione terminais <span className="text-brand-inline">TSiJUKEBOX</span> para gerenciar</p>
+            <p className="text-xs mt-1">Adicione terminais <BrandText /> para gerenciar</p>
           </div>
         ) : (
           <div className="space-y-3">
