@@ -7,8 +7,9 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ['html'],
+    ['html', { outputFolder: 'playwright-report' }],
     ['list'],
+    ['json', { outputFile: 'coverage/playwright/results.json' }],
   ],
   use: {
     baseURL: 'http://localhost:5173',

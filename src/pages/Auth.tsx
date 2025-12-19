@@ -85,9 +85,9 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-kiosk-bg flex items-center justify-center p-4" data-testid="auth-page">
-      <Card className="w-full max-w-md border-cyan-500/30 bg-kiosk-surface backdrop-blur">
+      <Card className="w-full max-w-md border-cyan-500/30 bg-kiosk-surface backdrop-blur" data-testid="auth-card">
         <CardHeader className="text-center space-y-4">
-          <LogoBrand size="sm" variant="metal" centered animate className="mb-2" />
+          <LogoBrand size="sm" variant="metal" centered animate className="mb-2" data-testid="auth-logo" />
           <div>
             <CardDescription className="flex items-center justify-center gap-2 mt-2 text-kiosk-text/90">
               {isSupabaseProvider ? (
