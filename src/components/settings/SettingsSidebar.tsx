@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   Plug, 
   Database, 
@@ -11,7 +12,8 @@ import {
   ChevronRight,
   LayoutDashboard,
   Search,
-  X
+  X,
+  Github
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,6 +53,7 @@ interface SettingsSidebarProps {
 }
 
 export function SettingsSidebar({ activeCategory, onCategoryChange }: SettingsSidebarProps) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -184,6 +187,39 @@ export function SettingsSidebar({ activeCategory, onCategoryChange }: SettingsSi
               </Tooltip>
             );
           })}
+
+          {/* GitHub Dashboard Link */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                onClick={() => navigate('/github-dashboard')}
+                className="settings-nav-button-3d relative mt-4 border-t border-kiosk-surface/30 pt-4"
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.35 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Github className="w-5 h-5 settings-nav-icon-3d" />
+
+                {isExpanded && (
+                  <motion.span
+                    className="ml-3 text-sm font-medium whitespace-nowrap flex-1 text-left text-kiosk-text/90"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    GitHub Stats
+                  </motion.span>
+                )}
+              </motion.button>
+            </TooltipTrigger>
+            {!isExpanded && (
+              <TooltipContent side="right" className="settings-tooltip">
+                GitHub Dashboard
+              </TooltipContent>
+            )}
+          </Tooltip>
         </nav>
 
         {/* No results message */}

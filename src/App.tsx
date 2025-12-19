@@ -45,6 +45,7 @@ const BrandGuidelines = lazy(() => import("./pages/BrandGuidelines"));
 const ChangelogTimeline = lazy(() => import("./pages/ChangelogTimeline"));
 const ComponentsShowcase = lazy(() => import("./pages/ComponentsShowcase"));
 const InstallerMetrics = lazy(() => import("./pages/InstallerMetrics"));
+const GitHubDashboard = lazy(() => import("./pages/GitHubDashboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -117,6 +118,11 @@ function AppRoutes() {
         <Route path="/dashboard" element={
           <ProtectedRoute requiredPermission="canAccessSettings">
             <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/github-dashboard" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <GitHubDashboard />
           </ProtectedRoute>
         } />
         <Route path="/clients-monitor" element={

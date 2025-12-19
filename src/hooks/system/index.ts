@@ -11,3 +11,12 @@ export { useMockStatus } from './useMockData';
 export { useStorjClient } from './useStorjClient';
 export { useWeather } from './useWeather';
 export { useWeatherForecast, type ForecastDay } from './useWeatherForecast';
+export { 
+  useGitHubStats,
+  type GitHubRepoInfo,
+  type GitHubCommit,
+  type GitHubContributor,
+  type GitHubRelease,
+  type GitHubBranch,
+  type GitHubLanguages
+} from './useGitHubStats';
