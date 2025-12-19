@@ -41,6 +41,7 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           onClick={() => toggleMute(!muted)}
           disabled={isLoading}
           aria-label={muted ? t('player.unmute') : t('player.mute')}
+          data-testid="volume-mute-toggle"
           className={cn(
             "w-11 h-11 rounded-full shrink-0",
             "button-control-3d",
@@ -82,6 +83,7 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={muted ? 0 : volume}
+          data-testid="volume-slider"
           className="relative z-10"
         />
       </div>
@@ -95,6 +97,7 @@ export function VolumeSlider({ volume, muted }: VolumeSliderProps) {
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
+        data-testid="volume-value"
       >
         {muted ? 0 : volume}%
       </motion.span>

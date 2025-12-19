@@ -48,6 +48,7 @@ export function PlaybackControls({
                 disabled={disabled}
                 aria-label={shuffle ? t('player.shuffleOn') : t('player.shuffleOff')}
                 aria-pressed={shuffle}
+                data-testid="playback-shuffle"
                 className={cn(
                   "w-9 h-9 rounded-full transition-all duration-300 relative",
                   shuffle
@@ -90,6 +91,7 @@ export function PlaybackControls({
                 disabled={disabled}
                 aria-label={repeatLabel}
                 aria-pressed={repeat !== 'off'}
+                data-testid="playback-repeat"
                 className={cn(
                   "w-9 h-9 rounded-full transition-all duration-300 relative",
                   repeat !== 'off'
@@ -142,6 +144,7 @@ export function PlaybackControls({
                 onClick={onQueueOpen}
                 disabled={disabled}
                 aria-label={t('player.openQueue')}
+                data-testid="playback-queue"
                 className="w-9 h-9 rounded-full text-kiosk-text/85 hover:text-kiosk-text hover:bg-kiosk-surface/50 transition-all duration-200"
               >
                 <ListMusic className="w-4 h-4" />

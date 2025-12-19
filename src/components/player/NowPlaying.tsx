@@ -9,7 +9,7 @@ interface NowPlayingProps {
 
 export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
   return (
-    <div className="flex flex-col items-center gap-2 relative">
+    <div className="flex flex-col items-center gap-2 relative" data-testid="now-playing">
       {/* Album Cover - Static with 3D effects */}
       <div className="relative">
         {/* Outer glow - static */}
@@ -40,6 +40,7 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
               src={track.cover}
               alt={`${track.title} - ${track.artist}`}
               className="w-full h-full object-cover relative z-10"
+              data-testid="track-cover"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-kiosk-surface to-[#050508] flex items-center justify-center relative z-10">
@@ -57,16 +58,16 @@ export function NowPlaying({ track, isPlaying }: NowPlayingProps) {
 
       {/* Track Info with new neon styles */}
       <div className="text-center space-y-1 max-w-sm mt-2">
-        <h2 className="text-xl md:text-2xl text-title-white-neon font-bold">
+        <h2 className="text-xl md:text-2xl text-title-white-neon font-bold" data-testid="track-title">
           {track?.title || 'Nenhuma faixa'}
         </h2>
         
-        <p className="text-base md:text-lg text-artist-neon-blue">
+        <p className="text-base md:text-lg text-artist-neon-blue" data-testid="track-artist">
           {track?.artist || 'Aguardando...'}
         </p>
         
         {track?.album && (
-          <p className="text-sm md:text-base text-album-neon">
+          <p className="text-sm md:text-base text-album-neon" data-testid="track-album">
             {track.album}
           </p>
         )}

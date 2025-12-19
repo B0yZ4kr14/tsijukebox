@@ -80,6 +80,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           aria-label={t('player.previousTrack')}
           aria-disabled={!canControl}
           title={!canControl ? t('permissions.noPlaybackControl') : undefined}
+          data-testid="player-prev"
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
@@ -103,6 +104,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           aria-label={isPlaying ? t('player.pause') : t('player.play')}
           aria-disabled={!canControl}
           title={!canControl ? t('permissions.noPlaybackControl') : undefined}
+          data-testid="player-play-pause"
           className={cn(
             "w-16 h-16 md:w-18 md:h-18 rounded-full relative z-10 overflow-hidden",
             "button-play-chrome-neon",
@@ -136,6 +138,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           aria-label={t('player.nextTrack')}
           aria-disabled={!canControl}
           title={!canControl ? t('permissions.noPlaybackControl') : undefined}
+          data-testid="player-next"
           className={cn(
             "w-11 h-11 md:w-12 md:h-12 rounded-full relative overflow-hidden",
             "button-control-extreme-3d",
@@ -164,6 +167,7 @@ export function PlayerControls({ isPlaying }: PlayerControlsProps) {
           aria-label={t('player.stop')}
           aria-disabled={!canControl}
           title={!canControl ? t('permissions.noPlaybackControl') : undefined}
+          data-testid="player-stop"
           className={cn(
             "w-9 h-9 rounded-full relative overflow-hidden",
             "button-stop-extreme-3d",

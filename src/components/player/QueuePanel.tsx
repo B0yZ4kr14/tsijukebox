@@ -218,7 +218,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
   if (!isOpen) return null;
 
   return (
-    <div ref={ref} className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
+    <div ref={ref} className="fixed inset-0 z-50 flex items-end justify-center md:items-center" data-testid="queue-panel">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -240,6 +240,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                 size="sm"
                 onClick={onClearQueue}
                 aria-label={t('player.clearQueue')}
+                data-testid="queue-clear"
                 className="text-kiosk-text/85 hover:text-destructive"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
@@ -251,6 +252,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
               size="icon"
               onClick={onClose}
               aria-label={t('common.close')}
+              data-testid="queue-close"
               className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
             >
               <X className="w-5 h-5" />
@@ -293,7 +295,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                 Próximas ({queue?.next.length || 0})
               </h3>
               {!queue || queue.next.length === 0 ? (
-                <div className="text-center py-8 text-kiosk-text/80">
+                <div className="text-center py-8 text-kiosk-text/80" data-testid="queue-empty">
                   <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">A fila está vazia</p>
                 </div>
