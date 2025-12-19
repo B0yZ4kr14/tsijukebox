@@ -16,5 +16,6 @@ export { SideInfoPanel } from './SideInfoPanel';
 export { SystemMonitor } from './SystemMonitor';
 export { UserBadge } from './UserBadge';
 export { VolumeSlider } from './VolumeSlider';
+export { VoiceControlButton } from './VoiceControlButton';
 export { WeatherForecastChart } from './WeatherForecastChart';
 export { WeatherWidget } from './WeatherWidget';

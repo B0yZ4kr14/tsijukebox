@@ -2,6 +2,7 @@ import { KioskLayout } from '@/components/layout/KioskLayout';
 import { SkipLink } from '@/components/ui/SkipLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIndexPage } from '@/hooks/pages/useIndexPage';
+import { VoiceControlButton } from '@/components/player/VoiceControlButton';
 import { 
   IndexHeader, 
   IndexPlayerSection, 
@@ -138,6 +139,11 @@ export default function Index() {
           onClearQueue={() => clearQueue()}
           onReorderQueue={reorderQueue}
         />
+
+        {/* Floating Voice Control Button */}
+        <div className="fixed bottom-6 right-6 z-40">
+          <VoiceControlButton size="lg" showFeedback={true} />
+        </div>
       </div>
     </KioskLayout>
   );

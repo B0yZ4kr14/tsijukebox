@@ -4,6 +4,7 @@ import { ProgressBar } from '@/components/player/ProgressBar';
 import { PlaybackControls } from '@/components/player/PlaybackControls';
 import { PlayerControls } from '@/components/player/PlayerControls';
 import { VolumeSlider } from '@/components/player/VolumeSlider';
+import { VoiceControlButton } from '@/components/player/VoiceControlButton';
 import type { SystemStatus } from '@/lib/api/types';
 
 interface IndexPlayerSectionProps {
@@ -73,12 +74,13 @@ export function IndexPlayerSection({
           <PlayerControls isPlaying={status?.playing ?? false} />
         </div>
         
-        {/* Volume Slider */}
-        <div className="w-full max-w-[280px] mt-5">
+        {/* Volume Slider + Voice Control */}
+        <div className="w-full max-w-[280px] mt-5 flex items-center gap-3">
           <VolumeSlider 
             volume={status?.volume ?? 75} 
             muted={status?.muted ?? false} 
           />
+          <VoiceControlButton size="md" showFeedback={true} />
         </div>
       </div>
     </main>
