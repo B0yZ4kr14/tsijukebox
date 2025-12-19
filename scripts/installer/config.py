@@ -91,12 +91,36 @@ class Config:
         'xorg-xinit',
     ]
     
+    # Pacotes de monitoramento
+    MONITORING_PACKAGES = [
+        'grafana',
+        'prometheus',
+        'prometheus-node-exporter',
+    ]
+    
+    # Pacotes de segurança
+    SECURITY_PACKAGES = [
+        'ufw',
+    ]
+    
+    # Pacotes web/proxy
+    WEB_PACKAGES = [
+        'nginx',
+        'certbot',
+        'certbot-nginx',
+    ]
+    
+    # Pacotes de música
+    MUSIC_PACKAGES = [
+        'spotify-launcher',  # Oficial do Arch
+    ]
+    
     # Pacotes opcionais por categoria
     OPTIONAL_PACKAGES = {
         'audio': ['pulseaudio', 'pavucontrol', 'alsa-utils'],
         'network': ['networkmanager', 'openssh', 'curl', 'wget'],
         'fonts': ['ttf-dejavu', 'ttf-liberation', 'noto-fonts'],
-        'utils': ['htop', 'neofetch', 'tmux', 'vim'],
+        'utils': ['htop', 'neofetch', 'tmux', 'vim', 'unclutter'],
     }
     
     # Configurações de banco de dados

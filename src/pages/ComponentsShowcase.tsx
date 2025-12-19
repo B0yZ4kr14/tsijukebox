@@ -124,7 +124,7 @@ const showcaseComponents = {
           name: 'variant', 
           type: 'select' as const, 
           default: 'mirror',
-          options: ['mirror', 'mirror-dark', 'metal', 'silver'],
+          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal'],
         },
         { 
           name: 'animate', 
@@ -135,7 +135,7 @@ const showcaseComponents = {
       renderPreview: (props: Record<string, unknown>) => (
         <LogoBrand 
           size={props.size as 'sm' | 'md' | 'lg' | 'xl'}
-          variant={props.variant as 'mirror' | 'mirror-dark' | 'metal' | 'neon'}
+          variant={props.variant as 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal'}
           animate={props.animate as boolean}
         />
       ),

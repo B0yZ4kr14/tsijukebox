@@ -75,6 +75,30 @@ export default defineConfig(({ mode }) => ({
               },
             },
           },
+          {
+            // Cache Wiki pages for offline access
+            urlPattern: /\/wiki.*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "wiki-cache",
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          {
+            // Cache documentation pages
+            urlPattern: /\/(changelog|showcase|brand|help).*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "docs-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+              },
+            },
+          },
         ],
       },
     }),

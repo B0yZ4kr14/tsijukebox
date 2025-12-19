@@ -44,6 +44,7 @@ const LyricsTest = lazy(() => import("./pages/LyricsTest"));
 const BrandGuidelines = lazy(() => import("./pages/BrandGuidelines"));
 const ChangelogTimeline = lazy(() => import("./pages/ChangelogTimeline"));
 const ComponentsShowcase = lazy(() => import("./pages/ComponentsShowcase"));
+const InstallerMetrics = lazy(() => import("./pages/InstallerMetrics"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -93,6 +94,7 @@ function AppRoutes() {
         <Route path="/brand-guidelines" element={<BrandGuidelines />} />
         <Route path="/changelog" element={<ChangelogTimeline />} />
         <Route path="/showcase" element={<ComponentsShowcase />} />
+        <Route path="/installer-metrics" element={<InstallerMetrics />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={

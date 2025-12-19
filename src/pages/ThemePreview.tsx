@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Sun, Moon, Sparkles, Eye, Palette } from 'lucide-react';
+import { ArrowLeft, Check, Sun, Moon, Sparkles, Eye, Palette, Columns, LayoutGrid } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 
 export default function ThemePreview() {
   const [previewPreset, setPreviewPreset] = useState<ThemePreset | null>(null);
+  const [splitMode, setSplitMode] = useState(false);
 
   // Apply preview on mount - default to dark-neon
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function ThemePreview() {
 
   // Apply preview colors when preset changes
   useEffect(() => {
-    if (previewPreset) {
+    if (previewPreset && !splitMode) {
       applyCustomColors(previewPreset.colors);
     }
     return () => {
@@ -32,7 +33,7 @@ export default function ThemePreview() {
         applyCustomColors(darkPreset.colors);
       }
     };
-  }, [previewPreset]);
+  }, [previewPreset, splitMode]);
 
   const applyTheme = (preset: ThemePreset) => {
     document.documentElement.classList.add('theme-transitioning');
@@ -49,6 +50,9 @@ export default function ThemePreview() {
   const currentPreset = previewPreset || builtInPresets[0];
   const isDarkTheme = currentPreset.id === 'dark-neon';
   const isLightTheme = currentPreset.id === 'light-neon-silver';
+  
+  const darkPreset = builtInPresets.find(p => p.id === 'dark-neon')!;
+  const lightPreset = builtInPresets.find(p => p.id === 'light-neon-silver')!;
 
   return (
     <KioskLayout>
@@ -81,16 +85,195 @@ export default function ThemePreview() {
               <ArrowLeft className="w-6 h-6 text-kiosk-text" />
             </Button>
           </Link>
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-gold-neon">Preview de Temas</h1>
             <p className="text-kiosk-text/85 text-sm">
               2 variantes disponíveis • Dark Neon & Light Neon Silver
             </p>
           </div>
+          
+          {/* Split Mode Toggle */}
+          <Button
+            variant={splitMode ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSplitMode(!splitMode)}
+            className="gap-2"
+          >
+            {splitMode ? <LayoutGrid className="w-4 h-4" /> : <Columns className="w-4 h-4" />}
+            {splitMode ? 'Normal' : 'Comparar'}
+          </Button>
         </motion.header>
 
-        <div className="max-w-5xl mx-auto space-y-8 pb-8">
-          {/* Theme Selector - Side by Side Comparison */}
+        <div className="max-w-6xl mx-auto space-y-8 pb-8">
+          {/* Split Mode - Side by Side Comparison */}
+          {splitMode ? (
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+            >
+              {/* Dark Theme Panel */}
+              <div 
+                className="rounded-2xl overflow-hidden border border-cyan-500/30"
+                style={{ background: `hsl(${darkPreset.colors.background})` }}
+              >
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 
+                      className="text-lg font-bold"
+                      style={{ color: `hsl(${darkPreset.colors.text})` }}
+                    >
+                      {darkPreset.name}
+                    </h3>
+                    <Moon className="w-6 h-6" style={{ color: `hsl(${darkPreset.colors.primary})` }} />
+                  </div>
+                  
+                  <div className="flex justify-center py-4">
+                    <LogoBrand size="lg" variant="mirror" animate />
+                  </div>
+                  
+                  {/* Sample UI */}
+                  <div 
+                    className="p-4 rounded-xl space-y-3"
+                    style={{ background: `hsl(${darkPreset.colors.surface})` }}
+                  >
+                    <div 
+                      className="w-full py-2.5 rounded-lg text-center font-medium text-sm"
+                      style={{ 
+                        background: `hsl(${darkPreset.colors.primary})`,
+                        color: 'black',
+                        boxShadow: `0 0 15px hsl(${darkPreset.colors.primaryGlow} / 0.5)`
+                      }}
+                    >
+                      Botão Primário
+                    </div>
+                    
+                    <div 
+                      className="flex items-center gap-3 p-3 rounded-lg"
+                      style={{ background: `hsl(${darkPreset.colors.background})` }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-full"
+                        style={{ background: `hsl(${darkPreset.colors.accent})` }}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium" style={{ color: `hsl(${darkPreset.colors.text})` }}>
+                          Item de Lista
+                        </p>
+                        <p className="text-xs opacity-70" style={{ color: `hsl(${darkPreset.colors.text})` }}>
+                          Descrição secundária
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Color Swatches */}
+                  <div className="flex gap-2 justify-center pt-2">
+                    {['primary', 'primaryGlow', 'accent', 'surface'].map(key => (
+                      <div 
+                        key={key}
+                        className="w-8 h-8 rounded-full shadow-lg border border-white/10"
+                        style={{ background: `hsl(${darkPreset.colors[key as keyof typeof darkPreset.colors]})` }}
+                        title={key}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => applyTheme(darkPreset)}
+                  className="w-full py-3 text-center font-medium text-sm transition-colors"
+                  style={{ 
+                    background: `hsl(${darkPreset.colors.surface})`,
+                    color: `hsl(${darkPreset.colors.primary})`
+                  }}
+                >
+                  {currentPreset.id === 'dark-neon' ? '✓ Ativo' : 'Aplicar Dark Neon'}
+                </button>
+              </div>
+
+              {/* Light Theme Panel */}
+              <div 
+                className="rounded-2xl overflow-hidden border border-amber-500/30"
+                style={{ background: `hsl(${lightPreset.colors.background})` }}
+              >
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 
+                      className="text-lg font-bold"
+                      style={{ color: `hsl(${lightPreset.colors.text})` }}
+                    >
+                      {lightPreset.name}
+                    </h3>
+                    <Sun className="w-6 h-6" style={{ color: `hsl(${lightPreset.colors.accent})` }} />
+                  </div>
+                  
+                  <div className="flex justify-center py-4">
+                    <LogoBrand size="lg" variant="mirror-dark" animate />
+                  </div>
+                  
+                  {/* Sample UI */}
+                  <div 
+                    className="p-4 rounded-xl space-y-3"
+                    style={{ background: `hsl(${lightPreset.colors.surface})` }}
+                  >
+                    <div 
+                      className="w-full py-2.5 rounded-lg text-center font-medium text-sm"
+                      style={{ 
+                        background: `hsl(${lightPreset.colors.primary})`,
+                        color: 'white',
+                        boxShadow: `0 0 15px hsl(${lightPreset.colors.primaryGlow} / 0.5)`
+                      }}
+                    >
+                      Botão Primário
+                    </div>
+                    
+                    <div 
+                      className="flex items-center gap-3 p-3 rounded-lg"
+                      style={{ background: `hsl(${lightPreset.colors.background})` }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-full"
+                        style={{ background: `hsl(${lightPreset.colors.accent})` }}
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium" style={{ color: `hsl(${lightPreset.colors.text})` }}>
+                          Item de Lista
+                        </p>
+                        <p className="text-xs opacity-70" style={{ color: `hsl(${lightPreset.colors.text})` }}>
+                          Descrição secundária
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Color Swatches */}
+                  <div className="flex gap-2 justify-center pt-2">
+                    {['primary', 'primaryGlow', 'accent', 'surface'].map(key => (
+                      <div 
+                        key={key}
+                        className="w-8 h-8 rounded-full shadow-lg border border-black/10"
+                        style={{ background: `hsl(${lightPreset.colors[key as keyof typeof lightPreset.colors]})` }}
+                        title={key}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => applyTheme(lightPreset)}
+                  className="w-full py-3 text-center font-medium text-sm transition-colors"
+                  style={{ 
+                    background: `hsl(${lightPreset.colors.surface})`,
+                    color: `hsl(${lightPreset.colors.primary})`
+                  }}
+                >
+                  {currentPreset.id === 'light-neon-silver' ? '✓ Ativo' : 'Aplicar Light Neon'}
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+          /* Normal Mode - Theme Selector */
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -248,6 +431,7 @@ export default function ThemePreview() {
               })}
             </div>
           </motion.div>
+          )}
 
           {/* Logo Variants Section */}
           <motion.div

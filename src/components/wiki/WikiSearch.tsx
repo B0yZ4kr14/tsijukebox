@@ -1,14 +1,56 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, FileText } from 'lucide-react';
+import { Search, X, FileText, Star } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 import { getAllArticles, getArticlePath, WikiArticle } from './wikiData';
 import { formatBrandInText } from '@/components/ui/BrandText';
 
 interface WikiSearchProps {
   onSelectArticle: (articleId: string) => void;
+}
+
+interface ScoredArticle {
+  article: WikiArticle;
+  score: number;
+}
+
+// Calculate relevance score for search results
+function getSearchScore(article: WikiArticle, searchTerm: string): number {
+  const term = searchTerm.toLowerCase();
+  let score = 0;
+  
+  // Title match (highest weight)
+  if (article.title.toLowerCase().includes(term)) {
+    score += 100;
+    // Bonus for exact match or starts with
+    if (article.title.toLowerCase() === term) score += 50;
+    if (article.title.toLowerCase().startsWith(term)) score += 25;
+  }
+  
+  // Description match (medium weight)
+  if (article.description.toLowerCase().includes(term)) {
+    score += 50;
+  }
+  
+  // Content match (lower weight, but count occurrences)
+  const contentLower = article.content.toLowerCase();
+  const contentMatches = (contentLower.match(new RegExp(term, 'g')) || []).length;
+  score += Math.min(contentMatches * 5, 30); // Cap at 30
+  
+  // Steps match
+  if (article.steps?.some(step => step.toLowerCase().includes(term))) {
+    score += 20;
+  }
+  
+  // Tips match
+  if (article.tips?.some(tip => tip.toLowerCase().includes(term))) {
+    score += 15;
+  }
+  
+  return score;
 }
 
 export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
@@ -18,16 +60,20 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
   const results = useMemo(() => {
     if (!query.trim()) return [];
     
-    const searchTerm = query.toLowerCase();
+    const searchTerm = query.toLowerCase().trim();
     const articles = getAllArticles();
     
-    return articles.filter(article => 
-      article.title.toLowerCase().includes(searchTerm) ||
-      article.description.toLowerCase().includes(searchTerm) ||
-      article.content.toLowerCase().includes(searchTerm) ||
-      article.steps?.some(step => step.toLowerCase().includes(searchTerm)) ||
-      article.tips?.some(tip => tip.toLowerCase().includes(searchTerm))
-    ).slice(0, 10);
+    // Score and filter articles
+    const scored: ScoredArticle[] = articles
+      .map(article => ({
+        article,
+        score: getSearchScore(article, searchTerm)
+      }))
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 15);
+    
+    return scored;
   }, [query]);
 
   const handleSelect = (articleId: string) => {
@@ -75,17 +121,26 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
           >
             <ScrollArea className="max-h-80">
               <div className="p-2 space-y-1">
-                {results.map((article) => {
+                {results.map(({ article, score }) => {
                   const path = getArticlePath(article.id);
+                  const isHighScore = score >= 100;
                   return (
                     <button
                       key={article.id}
                       onClick={() => handleSelect(article.id)}
                       className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-kiosk-bg transition-colors text-left"
                     >
-                      <FileText className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                      <FileText className={`w-5 h-5 shrink-0 mt-0.5 ${isHighScore ? 'text-amber-400' : 'text-primary'}`} />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-kiosk-text truncate">{formatBrandInText(article.title)}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-kiosk-text truncate">{formatBrandInText(article.title)}</p>
+                          {isHighScore && (
+                            <Badge variant="outline" className="text-[10px] py-0 px-1 border-amber-500/50 text-amber-400">
+                              <Star className="w-2.5 h-2.5 mr-0.5" />
+                              Relevante
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-xs text-kiosk-text/85 truncate">{formatBrandInText(article.description)}</p>
                         {path && (
                           <p className="text-xs text-kiosk-text/85 mt-1">
