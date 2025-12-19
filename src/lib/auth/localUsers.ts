@@ -9,13 +9,26 @@ import { hashPassword } from './passwordUtils';
  * - tsi: password "tsi" (admin)
  * - demo: password "demo" (user)
  */
+/**
+ * Local users configuration for demo/development.
+ * WARNING: This is NOT secure for production. Use Supabase in production.
+ * 
+ * Password hashes (SHA-256):
+ * - admin: "admin" → 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+ * - tsi: "tsi" → 4dc7c9ec434ed06502767136789763ec11d2c4b7571a4528a27fd7c87e4a81c2
+ * - demo: "demo" → 2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea
+ */
 export const LOCAL_USERS_CONFIG: Record<string, { passwordHash: string; role: UserRole }> = {
+  'admin': { 
+    passwordHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 
+    role: 'admin' 
+  },
   'tsi': { 
-    passwordHash: '5e884898da28047d9169e78f38d2b5db7b8c0e659b4e9f0f6d9f7f8a9b0c1d2e', 
+    passwordHash: '4dc7c9ec434ed06502767136789763ec11d2c4b7571a4528a27fd7c87e4a81c2', 
     role: 'admin' 
   },
   'demo': { 
-    passwordHash: '2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae', 
+    passwordHash: '2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea', 
     role: 'user' 
   },
 };
