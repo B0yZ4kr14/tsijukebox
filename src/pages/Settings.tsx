@@ -35,6 +35,8 @@ import {
   LocalMusicSection,
   StorjSection
 } from '@/components/settings';
+import { VolumeNormalizationSection } from '@/components/settings/VolumeNormalizationSection';
+import { VoiceControlSection } from '@/components/settings/VoiceControlSection';
 import { BackupManager } from '@/components/settings/backup';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
@@ -213,6 +215,8 @@ export default function Settings() {
           <>
             <ThemeSection />
             <AccessibilitySection />
+            <VolumeNormalizationSection />
+            <VoiceControlSection />
             <LanguageSection />
           </>
         );

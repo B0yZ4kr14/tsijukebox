@@ -46,6 +46,7 @@ const ChangelogTimeline = lazy(() => import("./pages/ChangelogTimeline"));
 const ComponentsShowcase = lazy(() => import("./pages/ComponentsShowcase"));
 const InstallerMetrics = lazy(() => import("./pages/InstallerMetrics"));
 const GitHubDashboard = lazy(() => import("./pages/GitHubDashboard"));
+const JukeboxStatsDashboard = lazy(() => import("./pages/JukeboxStatsDashboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +129,11 @@ function AppRoutes() {
         <Route path="/clients-monitor" element={
           <ProtectedRoute requiredPermission="canAccessSettings">
             <ClientsMonitorDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/stats" element={
+          <ProtectedRoute requiredPermission="canAccessSettings">
+            <JukeboxStatsDashboard />
           </ProtectedRoute>
         } />
         

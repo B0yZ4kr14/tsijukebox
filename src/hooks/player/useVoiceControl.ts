@@ -41,7 +41,7 @@ const defaultSettings: VoiceControlSettings = {
 };
 
 // Command patterns for multiple languages
-const VOICE_COMMANDS: VoiceCommand[] = [
+export const VOICE_COMMANDS: VoiceCommand[] = [
   // Play commands
   { 
     command: 'play', 
@@ -124,6 +124,58 @@ function saveSettings(settings: VoiceControlSettings): void {
   }
 }
 
+// Internal type definitions for Web Speech API
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message: string;
+}
+
+interface SpeechRecognitionInstance extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  maxAlternatives: number;
+  onstart: ((this: SpeechRecognitionInstance, ev: Event) => void) | null;
+  onend: ((this: SpeechRecognitionInstance, ev: Event) => void) | null;
+  onresult: ((this: SpeechRecognitionInstance, ev: SpeechRecognitionEvent) => void) | null;
+  onerror: ((this: SpeechRecognitionInstance, ev: SpeechRecognitionErrorEvent) => void) | null;
+  start(): void;
+  stop(): void;
+  abort(): void;
+}
+
+interface SpeechRecognitionConstructor {
+  new(): SpeechRecognitionInstance;
+}
+
+interface WindowWithSpeechRecognition {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+}
+
 export function useVoiceControl(): UseVoiceControlReturn {
   const [settings, setSettings] = useState<VoiceControlSettings>(loadSettings);
   const [isListening, setIsListening] = useState(false);
@@ -132,22 +184,51 @@ export function useVoiceControl(): UseVoiceControlReturn {
   const [confidence, setConfidence] = useState(0);
   const [error, setError] = useState<string | null>(null);
   
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const commandCallbacksRef = useRef<Map<string, () => void>>(new Map());
 
   // Check browser support
-  const isSupported = typeof window !== 'undefined' && 
-    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  const windowWithSpeech = typeof window !== 'undefined' ? window as unknown as WindowWithSpeechRecognition : null;
+  const isSupported = windowWithSpeech !== null && 
+    ('SpeechRecognition' in (windowWithSpeech as object) || 'webkitSpeechRecognition' in (windowWithSpeech as object));
+
+  // Process recognized command
+  const processCommand = useCallback((text: string) => {
+    for (const cmd of VOICE_COMMANDS) {
+      for (const pattern of cmd.patterns) {
+        if (pattern.test(text)) {
+          setLastCommand(cmd.action);
+          
+          // Execute callback if registered
+          const callback = commandCallbacksRef.current.get(cmd.action);
+          if (callback) {
+            callback();
+          }
+          
+          // Dispatch custom event for other components to listen
+          window.dispatchEvent(new CustomEvent('voice-command', { 
+            detail: { action: cmd.action, transcript: text } 
+          }));
+          
+          return;
+        }
+      }
+    }
+    // No command matched
+    setLastCommand(null);
+  }, []);
 
   // Initialize speech recognition
   useEffect(() => {
-    if (!isSupported) {
+    if (!isSupported || !windowWithSpeech) {
       setError('Reconhecimento de voz não suportado neste navegador');
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SpeechRecognitionAPI = windowWithSpeech.SpeechRecognition || windowWithSpeech.webkitSpeechRecognition;
+    if (!SpeechRecognitionAPI) return;
+
+    const recognition = new SpeechRecognitionAPI();
 
     recognition.continuous = settings.continuousListening;
     recognition.interimResults = true;
@@ -204,33 +285,7 @@ export function useVoiceControl(): UseVoiceControlReturn {
         recognitionRef.current.stop();
       }
     };
-  }, [isSupported, settings.language, settings.continuousListening, settings.wakeWord, settings.enabled]);
-
-  // Process recognized command
-  const processCommand = useCallback((text: string) => {
-    for (const cmd of VOICE_COMMANDS) {
-      for (const pattern of cmd.patterns) {
-        if (pattern.test(text)) {
-          setLastCommand(cmd.action);
-          
-          // Execute callback if registered
-          const callback = commandCallbacksRef.current.get(cmd.action);
-          if (callback) {
-            callback();
-          }
-          
-          // Dispatch custom event for other components to listen
-          window.dispatchEvent(new CustomEvent('voice-command', { 
-            detail: { action: cmd.action, transcript: text } 
-          }));
-          
-          return;
-        }
-      }
-    }
-    // No command matched
-    setLastCommand(null);
-  }, []);
+  }, [isSupported, settings.language, settings.continuousListening, settings.wakeWord, settings.enabled, processCommand, windowWithSpeech]);
 
   const startListening = useCallback(() => {
     if (!isSupported || !recognitionRef.current || !settings.enabled) return;
@@ -297,12 +352,4 @@ export function useVoiceControl(): UseVoiceControlReturn {
     resetSettings,
     executeCommand
   };
-}
-
-// Type declarations for Web Speech API
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
 }

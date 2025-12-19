@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      playback_stats: {
+        Row: {
+          album_art: string | null
+          album_name: string | null
+          artist_name: string
+          completed: boolean | null
+          created_at: string | null
+          duration_ms: number | null
+          id: string
+          played_at: string | null
+          provider: string
+          track_id: string
+          track_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          album_art?: string | null
+          album_name?: string | null
+          artist_name: string
+          completed?: boolean | null
+          created_at?: string | null
+          duration_ms?: number | null
+          id?: string
+          played_at?: string | null
+          provider?: string
+          track_id: string
+          track_name: string
+          user_agent?: string | null
+        }
+        Update: {
+          album_art?: string | null
+          album_name?: string | null
+          artist_name?: string
+          completed?: boolean | null
+          created_at?: string | null
+          duration_ms?: number | null
+          id?: string
+          played_at?: string | null
+          provider?: string
+          track_id?: string
+          track_name?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null

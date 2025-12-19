@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Volume2, Waveform, RotateCcw, Info } from 'lucide-react';
+import { Volume2, AudioWaveform, RotateCcw, Info } from 'lucide-react';
 import { useVolumeNormalization, NormalizationMode } from '@/hooks/player/useVolumeNormalization';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -129,7 +129,7 @@ export function VolumeNormalizationSection() {
         {settings.enabled && (
           <div className="rounded-lg border bg-card p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <Waveform className={`h-4 w-4 ${isProcessing ? 'text-green-500 animate-pulse' : 'text-muted-foreground'}`} />
+              <AudioWaveform className={`h-4 w-4 ${isProcessing ? 'text-green-500 animate-pulse' : 'text-muted-foreground'}`} />
               <span className="text-sm font-medium">Monitor em Tempo Real</span>
               {isProcessing && (
                 <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/30">

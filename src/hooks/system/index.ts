@@ -27,3 +27,10 @@ export {
   clearCache,
   getCacheStats
 } from './useGitHubCache';
+export { 
+  usePlaybackStats, 
+  useTrackPlayback, 
+  type PlaybackStat, 
+  type AggregatedStats, 
+  type StatsPeriod 
+} from './usePlaybackStats';

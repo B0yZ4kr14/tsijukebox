@@ -64,117 +64,17 @@ interface TrackPlaybackData {
   completed?: boolean;
 }
 
-function getPeriodFilter(period: StatsPeriod): Date | null {
-  const now = new Date();
-  
-  switch (period) {
-    case 'today':
-      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    case 'week':
-      const weekAgo = new Date(now);
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return weekAgo;
-    case 'month':
-      const monthAgo = new Date(now);
-      monthAgo.setMonth(monthAgo.getMonth() - 1);
-      return monthAgo;
-    case 'all':
-      return null;
-  }
-}
-
+// Fetch stats via edge function
 async function fetchPlaybackStats(period: StatsPeriod): Promise<AggregatedStats> {
-  const periodFilter = getPeriodFilter(period);
-  
-  let query = supabase
-    .from('playback_stats')
-    .select('*')
-    .order('played_at', { ascending: false });
-
-  if (periodFilter) {
-    query = query.gte('played_at', periodFilter.toISOString());
-  }
-
-  const { data, error } = await query.limit(1000);
+  const { data, error } = await supabase.functions.invoke('track-playback', {
+    body: { action: 'getStats', period }
+  });
 
   if (error) {
     throw error;
   }
 
-  const plays = data || [];
-  
-  // Calculate aggregated stats
-  const uniqueTracks = new Set(plays.map(p => p.track_id));
-  const uniqueArtists = new Set(plays.map(p => p.artist_name));
-  const totalMinutes = plays.reduce((acc, p) => acc + ((p.duration_ms || 0) / 60000), 0);
-
-  // Top tracks
-  const trackCounts = plays.reduce((acc, p) => {
-    const key = p.track_id;
-    if (!acc[key]) {
-      acc[key] = {
-        track_id: p.track_id,
-        track_name: p.track_name,
-        artist_name: p.artist_name,
-        album_art: p.album_art,
-        plays: 0
-      };
-    }
-    acc[key].plays++;
-    return acc;
-  }, {} as Record<string, any>);
-
-  const topTracks = Object.values(trackCounts)
-    .sort((a: any, b: any) => b.plays - a.plays)
-    .slice(0, 10);
-
-  // Top artists
-  const artistCounts = plays.reduce((acc, p) => {
-    if (!acc[p.artist_name]) {
-      acc[p.artist_name] = { artist_name: p.artist_name, plays: 0 };
-    }
-    acc[p.artist_name].plays++;
-    return acc;
-  }, {} as Record<string, any>);
-
-  const topArtists = Object.values(artistCounts)
-    .sort((a: any, b: any) => b.plays - a.plays)
-    .slice(0, 10);
-
-  // Hourly activity
-  const hourlyCounts = plays.reduce((acc, p) => {
-    const hour = new Date(p.played_at).getHours();
-    acc[hour] = (acc[hour] || 0) + 1;
-    return acc;
-  }, {} as Record<number, number>);
-
-  const hourlyActivity = Array.from({ length: 24 }, (_, hour) => ({
-    hour,
-    count: hourlyCounts[hour] || 0
-  }));
-
-  // Provider stats
-  const providerCounts = plays.reduce((acc, p) => {
-    acc[p.provider] = (acc[p.provider] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const providerStats = Object.entries(providerCounts).map(([provider, plays]) => ({
-    provider,
-    plays
-  }));
-
-  return {
-    totalPlays: plays.length,
-    uniqueTracks: uniqueTracks.size,
-    uniqueArtists: uniqueArtists.size,
-    totalMinutes: Math.round(totalMinutes),
-    topTracks,
-    topArtists,
-    hourlyActivity,
-    recentPlays: plays.slice(0, 20) as PlaybackStat[],
-    providerStats
-  };
+  return data as AggregatedStats;
 }
 
 export function usePlaybackStats(initialPeriod: StatsPeriod = 'week'): UsePlaybackStatsReturn {
@@ -207,16 +107,11 @@ export function useTrackPlayback(): UseTrackPlaybackReturn {
 
   const mutation = useMutation({
     mutationFn: async (data: TrackPlaybackData) => {
-      const { error } = await supabase.from('playback_stats').insert({
-        track_id: data.track_id,
-        track_name: data.track_name,
-        artist_name: data.artist_name,
-        album_name: data.album_name,
-        album_art: data.album_art,
-        provider: data.provider,
-        duration_ms: data.duration_ms,
-        completed: data.completed || false,
-        user_agent: navigator.userAgent
+      const { error } = await supabase.functions.invoke('track-playback', {
+        body: { 
+          action: 'record',
+          ...data
+        }
       });
 
       if (error) throw error;
