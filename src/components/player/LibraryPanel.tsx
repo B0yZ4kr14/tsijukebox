@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { useSpotifyPlaylists } from '@/hooks/useSpotifyPlaylists';
 import { useSpotifyLibrary } from '@/hooks/useSpotifyLibrary';
 import { useSpotifySearch } from '@/hooks/useSpotifySearch';

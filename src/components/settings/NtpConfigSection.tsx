@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsSection } from './SettingsSection';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 
 const NTP_SERVERS = [

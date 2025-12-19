@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SettingsSection } from './SettingsSection';
 import { CloudProviderHelp } from './CloudProviderHelp';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 

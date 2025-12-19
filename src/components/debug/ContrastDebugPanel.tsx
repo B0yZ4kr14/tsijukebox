@@ -11,7 +11,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useContrastDebug, ContrastIssue } from '@/hooks/useContrastDebug';
+import { useContrastDebug, ContrastIssue } from '@/hooks';
 
 export function ContrastDebugPanel() {
   const {

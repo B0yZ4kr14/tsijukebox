@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Music, Mic2, AlertCircle, Maximize2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { FullscreenKaraoke } from './FullscreenKaraoke';
 
 interface LyricsLine {

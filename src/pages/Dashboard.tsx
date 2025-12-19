@@ -17,8 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { useStatus } from '@/hooks/useStatus';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useStatus, useTranslation } from '@/hooks';
 
 // Generate mock data for charts
 function generateSystemData() {

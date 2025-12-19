@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { SettingsSection } from './SettingsSection';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 
 interface BackupSchedule {
   enabled: boolean;

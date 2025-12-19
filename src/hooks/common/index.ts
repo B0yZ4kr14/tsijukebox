@@ -12,6 +12,15 @@ export { usePWAInstall } from './usePWAInstall';
 export { useReadArticles } from './useReadArticles';
 export { useSettingsNotifications, type SettingsNotification } from './useSettingsNotifications';
 export { useSettingsStatus, type SettingsCategoryId, type CategoryStatus, type StatusLevel } from './useSettingsStatus';
-export { useSettingsTour } from './useSettingsTour';
-export { useThemeCustomizer, builtInPresets, defaultColors, type CustomThemeColors } from './useThemeCustomizer';
+export { useSettingsTour, type SettingsTourId } from './useSettingsTour';
+export { 
+  useThemeCustomizer, 
+  builtInPresets, 
+  defaultColors, 
+  hslToHex, 
+  hexToHsl,
+  applyCustomColors,
+  type CustomThemeColors, 
+  type ThemePreset 
+} from './useThemeCustomizer';
 export { useWikiBookmarks } from './useWikiBookmarks';

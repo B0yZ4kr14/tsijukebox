@@ -1,8 +1,7 @@
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { useStatus } from '@/hooks/useStatus';
-import { useLogs } from '@/hooks/useLogs';
+import { useStatus, useLogs } from '@/hooks';
 import { Cpu, HardDrive, Thermometer, Music, Play, Pause, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

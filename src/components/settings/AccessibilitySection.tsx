@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useContrastDebug } from '@/hooks/useContrastDebug';
+import { useContrastDebug } from '@/hooks';
 
 interface AccessibilitySettings {
   highContrast: boolean;

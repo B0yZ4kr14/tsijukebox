@@ -1,14 +1,14 @@
 import { Palette, Download, Upload, Eye, Sliders } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
 import { useSettings, ThemeColor } from '@/contexts/SettingsContext';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { ThemeCustomizer } from './ThemeCustomizer';
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useThemeCustomizer, CustomThemeColors } from '@/hooks/useThemeCustomizer';
+import { useThemeCustomizer, CustomThemeColors } from '@/hooks';
 
 interface ExportedSettings {
   version: string;

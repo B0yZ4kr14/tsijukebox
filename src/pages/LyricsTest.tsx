@@ -8,9 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { LyricsDisplay } from '@/components/player/LyricsDisplay';
 import { KaraokeLyrics } from '@/components/player/KaraokeLyrics';
 import { FullscreenKaraoke } from '@/components/player/FullscreenKaraoke';
-import { useLyrics } from '@/hooks/useLyrics';
+import { useLyrics, useTranslation } from '@/hooks';
 import { formatTime } from '@/lib/lrcParser';
-import { useTranslation } from '@/hooks/useTranslation';
 import { Link } from 'react-router-dom';
 
 // Demo tracks for testing with album covers

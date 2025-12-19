@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SettingsSection } from './SettingsSection';
 import { CloudProviderHelp } from './CloudProviderHelp';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 
 interface CloudBackupSectionProps {

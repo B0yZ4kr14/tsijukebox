@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { hslToHex, hexToHsl } from '@/hooks/useThemeCustomizer';
+import { hslToHex, hexToHsl } from '@/hooks';
 import { motion } from 'framer-motion';
 
 interface ColorPickerProps {

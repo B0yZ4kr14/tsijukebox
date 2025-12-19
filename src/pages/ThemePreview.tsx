@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useSettings, ThemeColor } from '@/contexts/SettingsContext';
-import { builtInPresets, applyCustomColors, type ThemePreset } from '@/hooks/useThemeCustomizer';
+import { builtInPresets, applyCustomColors, type ThemePreset } from '@/hooks';
 import { toast } from 'sonner';
 
 export default function ThemePreview() {

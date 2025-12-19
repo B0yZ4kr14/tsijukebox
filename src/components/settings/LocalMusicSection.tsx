@@ -17,8 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useLocalMusic } from '@/hooks/useLocalMusic';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLocalMusic, useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 import { AudioWaveformPreview } from '@/components/upload/AudioWaveformPreview';
 

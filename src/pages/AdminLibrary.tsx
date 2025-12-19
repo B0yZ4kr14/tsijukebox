@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useLibrary } from '@/hooks/useLibrary';
+import { useLibrary } from '@/hooks';
 import { Music, Play, Trash2, Upload, Search, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

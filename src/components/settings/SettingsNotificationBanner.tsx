@@ -12,8 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useSettingsNotifications, SettingsNotification } from '@/hooks/useSettingsNotifications';
-import { SettingsCategoryId } from '@/hooks/useSettingsStatus';
+import { useSettingsNotifications, SettingsNotification, SettingsCategoryId } from '@/hooks';
 import { useState } from 'react';
 
 interface SettingsNotificationBannerProps {

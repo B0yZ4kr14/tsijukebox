@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SpotifyAlbum } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useRipple } from '@/hooks/useRipple';
-import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useRipple, useSoundEffects } from '@/hooks';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 
 interface AlbumCardProps {

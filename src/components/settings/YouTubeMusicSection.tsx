@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useSettings } from '@/contexts/SettingsContext';
 import { youtubeMusicClient } from '@/lib/api/youtubeMusic';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks';
 
 export function YouTubeMusicSection() {
   const { toast } = useToast();

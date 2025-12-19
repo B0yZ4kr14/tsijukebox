@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { useLogs } from '@/hooks/useLogs';
+import { useLogs } from '@/hooks';
 import { FileText, Loader2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

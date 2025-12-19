@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { QueueItem, PlaybackQueue } from '@/lib/api/types';
 import { useUser } from '@/contexts/UserContext';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 import {
   DndContext,
   closestCenter,

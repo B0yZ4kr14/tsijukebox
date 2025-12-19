@@ -1,7 +1,7 @@
 import { HelpCircle, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GuidedTour } from '@/components/tour/GuidedTour';
-import { useSettingsTour, type SettingsTourId } from '@/hooks/useSettingsTour';
+import { useSettingsTour, type SettingsTourId } from '@/hooks';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SettingsSectionTourProps {

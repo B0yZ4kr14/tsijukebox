@@ -15,8 +15,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { spotifyClient, SpotifyTrack, SpotifyAlbum, SpotifyPlaylist } from '@/lib/api/spotify';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useRipple } from '@/hooks/useRipple';
-import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useRipple, useSoundEffects } from '@/hooks';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 
 interface SpotifyPanelProps {
