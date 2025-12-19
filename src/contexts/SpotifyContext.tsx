@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useCallback, useState } from 'react';
 import { spotifyClient, SpotifyTokens, SpotifyUser } from '@/lib/api/spotify';
+import { useMediaProviderStorage } from '@/hooks/common/useMediaProviderStorage';
 
 export interface SpotifySettings {
   clientId: string;
@@ -27,134 +28,45 @@ const defaultSpotifySettings: SpotifySettings = {
   isConnected: false,
 };
 
-interface StoredSpotifySettings {
-  clientId?: string;
-  clientSecret?: string;
-  tokens?: SpotifyTokens;
-}
-
-function loadSpotifySettings(): StoredSpotifySettings {
-  try {
-    const stored = localStorage.getItem(SPOTIFY_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveSpotifySettings(settings: StoredSpotifySettings) {
-  try {
-    localStorage.setItem(SPOTIFY_STORAGE_KEY, JSON.stringify(settings));
-  } catch (e) {
-    console.error('Failed to save Spotify settings:', e);
-  }
+interface SpotifyCredentials {
+  clientId: string;
+  clientSecret: string;
 }
 
 const SpotifyContext = createContext<SpotifyContextType | null>(null);
 
 export function SpotifyProvider({ children }: { children: React.ReactNode }) {
-  const [spotifySettings, setSpotifySettings] = useState<SpotifySettings>(() => {
-    const stored = loadSpotifySettings();
-    
-    if (stored.clientId && stored.clientSecret) {
-      spotifyClient.setCredentials({
-        clientId: stored.clientId,
-        clientSecret: stored.clientSecret,
-      });
-    }
-    
-    if (stored.tokens) {
-      spotifyClient.setTokens(stored.tokens);
-    }
-
-    return {
-      clientId: stored.clientId || '',
-      clientSecret: stored.clientSecret || '',
-      tokens: stored.tokens || null,
-      user: null,
-      isConnected: !!stored.tokens?.accessToken,
-    };
+  const {
+    settings,
+    setTokens,
+    setUser,
+    setCredentials,
+    clearAuth,
+  } = useMediaProviderStorage<SpotifySettings, SpotifyTokens, SpotifyUser | null, SpotifyCredentials>({
+    storageKey: SPOTIFY_STORAGE_KEY,
+    defaultSettings: defaultSpotifySettings,
+    client: {
+      setTokens: (tokens) => spotifyClient.setTokens(tokens),
+      clearTokens: () => spotifyClient.clearTokens(),
+      setCredentials: (credentials) => spotifyClient.setCredentials(credentials),
+      validateToken: () => spotifyClient.validateToken(),
+    },
+    getTokens: (s) => s.tokens,
+    getCredentials: (s) => ({ clientId: s.clientId, clientSecret: s.clientSecret }),
+    isConnected: (s) => s.isConnected,
   });
 
-  // Validate stored token on mount
-  useEffect(() => {
-    const validateStoredToken = async () => {
-      if (spotifySettings.tokens?.accessToken) {
-        const user = await spotifyClient.validateToken();
-        if (user) {
-          setSpotifySettings(prev => ({ ...prev, user, isConnected: true }));
-        } else {
-          setSpotifySettings(prev => ({
-            ...prev,
-            tokens: null,
-            user: null,
-            isConnected: false,
-          }));
-          spotifyClient.clearTokens();
-          saveSpotifySettings({
-            clientId: spotifySettings.clientId,
-            clientSecret: spotifySettings.clientSecret,
-          });
-        }
-      }
-    };
-
-    validateStoredToken();
-  }, []);
-
   const setSpotifyCredentials = useCallback((clientId: string, clientSecret: string) => {
-    spotifyClient.setCredentials({ clientId, clientSecret });
-    setSpotifySettings(prev => ({ ...prev, clientId, clientSecret }));
-    saveSpotifySettings({
-      clientId,
-      clientSecret,
-      tokens: spotifySettings.tokens || undefined,
-    });
-  }, [spotifySettings.tokens]);
-
-  const setSpotifyTokens = useCallback((tokens: SpotifyTokens | null) => {
-    if (tokens) {
-      spotifyClient.setTokens(tokens);
-    } else {
-      spotifyClient.clearTokens();
-    }
-    setSpotifySettings(prev => ({
-      ...prev,
-      tokens,
-      isConnected: !!tokens?.accessToken,
-    }));
-    saveSpotifySettings({
-      clientId: spotifySettings.clientId,
-      clientSecret: spotifySettings.clientSecret,
-      tokens: tokens || undefined,
-    });
-  }, [spotifySettings.clientId, spotifySettings.clientSecret]);
-
-  const setSpotifyUser = useCallback((user: SpotifyUser | null) => {
-    setSpotifySettings(prev => ({ ...prev, user }));
-  }, []);
-
-  const clearSpotifyAuth = useCallback(() => {
-    spotifyClient.clearTokens();
-    setSpotifySettings(prev => ({
-      ...prev,
-      tokens: null,
-      user: null,
-      isConnected: false,
-    }));
-    saveSpotifySettings({
-      clientId: spotifySettings.clientId,
-      clientSecret: spotifySettings.clientSecret,
-    });
-  }, [spotifySettings.clientId, spotifySettings.clientSecret]);
+    setCredentials?.({ clientId, clientSecret });
+  }, [setCredentials]);
 
   return (
     <SpotifyContext.Provider value={{
-      spotify: spotifySettings,
+      spotify: settings,
       setSpotifyCredentials,
-      setSpotifyTokens,
-      setSpotifyUser,
-      clearSpotifyAuth,
+      setSpotifyTokens: setTokens,
+      setSpotifyUser: setUser,
+      clearSpotifyAuth: clearAuth,
     }}>
       {children}
     </SpotifyContext.Provider>

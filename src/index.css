@@ -193,6 +193,25 @@
     color: hsl(0 0% 78%);
   }
 
+  /* Navigation Neon White - Bold legible text for nav buttons */
+  .text-nav-neon-white {
+    color: hsl(0 0% 95%);
+    font-weight: 600;
+    text-shadow: 0 0 4px hsl(0 0% 100% / 0.3);
+  }
+
+  /* Description Visible - High contrast for descriptions */
+  .text-description-visible {
+    color: hsl(0 0% 82%);
+    font-weight: 500;
+  }
+
+  /* Navigation Subtitle - Cyan tinted for subsections */
+  .text-nav-subtitle {
+    color: hsl(195 70% 75%);
+    font-weight: 500;
+  }
+
   /* Settings page high contrast text */
   .text-settings-title {
     color: hsl(0 0% 95%);

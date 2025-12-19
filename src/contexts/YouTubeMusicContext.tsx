@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext } from 'react';
 import { youtubeMusicClient, YouTubeMusicTokens, YouTubeMusicUser } from '@/lib/api/youtubeMusic';
+import { useMediaProviderStorage } from '@/hooks/common/useMediaProviderStorage';
 
 export interface YouTubeMusicSettings {
   tokens: YouTubeMusicTokens | null;
@@ -22,72 +23,31 @@ const defaultYouTubeMusicSettings: YouTubeMusicSettings = {
   isConnected: false,
 };
 
-function loadYouTubeMusicSettings(): { tokens?: YouTubeMusicTokens } {
-  try {
-    const stored = localStorage.getItem(YOUTUBE_MUSIC_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveYouTubeMusicSettings(settings: { tokens?: YouTubeMusicTokens }) {
-  try {
-    localStorage.setItem(YOUTUBE_MUSIC_STORAGE_KEY, JSON.stringify(settings));
-  } catch (e) {
-    console.error('Failed to save YouTube Music settings:', e);
-  }
-}
-
 const YouTubeMusicContext = createContext<YouTubeMusicContextType | null>(null);
 
 export function YouTubeMusicProvider({ children }: { children: React.ReactNode }) {
-  const [youtubeMusicSettings, setYouTubeMusicSettings] = useState<YouTubeMusicSettings>(() => {
-    const stored = loadYouTubeMusicSettings();
-    if (stored.tokens) {
-      youtubeMusicClient.setTokens(stored.tokens);
-    }
-    return {
-      tokens: stored.tokens || null,
-      user: null,
-      isConnected: !!stored.tokens?.accessToken,
-    };
+  const {
+    settings,
+    setTokens,
+    setUser,
+    clearAuth,
+  } = useMediaProviderStorage<YouTubeMusicSettings, YouTubeMusicTokens, YouTubeMusicUser | null>({
+    storageKey: YOUTUBE_MUSIC_STORAGE_KEY,
+    defaultSettings: defaultYouTubeMusicSettings,
+    client: {
+      setTokens: (tokens) => youtubeMusicClient.setTokens(tokens),
+      clearTokens: () => youtubeMusicClient.clearTokens(),
+    },
+    getTokens: (s) => s.tokens,
+    isConnected: (s) => s.isConnected,
   });
-
-  const setYouTubeMusicTokens = useCallback((tokens: YouTubeMusicTokens | null) => {
-    if (tokens) {
-      youtubeMusicClient.setTokens(tokens);
-    } else {
-      youtubeMusicClient.clearTokens();
-    }
-    setYouTubeMusicSettings(prev => ({
-      ...prev,
-      tokens,
-      isConnected: !!tokens?.accessToken,
-    }));
-    saveYouTubeMusicSettings({ tokens: tokens || undefined });
-  }, []);
-
-  const setYouTubeMusicUser = useCallback((user: YouTubeMusicUser | null) => {
-    setYouTubeMusicSettings(prev => ({ ...prev, user }));
-  }, []);
-
-  const clearYouTubeMusicAuth = useCallback(() => {
-    youtubeMusicClient.clearTokens();
-    setYouTubeMusicSettings({
-      tokens: null,
-      user: null,
-      isConnected: false,
-    });
-    saveYouTubeMusicSettings({});
-  }, []);
 
   return (
     <YouTubeMusicContext.Provider value={{
-      youtubeMusic: youtubeMusicSettings,
-      setYouTubeMusicTokens,
-      setYouTubeMusicUser,
-      clearYouTubeMusicAuth,
+      youtubeMusic: settings,
+      setYouTubeMusicTokens: setTokens,
+      setYouTubeMusicUser: setUser,
+      clearYouTubeMusicAuth: clearAuth,
     }}>
       {children}
     </YouTubeMusicContext.Provider>

@@ -73,7 +73,7 @@ export default function Wiki() {
                 <Book className="w-6 h-6 icon-neon-blue" />
                 <div>
                   <h1 className="text-xl font-bold text-gold-neon">Wiki</h1>
-                  <p className="text-xs text-kiosk-text/80">
+                <p className="text-xs text-description-visible">
                     {totalArticles} artigos em {wikiCategories.length} categorias
                   </p>
                 </div>
@@ -258,7 +258,7 @@ function CategoryOverview({
     >
       <header className="space-y-2">
         <h1 className="text-2xl font-bold text-gold-neon">{formatBrandName(category.title)}</h1>
-        <p className="text-kiosk-text/85">{formatBrandName(category.description)}</p>
+        <p className="text-description-visible">{formatBrandName(category.description)}</p>
       </header>
 
       <div className="grid gap-4">
@@ -278,7 +278,7 @@ function CategoryOverview({
                   <FileText className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-kiosk-text text-sm">{formatBrandName(article.title)}</p>
-                    <p className="text-xs text-kiosk-text/80">{formatBrandName(article.description)}</p>
+                    <p className="text-xs text-description-visible">{formatBrandName(article.description)}</p>
                   </div>
                 </button>
               ))}
@@ -309,7 +309,7 @@ function WelcomeScreen({
         <h1 className="text-2xl font-bold text-gold-neon mb-2">
           Bem-vindo à Wiki
         </h1>
-        <p className="text-kiosk-text/90 max-w-lg mx-auto">
+        <p className="text-description-visible max-w-lg mx-auto">
           Documentação completa sobre todas as funcionalidades do sistema. 
           Selecione uma categoria na navegação ou use a busca para encontrar o que precisa.
         </p>
@@ -347,10 +347,10 @@ function WelcomeScreen({
                   <h3 className="font-semibold text-kiosk-text group-hover:text-primary transition-colors">
                     {category.title}
                   </h3>
-                  <p className="text-xs text-kiosk-text/90">{articleCount} artigos</p>
+                  <p className="text-xs text-description-visible">{articleCount} artigos</p>
                 </div>
               </div>
-              <p className="text-sm text-kiosk-text/80 line-clamp-2">
+              <p className="text-sm text-description-visible line-clamp-2">
                 {formatBrandName(category.description)}
               </p>
             </button>

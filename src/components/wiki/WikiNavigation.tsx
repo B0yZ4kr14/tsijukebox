@@ -331,7 +331,7 @@ export function WikiNavigation({
             variant="ghost"
             size="sm"
             onClick={expandAll}
-            className="h-7 text-xs hover:bg-primary/10"
+            className="h-7 text-xs text-nav-neon-white hover:bg-primary/10"
           >
             <FolderOpen className="w-3 h-3 mr-1" />
             Expandir
@@ -340,7 +340,7 @@ export function WikiNavigation({
             variant="ghost"
             size="sm"
             onClick={collapseAll}
-            className="h-7 text-xs hover:bg-primary/10"
+            className="h-7 text-xs text-nav-neon-white hover:bg-primary/10"
           >
             <FolderClosed className="w-3 h-3 mr-1" />
             Recolher
@@ -357,7 +357,7 @@ export function WikiNavigation({
             </Toggle>
           </div>
         </div>
-        <div className="text-xs text-kiosk-text/90">
+        <div className="text-xs text-description-visible">
           {searchQuery || categoryFilter 
             ? `${filteredArticleCount} de ${totalArticles} artigos` 
             : `${totalArticles} artigos • ${wikiCategories.length} categorias`
@@ -368,7 +368,7 @@ export function WikiNavigation({
       <ScrollArea className="h-[calc(100vh-380px)]">
         <nav className="space-y-1 pr-4">
           {filteredCategories.length === 0 ? (
-            <div className="text-center py-8 text-kiosk-text/85">
+            <div className="text-center py-8 text-description-visible">
               <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">Nenhum artigo encontrado</p>
               <p className="text-xs mt-1">Tente outros termos de busca</p>
@@ -449,7 +449,7 @@ export function WikiNavigation({
                                 onClick={() => toggleSubSection(subSection.id)}
                                 className={cn(
                                   "w-full flex items-center gap-2 py-1.5 rounded text-left",
-                                  "hover:bg-kiosk-surface/50 text-kiosk-text/90 hover:text-kiosk-text",
+                                  "hover:bg-kiosk-surface/50 text-nav-subtitle hover:text-kiosk-text",
                                   showTreeLines ? "pl-6 pr-2" : "px-3"
                                 )}
                               >
@@ -461,7 +461,7 @@ export function WikiNavigation({
                                 <span className="text-xs font-medium truncate flex-1">
                                   {highlightMatch(subSection.title, searchQuery)}
                                 </span>
-                                <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-kiosk-border text-kiosk-text/85">
+                                <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-kiosk-border text-description-visible">
                                   {subSection.articles.length}
                                 </Badge>
                               </button>
@@ -502,7 +502,7 @@ export function WikiNavigation({
                                                 showTreeLines ? "pl-5 pr-2" : "px-3",
                                                 selectedArticle === article.id
                                                   ? "bg-primary/20 text-primary"
-                                                  : "hover:bg-kiosk-surface/30 text-kiosk-text/85 hover:text-kiosk-text",
+                                                  : "hover:bg-kiosk-surface/30 text-description-visible hover:text-kiosk-text",
                                                 // Highlight new articles (only if not read)
                                                 NEW_ARTICLE_IDS.has(article.id) && !(isArticleRead?.(article.id)) && "bg-green-500/5 hover:bg-green-500/10"
                                               )}
