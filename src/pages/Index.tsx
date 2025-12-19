@@ -3,6 +3,7 @@ import { SkipLink } from '@/components/ui/SkipLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIndexPage } from '@/hooks/pages/useIndexPage';
 import { VoiceControlButton } from '@/components/player/VoiceControlButton';
+import { useVoiceSearch } from '@/hooks/player/useVoiceSearch';
 import { 
   IndexHeader, 
   IndexPlayerSection, 
@@ -12,6 +13,11 @@ import {
 } from '@/components/index-page';
 
 export default function Index() {
+  // Enable voice search integration
+  useVoiceSearch({
+    autoNavigate: true,
+    provider: 'spotify'
+  });
   const {
     status,
     isLoading,

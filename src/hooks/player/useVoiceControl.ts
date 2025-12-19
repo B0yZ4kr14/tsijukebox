@@ -2,17 +2,41 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 export type VoiceLanguage = 'pt-BR' | 'en-US' | 'es-ES';
 
+export interface CustomVoiceCommand {
+  id: string;
+  name: string;
+  patterns: string[];
+  action: 'play' | 'pause' | 'next' | 'previous' | 'volume' | 'search' | 'shuffle' | 'repeat' | 'mute' | 'custom';
+  customAction?: string;
+  enabled: boolean;
+}
+
 export interface VoiceControlSettings {
   enabled: boolean;
   language: VoiceLanguage;
   continuousListening: boolean;
   wakeWord: string;
+  // Sensitivity settings
+  minConfidenceThreshold: number;
+  noiseReduction: boolean;
+  silenceTimeout: number;
+  autoStopAfterCommand: boolean;
+  // Custom commands
+  customCommands: CustomVoiceCommand[];
 }
 
 export interface VoiceCommand {
   command: string;
   patterns: RegExp[];
   action: string;
+  extractQuery?: boolean;
+}
+
+export interface VoiceCommandEvent {
+  action: string;
+  transcript: string;
+  searchQuery?: string;
+  confidence: number;
 }
 
 interface UseVoiceControlReturn {
@@ -29,6 +53,9 @@ interface UseVoiceControlReturn {
   updateSettings: (settings: Partial<VoiceControlSettings>) => void;
   resetSettings: () => void;
   executeCommand: (command: string) => void;
+  addCustomCommand: (command: Omit<CustomVoiceCommand, 'id'>) => void;
+  removeCustomCommand: (id: string) => void;
+  toggleCustomCommand: (id: string, enabled: boolean) => void;
 }
 
 const STORAGE_KEY = 'tsijukebox-voice-control';
@@ -37,7 +64,12 @@ const defaultSettings: VoiceControlSettings = {
   enabled: false,
   language: 'pt-BR',
   continuousListening: false,
-  wakeWord: 'jukebox'
+  wakeWord: 'jukebox',
+  minConfidenceThreshold: 0.7,
+  noiseReduction: true,
+  silenceTimeout: 2000,
+  autoStopAfterCommand: true,
+  customCommands: []
 };
 
 // Command patterns for multiple languages
@@ -101,6 +133,17 @@ export const VOICE_COMMANDS: VoiceCommand[] = [
     command: 'stop', 
     patterns: [/\b(stop|parar tudo|encerrar)\b/i], 
     action: 'stop' 
+  },
+  // Search commands
+  { 
+    command: 'search', 
+    patterns: [
+      /\b(buscar|procurar|search|encontrar|achar)\s+(.+)/i,
+      /\b(tocar|play)\s+(música|musica|artista|banda|album|álbum)\s+(.+)/i,
+      /\b(pesquisar)\s+(.+)/i
+    ], 
+    action: 'search',
+    extractQuery: true
   }
 ];
 
@@ -108,7 +151,8 @@ function loadSettings(): VoiceControlSettings {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return { ...defaultSettings, ...JSON.parse(stored) };
+      const parsed = JSON.parse(stored);
+      return { ...defaultSettings, ...parsed };
     }
   } catch (error) {
     console.error('Error loading voice control settings:', error);
@@ -186,18 +230,69 @@ export function useVoiceControl(): UseVoiceControlReturn {
   
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const commandCallbacksRef = useRef<Map<string, () => void>>(new Map());
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check browser support
   const windowWithSpeech = typeof window !== 'undefined' ? window as unknown as WindowWithSpeechRecognition : null;
   const isSupported = windowWithSpeech !== null && 
     ('SpeechRecognition' in (windowWithSpeech as object) || 'webkitSpeechRecognition' in (windowWithSpeech as object));
 
+  // Extract search query from text
+  const extractSearchQuery = useCallback((text: string, pattern: RegExp): string | undefined => {
+    const match = text.match(pattern);
+    if (!match) return undefined;
+    
+    // Try to get the last capture group (the search term)
+    for (let i = match.length - 1; i > 0; i--) {
+      if (match[i] && match[i].trim()) {
+        return match[i].trim();
+      }
+    }
+    return undefined;
+  }, []);
+
   // Process recognized command
-  const processCommand = useCallback((text: string) => {
+  const processCommand = useCallback((text: string, currentConfidence: number) => {
+    // Check confidence threshold
+    if (currentConfidence < settings.minConfidenceThreshold) {
+      console.log(`Confiança ${(currentConfidence * 100).toFixed(0)}% abaixo do threshold ${(settings.minConfidenceThreshold * 100).toFixed(0)}%`);
+      return;
+    }
+
+    // Check custom commands first
+    for (const cmd of settings.customCommands) {
+      if (!cmd.enabled) continue;
+      
+      for (const patternStr of cmd.patterns) {
+        try {
+          const pattern = new RegExp(patternStr, 'i');
+          if (pattern.test(text)) {
+            setLastCommand(cmd.action);
+            
+            window.dispatchEvent(new CustomEvent<VoiceCommandEvent>('voice-command', { 
+              detail: { 
+                action: cmd.customAction || cmd.action, 
+                transcript: text,
+                confidence: currentConfidence
+              } 
+            }));
+            
+            return;
+          }
+        } catch (e) {
+          console.error('Invalid custom command pattern:', patternStr);
+        }
+      }
+    }
+
+    // Check built-in commands
     for (const cmd of VOICE_COMMANDS) {
       for (const pattern of cmd.patterns) {
         if (pattern.test(text)) {
           setLastCommand(cmd.action);
+          
+          // Extract search query if this is a search command
+          const searchQuery = cmd.extractQuery ? extractSearchQuery(text, pattern) : undefined;
           
           // Execute callback if registered
           const callback = commandCallbacksRef.current.get(cmd.action);
@@ -206,16 +301,39 @@ export function useVoiceControl(): UseVoiceControlReturn {
           }
           
           // Dispatch custom event for other components to listen
-          window.dispatchEvent(new CustomEvent('voice-command', { 
-            detail: { action: cmd.action, transcript: text } 
+          window.dispatchEvent(new CustomEvent<VoiceCommandEvent>('voice-command', { 
+            detail: { 
+              action: cmd.action, 
+              transcript: text,
+              searchQuery,
+              confidence: currentConfidence
+            } 
           }));
           
           return;
         }
       }
     }
+    
     // No command matched
     setLastCommand(null);
+  }, [settings.minConfidenceThreshold, settings.customCommands, extractSearchQuery]);
+
+  // Stop listening function
+  const stopListening = useCallback(() => {
+    if (!recognitionRef.current) return;
+    
+    try {
+      recognitionRef.current.stop();
+    } catch (e) {
+      // Not started or other error
+    }
+    
+    // Clear silence timeout
+    if (silenceTimeoutRef.current) {
+      clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = null;
+    }
   }, []);
 
   // Initialize speech recognition
@@ -238,10 +356,24 @@ export function useVoiceControl(): UseVoiceControlReturn {
     recognition.onstart = () => {
       setIsListening(true);
       setError(null);
+      
+      // Start silence timeout
+      if (settings.silenceTimeout > 0 && !settings.continuousListening) {
+        silenceTimeoutRef.current = setTimeout(() => {
+          stopListening();
+        }, settings.silenceTimeout);
+      }
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      
+      // Clear silence timeout
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = null;
+      }
+      
       // Restart if continuous listening is enabled
       if (settings.enabled && settings.continuousListening && recognitionRef.current) {
         try {
@@ -260,13 +392,26 @@ export function useVoiceControl(): UseVoiceControlReturn {
       setTranscript(transcriptText);
       setConfidence(conf);
 
+      // Reset silence timeout on speech
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = setTimeout(() => {
+          stopListening();
+        }, settings.silenceTimeout);
+      }
+
       if (result.isFinal) {
         // Check for wake word if configured
         const hasWakeWord = !settings.wakeWord || 
           transcriptText.includes(settings.wakeWord.toLowerCase());
 
         if (hasWakeWord) {
-          processCommand(transcriptText);
+          processCommand(transcriptText, conf);
+          
+          // Auto-stop after command if enabled
+          if (settings.autoStopAfterCommand && !settings.continuousListening) {
+            stopListening();
+          }
         }
       }
     };
@@ -284,8 +429,11 @@ export function useVoiceControl(): UseVoiceControlReturn {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
     };
-  }, [isSupported, settings.language, settings.continuousListening, settings.wakeWord, settings.enabled, processCommand, windowWithSpeech]);
+  }, [isSupported, settings.language, settings.continuousListening, settings.wakeWord, settings.enabled, settings.silenceTimeout, settings.autoStopAfterCommand, processCommand, stopListening, windowWithSpeech]);
 
   const startListening = useCallback(() => {
     if (!isSupported || !recognitionRef.current || !settings.enabled) return;
@@ -296,16 +444,6 @@ export function useVoiceControl(): UseVoiceControlReturn {
       // Already started or other error
     }
   }, [isSupported, settings.enabled]);
-
-  const stopListening = useCallback(() => {
-    if (!recognitionRef.current) return;
-    
-    try {
-      recognitionRef.current.stop();
-    } catch (e) {
-      // Not started or other error
-    }
-  }, []);
 
   const toggleListening = useCallback(() => {
     if (isListening) {
@@ -334,8 +472,51 @@ export function useVoiceControl(): UseVoiceControlReturn {
 
   // Execute command programmatically
   const executeCommand = useCallback((command: string) => {
-    processCommand(command);
+    processCommand(command, 1.0);
   }, [processCommand]);
+
+  // Add custom command
+  const addCustomCommand = useCallback((command: Omit<CustomVoiceCommand, 'id'>) => {
+    const newCommand: CustomVoiceCommand = {
+      ...command,
+      id: crypto.randomUUID()
+    };
+    
+    setSettings(prev => {
+      const updated = {
+        ...prev,
+        customCommands: [...prev.customCommands, newCommand]
+      };
+      saveSettings(updated);
+      return updated;
+    });
+  }, []);
+
+  // Remove custom command
+  const removeCustomCommand = useCallback((id: string) => {
+    setSettings(prev => {
+      const updated = {
+        ...prev,
+        customCommands: prev.customCommands.filter(cmd => cmd.id !== id)
+      };
+      saveSettings(updated);
+      return updated;
+    });
+  }, []);
+
+  // Toggle custom command enabled state
+  const toggleCustomCommand = useCallback((id: string, enabled: boolean) => {
+    setSettings(prev => {
+      const updated = {
+        ...prev,
+        customCommands: prev.customCommands.map(cmd => 
+          cmd.id === id ? { ...cmd, enabled } : cmd
+        )
+      };
+      saveSettings(updated);
+      return updated;
+    });
+  }, []);
 
   return {
     settings,
@@ -350,6 +531,9 @@ export function useVoiceControl(): UseVoiceControlReturn {
     toggleListening,
     updateSettings,
     resetSettings,
-    executeCommand
+    executeCommand,
+    addCustomCommand,
+    removeCustomCommand,
+    toggleCustomCommand
   };
 }
