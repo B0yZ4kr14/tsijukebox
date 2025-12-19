@@ -54,6 +54,7 @@
 
 | Document | Audience | Description |
 |----------|----------|-------------|
+| [**Project Map**](PROJECT-MAP.md) | Developers | Complete file map with 95+ components, 52 hooks |
 | [**Developer Guide**](DEVELOPER-GUIDE.md) | Developers | Architecture and contribution guide |
 | [**Contributing Guide**](CONTRIBUTING.md) | Developers | How to contribute to the project |
 | [**Hooks Architecture**](HOOKS-ARCHITECTURE.md) | Developers | React hooks organization |
