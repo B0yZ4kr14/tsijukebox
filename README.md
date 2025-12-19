@@ -1,120 +1,133 @@
-# TSiJUKEBOX
+<div align="center">
+  <img src="public/logo/tsijukebox-logo.svg" alt="TSiJUKEBOX" width="400">
+  
+  # TSiJUKEBOX Enterprise
+  
+  **Sistema Kiosk Musical PWA com Integração Spotify/YouTube Music**
+  
+  ![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
+  ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
+  ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript)
+  ![Vite](https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite)
+  ![Tailwind](https://img.shields.io/badge/Tailwind-3.x-38bdf8?style=flat-square&logo=tailwindcss)
+  ![WCAG](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
+  ![Contrast](https://img.shields.io/badge/contrast-4.5:1+-brightgreen?style=flat-square)
+  
+  [📖 Documentação](docs/README.md) •
+  [🚀 Quick Start](docs/GETTING-STARTED.md) •
+  [🤝 Contribuir](docs/CONTRIBUTING.md) •
+  [📜 Licença](LICENSE)
+</div>
 
-![WCAG Status](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
-![Accessibility](https://img.shields.io/badge/a11y-validated-blue?style=flat-square)
-![Contrast Check](https://img.shields.io/badge/contrast-4.5:1+-brightgreen?style=flat-square)
-![Native Elements](https://img.shields.io/badge/native_elements-blocked-red?style=flat-square)
+---
 
-> Sistema de Jukebox para kiosk com conformidade WCAG 2.1 AA
+## ✨ Features
 
-## Acessibilidade
+| Feature | Descrição | Status |
+|---------|-----------|--------|
+| 🎧 **Multi-Provider** | Spotify, YouTube Music, Arquivos Locais | ✅ |
+| 📱 **Kiosk Mode** | Interface touch otimizada para uso público | ✅ |
+| 🎤 **Karaoke Mode** | Letras sincronizadas em fullscreen | ✅ |
+| ☁️ **Cloud Backup** | Storj, Google Drive, AWS S3 | ✅ |
+| 🔐 **RBAC** | Roles: Admin, User, Newbie | ✅ |
+| 📊 **System Monitor** | CPU, RAM, temperatura em tempo real | ✅ |
+| 🌐 **i18n** | Português, English, Español | ✅ |
+| ♿ **WCAG 2.1 AA** | Acessibilidade validada com 13 exceções documentadas | ✅ |
+| 🌤️ **Weather Widget** | Previsão do tempo integrada | ✅ |
+| 🔍 **Global Search** | Busca unificada em todo o sistema | ✅ |
 
-Este projeto segue as diretrizes WCAG 2.1 nível AA:
+---
 
-- ✅ **13 exceções de contraste documentadas** - [Ver documentação](/wcag-exceptions)
-- ✅ **Validação automatizada no CI/CD** - Bloqueia PRs com exceções não documentadas
-- ✅ **Auditoria com axe-core** - Verifica rotas principais
+## 🚀 Quick Start
+
+```bash
+# Clone o repositório
+git clone https://github.com/yourusername/tsijukebox.git
+
+# Instale as dependências
+cd tsijukebox && npm install
+
+# Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
+
+---
+
+## 📸 Screenshots
+
+| Player Principal | Kiosk Mode | Configurações |
+|------------------|------------|---------------|
+| ![Player](docs/screenshots/player.png) | ![Kiosk](docs/screenshots/kiosk.png) | ![Settings](docs/screenshots/settings.png) |
+
+> 💡 *Screenshots serão adicionados em breve*
+
+---
+
+## 🏗️ Stack Tecnológico
+
+| Camada | Tecnologias |
+|--------|-------------|
+| **Frontend** | React 18 + TypeScript + Vite |
+| **Estilização** | Tailwind CSS + shadcn/ui |
+| **Animações** | Framer Motion |
+| **Backend** | Lovable Cloud (Supabase) |
+| **Integrações** | Spotify API, YouTube Music, Spicetify CLI |
+| **PWA** | Vite PWA Plugin + Workbox |
+
+---
+
+## ♿ Acessibilidade
+
+Este projeto segue as diretrizes **WCAG 2.1 nível AA**:
+
+- ✅ **13 exceções de contraste documentadas** — [Ver documentação](/wcag-exceptions)
+- ✅ **Validação automatizada no CI/CD** — Bloqueia PRs com exceções não documentadas
+- ✅ **Auditoria com axe-core** — Verifica rotas principais
+- ✅ **Elementos nativos bloqueados** — Usa componentes Radix/Shadcn
 
 ### Scripts de Validação
 
 ```bash
-# Validar comentários WCAG
-npm run wcag:validate
-
-# Auditoria completa de acessibilidade
-npm run a11y:simple
-
-# Verificação de contraste CSS
-npm run contrast
-
-# Verificar elementos HTML nativos
-node scripts/check-native-elements.js
+npm run wcag:validate    # Validar comentários WCAG
+npm run a11y:simple      # Auditoria completa
+npm run contrast         # Verificação de contraste CSS
 ```
 
-### Elementos HTML Nativos Bloqueados
-
-Este projeto bloqueia o uso de elementos HTML nativos que devem usar componentes Radix/Shadcn UI:
-
-| Elemento Nativo | Substituição |
-|-----------------|--------------|
-| `<select>` | `Select` de `@/components/ui/select` |
-| `<dialog>` | `Dialog` de `@/components/ui/dialog` |
-| `<progress>` | `Progress` de `@/components/ui/progress` |
-
-O pre-commit hook bloqueia commits contendo esses elementos.
-
-Consulte [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) para guia completo.
+Consulte [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) para o guia completo.
 
 ---
 
-## Project info
+## 📚 Documentação
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+| Documento | Descrição |
+|-----------|-----------|
+| [Getting Started](docs/GETTING-STARTED.md) | Primeiros passos |
+| [Installation](docs/INSTALLATION.md) | Guia de instalação completo |
+| [Developer Guide](docs/DEVELOPER-GUIDE.md) | Guia para desenvolvedores |
+| [API Reference](docs/API-REFERENCE.md) | Referência de APIs |
+| [Design System](docs/DESIGN-SYSTEM.md) | Sistema de design |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Solução de problemas |
+| [Changelog](docs/CHANGELOG.md) | Histórico de versões |
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🤝 Contribuindo
 
-**Use Lovable**
+Contribuições são bem-vindas! Leia nosso [Guia de Contribuição](docs/CONTRIBUTING.md) e nosso [Código de Conduta](CODE_OF_CONDUCT.md).
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📄 Licença
 
-**Use your preferred IDE**
+Este projeto está sob **Domínio Público** — veja [LICENSE](LICENSE) e [CREDITS](docs/CREDITS.md) para detalhes.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+<div align="center">
+  <sub>Desenvolvido com 💙 e ☕ por <strong>B0.y_Z4kr14</strong></sub>
+  <br><br>
+  <strong>TSiJUKEBOX Enterprise</strong> — <em>A música, amplificada.</em>
+</div>
