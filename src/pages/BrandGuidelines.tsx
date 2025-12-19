@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,8 @@ import { toast } from 'sonner';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LogoDownload } from '@/components/ui/LogoDownload';
 import { BrandText, BrandTextWeight } from '@/components/ui/BrandText';
-import { BrandTagline, TaglineVariant } from '@/components/ui/BrandTagline';
+import { BrandTagline, TaglineVariant, BrandWithTagline, BrandAnimationType } from '@/components/ui/BrandTagline';
+import { BrandLogo, LogoAnimationType } from '@/components/ui/BrandLogo';
 
 // Color data for the palette
 const neonColors = [
@@ -183,7 +184,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
 
         {/* Tabs Navigation */}
         <Tabs defaultValue="colors" className="space-y-8">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 bg-kiosk-surface/50">
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 bg-kiosk-surface/50">
             <TabsTrigger value="colors" className="data-[state=active]:bg-kiosk-primary/20">
               <Palette className="w-4 h-4 mr-2" />
               Cores
@@ -191,6 +192,10 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
             <TabsTrigger value="typography" className="data-[state=active]:bg-kiosk-primary/20">
               <Type className="w-4 h-4 mr-2" />
               Tipografia
+            </TabsTrigger>
+            <TabsTrigger value="animations" className="data-[state=active]:bg-kiosk-primary/20">
+              <Play className="w-4 h-4 mr-2" />
+              Animações
             </TabsTrigger>
             <TabsTrigger value="logo-usage" className="data-[state=active]:bg-kiosk-primary/20">
               <Shield className="w-4 h-4 mr-2" />
@@ -458,6 +463,104 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-green-400">{`<BrandTagline variant="neon" />`}</p>
                   <p className="text-kiosk-text/70 mt-2">{`// Combo BrandText + Tagline`}</p>
                   <p className="text-green-400">{`<BrandWithTagline brandSize="xl" taglineVariant="subtle" />`}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Animations Tab */}
+          <TabsContent value="animations" className="space-y-8">
+            {/* BrandLogo Animations */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader>
+                <CardTitle className="text-gold-neon flex items-center gap-2">
+                  <Play className="w-5 h-5 icon-neon-blue" />
+                  Animações do BrandLogo
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Animações de entrada para splash screens e loading states
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Animation Types Demo */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-kiosk-text/70">Tipos de Animação</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    {(['fade', 'slide-up', 'scale', 'cascade', 'splash'] as LogoAnimationType[]).map((anim) => (
+                      <div key={anim} className="p-6 bg-kiosk-bg/50 rounded-lg text-center min-h-[140px] flex flex-col items-center justify-center">
+                        <BrandLogo 
+                          key={`${anim}-${Date.now()}`}
+                          size="sm" 
+                          variant="metal" 
+                          animate={anim}
+                          taglineVariant="subtle"
+                        />
+                        <Badge variant="outline" className="mt-4 text-xs">{anim}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Splash Screen Example */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-kiosk-text/70">Exemplo: Splash Screen</h4>
+                  <div className="p-12 bg-gradient-to-b from-kiosk-bg to-kiosk-surface rounded-lg flex items-center justify-center">
+                    <BrandLogo 
+                      key={`splash-demo-${Date.now()}`}
+                      size="xl" 
+                      variant="metal" 
+                      animate="splash"
+                      taglineVariant="neon"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* BrandWithTagline Animations */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader>
+                <CardTitle className="text-gold-neon flex items-center gap-2">
+                  <Type className="w-5 h-5 icon-neon-blue" />
+                  Animações do BrandWithTagline
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Versão texto com animações para headers e loading states
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  {(['fade', 'slide-up', 'slide-down', 'scale', 'cascade'] as BrandAnimationType[]).map((anim) => (
+                    <div key={anim} className="p-6 bg-kiosk-bg/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center">
+                      <BrandWithTagline 
+                        key={`text-${anim}-${Date.now()}`}
+                        brandSize="lg"
+                        brandWeight="bold"
+                        animate={anim}
+                        taglineVariant="subtle"
+                      />
+                      <Badge variant="outline" className="mt-3 text-xs">{anim}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Code Examples */}
+            <Card className="bg-kiosk-surface/30 border-cyan-500/20">
+              <CardHeader>
+                <CardTitle className="text-gold-neon">Exemplos de Código</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
+                  <p className="text-cyan-400">{`import { BrandLogo, BrandWithTagline } from '@/components/ui';`}</p>
+                  <Separator className="bg-kiosk-border/30 my-3" />
+                  <p className="text-kiosk-text/70">{`// Splash Screen com animação elegante`}</p>
+                  <p className="text-green-400">{`<BrandLogo size="xl" variant="metal" animate="splash" />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Loading State com slide-up`}</p>
+                  <p className="text-green-400">{`<BrandWithTagline animate="slide-up" taglineVariant="neon" />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Header com cascade`}</p>
+                  <p className="text-green-400">{`<BrandLogo animate="cascade" animationDelay={0.2} />`}</p>
                 </div>
               </CardContent>
             </Card>

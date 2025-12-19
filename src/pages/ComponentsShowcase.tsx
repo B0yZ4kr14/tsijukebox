@@ -17,7 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { BrandText, BrandTextSize, BrandTextWeight } from '@/components/ui/BrandText';
-import { BrandTagline, TaglineVariant, TaglineSize } from '@/components/ui/BrandTagline';
+import { BrandTagline, TaglineVariant, TaglineSize, BrandAnimationType } from '@/components/ui/BrandTagline';
+import { BrandLogo, LogoAnimationType, LogoVariant } from '@/components/ui/BrandLogo';
 import { CodePlayground, PropDefinition } from '@/components/docs/CodePlayground';
 
 // Component categories
@@ -225,6 +226,55 @@ const showcaseComponents = {
           variant={props.variant as TaglineVariant}
           size={props.size as TaglineSize}
           uppercase={props.uppercase as boolean}
+        />
+      ),
+    },
+    {
+      id: 'brand-logo',
+      title: 'BrandLogo',
+      description: 'Logo unificado com animações de entrada para splash screens',
+      code: `<BrandLogo 
+  size={size}
+  variant={variant}
+  animate={animate}
+  showTagline={showTagline}
+/>`,
+      props: [
+        { 
+          name: 'size', 
+          type: 'select' as const, 
+          default: 'md',
+          options: ['sm', 'md', 'lg', 'xl'],
+          description: 'Tamanho do logo'
+        },
+        { 
+          name: 'variant', 
+          type: 'select' as const, 
+          default: 'metal',
+          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal', 'brand'],
+          description: 'Estilo visual do logo'
+        },
+        { 
+          name: 'animate', 
+          type: 'select' as const, 
+          default: 'none',
+          options: ['none', 'fade', 'slide-up', 'scale', 'cascade', 'splash'],
+          description: 'Tipo de animação de entrada'
+        },
+        { 
+          name: 'showTagline', 
+          type: 'boolean' as const, 
+          default: true,
+          description: 'Mostrar tagline abaixo do logo'
+        },
+      ],
+      renderPreview: (props: Record<string, unknown>) => (
+        <BrandLogo 
+          key={`${props.animate}-${Date.now()}`}
+          size={props.size as 'sm' | 'md' | 'lg' | 'xl'}
+          variant={props.variant as LogoVariant}
+          animate={props.animate as LogoAnimationType}
+          showTagline={props.showTagline as boolean}
         />
       ),
     },
