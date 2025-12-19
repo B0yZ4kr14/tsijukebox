@@ -1,0 +1,29 @@
+pkgbase = tsijukebox
+	pkgdesc = Enterprise Music System for Kiosk - PWA with Spotify/YouTube Music Integration
+	pkgver = 4.0.0
+	pkgrel = 1
+	url = https://github.com/B0yZ4kr14/TSiJUKEBOX
+	arch = x86_64
+	arch = aarch64
+	license = custom:public-domain
+	makedepends = npm
+	makedepends = git
+	makedepends = python
+	depends = nodejs>=18
+	depends = chromium
+	depends = pulseaudio
+	depends = libnotify
+	depends = xdg-utils
+	optdepends = spotify: Native Spotify client for Spicetify integration
+	optdepends = spicetify-cli: Spotify customization and theming
+	optdepends = nginx: Reverse proxy for production deployment
+	optdepends = ufw: Firewall configuration
+	optdepends = pipewire: Modern audio server (alternative to pulseaudio)
+	optdepends = pipewire-pulse: PipeWire PulseAudio compatibility
+	optdepends = grafana: Metrics and monitoring dashboard
+	optdepends = prometheus: Metrics collection
+	backup = etc/tsijukebox/config.json
+	source = git+https://github.com/B0yZ4kr14/TSiJUKEBOX.git
+	sha256sums = SKIP
+
+pkgname = tsijukebox
