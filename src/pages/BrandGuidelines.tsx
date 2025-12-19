@@ -668,17 +668,63 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {(['default', 'metal', 'silver', 'mirror'] as const).map((variant) => (
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                  {(['default', 'metal', 'silver', 'mirror', 'hologram'] as const).map((variant) => (
                     <div key={variant} className="text-center space-y-3">
-                      <div className="p-4 bg-kiosk-bg/50 rounded-lg">
-                        <LogoBrand size="sm" variant={variant} centered />
+                      <div className={`p-4 rounded-lg ${variant === 'hologram' ? 'bg-gradient-to-b from-kiosk-bg via-purple-950/20 to-kiosk-bg' : 'bg-kiosk-bg/50'}`}>
+                        <LogoBrand size="sm" variant={variant} centered animate={variant === 'hologram'} />
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className={`text-xs ${variant === 'hologram' ? 'border-purple-500 text-purple-400' : ''}`}>
                         {variant}
                       </Badge>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Hologram Variant Highlight */}
+            <Card className="bg-kiosk-surface/30 border-purple-500/30">
+              <CardHeader>
+                <CardTitle className="text-gold-neon flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  Variante Hologram
+                </CardTitle>
+                <CardDescription className="text-kiosk-text/60">
+                  Efeito 3D futurista com flutuação, reflexos e hue shift
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="p-12 bg-gradient-to-b from-kiosk-bg via-purple-950/20 to-kiosk-bg rounded-lg flex items-center justify-center">
+                  <LogoBrand size="xl" variant="hologram" showTagline animate />
+                </div>
+                
+                {/* Animation Details */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div className="p-3 bg-kiosk-bg/50 rounded-lg">
+                    <span className="text-cyan-400 font-mono text-sm">hologram-float</span>
+                    <p className="text-kiosk-text/50 text-xs mt-1">6s - Flutuação 3D</p>
+                  </div>
+                  <div className="p-3 bg-kiosk-bg/50 rounded-lg">
+                    <span className="text-cyan-400 font-mono text-sm">hologram-hue</span>
+                    <p className="text-kiosk-text/50 text-xs mt-1">8s - Hue shift</p>
+                  </div>
+                  <div className="p-3 bg-kiosk-bg/50 rounded-lg">
+                    <span className="text-cyan-400 font-mono text-sm">scanlines</span>
+                    <p className="text-kiosk-text/50 text-xs mt-1">3s - Linhas CRT</p>
+                  </div>
+                  <div className="p-3 bg-kiosk-bg/50 rounded-lg">
+                    <span className="text-cyan-400 font-mono text-sm">glow-pulse</span>
+                    <p className="text-kiosk-text/50 text-xs mt-1">4s - Glow pulsante</p>
+                  </div>
+                </div>
+
+                {/* Code Example */}
+                <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
+                  <p className="text-kiosk-text/70">{`// Hologram para splash screens`}</p>
+                  <p className="text-purple-400">{`<BrandLogo variant="hologram" size="xl" animate="splash" />`}</p>
+                  <p className="text-kiosk-text/70 mt-2">{`// Hologram em header`}</p>
+                  <p className="text-purple-400">{`<LogoBrand variant="hologram" size="md" animate />`}</p>
                 </div>
               </CardContent>
             </Card>

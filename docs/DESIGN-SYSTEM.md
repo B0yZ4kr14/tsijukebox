@@ -126,6 +126,19 @@
 | `.logo-container-3d` | Container com profundidade 3D |
 | `.logo-container-metal` | Container para variante metal |
 | `.logo-animate` | Animação de pulsação |
+| `.logo-container-hologram` | Container 3D com perspective, scanlines e glow pulsante |
+| `.logo-animate-hologram` | Animação combinada: float 6s + hue-rotate 8s |
+| `.logo-tsi-hologram` | TSi com gradiente cyan (180°-210°) + reflexo invertido |
+| `.logo-jukebox-hologram` | JUKEBOX com gradiente gold-cyan (45°-195°) + reflexo |
+
+### Keyframes do Hologram
+
+| Keyframe | Duração | Descrição |
+|----------|---------|-----------|
+| `hologram-float` | 6s | translateY (0 → -10px) + rotateX/Y sutil |
+| `hologram-hue` | 8s | hue-rotate 0° → 30° → 0° + brightness 1 → 1.1 |
+| `hologram-scanlines` | 3s | background-position Y animado (linhas CRT) |
+| `hologram-glow-pulse` | 4s | box-shadow opacity 60% → 100% |
 
 ---
 

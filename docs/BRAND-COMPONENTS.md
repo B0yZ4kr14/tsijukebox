@@ -104,6 +104,64 @@ import { BrandLogo } from '@/components/ui';
 
 ---
 
+### Efeito Hologram em Detalhe
+
+A variante `hologram` implementa um efeito visual futurista completo com animações combinadas:
+
+#### Animações Combinadas
+
+| Keyframe | Duração | Efeito |
+|----------|---------|--------|
+| `hologram-float` | 6s | Flutuação 3D no eixo Y com rotação X/Y sutil (±2°) |
+| `hologram-hue` | 8s | Shift de matiz de 0° a 30° com variação de brilho |
+| `hologram-scanlines` | 3s | Linhas de varredura horizontais estilo CRT |
+| `hologram-glow-pulse` | 4s | Pulsação do glow externo de 60% a 100% opacity |
+
+#### Classes CSS
+
+| Classe | Descrição |
+|--------|-----------|
+| `.logo-container-hologram` | Container com perspective 3D (1000px), scanlines e glow |
+| `.logo-animate-hologram` | Combina float + hue shift |
+| `.logo-tsi-hologram` | Gradiente cyan luminoso (180°-210°) com reflexo invertido |
+| `.logo-jukebox-hologram` | Gradiente gold-cyan (45°-195°) com reflexo invertido |
+
+#### Efeitos Visuais
+
+- **Scanlines**: Overlay de linhas horizontais semi-transparentes (pseudo-elemento `::before`)
+- **Glow Pulsante**: Box-shadow animado ao redor do container (pseudo-elemento `::after`)
+- **Reflexos**: Texto invertido abaixo com blur e fade (pseudo-elementos `::after` em cada palavra)
+- **Perspectiva 3D**: Transform-style preserve-3d com perspective de 1000px
+
+#### Exemplo de Uso
+
+```tsx
+// Hologram para splash screens futuristas
+<BrandLogo 
+  variant="hologram"
+  size="xl"
+  animate="splash"
+  taglineVariant="neon"
+/>
+
+// Hologram em header escuro
+<BrandLogo 
+  variant="hologram"
+  size="md"
+  animate="fade"
+/>
+
+// LogoBrand direto
+<LogoBrand 
+  variant="hologram"
+  size="lg"
+  showTagline
+  animate
+/>
+```
+
+---
+
 ### SplashScreen
 
 Tela de carregamento completa com progress bar.
