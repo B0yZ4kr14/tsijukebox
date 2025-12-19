@@ -1,21 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Lock, Mail, User, Cloud, Server } from 'lucide-react';
+import { Cloud, Server } from 'lucide-react';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { LoginForm, SignUpForm, LocalLoginForm } from '@/components/auth';
+import type { LoginFormData, SignUpFormData, LocalLoginFormData } from '@/lib/validations/authSchemas';
 
 export default function Auth() {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [signUpPassword, setSignUpPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, signUp, isAuthenticated, authConfig } = useUser();
   const navigate = useNavigate();
@@ -26,45 +20,27 @@ export default function Auth() {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
-
     try {
-      const loginIdentifier = authConfig.provider === 'supabase' ? email : identifier;
-      const success = await login(loginIdentifier, password);
-      
+      const success = await login(data.email, data.password);
       if (success) {
         toast.success('Login realizado com sucesso');
         navigate('/');
       } else {
         toast.error('Credenciais inválidas');
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao fazer login');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (signUpPassword !== confirmPassword) {
-      toast.error('As senhas não coincidem');
-      return;
-    }
-
-    if (signUpPassword.length < 6) {
-      toast.error('A senha deve ter no mínimo 6 caracteres');
-      return;
-    }
-
+  const handleSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
-
     try {
-      const { error } = await signUp(email, signUpPassword);
-      
+      const { error } = await signUp(data.email, data.password);
       if (error) {
         if (error.message.includes('already registered')) {
           toast.error('Este email já está registrado');
@@ -74,8 +50,25 @@ export default function Auth() {
       } else {
         toast.success('Conta criada! Verifique seu email para confirmar.');
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao criar conta');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLocalLogin = async (data: LocalLoginFormData) => {
+    setIsLoading(true);
+    try {
+      const success = await login(data.username, data.password);
+      if (success) {
+        toast.success('Login realizado com sucesso');
+        navigate('/');
+      } else {
+        toast.error('Credenciais inválidas');
+      }
+    } catch {
+      toast.error('Erro ao fazer login');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +78,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-kiosk-bg flex items-center justify-center p-4">
-      <Card className="w-full max-w-md border-cyan-500/30 bg-[hsl(220_25%_10%)] backdrop-blur">
+      <Card className="w-full max-w-md border-cyan-500/30 bg-kiosk-surface backdrop-blur">
         <CardHeader className="text-center space-y-4">
           <LogoBrand size="sm" variant="metal" centered animate className="mb-2" />
           <div>
@@ -107,163 +100,25 @@ export default function Auth() {
         <CardContent>
           {isSupabaseProvider ? (
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6 bg-[hsl(220_25%_14%)]">
-                <TabsTrigger value="login" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">Entrar</TabsTrigger>
-                <TabsTrigger value="signup" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">Criar Conta</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-6 bg-kiosk-surface-alt">
+                <TabsTrigger value="login" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">
+                  Entrar
+                </TabsTrigger>
+                <TabsTrigger value="signup" className="data-[state=active]:bg-kiosk-primary/20 text-kiosk-text">
+                  Criar Conta
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-label-yellow">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="seu@email.com"
-                        required
-                        autoComplete="email"
-                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-label-yellow">Senha</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                      <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        autoComplete="current-password"
-                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                      />
-                    </div>
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Entrando...' : 'Entrar'}
-                  </Button>
-                </form>
+                <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
               </TabsContent>
               
               <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-label-yellow">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="seu@email.com"
-                        required
-                        autoComplete="email"
-                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-label-yellow">Senha</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                      <Input
-                        id="signup-password"
-                        type="password"
-                        value={signUpPassword}
-                        onChange={(e) => setSignUpPassword(e.target.value)}
-                        placeholder="Mínimo 6 caracteres"
-                        required
-                        autoComplete="new-password"
-                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password" className="text-label-yellow">Confirmar Senha</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Repita a senha"
-                        required
-                        autoComplete="new-password"
-                        className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                      />
-                    </div>
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Criando conta...' : 'Criar Conta'}
-                  </Button>
-                </form>
+                <SignUpForm onSubmit={handleSignUp} isLoading={isLoading} />
               </TabsContent>
             </Tabs>
           ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username" className="text-label-yellow">Usuário</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                  <Input
-                    id="username"
-                    type="text"
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="Digite o usuário"
-                    required
-                    autoComplete="username"
-                    className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="local-password" className="text-label-yellow">Senha</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 icon-neon-blue" />
-                  <Input
-                    id="local-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Digite a senha"
-                    required
-                    autoComplete="current-password"
-                    className="pl-10 bg-[hsl(220_25%_14%)] border-kiosk-border text-kiosk-text"
-                  />
-                </div>
-              </div>
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-              >
-                <Lock className="w-4 h-4 mr-2" />
-                {isLoading ? 'Entrando...' : 'Entrar'}
-              </Button>
-              
-              <div className="text-xs text-kiosk-text/85 text-center mt-4 space-y-1">
-                <p>Demo: <code className="bg-kiosk-surface px-1 rounded">tsi</code> / <code className="bg-kiosk-surface px-1 rounded">connect</code></p>
-                <p className="text-kiosk-text/65">⚠️ Modo demo - use Lovable Cloud em produção</p>
-              </div>
-            </form>
+            <LocalLoginForm onSubmit={handleLocalLogin} isLoading={isLoading} />
           )}
         </CardContent>
       </Card>
