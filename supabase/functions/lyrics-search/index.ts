@@ -194,7 +194,18 @@ async function searchLRCLIB(trackName: string, artistName: string): Promise<Lyri
     }
     
     // Get the first result with synced lyrics
-    const bestMatch = results.find((r: any) => r.syncedLyrics) || results[0];
+    // LRCLIBResult interface used for type-safe access
+    interface LRCLIBResult {
+      id: number;
+      trackName: string;
+      artistName: string;
+      albumName?: string;
+      duration?: number;
+      instrumental: boolean;
+      plainLyrics: string | null;
+      syncedLyrics: string | null;
+    }
+    const bestMatch = (results as LRCLIBResult[]).find((r) => r.syncedLyrics) || results[0];
     
     if (bestMatch.syncedLyrics) {
       const hasWordTimestamps = bestMatch.syncedLyrics.includes('<');
