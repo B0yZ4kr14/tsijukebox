@@ -127,7 +127,7 @@ const showcaseComponents = {
           name: 'variant', 
           type: 'select' as const, 
           default: 'mirror',
-          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal'],
+          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal', 'hologram'],
         },
         { 
           name: 'animate', 
@@ -138,7 +138,7 @@ const showcaseComponents = {
       renderPreview: (props: Record<string, unknown>) => (
         <LogoBrand 
           size={props.size as 'sm' | 'md' | 'lg' | 'xl'}
-          variant={props.variant as 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal'}
+          variant={props.variant as 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal' | 'hologram'}
           animate={props.animate as boolean}
         />
       ),
@@ -251,7 +251,7 @@ const showcaseComponents = {
           name: 'variant', 
           type: 'select' as const, 
           default: 'metal',
-          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal', 'brand'],
+          options: ['default', 'ultra', 'bulge', 'mirror', 'mirror-dark', 'silver', 'metal', 'brand', 'hologram'],
           description: 'Estilo visual do logo'
         },
         { 

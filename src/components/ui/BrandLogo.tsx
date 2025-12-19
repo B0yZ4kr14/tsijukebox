@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { LogoBrand } from './LogoBrand';
 import { BrandTagline, TaglineVariant, TaglineSize } from './BrandTagline';
 
-export type LogoVariant = 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal' | 'brand';
+export type LogoVariant = 'default' | 'ultra' | 'bulge' | 'mirror' | 'mirror-dark' | 'silver' | 'metal' | 'brand' | 'hologram';
 export type LogoSize = 'sm' | 'md' | 'lg' | 'xl';
 export type LogoAnimationType = 'none' | 'fade' | 'slide-up' | 'scale' | 'cascade' | 'splash' | 'glitch';
 
