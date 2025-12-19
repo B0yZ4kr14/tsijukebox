@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { useConnectionMonitor } from "@/hooks/useConnectionMonitor";
+import { useConnectionMonitor } from "@/hooks/system";
 import { ContrastDebugPanel } from "@/components/debug/ContrastDebugPanel";
 import { Music } from "lucide-react";
 

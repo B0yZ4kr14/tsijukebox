@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
-import { useMockStatus } from '@/hooks/useMockData';
-import { useWebSocketStatus } from '@/hooks/useWebSocketStatus';
+import { useMockStatus } from './useMockData';
+import { useWebSocketStatus } from './useWebSocketStatus';
 import { useSettings } from '@/contexts/SettingsContext';
 import type { SystemStatus } from '@/lib/api/types';
 

@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { spotifyClient, SpotifySearchResults } from '@/lib/api/spotify';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/hooks/common';
 
 export type SearchType = 'track' | 'album' | 'artist' | 'playlist';
 

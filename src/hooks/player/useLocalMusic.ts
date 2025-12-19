@@ -9,7 +9,7 @@ import {
   MusicPlaylist,
   ConfigReplicationSettings
 } from '@/lib/api/localMusic';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common';
 
 export function useLocalMusic() {
   const { toast } = useToast();

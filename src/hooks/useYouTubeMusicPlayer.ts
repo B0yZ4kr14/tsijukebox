@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { youtubeMusicClient } from '@/lib/api/youtubeMusic';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common';
 
 export function useYouTubeMusicPlayer() {
   const { toast } = useToast();

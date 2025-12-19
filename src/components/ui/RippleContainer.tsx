@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Ripple } from '@/hooks/useRipple';
+import type { Ripple } from '@/hooks/common';
 
 interface RippleContainerProps {
   ripples: Ripple[];

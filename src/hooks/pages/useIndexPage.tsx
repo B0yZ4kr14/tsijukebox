@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStatus } from '@/hooks/useStatus';
-import { usePlayer } from '@/hooks/usePlayer';
-import { useVolume } from '@/hooks/useVolume';
-import { usePlaybackControls } from '@/hooks/usePlaybackControls';
-import { useTouchGestures } from '@/hooks/useTouchGestures';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useFirstAccess } from '@/hooks/useFirstAccess';
-import { usePWAInstall } from '@/hooks/usePWAInstall';
-import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { useStatus, useNetworkStatus } from '@/hooks/system';
+import { usePlayer, useVolume, usePlaybackControls } from '@/hooks/player';
+import { 
+  useTouchGestures, 
+  useTranslation, 
+  useFirstAccess, 
+  usePWAInstall 
+} from '@/hooks/common';
 import { useSettings } from '@/contexts/SettingsContext';
 import { api } from '@/lib/api/client';
 import { toast } from 'sonner';

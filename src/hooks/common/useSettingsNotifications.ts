@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { useSettingsStatus, SettingsCategoryId } from '@/hooks/useSettingsStatus';
+import { useSettingsStatus, SettingsCategoryId } from './useSettingsStatus';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export interface SettingsNotification {

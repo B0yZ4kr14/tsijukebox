@@ -1,4 +1,4 @@
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from '@/hooks/common';
 
 export function SkipLink() {
   const { t } = useTranslation();

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { storjClient, StorjBucket, StorjObject, StorjStorageStats, StorjUploadProgress } from '@/lib/api/storj';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common';
 
 export function useStorjClient() {
   const { toast } = useToast();

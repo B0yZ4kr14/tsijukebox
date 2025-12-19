@@ -3,8 +3,8 @@ import { X, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { extractDominantColors, type ExtractedColors } from '@/lib/colorExtractor';
-import { useLyrics } from '@/hooks/useLyrics';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLyrics } from '@/hooks/player';
+import { useTranslation } from '@/hooks/common';
 
 interface FullscreenKaraokeProps {
   isOpen: boolean;

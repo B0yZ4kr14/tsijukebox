@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { spicetifyClient, SpicetifyStatus, SpicetifyTheme, SpicetifyExtension, SpicetifySnippet, SpicetifyCustomApp, SpicetifyConfig, SpicetifyMarketplaceItem } from '@/lib/api/spicetify';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/common';
 
 export function useSpicetifyIntegration() {
   const { toast } = useToast();

@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Volume, Volume1, Volume2, VolumeX } from 'lucide-react';
-import { useVolume } from '@/hooks/useVolume';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useVolume } from '@/hooks/player';
+import { useTranslation } from '@/hooks/common';
 import { cn } from '@/lib/utils';
 
 interface VolumeSliderProps {

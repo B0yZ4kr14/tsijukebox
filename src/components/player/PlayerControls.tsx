@@ -1,12 +1,10 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, SkipBack, SkipForward, Square } from 'lucide-react';
-import { usePlayer } from '@/hooks/usePlayer';
-import { useRipple } from '@/hooks/useRipple';
-import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { usePlayer } from '@/hooks/player';
+import { useRipple, useSoundEffects, useTranslation } from '@/hooks/common';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useTranslation } from '@/hooks/useTranslation';
 import { useUser } from '@/contexts/UserContext';
 import { cn } from '@/lib/utils';
 

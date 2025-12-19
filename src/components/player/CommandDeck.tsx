@@ -5,9 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 import { useUser } from '@/contexts/UserContext';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useRipple } from '@/hooks/useRipple';
-import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useTranslation, useRipple, useSoundEffects } from '@/hooks/common';
 import { RippleContainer } from '@/components/ui/RippleContainer';
 import {
   AlertDialog,

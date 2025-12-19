@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ForecastDay } from '@/hooks/useWeatherForecast';
+import { ForecastDay } from '@/hooks/system';
 import { AnimatedWeatherIcon } from '@/components/weather/AnimatedWeatherIcon';
 import { cn } from '@/lib/utils';
 
