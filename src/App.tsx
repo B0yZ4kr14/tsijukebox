@@ -41,6 +41,7 @@ const ClientsMonitorDashboard = lazy(() => import("./pages/ClientsMonitorDashboa
 const WcagExceptions = lazy(() => import("./pages/WcagExceptions"));
 const A11yDashboard = lazy(() => import("./pages/A11yDashboard"));
 const LyricsTest = lazy(() => import("./pages/LyricsTest"));
+const BrandGuidelines = lazy(() => import("./pages/BrandGuidelines"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,6 +87,8 @@ function AppRoutes() {
         <Route path="/wcag-exceptions" element={<WcagExceptions />} />
         <Route path="/a11y-dashboard" element={<A11yDashboard />} />
         <Route path="/lyrics-test" element={<LyricsTest />} />
+        <Route path="/brand" element={<BrandGuidelines />} />
+        <Route path="/brand-guidelines" element={<BrandGuidelines />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={

@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Cloud, Server } from 'lucide-react';
+import { Cloud, Server, RefreshCw } from 'lucide-react';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LoginForm, SignUpForm, LocalLoginForm } from '@/components/auth';
 import type { LoginFormData, SignUpFormData, LocalLoginFormData } from '@/lib/validations/authSchemas';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
-  const { login, signUp, isAuthenticated, authConfig } = useUser();
+  const { login, signUp, isAuthenticated, authConfig, setAuthProvider } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,6 +75,12 @@ export default function Auth() {
     }
   };
 
+  const toggleProvider = () => {
+    const newProvider = isSupabaseProvider ? 'local' : 'supabase';
+    setAuthProvider(newProvider);
+    toast.info(`Provedor alterado para: ${newProvider === 'supabase' ? 'Lovable Cloud' : 'Backend Local'}`);
+  };
+
   const isSupabaseProvider = authConfig.provider === 'supabase';
 
   return (
@@ -97,7 +104,7 @@ export default function Auth() {
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           {isSupabaseProvider ? (
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6 bg-kiosk-surface-alt">
@@ -120,6 +127,19 @@ export default function Auth() {
           ) : (
             <LocalLoginForm onSubmit={handleLocalLogin} isLoading={isLoading} />
           )}
+          
+          {/* Provider Toggle Button */}
+          <div className="pt-4 border-t border-kiosk-border/30">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleProvider}
+              className="w-full text-kiosk-text/60 hover:text-kiosk-text/90 gap-2"
+            >
+              <RefreshCw className="w-3 h-3" />
+              {isSupabaseProvider ? 'Usar Backend Local' : 'Usar Lovable Cloud'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
