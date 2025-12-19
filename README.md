@@ -9,6 +9,9 @@
   ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
   ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript)
+  ![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen?style=flat-square)
+  ![Unit Tests](https://img.shields.io/badge/unit_tests-129-blue?style=flat-square)
+  ![E2E Tests](https://img.shields.io/badge/e2e_tests-53-purple?style=flat-square)
   ![Vite](https://img.shields.io/badge/Vite-5.x-646cff?style=flat-square&logo=vite)
   ![Tailwind](https://img.shields.io/badge/Tailwind-3.x-38bdf8?style=flat-square&logo=tailwindcss)
   ![WCAG](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
@@ -128,6 +131,46 @@ npm run contrast         # Verificação de contraste CSS
 ```
 
 Consulte [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) para o guia completo.
+
+---
+
+## 🧪 Testes
+
+Este projeto possui cobertura abrangente de testes:
+
+| Tipo | Quantidade | Framework | Cobertura |
+|------|------------|-----------|-----------|
+| **Unitários** | ~129 | Vitest | Hooks, Contexts, Lib |
+| **Componentes** | ~49 | Vitest + RTL | Backup, Auth, Settings |
+| **E2E** | ~53 | Playwright | Fluxos críticos |
+| **Acessibilidade** | ~10 | axe-core | WCAG 2.1 AA |
+
+### Executar Testes
+
+```bash
+# Testes unitários
+npm run test
+
+# Testes com cobertura
+npm run test -- --coverage
+
+# Testes E2E
+npx playwright test
+
+# Testes E2E com UI interativa
+npx playwright test --ui
+
+# Relatório combinado
+node scripts/merge-coverage.js
+```
+
+### Relatórios
+
+| Relatório | Localização |
+|-----------|-------------|
+| Vitest HTML | `coverage/vitest/index.html` |
+| Playwright HTML | `playwright-report/index.html` |
+| Combinado | `coverage/combined/index.html` |
 
 ---
 

@@ -86,9 +86,36 @@ function generateCoverageReport() {
   const htmlReport = generateHtmlReport(report);
   fs.writeFileSync(path.join(COVERAGE_DIRS.combined, 'index.html'), htmlReport);
   
+  // Calculate total coverage for badge
+  const totalCoverage = report.unitTestCoverage 
+    ? Math.round((report.unitTestCoverage.lines + report.unitTestCoverage.functions + report.unitTestCoverage.branches) / 3)
+    : 0;
+  
+  // Generate badge JSON
+  const badgeColor = totalCoverage >= 80 ? 'brightgreen' : totalCoverage >= 60 ? 'yellow' : 'red';
+  const badgeData = {
+    schemaVersion: 1,
+    label: 'coverage',
+    message: `${totalCoverage}%`,
+    color: badgeColor,
+    totalCoverage,
+  };
+  
+  const badgePath = path.join(COVERAGE_DIRS.combined, 'badge.json');
+  fs.writeFileSync(badgePath, JSON.stringify(badgeData, null, 2));
+  
+  // Write summary.json for CI
+  const summaryData = {
+    totalCoverage,
+    unitTests: report.unitTestCoverage || null,
+    e2eTests: report.e2eTestResults || null,
+  };
+  fs.writeFileSync(path.join(COVERAGE_DIRS.combined, 'summary.json'), JSON.stringify(summaryData, null, 2));
+  
   console.log('✅ Coverage reports merged successfully!\n');
   console.log(`📁 Combined report: ${COVERAGE_DIRS.combined}/index.html`);
-  console.log(`📁 JSON report: ${reportPath}\n`);
+  console.log(`📁 JSON report: ${reportPath}`);
+  console.log(`📁 Badge JSON: ${badgePath}\n`);
   
   // Print summary
   if (report.unitTestCoverage) {
@@ -104,6 +131,8 @@ function generateCoverageReport() {
     console.log(`   Failed: ${report.e2eTestResults.failed}`);
     console.log(`   Pass Rate: ${report.e2eTestResults.passRate}%\n`);
   }
+  
+  console.log(`📊 Total Coverage: ${totalCoverage}%`);
 }
 
 function generateHtmlReport(report) {

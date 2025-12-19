@@ -40,6 +40,17 @@ jobs:
       - name: Merge coverage reports
         run: node scripts/merge-coverage.js
       
+      - name: Generate coverage badge data
+        if: always()
+        run: |
+          if [ -f "coverage/combined/summary.json" ]; then
+            COVERAGE=$(cat coverage/combined/summary.json | jq '.totalCoverage' || echo '0')
+            echo "COVERAGE_PCT=$COVERAGE" >> $GITHUB_ENV
+            echo "Coverage: $COVERAGE%"
+          else
+            echo "COVERAGE_PCT=0" >> $GITHUB_ENV
+          fi
+      
       - name: Upload Vitest coverage
         uses: actions/upload-artifact@v4
         if: always()
@@ -62,6 +73,14 @@ jobs:
         with:
           name: combined-coverage
           path: coverage/combined/
+          retention-days: 30
+      
+      - name: Upload coverage badge
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-badge
+          path: coverage/combined/badge.json
           retention-days: 30
       
       - name: Upload test results
