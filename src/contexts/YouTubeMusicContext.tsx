@@ -37,6 +37,7 @@ export function YouTubeMusicProvider({ children }: { children: React.ReactNode }
     client: {
       setTokens: (tokens) => youtubeMusicClient.setTokens(tokens),
       clearTokens: () => youtubeMusicClient.clearTokens(),
+      validateToken: () => youtubeMusicClient.validateToken(), // Added automatic token validation
     },
     getTokens: (s) => s.tokens,
     isConnected: (s) => s.isConnected,
