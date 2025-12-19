@@ -58,7 +58,8 @@
 | [**Developer Guide**](DEVELOPER-GUIDE.md) | Developers | Architecture and contribution guide |
 | [**Contributing Guide**](CONTRIBUTING.md) | Developers | How to contribute to the project |
 | [**Hooks Architecture**](HOOKS-ARCHITECTURE.md) | Developers | React hooks organization |
-| [**API Reference**](API-REFERENCE.md) | Developers | Complete API documentation |
+| [**API Reference**](API-REFERENCE.md) | Developers | Complete hooks and contexts documentation |
+| [**Architecture Analysis**](ARCHITECTURE-ANALYSIS.md) | Developers | Architecture analysis and refactoring recommendations |
 | [**Backend Endpoints**](BACKEND-ENDPOINTS.md) | Developers | Edge functions documentation |
 | [**Security Guide**](SECURITY.md) | Developers | Security practices and policies |
 
