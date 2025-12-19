@@ -12,7 +12,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Contexts-6-blue?style=flat-square" alt="Contexts">
-  <img src="https://img.shields.io/badge/Hooks-52-green?style=flat-square" alt="Hooks">
+  <img src="https://img.shields.io/badge/Hooks-57-green?style=flat-square" alt="Hooks">
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178c6?style=flat-square" alt="TypeScript">
 </p>
 
@@ -67,6 +67,12 @@
   - [useYouTubeMusicSearch](#useyoutubemusicsearch)
   - [useYouTubeMusicPlayer](#useyoutubemusicplayer)
   - [useYouTubeMusicLibrary](#useyoutubemusiclibrary)
+  - [useYouTubeMusicPlaylists](#useyoutubemusicplaylists)
+  - [useYouTubeMusicBrowse](#useyoutubemusicbrowse)
+  - [useYouTubeMusicRecommendations](#useyoutubemusicrecommendations)
+- [Hooks - Settings](#-settings-hooks)
+  - [useSettingsOAuth](#usesettingsoauth)
+  - [useSettingsNavigation](#usesettingsnavigation)
 - [Hooks - Auth](#-auth-hooks)
   - [useAuthConfig](#useauthconfig)
   - [useLocalAuth](#uselocalauth)
@@ -1531,6 +1537,360 @@ interface UseYouTubeMusicLibraryReturn {
   isLoading: boolean;
   likeTrack: (videoId: string) => Promise<void>;
   unlikeTrack: (videoId: string) => Promise<void>;
+}
+```
+
+---
+
+### useYouTubeMusicPlaylists
+
+Hook para gerenciamento de playlists do YouTube Music.
+
+**Importação:**
+```typescript
+import { useYouTubeMusicPlaylists } from '@/hooks/youtube';
+```
+
+**Interface:**
+```typescript
+interface YouTubeMusicPlaylist {
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  trackCount: number;
+  privacy: 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
+}
+
+interface UseYouTubeMusicPlaylistsReturn {
+  playlists: YouTubeMusicPlaylist[];
+  isLoading: boolean;
+  error: string | null;
+  
+  // CRUD
+  fetchPlaylists: () => Promise<void>;
+  createPlaylist: (title: string, description?: string) => Promise<YouTubeMusicPlaylist | null>;
+  getPlaylistTracks: (playlistId: string) => Promise<YouTubeMusicTrack[]>;
+  
+  // Track management
+  addTrackToPlaylist: (playlistId: string, trackId: string) => Promise<void>;
+  removeTrackFromPlaylist: (playlistId: string, trackId: string) => Promise<void>;
+}
+```
+
+**Exemplo de Uso:**
+```typescript
+function PlaylistManager() {
+  const { 
+    playlists, 
+    isLoading, 
+    createPlaylist, 
+    addTrackToPlaylist 
+  } = useYouTubeMusicPlaylists();
+  
+  const handleCreate = async () => {
+    const playlist = await createPlaylist('Minha Playlist', 'Descrição');
+    if (playlist) {
+      toast.success('Playlist criada!');
+    }
+  };
+  
+  return (
+    <div>
+      {playlists.map(p => (
+        <PlaylistCard key={p.id} playlist={p} />
+      ))}
+      <Button onClick={handleCreate}>Nova Playlist</Button>
+    </div>
+  );
+}
+```
+
+---
+
+### useYouTubeMusicBrowse
+
+Hook para navegação e descoberta no YouTube Music.
+
+**Importação:**
+```typescript
+import { useYouTubeMusicBrowse } from '@/hooks/youtube';
+```
+
+**Interface:**
+```typescript
+interface BrowseCategory {
+  id: string;
+  title: string;
+  thumbnailUrl: string | null;
+}
+
+interface UseYouTubeMusicBrowseReturn {
+  categories: BrowseCategory[];
+  newReleases: YouTubeMusicAlbum[];
+  topTracks: YouTubeMusicTrack[];
+  featuredPlaylists: YouTubeMusicPlaylist[];
+  isLoading: boolean;
+  error: string | null;
+  
+  // Actions
+  fetchBrowseData: () => Promise<void>;
+  fetchNewReleases: () => Promise<void>;
+  fetchTopTracks: () => Promise<void>;
+  refresh: () => void;
+}
+```
+
+**Exemplo de Uso:**
+```typescript
+function BrowsePage() {
+  const { 
+    categories, 
+    newReleases, 
+    topTracks,
+    isLoading,
+    fetchBrowseData 
+  } = useYouTubeMusicBrowse();
+  
+  useEffect(() => {
+    fetchBrowseData();
+  }, []);
+  
+  if (isLoading) return <Spinner />;
+  
+  return (
+    <div className="space-y-6">
+      <section>
+        <h2>Categorias</h2>
+        <div className="grid grid-cols-4 gap-4">
+          {categories.map(cat => (
+            <CategoryCard key={cat.id} category={cat} />
+          ))}
+        </div>
+      </section>
+      
+      <section>
+        <h2>Novos Lançamentos</h2>
+        <AlbumGrid albums={newReleases} />
+      </section>
+    </div>
+  );
+}
+```
+
+---
+
+### useYouTubeMusicRecommendations
+
+Hook para recomendações personalizadas do YouTube Music.
+
+**Importação:**
+```typescript
+import { useYouTubeMusicRecommendations } from '@/hooks/youtube';
+```
+
+**Interface:**
+```typescript
+interface UseYouTubeMusicRecommendationsParams {
+  seedTrackId?: string;
+  autoFetch?: boolean;
+  limit?: number;
+}
+
+interface UseYouTubeMusicRecommendationsReturn {
+  recommendations: YouTubeMusicTrack[];
+  listenAgain: YouTubeMusicTrack[];
+  mixedForYou: YouTubeMusicPlaylist[];
+  isLoading: boolean;
+  error: string | null;
+  isConnected: boolean;
+  
+  fetchRecommendations: () => Promise<void>;
+  fetchBasedOnTrack: (trackId: string) => Promise<YouTubeMusicTrack[]>;
+  refresh: () => void;
+}
+```
+
+**Exemplo de Uso:**
+```typescript
+function RecommendationsPage() {
+  const { 
+    recommendations, 
+    listenAgain,
+    mixedForYou,
+    isLoading,
+    fetchBasedOnTrack 
+  } = useYouTubeMusicRecommendations({ autoFetch: true, limit: 20 });
+  
+  const handleSimilar = async (trackId: string) => {
+    const similar = await fetchBasedOnTrack(trackId);
+    console.log('Similar tracks:', similar);
+  };
+  
+  return (
+    <div className="space-y-6">
+      <section>
+        <h2>Recomendações para Você</h2>
+        <TrackList tracks={recommendations} onSimilar={handleSimilar} />
+      </section>
+      
+      <section>
+        <h2>Ouvir Novamente</h2>
+        <TrackList tracks={listenAgain} />
+      </section>
+      
+      <section>
+        <h2>Mixes para Você</h2>
+        <PlaylistGrid playlists={mixedForYou} />
+      </section>
+    </div>
+  );
+}
+```
+
+---
+
+## ⚙️ Settings Hooks
+
+### useSettingsOAuth
+
+Hook para gerenciamento de fluxos OAuth na página de configurações.
+
+**Importação:**
+```typescript
+import { useSettingsOAuth } from '@/hooks/settings';
+```
+
+**Interface:**
+```typescript
+interface UseSettingsOAuthReturn {
+  isProcessingCallback: boolean;
+  isConnecting: boolean;
+  oauthError: string | null;
+  
+  handleSpotifyConnect: () => Promise<void>;
+  handleSpotifyDisconnect: () => void;
+  clearOAuthError: () => void;
+}
+```
+
+**Propriedades:**
+
+| Propriedade | Tipo | Descrição |
+|-------------|------|-----------|
+| `isProcessingCallback` | `boolean` | Se está processando callback OAuth |
+| `isConnecting` | `boolean` | Se está conectando ao serviço |
+| `oauthError` | `string \| null` | Mensagem de erro OAuth |
+
+**Métodos:**
+
+| Método | Descrição |
+|--------|-----------|
+| `handleSpotifyConnect` | Inicia conexão OAuth com Spotify |
+| `handleSpotifyDisconnect` | Desconecta do Spotify |
+| `clearOAuthError` | Limpa erro OAuth |
+
+**Exemplo de Uso:**
+```typescript
+function SpotifySettings() {
+  const { 
+    isConnecting, 
+    oauthError, 
+    handleSpotifyConnect, 
+    handleSpotifyDisconnect,
+    clearOAuthError 
+  } = useSettingsOAuth();
+  
+  return (
+    <div>
+      {oauthError && (
+        <Alert variant="destructive" onClose={clearOAuthError}>
+          {oauthError}
+        </Alert>
+      )}
+      
+      <Button 
+        onClick={handleSpotifyConnect} 
+        disabled={isConnecting}
+      >
+        {isConnecting ? 'Conectando...' : 'Conectar ao Spotify'}
+      </Button>
+    </div>
+  );
+}
+```
+
+---
+
+### useSettingsNavigation
+
+Hook para navegação entre categorias de configurações com persistência.
+
+**Importação:**
+```typescript
+import { useSettingsNavigation } from '@/hooks/settings';
+```
+
+**Interface:**
+```typescript
+type SettingsCategory = 
+  | 'dashboard' 
+  | 'connections' 
+  | 'data' 
+  | 'system' 
+  | 'appearance' 
+  | 'security' 
+  | 'integrations';
+
+interface UseSettingsNavigationReturn {
+  activeCategory: SettingsCategory;
+  setActiveCategory: (category: SettingsCategory) => void;
+  categoryTitles: Record<SettingsCategory, string>;
+}
+```
+
+**Propriedades:**
+
+| Propriedade | Tipo | Descrição |
+|-------------|------|-----------|
+| `activeCategory` | `SettingsCategory` | Categoria ativa atual |
+| `categoryTitles` | `Record` | Mapa de títulos por categoria |
+
+**Persistência:**
+- A categoria ativa é persistida em `localStorage.settings_active_category`
+- Ao recarregar a página, a última categoria visitada é restaurada
+
+**Exemplo de Uso:**
+```typescript
+function SettingsPage() {
+  const { 
+    activeCategory, 
+    setActiveCategory, 
+    categoryTitles 
+  } = useSettingsNavigation();
+  
+  return (
+    <div className="flex">
+      {/* Sidebar */}
+      <nav className="w-64">
+        {Object.entries(categoryTitles).map(([id, title]) => (
+          <button
+            key={id}
+            onClick={() => setActiveCategory(id as SettingsCategory)}
+            className={activeCategory === id ? 'active' : ''}
+          >
+            {title}
+          </button>
+        ))}
+      </nav>
+      
+      {/* Content */}
+      <main className="flex-1">
+        <h1>{categoryTitles[activeCategory]}</h1>
+        <SettingsContent category={activeCategory} />
+      </main>
+    </div>
+  );
 }
 ```
 

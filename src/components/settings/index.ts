@@ -5,13 +5,9 @@ export { BackendConnectionSection } from './BackendConnectionSection';
 export { DatabaseSection } from './DatabaseSection';
 export { DatabaseConfigSection } from './DatabaseConfigSection';
 export { UnifiedDatabaseSection } from './UnifiedDatabaseSection';
-export { BackupSection } from './BackupSection';
-export { CloudBackupSection } from './CloudBackupSection';
 export { BackupScheduleSection } from './BackupScheduleSection';
-export { UnifiedBackupSection } from './UnifiedBackupSection';
 export { AdvancedDatabaseSection } from './AdvancedDatabaseSection';
 export { ClientsManagementSection } from './ClientsManagementSection';
-export { DistributedBackupSection } from './DistributedBackupSection';
 export { UserManagementSection } from './UserManagementSection';
 export { AuthProviderSection } from './AuthProviderSection';
 export { SystemUrlsSection } from './SystemUrlsSection';
@@ -24,7 +20,6 @@ export { SettingsSectionTour } from './SettingsSectionTour';
 export { SettingsDashboard } from './SettingsDashboard';
 export { SettingsSidebar, type SettingsCategory } from './SettingsSidebar';
 export { SettingsBreadcrumb } from './SettingsBreadcrumb';
-export { ConfigBackupSection } from './ConfigBackupSection';
 export { SettingsGuideCard } from './SettingsGuideCard';
 export { SettingsGuideModal } from './SettingsGuideModal';
 export { SettingsFAQ } from './SettingsFAQ';
@@ -35,3 +30,6 @@ export { YouTubeMusicSection } from './YouTubeMusicSection';
 export { MusicIntegrationsSection } from './MusicIntegrationsSection';
 export { LocalMusicSection } from './LocalMusicSection';
 export { StorjSection } from './StorjSection';
+
+// New consolidated backup module
+export * from './backup';

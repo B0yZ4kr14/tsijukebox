@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { SettingsGuideCard } from './SettingsGuideCard';
 import { SettingsGuideModal } from './SettingsGuideModal';
-import { ConfigBackupSection } from './ConfigBackupSection';
+import { BackupManager } from './backup';
 import { SettingsFAQ } from './SettingsFAQ';
 import { SettingsNotificationBanner } from './SettingsNotificationBanner';
 
@@ -349,7 +349,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <ConfigBackupSection />
+        <BackupManager providers={['local']} showScheduler={false} />
       </motion.div>
 
       {/* FAQ Section */}
