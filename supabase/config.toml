@@ -38,3 +38,9 @@ verify_jwt = false
 
 [functions.refactor-docs]
 verify_jwt = false
+
+[functions.perplexity-research]
+verify_jwt = false
+
+[functions.doc-orchestrator]
+verify_jwt = false
