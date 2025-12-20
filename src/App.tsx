@@ -47,6 +47,7 @@ const ComponentsShowcase = lazy(() => import("./pages/ComponentsShowcase"));
 const InstallerMetrics = lazy(() => import("./pages/InstallerMetrics"));
 const GitHubDashboard = lazy(() => import("./pages/GitHubDashboard"));
 const JukeboxStatsDashboard = lazy(() => import("./pages/JukeboxStatsDashboard"));
+const VersionComparison = lazy(() => import("./pages/VersionComparison"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,6 +98,7 @@ function AppRoutes() {
         <Route path="/changelog" element={<ChangelogTimeline />} />
         <Route path="/showcase" element={<ComponentsShowcase />} />
         <Route path="/installer-metrics" element={<InstallerMetrics />} />
+        <Route path="/version-comparison" element={<VersionComparison />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={

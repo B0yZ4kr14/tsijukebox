@@ -1,5 +1,6 @@
 export { SettingsSection } from './SettingsSection';
 export { ThemeSection } from './ThemeSection';
+export { AlertConfigSection } from './AlertConfigSection';
 export { CloudConnectionSection } from './CloudConnectionSection';
 export { BackendConnectionSection } from './BackendConnectionSection';
 export { DatabaseSection } from './DatabaseSection';
