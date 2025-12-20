@@ -35,7 +35,9 @@ import {
   LocalMusicSection,
   StorjSection,
   GitHubSyncStatus,
-  CodeScanSection
+  CodeScanSection,
+  ScriptRefactorSection,
+  ManusAutomationSection
 } from '@/components/settings';
 import { VolumeNormalizationSection } from '@/components/settings/VolumeNormalizationSection';
 import { VoiceControlSection } from '@/components/settings/VoiceControlSection';
@@ -231,6 +233,8 @@ export default function Settings() {
             <AuthProviderSection />
             <GitHubSyncStatus />
             <CodeScanSection />
+            <ScriptRefactorSection />
+            <ManusAutomationSection />
           </>
         );
 

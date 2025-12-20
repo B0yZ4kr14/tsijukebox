@@ -35,5 +35,6 @@ export { GitHubSyncStatus } from './GitHubSyncStatus';
 export { CreateDeployKeyModal } from './CreateDeployKeyModal';
 export { CodeScanSection } from './CodeScanSection';
 export { ScriptRefactorSection } from './ScriptRefactorSection';
+export { ManusAutomationSection } from './ManusAutomationSection';
 
 export * from './backup';

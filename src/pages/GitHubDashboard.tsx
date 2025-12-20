@@ -41,6 +41,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { CommitFilters } from '@/components/github/CommitFilters';
 import { CacheIndicator } from '@/components/github/CacheIndicator';
+import { GitHubDashboardCharts } from '@/components/github/GitHubDashboardCharts';
 import { getCommitTypeInfo } from '@/lib/constants/commitTypes';
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -348,6 +349,14 @@ export default function GitHubDashboard() {
             </Card>
           </motion.div>
         </div>
+
+        {/* Advanced Charts */}
+        <GitHubDashboardCharts
+          commits={commits}
+          contributors={contributors}
+          languages={languages}
+          releases={releases}
+        />
 
         {/* Commits Table */}
         <motion.div

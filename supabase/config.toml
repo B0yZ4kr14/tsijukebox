@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.code-refactor]
 verify_jwt = false
+
+[functions.manus-automation]
+verify_jwt = false

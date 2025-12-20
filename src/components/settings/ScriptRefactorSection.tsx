@@ -91,7 +91,7 @@ export function ScriptRefactorSection() {
 
   return (
     <SettingsSection
-      icon={Wand2}
+      icon={<Wand2 className="w-5 h-5 text-kiosk-primary" />}
       title="Refatoração de Scripts"
       description="Use Claude AI para analisar e refatorar scripts Python, Dockerfile e mais"
     >

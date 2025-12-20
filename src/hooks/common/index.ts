@@ -25,3 +25,4 @@ export {
 } from './useThemeCustomizer';
 export { useWikiBookmarks } from './useWikiBookmarks';
 export { useBackNavigation } from './useBackNavigation';
+export { useNotifications, type Notification } from './useNotifications';
