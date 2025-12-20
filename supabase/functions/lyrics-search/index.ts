@@ -1,9 +1,24 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Zod schemas for request validation
+const LyricsSearchRequestSchema = z.object({
+  trackName: z.string()
+    .min(1, 'trackName is required')
+    .max(500, 'trackName must be less than 500 characters')
+    .trim(),
+  artistName: z.string()
+    .min(1, 'artistName is required')
+    .max(500, 'artistName must be less than 500 characters')
+    .trim(),
+});
+
+type LyricsSearchRequest = z.infer<typeof LyricsSearchRequestSchema>;
 
 interface LyricsLine {
   time: number;
@@ -194,7 +209,6 @@ async function searchLRCLIB(trackName: string, artistName: string): Promise<Lyri
     }
     
     // Get the first result with synced lyrics
-    // LRCLIBResult interface used for type-safe access
     interface LRCLIBResult {
       id: number;
       trackName: string;
@@ -377,34 +391,42 @@ serve(async (req) => {
   }
   
   try {
-    const { trackName, artistName } = await req.json();
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = LyricsSearchRequestSchema.safeParse(rawBody);
     
-    if (!trackName || !artistName) {
+    if (!parseResult.success) {
+      console.error('[lyrics-search] Validation error:', parseResult.error.issues);
       return new Response(
-        JSON.stringify({ error: 'trackName and artistName are required' }),
+        JSON.stringify({ 
+          error: 'Invalid request parameters',
+          details: parseResult.error.issues.map(i => ({ path: i.path.join('.'), message: i.message }))
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
     
-    console.log(`Searching lyrics for: "${trackName}" by "${artistName}"`);
+    const { trackName, artistName } = parseResult.data;
+    
+    console.log(`[lyrics-search] Searching for: "${trackName}" by "${artistName}"`);
     
     // Try LRCLIB exact match first
     let lyrics = await fetchFromLRCLIB(trackName, artistName);
     
     // If no exact match, try search
     if (!lyrics) {
-      console.log('No exact match, trying LRCLIB search...');
+      console.log('[lyrics-search] No exact match, trying LRCLIB search...');
       lyrics = await searchLRCLIB(trackName, artistName);
     }
     
     // If still no lyrics, try Genius as fallback
     if (!lyrics) {
-      console.log('LRCLIB failed, trying Genius fallback...');
+      console.log('[lyrics-search] LRCLIB failed, trying Genius fallback...');
       lyrics = await fetchFromGenius(trackName, artistName);
     }
     
     if (lyrics) {
-      console.log(`Found lyrics from ${lyrics.source}, synced: ${lyrics.synced}, lines: ${lyrics.lines.length}`);
+      console.log(`[lyrics-search] Found lyrics from ${lyrics.source}, synced: ${lyrics.synced}, lines: ${lyrics.lines.length}`);
       return new Response(
         JSON.stringify(lyrics),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -412,7 +434,7 @@ serve(async (req) => {
     }
     
     // No lyrics found
-    console.log('No lyrics found');
+    console.log('[lyrics-search] No lyrics found');
     return new Response(
       JSON.stringify({
         source: 'none',
@@ -425,7 +447,7 @@ serve(async (req) => {
     );
     
   } catch (error) {
-    console.error('Error in lyrics-search:', error);
+    console.error('[lyrics-search] Error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: message }),

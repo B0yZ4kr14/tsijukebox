@@ -1,20 +1,39 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface GitHubSyncRequest {
-  action: 'export-files' | 'sync-status' | 'create-commit' | 'list-files' | 'get-file';
-  files?: Array<{
-    path: string;
-    content: string;
-  }>;
-  commitMessage?: string;
-  branch?: string;
-  filePath?: string;
-}
+// Zod schemas for request validation
+const GitHubFileSchema = z.object({
+  path: z.string().min(1, 'path is required').max(500),
+  content: z.string().max(1_000_000, 'content must be less than 1MB'),
+});
+
+const GitHubSyncRequestSchema = z.object({
+  action: z.enum(['export-files', 'sync-status', 'create-commit', 'list-files', 'get-file']),
+  files: z.array(GitHubFileSchema).max(100).optional(),
+  commitMessage: z.string().max(500).optional(),
+  branch: z.string().max(100).optional(),
+  filePath: z.string().max(500).optional(),
+}).refine(
+  (data) => {
+    // Validate that files is present when action requires it
+    if (['export-files', 'create-commit'].includes(data.action) && (!data.files || data.files.length === 0)) {
+      return false;
+    }
+    // Validate that filePath is present when action is 'get-file'
+    if (data.action === 'get-file' && !data.filePath) {
+      return false;
+    }
+    return true;
+  },
+  { message: 'Invalid request: files required for export-files/create-commit, filePath required for get-file' }
+);
+
+type GitHubSyncRequest = z.infer<typeof GitHubSyncRequestSchema>;
 
 interface GitHubFile {
   path: string;
@@ -54,7 +73,7 @@ async function getFileContent(token: string, path: string, branch: string): Prom
     const content = atob(data.content.replace(/\n/g, ''));
     return { content, sha: data.sha };
   } catch (error) {
-    console.error(`Error getting file ${path}:`, error);
+    console.error(`[github-sync-export] Error getting file ${path}:`, error);
     return null;
   }
 }
@@ -100,7 +119,7 @@ async function listRepositoryFiles(token: string, path: string = '', branch: str
     
     return files;
   } catch (error) {
-    console.error('Error listing files:', error);
+    console.error('[github-sync-export] Error listing files:', error);
     return [];
   }
 }
@@ -306,15 +325,31 @@ Deno.serve(async (req) => {
     const GITHUB_TOKEN = Deno.env.get('GITHUB_ACCESS_TOKEN');
     
     if (!GITHUB_TOKEN) {
-      console.error('GITHUB_ACCESS_TOKEN not configured');
+      console.error('[github-sync-export] GITHUB_ACCESS_TOKEN not configured');
       return new Response(
         JSON.stringify({ error: 'GitHub access token not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const { action, files, commitMessage, branch = DEFAULT_BRANCH, filePath } = await req.json() as GitHubSyncRequest;
-    console.log(`GitHub sync action: ${action}`);
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = GitHubSyncRequestSchema.safeParse(rawBody);
+    
+    if (!parseResult.success) {
+      console.error('[github-sync-export] Validation error:', parseResult.error.issues);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid request parameters',
+          details: parseResult.error.issues.map(i => ({ path: i.path.join('.'), message: i.message }))
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { action, files, commitMessage, branch = DEFAULT_BRANCH, filePath } = parseResult.data;
+    console.log(`[github-sync-export] Action: ${action}`);
 
     switch (action) {
       case 'list-files': {
@@ -326,13 +361,7 @@ Deno.serve(async (req) => {
       }
 
       case 'get-file': {
-        if (!filePath) {
-          return new Response(
-            JSON.stringify({ error: 'filePath is required for get-file action' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-        const fileContent = await getFileContent(GITHUB_TOKEN, filePath, branch);
+        const fileContent = await getFileContent(GITHUB_TOKEN, filePath!, branch);
         return new Response(
           JSON.stringify({ success: true, file: fileContent }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -402,19 +431,12 @@ Deno.serve(async (req) => {
       }
 
       case 'export-files': {
-        if (!files || files.length === 0) {
-          return new Response(
-            JSON.stringify({ error: 'files array is required for export-files action' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        const message = commitMessage || `[TSiJUKEBOX] Sync ${files.length} files - ${new Date().toISOString()}`;
+        const message = commitMessage || `[TSiJUKEBOX] Sync ${files!.length} files - ${new Date().toISOString()}`;
         
         // For small number of files, use individual updates
-        if (files.length <= 3) {
+        if (files!.length <= 3) {
           const results = await Promise.all(
-            files.map(file => 
+            files!.map(file => 
               createOrUpdateFile(GITHUB_TOKEN, file.path, file.content, message, branch)
             )
           );
@@ -432,7 +454,7 @@ Deno.serve(async (req) => {
             severity: 'info',
             title: 'GitHub Sync Completo',
             message: `${created} arquivos criados, ${updated} atualizados`,
-            metadata: { filesCount: files.length, branch },
+            metadata: { filesCount: files!.length, branch },
           });
           
           return new Response(
@@ -440,14 +462,14 @@ Deno.serve(async (req) => {
               success: true,
               created,
               updated,
-              files: files.map(f => f.path),
+              files: files!.map(f => f.path),
             }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
 
         // For larger number of files, use a single commit
-        const result = await createMultiFileCommit(GITHUB_TOKEN, files, message, branch);
+        const result = await createMultiFileCommit(GITHUB_TOKEN, files!, message, branch);
         
         // Create notification
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -477,15 +499,8 @@ Deno.serve(async (req) => {
       }
 
       case 'create-commit': {
-        if (!files || files.length === 0) {
-          return new Response(
-            JSON.stringify({ error: 'files array is required for create-commit action' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        const message = commitMessage || `[TSiJUKEBOX] Update ${files.length} files`;
-        const result = await createMultiFileCommit(GITHUB_TOKEN, files, message, branch);
+        const message = commitMessage || `[TSiJUKEBOX] Update ${files!.length} files`;
+        const result = await createMultiFileCommit(GITHUB_TOKEN, files!, message, branch);
         
         return new Response(
           JSON.stringify({ success: true, commit: result }),
@@ -499,11 +514,11 @@ Deno.serve(async (req) => {
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
     }
-  } catch (error) {
-    console.error('Error in github-sync-export:', error);
+  } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[github-sync-export] Error: ${errorMessage}`);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ success: false, error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

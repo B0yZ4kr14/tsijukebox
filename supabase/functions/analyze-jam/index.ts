@@ -1,23 +1,31 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface JamTrack {
-  trackName: string;
-  artistName: string;
-  albumArt?: string;
-  durationMs?: number;
-}
+// Zod schemas for request validation
+const JamTrackSchema = z.object({
+  trackName: z.string().min(1).max(500),
+  artistName: z.string().min(1).max(500),
+  albumArt: z.string().url().optional().or(z.literal('')),
+  durationMs: z.number().int().positive().optional(),
+});
 
-interface AnalyzeJamRequest {
-  action: 'suggest-tracks' | 'analyze-mood' | 'get-similar';
-  queue: JamTrack[];
-  currentTrack?: JamTrack;
-  sessionName?: string;
-}
+const AnalyzeJamRequestSchema = z.object({
+  action: z.enum(['suggest-tracks', 'analyze-mood', 'get-similar']),
+  queue: z.array(JamTrackSchema).max(100),
+  currentTrack: JamTrackSchema.optional(),
+  sessionName: z.string().max(200).optional(),
+});
+
+type JamTrack = z.infer<typeof JamTrackSchema>;
+type AnalyzeJamRequest = z.infer<typeof AnalyzeJamRequestSchema>;
+
+// Lovable AI Gateway configuration
+const LOVABLE_AI_GATEWAY = 'https://ai.lovable.dev/api/chat';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -25,12 +33,29 @@ serve(async (req) => {
   }
 
   try {
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not configured');
+    // Get Lovable API key (auto-configured in Lovable Cloud)
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.error('[analyze-jam] LOVABLE_API_KEY is not configured');
+      throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const { action, queue, currentTrack, sessionName } = await req.json() as AnalyzeJamRequest;
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = AnalyzeJamRequestSchema.safeParse(rawBody);
+    
+    if (!parseResult.success) {
+      console.error('[analyze-jam] Validation error:', parseResult.error.issues);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid request parameters',
+          details: parseResult.error.issues.map(i => ({ path: i.path.join('.'), message: i.message }))
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { action, queue, currentTrack, sessionName } = parseResult.data;
 
     console.log(`[analyze-jam] Action: ${action}, Queue size: ${queue?.length || 0}`);
 
@@ -105,35 +130,36 @@ ${queueContext}`;
         throw new Error(`Ação desconhecida: ${action}`);
     }
 
-    console.log(`[analyze-jam] Calling Claude Opus 4...`);
+    console.log('[analyze-jam] Calling Lovable AI Gateway (gemini-2.5-flash)...');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Use Lovable AI Gateway instead of direct Anthropic API
+    const response = await fetch(LOVABLE_AI_GATEWAY, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-1-20250805',
-        max_tokens: 1024,
+        model: 'google/gemini-2.5-flash',
         messages: [
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        system: systemPrompt,
+        max_tokens: 1024,
+        response_format: { type: 'json_object' },
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[analyze-jam] Anthropic API error: ${response.status}`, errorText);
-      throw new Error(`Anthropic API error: ${response.status}`);
+      console.error(`[analyze-jam] Lovable AI Gateway error: ${response.status}`, errorText);
+      throw new Error(`Lovable AI Gateway error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.content?.[0]?.text || '{}';
+    const content = data.choices?.[0]?.message?.content || '{}';
 
-    console.log(`[analyze-jam] Response received, parsing...`);
+    console.log('[analyze-jam] Response received, parsing...');
 
     // Parse JSON from response
     let result;
@@ -142,9 +168,16 @@ ${queueContext}`;
       const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, content];
       result = JSON.parse(jsonMatch[1].trim());
     } catch (parseError) {
-      console.error(`[analyze-jam] JSON parse error:`, parseError);
-      result = { error: 'Failed to parse AI response', raw: content };
+      console.error('[analyze-jam] JSON parse error:', parseError);
+      // Try parsing the entire content as JSON
+      try {
+        result = JSON.parse(content);
+      } catch {
+        result = { error: 'Failed to parse AI response', raw: content };
+      }
     }
+
+    console.log('[analyze-jam] Successfully processed response');
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

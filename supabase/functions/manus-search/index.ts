@@ -1,15 +1,22 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface ManusSearchRequest {
-  query: string;
-  type?: 'artist' | 'track' | 'documentation' | 'general';
-  limit?: number;
-}
+// Zod schema for request validation
+const ManusSearchRequestSchema = z.object({
+  query: z.string()
+    .min(1, 'query is required')
+    .max(1000, 'query must be less than 1000 characters')
+    .trim(),
+  type: z.enum(['artist', 'track', 'documentation', 'general']).default('general'),
+  limit: z.number().int().min(1).max(50).default(5),
+});
+
+type ManusSearchRequest = z.infer<typeof ManusSearchRequestSchema>;
 
 interface ManusSearchResult {
   title: string;
@@ -26,10 +33,27 @@ serve(async (req) => {
   try {
     const MANUS_API_KEY = Deno.env.get('MANUS_API_KEY');
     if (!MANUS_API_KEY) {
+      console.error('[manus-search] MANUS_API_KEY is not configured');
       throw new Error('MANUS_API_KEY is not configured');
     }
 
-    const { query, type = 'general', limit = 5 } = await req.json() as ManusSearchRequest;
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = ManusSearchRequestSchema.safeParse(rawBody);
+    
+    if (!parseResult.success) {
+      console.error('[manus-search] Validation error:', parseResult.error.issues);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid request parameters',
+          details: parseResult.error.issues.map(i => ({ path: i.path.join('.'), message: i.message })),
+          results: []
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { query, type, limit } = parseResult.data;
 
     console.log(`[manus-search] Query: "${query}", Type: ${type}, Limit: ${limit}`);
 

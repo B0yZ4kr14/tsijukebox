@@ -1,9 +1,35 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Zod schema for request validation
+const GitHubRepoRequestSchema = z.object({
+  path: z.string().max(500).default(''),
+  action: z.enum([
+    'contents', 'tree', 'raw', 'repo-info', 'commits', 'last-commit',
+    'sync-status', 'releases', 'branches', 'contributors', 'languages',
+    'deploy-keys', 'create-deploy-key', 'delete-deploy-key', 'gpg-keys', 'ssh-keys'
+  ]).default('contents'),
+  title: z.string().max(200).optional(),
+  key: z.string().max(5000).optional(),
+  read_only: z.boolean().optional(),
+  keyId: z.number().int().positive().optional(),
+}).refine(
+  (data) => {
+    // Validate that keyId is present when action is 'delete-deploy-key'
+    if (data.action === 'delete-deploy-key' && !data.keyId) {
+      return false;
+    }
+    return true;
+  },
+  { message: 'keyId is required for delete-deploy-key action' }
+);
+
+type GitHubRepoRequest = z.infer<typeof GitHubRepoRequestSchema>;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -13,11 +39,27 @@ serve(async (req) => {
   try {
     const GITHUB_TOKEN = Deno.env.get('GITHUB_ACCESS_TOKEN');
     if (!GITHUB_TOKEN) {
+      console.error('[github-repo] GITHUB_ACCESS_TOKEN not configured');
       throw new Error('GITHUB_ACCESS_TOKEN not configured');
     }
 
-    const body = await req.json();
-    const { path = '', action = 'contents', title, key, read_only, keyId } = body;
+    // Parse and validate request body
+    const rawBody = await req.json();
+    const parseResult = GitHubRepoRequestSchema.safeParse(rawBody);
+    
+    if (!parseResult.success) {
+      console.error('[github-repo] Validation error:', parseResult.error.issues);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid request parameters',
+          details: parseResult.error.issues.map(i => ({ path: i.path.join('.'), message: i.message }))
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { path, action, title, key, read_only, keyId } = parseResult.data;
     const repo = 'B0yZ4kr14/TSiJUKEBOX';
     
     let url = '';
@@ -69,7 +111,6 @@ serve(async (req) => {
         requestBody = JSON.stringify({ title, key, read_only: read_only ?? true });
         break;
       case 'delete-deploy-key':
-        if (!keyId) throw new Error('keyId is required for delete-deploy-key');
         url = `https://api.github.com/repos/${repo}/keys/${keyId}`;
         method = 'DELETE';
         break;
