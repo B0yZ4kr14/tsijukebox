@@ -1,0 +1,66 @@
+# Dependabot configuration for TSiJUKEBOX
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+
+updates:
+  # NPM dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps):"
+    groups:
+      # Group React-related dependencies
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      # Group Radix UI components
+      radix:
+        patterns:
+          - "@radix-ui/*"
+      # Group Testing dependencies
+      testing:
+        patterns:
+          - "vitest*"
+          - "@testing-library/*"
+          - "playwright*"
+          - "puppeteer*"
+      # Group TanStack dependencies
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci(deps):"
+
+  # Python dependencies (for installer)
+  - package-ecosystem: "pip"
+    directory: "/scripts/installer"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore(deps):"

@@ -1,0 +1,120 @@
+# Release Drafter Configuration for TSiJUKEBOX
+# https://github.com/release-drafter/release-drafter
+
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+template: |
+  # 🎵 TSiJUKEBOX $RESOLVED_VERSION
+
+  $CHANGES
+
+  ## 📦 Installation
+
+  ```bash
+  git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
+  cd TSiJUKEBOX
+  npm install
+  npm run dev
+  ```
+
+  ## 📚 Documentation
+
+  - [Wiki](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki)
+  - [Changelog](./docs/CHANGELOG.md)
+
+  ---
+  **Full Changelog**: https://github.com/B0yZ4kr14/TSiJUKEBOX/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+      - 'bugfix'
+      - 'fix'
+  - title: '🔒 Security'
+    labels:
+      - 'security'
+  - title: '♿ Accessibility'
+    labels:
+      - 'a11y'
+      - 'accessibility'
+      - 'wcag'
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+  - title: '🎨 UI/UX'
+    labels:
+      - 'ui'
+      - 'ux'
+      - 'design'
+  - title: '🧹 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+      - 'refactor'
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
+  - title: '🧪 Tests'
+    labels:
+      - 'tests'
+      - 'testing'
+  - title: '🔧 CI/CD'
+    labels:
+      - 'ci'
+      - 'github-actions'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'bug'
+      - 'bugfix'
+      - 'fix'
+      - 'chore'
+      - 'documentation'
+  default: patch
+
+autolabeler:
+  - label: 'feature'
+    branch:
+      - '/feature\/.+/'
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+      - '/bugfix\/.+/'
+  - label: 'documentation'
+    files:
+      - 'docs/**/*'
+      - '*.md'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+  - label: 'dependencies'
+    files:
+      - 'package.json'
+      - 'package-lock.json'
+
+exclude-labels:
+  - 'skip-changelog'
+  - 'wontfix'
+  - 'duplicate'
+  - 'invalid'
+
+no-changes-template: 'No changes since last release.'

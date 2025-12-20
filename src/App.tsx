@@ -100,6 +100,7 @@ function AppRoutes() {
         <Route path="/showcase" element={<ComponentsShowcase />} />
         <Route path="/installer-metrics" element={<InstallerMetrics />} />
         <Route path="/version-comparison" element={<VersionComparison />} />
+        <Route path="/landing" element={<LandingPage />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={

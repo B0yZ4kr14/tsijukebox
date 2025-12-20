@@ -1,0 +1,49 @@
+# Stale issue/PR configuration for TSiJUKEBOX
+# Requires: https://github.com/actions/stale
+
+# Number of days of inactivity before an issue/PR is marked stale
+daysUntilStale: 60
+
+# Number of days of inactivity before a stale issue/PR is closed
+daysUntilClose: 14
+
+# Issues/PRs with these labels will never be considered stale
+exemptLabels:
+  - pinned
+  - security
+  - bug
+  - critical
+  - help-wanted
+  - good-first-issue
+  - in-progress
+  - blocked
+  - wontfix
+
+# Label to use when marking an issue as stale
+staleLabel: stale
+
+# Comment to post when marking an issue as stale
+markComment: >
+  Este issue/PR está inativo há mais de 60 dias e foi marcado como `stale`.
+  Será fechado automaticamente em 14 dias caso não haja atividade.
+  
+  Se este issue ainda é relevante, por favor comente ou remova o label `stale`.
+
+# Comment to post when closing a stale issue
+closeComment: >
+  Este issue/PR foi fechado automaticamente devido à inatividade.
+  Sinta-se à vontade para reabrir se o problema persistir.
+
+# Limit the number of actions per hour
+limitPerRun: 30
+
+# Only issues/PRs before this date are considered stale
+# onlyLabels: []
+
+# Issues/PRs with these assignees will not be marked stale
+# exemptAssignees: []
+
+# Separate settings for PRs (optional)
+# pulls:
+#   daysUntilStale: 90
+#   daysUntilClose: 30
