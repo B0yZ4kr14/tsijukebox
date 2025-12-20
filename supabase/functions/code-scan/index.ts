@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +10,7 @@ interface ScanRequest {
   code: string;
   fileName?: string;
   scanType?: 'security' | 'performance' | 'all';
+  persist?: boolean;
 }
 
 serve(async (req) => {
@@ -22,7 +24,7 @@ serve(async (req) => {
       throw new Error('ANTHROPIC_API_KEY_ADMIN not configured');
     }
 
-    const { code, fileName = 'unknown', scanType = 'all' }: ScanRequest = await req.json();
+    const { code, fileName = 'unknown', scanType = 'all', persist = true }: ScanRequest = await req.json();
 
     if (!code || code.trim().length === 0) {
       throw new Error('Code content is required');
@@ -105,7 +107,6 @@ Responda em JSON com este formato:
     // Parse the JSON from the response
     let scanResult;
     try {
-      // Try to extract JSON from the response
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         scanResult = JSON.parse(jsonMatch[0]);
@@ -121,14 +122,68 @@ Responda em JSON com este formato:
       };
     }
 
-    console.log(`[code-scan] Scan complete for ${fileName}: ${scanResult.issues?.length || 0} issues found`);
+    const scannedAt = new Date().toISOString();
+    const issues = scanResult.issues || [];
+    
+    // Calculate issue counts by severity
+    const issuesCount = issues.length;
+    const criticalCount = issues.filter((i: { severity: string }) => i.severity === 'critical').length;
+    const highCount = issues.filter((i: { severity: string }) => i.severity === 'high').length;
+    const mediumCount = issues.filter((i: { severity: string }) => i.severity === 'medium').length;
+    const lowCount = issues.filter((i: { severity: string }) => i.severity === 'low').length;
+
+    // Persist to database if enabled
+    let persistedId = null;
+    if (persist) {
+      try {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const { data: insertedData, error: insertError } = await supabase
+          .from('code_scan_history')
+          .insert({
+            file_name: fileName,
+            score: scanResult.score || 0,
+            summary: scanResult.summary || '',
+            issues: issues,
+            issues_count: issuesCount,
+            critical_count: criticalCount,
+            high_count: highCount,
+            medium_count: mediumCount,
+            low_count: lowCount,
+            scanned_at: scannedAt,
+          })
+          .select('id')
+          .single();
+
+        if (insertError) {
+          console.error(`[code-scan] Failed to persist scan: ${insertError.message}`);
+        } else {
+          persistedId = insertedData?.id;
+          console.log(`[code-scan] Scan persisted with ID: ${persistedId}`);
+        }
+      } catch (dbError) {
+        console.error(`[code-scan] Database error: ${dbError}`);
+      }
+    }
+
+    console.log(`[code-scan] Scan complete for ${fileName}: ${issuesCount} issues found`);
 
     return new Response(JSON.stringify({ 
       success: true, 
       data: {
         ...scanResult,
         fileName,
-        scannedAt: new Date().toISOString(),
+        scannedAt,
+        persistedId,
+        counts: {
+          total: issuesCount,
+          critical: criticalCount,
+          high: highCount,
+          medium: mediumCount,
+          low: lowCount,
+        }
       }
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

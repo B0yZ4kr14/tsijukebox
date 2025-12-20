@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      code_scan_history: {
+        Row: {
+          created_at: string | null
+          critical_count: number | null
+          file_name: string
+          high_count: number | null
+          id: string
+          issues: Json
+          issues_count: number | null
+          low_count: number | null
+          medium_count: number | null
+          scanned_at: string | null
+          score: number
+          summary: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          critical_count?: number | null
+          file_name: string
+          high_count?: number | null
+          id?: string
+          issues?: Json
+          issues_count?: number | null
+          low_count?: number | null
+          medium_count?: number | null
+          scanned_at?: string | null
+          score?: number
+          summary?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          critical_count?: number | null
+          file_name?: string
+          high_count?: number | null
+          id?: string
+          issues?: Json
+          issues_count?: number | null
+          low_count?: number | null
+          medium_count?: number | null
+          scanned_at?: string | null
+          score?: number
+          summary?: string | null
+        }
+        Relationships: []
+      }
       playback_stats: {
         Row: {
           album_art: string | null

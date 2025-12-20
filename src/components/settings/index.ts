@@ -34,6 +34,6 @@ export { StorjSection } from './StorjSection';
 export { GitHubSyncStatus } from './GitHubSyncStatus';
 export { CreateDeployKeyModal } from './CreateDeployKeyModal';
 export { CodeScanSection } from './CodeScanSection';
+export { ScriptRefactorSection } from './ScriptRefactorSection';
 
-// New consolidated backup module
 export * from './backup';

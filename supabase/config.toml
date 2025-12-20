@@ -1,13 +1,13 @@
 project_id = "ynkqczsmcnxvapljofel"
 
-# lyrics-search is public (no auth required) - allows frontend to search lyrics without user login
 [functions.lyrics-search]
 verify_jwt = false
 
-# github-repo is public - allows fetching repository data
 [functions.github-repo]
 verify_jwt = false
 
-# code-scan is public - allows code analysis with Anthropic
 [functions.code-scan]
+verify_jwt = false
+
+[functions.code-refactor]
 verify_jwt = false

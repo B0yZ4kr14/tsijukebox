@@ -36,3 +36,4 @@ export {
 } from './usePlaybackStats';
 export { useGitHubSync, type GitHubSyncStatus, type UseGitHubSyncReturn } from './useGitHubSync';
 export { useCodeScan, type CodeIssue, type CodeScanResult, type UseCodeScanReturn } from './useCodeScan';
+export { useCodeRefactor, type RefactorSuggestion, type RefactorResult, type UseCodeRefactorReturn } from './useCodeRefactor';
