@@ -24,13 +24,9 @@ Object.defineProperty(global, 'sessionStorage', {
   writable: true,
 });
 
-// Mock do SettingsContext
-vi.mock('@/contexts/SettingsContext', () => ({
-  useSettings: vi.fn(() => ({
-    spotify: { isConnected: true },
-    youtube: { isConnected: true },
-  })),
-}));
+// NOTA: Mock do SettingsContext removido daqui.
+// Cada teste deve definir seu próprio mock para useSettings
+// para evitar conflitos com diferentes configurações necessárias.
 
 // Mock do react-router-dom
 vi.mock('react-router-dom', async () => {

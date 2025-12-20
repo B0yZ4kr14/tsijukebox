@@ -13,7 +13,7 @@ vi.mock('@/contexts/SettingsContext', () => ({
   })),
 }));
 
-vi.mock('./useMockData', () => ({
+vi.mock('@/hooks/system/useMockData', () => ({
   useMockStatus: vi.fn(() => ({
     status: {
       cpu: 25,
@@ -29,7 +29,7 @@ vi.mock('./useMockData', () => ({
   })),
 }));
 
-vi.mock('./useWebSocketStatus', () => ({
+vi.mock('@/hooks/system/useWebSocketStatus', () => ({
   useWebSocketStatus: vi.fn(() => ({
     status: null,
     isConnected: false,
@@ -57,7 +57,7 @@ vi.mock('@/lib/api/client', () => ({
 
 import { useStatus } from '../useStatus';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useWebSocketStatus } from '../useWebSocketStatus';
+import { useWebSocketStatus } from '@/hooks/system/useWebSocketStatus';
 
 const createTestQueryClient = () => new QueryClient({
   defaultOptions: {
