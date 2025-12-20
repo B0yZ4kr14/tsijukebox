@@ -220,6 +220,51 @@ export type Database = {
           },
         ]
       }
+      jam_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          participant_id: string
+          participant_nickname: string
+          session_id: string
+          track_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          participant_id: string
+          participant_nickname: string
+          session_id: string
+          track_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          participant_id?: string
+          participant_nickname?: string
+          session_id?: string
+          track_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jam_reactions_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "jam_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jam_reactions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "jam_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jam_sessions: {
         Row: {
           access_code: string | null

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { JamProvider, useJam } from '@/contexts/JamContext';
 import { JamHeader } from '@/components/jam/JamHeader';
 import { JamPlayer } from '@/components/jam/JamPlayer';
+import { JamReactions } from '@/components/jam/JamReactions';
 import { JamParticipantsList } from '@/components/jam/JamParticipantsList';
 import { JamQueue } from '@/components/jam/JamQueue';
 import { JamNicknameModal } from '@/components/jam/JamNicknameModal';
@@ -160,6 +161,9 @@ function JamSessionContent() {
             onSkip={handleSkip}
             onSeek={handleSeek}
           />
+
+          {/* Reactions System */}
+          <JamReactions trackId={session?.current_track?.track_id} />
 
           <JamQueue
             queue={queue}
