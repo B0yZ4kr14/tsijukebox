@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CodePreview } from '@/components/ui/CodePreview';
+import { CodeDiffViewer } from '@/components/ui/CodeDiffViewer';
 import { 
   useScriptRefactor, 
   InstallerScript, 
@@ -24,7 +27,6 @@ import {
   ChevronDown,
   ChevronRight,
   Github,
-  Play,
   Trash2,
   Settings,
   Layers,
@@ -33,6 +35,7 @@ import {
   Code2,
   Sparkles,
   AlertTriangle,
+  GitCompare,
 } from 'lucide-react';
 
 // Ícones e cores por categoria
@@ -296,10 +299,12 @@ export function ScriptRefactorSection() {
     clearRefactored,
   } = useScriptRefactor();
 
-  const [activeTab, setActiveTab] = useState<'scripts' | 'code' | 'results'>('scripts');
+  const [activeTab, setActiveTab] = useState<'scripts' | 'code' | 'results' | 'diff'>('scripts');
   const [codeInput, setCodeInput] = useState('');
   const [selectedScriptForCode, setSelectedScriptForCode] = useState<InstallerScript | null>(null);
   const [refactoringScript, setRefactoringScript] = useState<string | null>(null);
+  const [selectedDiffScript, setSelectedDiffScript] = useState<string | null>(null);
+  const [originalCodeForDiff, setOriginalCodeForDiff] = useState<string>('');
 
   const handleRefactorScript = async (script: InstallerScript) => {
     if (!codeInput && !selectedScriptForCode) {
@@ -310,6 +315,11 @@ export function ScriptRefactorSection() {
     }
     
     setRefactoringScript(script.path);
+    // Store original code for diff
+    if (codeInput) {
+      setOriginalCodeForDiff(codeInput);
+    }
+    
     try {
       await refactorSingle(script.path, codeInput);
       toast.success(`${script.name} refatorado com sucesso!`);
@@ -327,10 +337,14 @@ export function ScriptRefactorSection() {
       return;
     }
     
+    // Store original code for diff comparison
+    setOriginalCodeForDiff(codeInput);
+    
     setRefactoringScript(selectedScriptForCode.path);
     try {
       await refactorSingle(selectedScriptForCode.path, codeInput);
       toast.success(`${selectedScriptForCode.name} refatorado com sucesso!`);
+      setSelectedDiffScript(selectedScriptForCode.path);
       setCodeInput('');
       setSelectedScriptForCode(null);
       setActiveTab('results');
@@ -353,6 +367,10 @@ export function ScriptRefactorSection() {
   const setupScripts = getScriptsByCategory('setup');
   const integrationScripts = getScriptsByCategory('integration');
   const utilityScripts = getScriptsByCategory('utility');
+
+  // Get refactored scripts for diff view
+  const refactoredScriptsArray = Array.from(refactoredScripts.entries());
+  const currentDiffData = selectedDiffScript ? refactoredScripts.get(selectedDiffScript) : null;
 
   return (
     <SettingsSection
@@ -404,7 +422,7 @@ export function ScriptRefactorSection() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="scripts" className="gap-1">
               <FileCode className="w-4 h-4" />
               Scripts ({installerScripts.length})
@@ -416,6 +434,10 @@ export function ScriptRefactorSection() {
             <TabsTrigger value="results" className="gap-1">
               <Sparkles className="w-4 h-4" />
               Resultados ({refactoredScripts.size})
+            </TabsTrigger>
+            <TabsTrigger value="diff" className="gap-1" disabled={refactoredScripts.size === 0}>
+              <GitCompare className="w-4 h-4" />
+              Comparar
             </TabsTrigger>
           </TabsList>
 
@@ -470,7 +492,7 @@ export function ScriptRefactorSection() {
             </ScrollArea>
           </TabsContent>
 
-          {/* Code Input Tab */}
+          {/* Code Input Tab with Syntax Highlighting */}
           <TabsContent value="code" className="mt-4">
             <div className="space-y-4">
               {selectedScriptForCode && (
@@ -490,24 +512,47 @@ export function ScriptRefactorSection() {
                 </div>
               )}
               
-              <Textarea
-                placeholder={selectedScriptForCode 
-                  ? `Cole o código de ${selectedScriptForCode.name} aqui...`
-                  : "Selecione um script na aba 'Scripts' primeiro, ou cole o código Python aqui..."
-                }
-                value={codeInput}
-                onChange={(e) => setCodeInput(e.target.value)}
-                className="font-mono text-sm min-h-[400px]"
-              />
+              {/* Show CodePreview if there's code, otherwise show Textarea */}
+              {codeInput ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Preview do código:</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCodeInput('')}
+                    >
+                      Limpar
+                    </Button>
+                  </div>
+                  <CodePreview
+                    code={codeInput}
+                    language="python"
+                    fileName={selectedScriptForCode?.name || 'script.py'}
+                    maxHeight="350px"
+                  />
+                </div>
+              ) : (
+                <Textarea
+                  placeholder={selectedScriptForCode 
+                    ? `Cole o código de ${selectedScriptForCode.name} aqui...`
+                    : "Selecione um script na aba 'Scripts' primeiro, ou cole o código Python aqui..."
+                  }
+                  value={codeInput}
+                  onChange={(e) => setCodeInput(e.target.value)}
+                  className="font-mono text-sm min-h-[400px]"
+                />
+              )}
               
               <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setCodeInput('')}
-                  disabled={!codeInput}
-                >
-                  Limpar
-                </Button>
+                {codeInput && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setCodeInput('')}
+                  >
+                    Limpar
+                  </Button>
+                )}
                 <Button
                   onClick={handleRefactorFromCode}
                   disabled={!selectedScriptForCode || !codeInput.trim() || isRefactoring}
@@ -528,7 +573,7 @@ export function ScriptRefactorSection() {
             </div>
           </TabsContent>
 
-          {/* Results Tab */}
+          {/* Results Tab with Syntax Highlighting */}
           <TabsContent value="results" className="mt-4">
             {refactoredScripts.size === 0 ? (
               <div className="flex flex-col items-center justify-center h-[400px] text-muted-foreground">
@@ -549,27 +594,36 @@ export function ScriptRefactorSection() {
                     Limpar Resultados
                   </Button>
                   
-                  <Button
-                    onClick={handleExport}
-                    disabled={isExporting}
-                  >
-                    {isExporting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Exportando...
-                      </>
-                    ) : (
-                      <>
-                        <Github className="w-4 h-4 mr-2" />
-                        Exportar para GitHub ({refactoredScripts.size})
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setActiveTab('diff')}
+                    >
+                      <GitCompare className="w-4 h-4 mr-2" />
+                      Comparar Código
+                    </Button>
+                    <Button
+                      onClick={handleExport}
+                      disabled={isExporting}
+                    >
+                      {isExporting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Exportando...
+                        </>
+                      ) : (
+                        <>
+                          <Github className="w-4 h-4 mr-2" />
+                          Exportar para GitHub ({refactoredScripts.size})
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 
-                <ScrollArea className="h-[400px]">
+                <ScrollArea className="h-[500px]">
                   <div className="space-y-4 pr-4">
-                    {Array.from(refactoredScripts.entries()).map(([path, data]) => (
+                    {refactoredScriptsArray.map(([path, data]) => (
                       <Card key={path} className="border-success/30 bg-success/5">
                         <CardHeader className="pb-2">
                           <div className="flex items-center justify-between">
@@ -600,6 +654,15 @@ export function ScriptRefactorSection() {
                             )}
                           </div>
                           
+                          {/* Code Preview */}
+                          <CodePreview
+                            code={data.refactoredCode}
+                            language="python"
+                            fileName={path.split('/').pop() || 'refactored.py'}
+                            maxHeight="200px"
+                            showLineNumbers={true}
+                          />
+                          
                           <div className="flex gap-2">
                             <Button
                               variant="outline"
@@ -610,12 +673,72 @@ export function ScriptRefactorSection() {
                               <Copy className="w-3 h-3 mr-1" />
                               Copiar Código
                             </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedDiffScript(path);
+                                setActiveTab('diff');
+                              }}
+                            >
+                              <GitCompare className="w-3 h-3 mr-1" />
+                              Ver Diff
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>
                     ))}
                   </div>
                 </ScrollArea>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Diff Tab - Side by side comparison */}
+          <TabsContent value="diff" className="mt-4">
+            {refactoredScripts.size === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[400px] text-muted-foreground">
+                <GitCompare className="w-12 h-12 mb-4 opacity-50" />
+                <p>Nenhum script refatorado para comparar</p>
+                <p className="text-sm">Refatore scripts primeiro para ver a comparação</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Script selector */}
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-medium">Selecionar script:</span>
+                  <Select
+                    value={selectedDiffScript || ''}
+                    onValueChange={(value) => setSelectedDiffScript(value)}
+                  >
+                    <SelectTrigger className="w-[300px]">
+                      <SelectValue placeholder="Escolha um script refatorado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {refactoredScriptsArray.map(([path]) => (
+                        <SelectItem key={path} value={path}>
+                          {path.split('/').pop()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Diff viewer */}
+                {selectedDiffScript && currentDiffData ? (
+                  <CodeDiffViewer
+                    oldCode={originalCodeForDiff || '# Código original não disponível\n# Cole o código original na aba "Código" antes de refatorar para ver a comparação completa'}
+                    newCode={currentDiffData.refactoredCode}
+                    oldTitle={`${selectedDiffScript.split('/').pop()} (Original)`}
+                    newTitle={`${selectedDiffScript.split('/').pop()} (Refatorado)`}
+                    maxHeight="500px"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-[400px] text-muted-foreground border rounded-lg">
+                    <GitCompare className="w-8 h-8 mb-2 opacity-50" />
+                    <p className="text-sm">Selecione um script para ver a comparação</p>
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>

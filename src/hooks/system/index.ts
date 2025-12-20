@@ -65,3 +65,4 @@ export {
   type MetricsPeriod,
   type UseInstallerMetricsReturn
 } from './useInstallerMetrics';
+export { useFailureRateAlert } from './useFailureRateAlert';
