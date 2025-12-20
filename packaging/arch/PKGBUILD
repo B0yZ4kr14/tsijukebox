@@ -1,5 +1,6 @@
 # Maintainer: B0.y_Z4kr14 <b0yz4kr14@proton.me>
 # TSiJUKEBOX Enterprise - Music System for Kiosk
+# Optimized for CachyOS and Arch Linux
 
 pkgname=tsijukebox
 pkgver=4.0.0
@@ -9,13 +10,13 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/B0yZ4kr14/TSiJUKEBOX"
 license=('custom:public-domain')
 
-# Runtime dependencies
+# Runtime dependencies - CachyOS optimized
 depends=(
     'nodejs>=18'
     'chromium'
-    'pulseaudio'
     'libnotify'
     'xdg-utils'
+    'dbus'
 )
 
 # Build dependencies
@@ -23,18 +24,44 @@ makedepends=(
     'npm'
     'git'
     'python'
+    'python-setuptools'
 )
 
-# Optional dependencies
+# Optional dependencies with descriptions
 optdepends=(
+    # Audio
+    'pipewire: Modern audio server (recommended for CachyOS)'
+    'pipewire-pulse: PulseAudio compatibility layer for PipeWire'
+    'wireplumber: PipeWire session manager'
+    'pulseaudio: Legacy audio server (alternative to pipewire)'
+    
+    # Spotify Integration
     'spotify: Native Spotify client for Spicetify integration'
     'spicetify-cli: Spotify customization and theming'
+    
+    # Network & Discovery
+    'avahi: mDNS/DNS-SD service discovery'
+    'nss-mdns: mDNS hostname resolution'
+    
+    # Server & Proxy
     'nginx: Reverse proxy for production deployment'
-    'ufw: Firewall configuration'
-    'pipewire: Modern audio server (alternative to pulseaudio)'
-    'pipewire-pulse: PipeWire PulseAudio compatibility'
+    'caddy: Modern web server alternative to nginx'
+    
+    # Security
+    'ufw: Uncomplicated firewall configuration'
+    'fail2ban: Intrusion prevention'
+    
+    # Monitoring
     'grafana: Metrics and monitoring dashboard'
     'prometheus: Metrics collection'
+    'prometheus-node-exporter: System metrics exporter'
+    
+    # Docker (optional containerized deployment)
+    'docker: Container runtime'
+    'docker-compose: Multi-container orchestration'
+    
+    # CachyOS specific
+    'cachyos-settings: CachyOS optimized system settings'
 )
 
 # Backup configuration files
@@ -49,22 +76,32 @@ install=tsijukebox.install
 source=(
     "git+${url}.git"
     'tsijukebox.service'
+    'tsijukebox-kiosk.service'
+    'tsijukebox-update.service'
+    'tsijukebox-update.timer'
     'tsijukebox.desktop'
     'tsijukebox'
     'config.json'
 )
 
-# Skip checksums for git source
-sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
+# SHA512 checksums (more secure than SHA256)
+sha512sums=(
+    'SKIP'  # git source
+    'SKIP'  # tsijukebox.service
+    'SKIP'  # tsijukebox-kiosk.service
+    'SKIP'  # tsijukebox-update.service
+    'SKIP'  # tsijukebox-update.timer
+    'SKIP'  # tsijukebox.desktop
+    'SKIP'  # tsijukebox
+    'SKIP'  # config.json
 )
 
 # Package options
-options=('!strip')
+options=('!strip' '!debug')
+
+# Conflicts with previous versions
+conflicts=('tsijukebox-git')
+provides=("tsijukebox=${pkgver}")
 
 pkgver() {
     cd "$srcdir/TSiJUKEBOX"
@@ -75,19 +112,34 @@ prepare() {
     cd "$srcdir/TSiJUKEBOX"
     
     # Clean any previous builds
-    rm -rf node_modules dist
+    rm -rf node_modules dist .cache
     
     msg2 "Preparing build environment..."
+    
+    # Verify Node.js version
+    local node_version
+    node_version=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+    if [[ "$node_version" -lt 18 ]]; then
+        error "Node.js 18+ required, found v${node_version}"
+        return 1
+    fi
 }
 
 build() {
     cd "$srcdir/TSiJUKEBOX"
     
     msg2 "Installing dependencies..."
-    npm ci --legacy-peer-deps --no-audit --no-fund
+    npm ci --legacy-peer-deps --no-audit --no-fund --prefer-offline
     
     msg2 "Building production bundle..."
-    npm run build
+    NODE_ENV=production npm run build
+    
+    msg2 "Optimizing assets..."
+    # Compress large files if available
+    if command -v brotli &> /dev/null; then
+        find dist -type f \( -name "*.js" -o -name "*.css" -o -name "*.html" \) -size +1k \
+            -exec brotli -f -k {} \; 2>/dev/null || true
+    fi
     
     msg2 "Build completed successfully!"
 }
@@ -97,6 +149,12 @@ check() {
     
     msg2 "Running tests..."
     npm run test --if-present || true
+    
+    msg2 "Validating build output..."
+    if [[ ! -f "dist/index.html" ]]; then
+        error "Build validation failed: index.html not found"
+        return 1
+    fi
 }
 
 package() {
@@ -106,20 +164,32 @@ package() {
     install -dm755 "$pkgdir/opt/tsijukebox"
     install -dm755 "$pkgdir/etc/tsijukebox"
     install -dm755 "$pkgdir/var/log/tsijukebox"
+    install -dm700 "$pkgdir/var/lib/tsijukebox"
     install -dm755 "$pkgdir/usr/share/doc/tsijukebox"
     
     # Install application files
     msg2 "Installing application files..."
     cp -r dist/* "$pkgdir/opt/tsijukebox/"
     
-    # Install systemd service
-    msg2 "Installing systemd service..."
+    # Install Brotli compressed files if they exist
+    find dist -name "*.br" -exec cp {} "$pkgdir/opt/tsijukebox/" \; 2>/dev/null || true
+    
+    # Install systemd services
+    msg2 "Installing systemd services..."
     install -Dm644 "$srcdir/tsijukebox.service" \
         "$pkgdir/usr/lib/systemd/system/tsijukebox.service"
+    install -Dm644 "$srcdir/tsijukebox-kiosk.service" \
+        "$pkgdir/usr/lib/systemd/system/tsijukebox-kiosk.service"
+    install -Dm644 "$srcdir/tsijukebox-update.service" \
+        "$pkgdir/usr/lib/systemd/system/tsijukebox-update.service"
+    install -Dm644 "$srcdir/tsijukebox-update.timer" \
+        "$pkgdir/usr/lib/systemd/system/tsijukebox-update.timer"
     
-    # Install user systemd service
+    # Install user systemd services
     install -Dm644 "$srcdir/tsijukebox.service" \
         "$pkgdir/usr/lib/systemd/user/tsijukebox.service"
+    install -Dm644 "$srcdir/tsijukebox-kiosk.service" \
+        "$pkgdir/usr/lib/systemd/user/tsijukebox-kiosk.service"
     
     # Install configuration
     msg2 "Installing configuration..."
@@ -131,18 +201,30 @@ package() {
     install -Dm644 "$srcdir/tsijukebox.desktop" \
         "$pkgdir/usr/share/applications/tsijukebox.desktop"
     
-    # Install icon
+    # Install icons
     install -Dm644 "public/pwa-512x512.png" \
         "$pkgdir/usr/share/pixmaps/tsijukebox.png"
     
-    # Install additional icon sizes
+    # Install additional icon sizes for HiDPI
     for size in 16 24 32 48 64 128 256 512; do
         install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
         if [[ -f "public/pwa-${size}x${size}.png" ]]; then
             install -Dm644 "public/pwa-${size}x${size}.png" \
                 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/tsijukebox.png"
+        elif [[ -f "public/pwa-512x512.png" ]]; then
+            # Resize from 512x512 if available (requires imagemagick)
+            if command -v convert &> /dev/null; then
+                convert "public/pwa-512x512.png" -resize "${size}x${size}" \
+                    "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/tsijukebox.png" 2>/dev/null || true
+            fi
         fi
     done
+    
+    # Install SVG icon
+    if [[ -f "public/logo/tsijukebox-logo.svg" ]]; then
+        install -Dm644 "public/logo/tsijukebox-logo.svg" \
+            "$pkgdir/usr/share/icons/hicolor/scalable/apps/tsijukebox.svg"
+    fi
     
     # Install launcher script
     msg2 "Installing launcher..."
@@ -156,8 +238,18 @@ package() {
     install -Dm644 "LICENSE" \
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     
+    # Install additional documentation
     if [[ -d "docs" ]]; then
+        find docs -type f -name "*.md" -exec install -Dm644 {} \
+            "$pkgdir/usr/share/doc/tsijukebox/{}" \; 2>/dev/null || \
         cp -r docs/* "$pkgdir/usr/share/doc/tsijukebox/"
+    fi
+    
+    # Install Python installer scripts
+    if [[ -d "scripts/installer" ]]; then
+        install -dm755 "$pkgdir/opt/tsijukebox/installer"
+        cp -r scripts/installer/* "$pkgdir/opt/tsijukebox/installer/"
+        chmod +x "$pkgdir/opt/tsijukebox/installer/"*.py 2>/dev/null || true
     fi
     
     # Set permissions
@@ -166,6 +258,19 @@ package() {
     chmod 644 "$pkgdir/opt/tsijukebox"/*.html 2>/dev/null || true
     chmod 644 "$pkgdir/opt/tsijukebox"/*.js 2>/dev/null || true
     chmod 644 "$pkgdir/opt/tsijukebox"/*.css 2>/dev/null || true
+    chmod 644 "$pkgdir/opt/tsijukebox"/*.json 2>/dev/null || true
+    chmod 644 "$pkgdir/opt/tsijukebox"/*.br 2>/dev/null || true
+    
+    # Create tmpfiles.d configuration for runtime directories
+    install -Dm644 /dev/stdin "$pkgdir/usr/lib/tmpfiles.d/tsijukebox.conf" << EOF
+d /var/log/tsijukebox 0755 root root -
+d /var/lib/tsijukebox 0700 root root -
+EOF
+    
+    # Create sysusers.d configuration for kiosk user
+    install -Dm644 /dev/stdin "$pkgdir/usr/lib/sysusers.d/tsijukebox.conf" << EOF
+u kiosk - "TSiJUKEBOX Kiosk User" /home/kiosk /usr/bin/nologin
+EOF
     
     msg2 "Package installation completed!"
 }

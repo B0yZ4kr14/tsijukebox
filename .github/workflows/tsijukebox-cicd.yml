@@ -1,0 +1,363 @@
+name: TSiJUKEBOX CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_aur:
+        description: 'Deploy to AUR'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # ============================================
+  # Job 1: Lint and Type Check
+  # ============================================
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run ESLint
+        run: npm run lint --if-present
+
+      - name: Run TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Check formatting
+        run: npx prettier --check "src/**/*.{ts,tsx}" --ignore-unknown || true
+
+  # ============================================
+  # Job 2: Unit Tests
+  # ============================================
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run Vitest
+        run: npm run test -- --coverage --reporter=verbose
+        env:
+          CI: true
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-unit
+          path: coverage/
+          retention-days: 7
+
+  # ============================================
+  # Job 3: E2E Tests
+  # ============================================
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+        env:
+          CI: true
+
+      - name: Upload E2E report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================
+  # Job 4: Python Scripts Validation
+  # ============================================
+  python-lint:
+    name: Python Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python tools
+        run: |
+          pip install ruff mypy
+
+      - name: Run Ruff linter
+        run: ruff check scripts/installer/ --ignore E501 || true
+
+      - name: Run MyPy type check
+        run: mypy scripts/installer/ --ignore-missing-imports || true
+
+  # ============================================
+  # Job 5: Production Build
+  # ============================================
+  build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    needs: [test-unit, test-e2e]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 30
+
+  # ============================================
+  # Job 6: AUR Package Build
+  # ============================================
+  aur-build:
+    name: AUR Package Build
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Arch Linux
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel git sudo namcap
+
+      - name: Create build user
+        run: |
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+      - name: Build package
+        run: |
+          cd packaging/arch
+          chown -R builder:builder .
+          su builder -c "makepkg --printsrcinfo > .SRCINFO"
+          
+      - name: Validate with namcap
+        run: |
+          cd packaging/arch
+          namcap PKGBUILD || true
+
+      - name: Upload PKGBUILD artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: aur-package
+          path: |
+            packaging/arch/PKGBUILD
+            packaging/arch/.SRCINFO
+          retention-days: 30
+
+  # ============================================
+  # Job 7: AUR Publish
+  # ============================================
+  aur-publish:
+    name: AUR Publish
+    runs-on: ubuntu-latest
+    needs: aur-build
+    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.deploy_aur == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download PKGBUILD artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: aur-package
+          path: packaging/arch/
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+          echo "Host aur.archlinux.org" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/aur" >> ~/.ssh/config
+          echo "  User aur" >> ~/.ssh/config
+          ssh-keyscan -t ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
+
+      - name: Publish to AUR
+        if: env.AUR_SSH_PRIVATE_KEY != ''
+        env:
+          AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+        run: |
+          cd packaging/arch
+          chmod +x aur-publish.sh
+          ./aur-publish.sh --update
+
+  # ============================================
+  # Job 8: GitHub Release
+  # ============================================
+  release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build, aur-build]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Download AUR artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: aur-package
+          path: aur/
+
+      - name: Create release archive
+        run: |
+          cd dist
+          zip -r ../tsijukebox-${{ github.ref_name }}.zip .
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## Changes in ${{ github.ref_name }}" > RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          git log --oneline $(git describe --tags --abbrev=0 HEAD^)..HEAD >> RELEASE_NOTES.md || echo "Initial release" >> RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            tsijukebox-${{ github.ref_name }}.zip
+            aur/PKGBUILD
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
+
+  # ============================================
+  # Job 9: Deploy Badges
+  # ============================================
+  badges:
+    name: Deploy Badges
+    runs-on: ubuntu-latest
+    needs: [test-unit, test-e2e]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit
+          path: coverage/
+
+      - name: Generate badges
+        run: |
+          mkdir -p coverage/badges
+          
+          # Calculate coverage percentage
+          COVERAGE=$(cat coverage/coverage-summary.json 2>/dev/null | jq '.total.lines.pct // 0' || echo "0")
+          
+          # Generate coverage badge JSON
+          cat > coverage/badges/coverage.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "coverage",
+            "message": "${COVERAGE}%",
+            "color": "$([ $(echo "$COVERAGE > 80" | bc -l) -eq 1 ] && echo "brightgreen" || echo "yellow")"
+          }
+          EOF
+          
+          # Generate build status badge
+          cat > coverage/badges/build.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "build",
+            "message": "passing",
+            "color": "brightgreen"
+          }
+          EOF
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: coverage/
+          destination_dir: coverage/

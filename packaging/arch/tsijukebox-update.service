@@ -1,0 +1,95 @@
+# =============================================================================
+# TSiJUKEBOX Enterprise - Automatic Update Service
+# Triggered by tsijukebox-update.timer
+# =============================================================================
+
+[Unit]
+Description=TSiJUKEBOX Automatic Update Check
+Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/usr/bin/pacman
+
+[Service]
+Type=oneshot
+User=root
+
+# Check for updates and install if available
+ExecStart=/bin/bash -c '\
+    set -euo pipefail; \
+    LOGFILE="/var/log/tsijukebox/update.log"; \
+    mkdir -p /var/log/tsijukebox; \
+    echo "$(date): Checking for TSiJUKEBOX updates..." >> "$LOGFILE"; \
+    \
+    # Check if running from AUR
+    if pacman -Qi tsijukebox &>/dev/null; then \
+        echo "$(date): Package installed via pacman" >> "$LOGFILE"; \
+        \
+        # Update package database
+        pacman -Sy --noconfirm >> "$LOGFILE" 2>&1 || true; \
+        \
+        # Check for updates
+        if pacman -Qu tsijukebox 2>/dev/null | grep -q tsijukebox; then \
+            echo "$(date): Update available, installing..." >> "$LOGFILE"; \
+            pacman -S --noconfirm tsijukebox >> "$LOGFILE" 2>&1; \
+            \
+            # Restart kiosk service if running
+            if systemctl is-active --quiet tsijukebox-kiosk.service; then \
+                echo "$(date): Restarting kiosk service..." >> "$LOGFILE"; \
+                systemctl restart tsijukebox-kiosk.service; \
+            fi; \
+            \
+            echo "$(date): Update completed successfully" >> "$LOGFILE"; \
+        else \
+            echo "$(date): No updates available" >> "$LOGFILE"; \
+        fi; \
+    else \
+        echo "$(date): Package not installed via pacman, checking git..." >> "$LOGFILE"; \
+        \
+        # Git-based installation update
+        if [[ -d /opt/tsijukebox/.git ]]; then \
+            cd /opt/tsijukebox; \
+            git fetch origin main >> "$LOGFILE" 2>&1; \
+            LOCAL=$(git rev-parse HEAD); \
+            REMOTE=$(git rev-parse origin/main); \
+            \
+            if [[ "$LOCAL" != "$REMOTE" ]]; then \
+                echo "$(date): Git update available, pulling..." >> "$LOGFILE"; \
+                git pull origin main >> "$LOGFILE" 2>&1; \
+                npm ci --legacy-peer-deps >> "$LOGFILE" 2>&1; \
+                npm run build >> "$LOGFILE" 2>&1; \
+                \
+                if systemctl is-active --quiet tsijukebox-kiosk.service; then \
+                    systemctl restart tsijukebox-kiosk.service; \
+                fi; \
+                \
+                echo "$(date): Git update completed" >> "$LOGFILE"; \
+            else \
+                echo "$(date): Already up to date" >> "$LOGFILE"; \
+            fi; \
+        fi; \
+    fi; \
+    \
+    # Cleanup old logs (keep last 30 days)
+    find /var/log/tsijukebox -name "*.log" -mtime +30 -delete 2>/dev/null || true; \
+    '
+
+# Timeout for update process
+TimeoutStartSec=600
+
+# Security
+ProtectSystem=false
+ProtectHome=true
+PrivateTmp=true
+
+# Resource limits
+MemoryMax=1G
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tsijukebox-update
+
+[Install]
+WantedBy=multi-user.target

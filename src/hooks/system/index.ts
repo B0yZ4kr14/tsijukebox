@@ -53,3 +53,9 @@ export {
   type RefactorResult as ClaudeRefactorResult,
   type UseClaudeOpusRefactorReturn
 } from './useClaudeOpusRefactor';
+export {
+  useScriptRefactor,
+  type InstallerScript,
+  type RefactoredScript,
+  type UseScriptRefactorReturn
+} from './useScriptRefactor';

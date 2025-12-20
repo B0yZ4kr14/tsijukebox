@@ -1,0 +1,141 @@
+# =============================================================================
+# TSiJUKEBOX Enterprise - Kiosk Mode Service
+# Optimized for CachyOS/Arch Linux with Openbox
+# =============================================================================
+
+[Unit]
+Description=TSiJUKEBOX Enterprise Kiosk Mode
+Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
+After=network-online.target sound.target graphical.target display-manager.service
+Wants=network-online.target sound.target
+Requires=graphical.target
+ConditionPathExists=/opt/tsijukebox/index.html
+ConditionPathExists=/usr/bin/chromium
+
+[Service]
+Type=simple
+User=kiosk
+Group=kiosk
+WorkingDirectory=/opt/tsijukebox
+
+# Environment - CachyOS/Arch optimized
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/kiosk/.Xauthority
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=XDG_SESSION_TYPE=x11
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+Environment=PULSE_SERVER=unix:/run/user/1000/pulse/native
+Environment=LANG=pt_BR.UTF-8
+Environment=LC_ALL=pt_BR.UTF-8
+
+# PipeWire support (CachyOS default)
+Environment=PIPEWIRE_RUNTIME_DIR=/run/user/1000
+
+# Pre-start checks
+ExecStartPre=/usr/bin/sleep 5
+ExecStartPre=/usr/bin/test -S /run/user/1000/bus
+ExecStartPre=-/usr/bin/xdotool key Escape
+
+# Chromium Kiosk Mode - Fully optimized
+ExecStart=/usr/bin/chromium \
+    --kiosk \
+    --app=file:///opt/tsijukebox/index.html \
+    --start-fullscreen \
+    --start-maximized \
+    --window-size=1920,1080 \
+    --window-position=0,0 \
+    --no-first-run \
+    --fast \
+    --fast-start \
+    --disable-translate \
+    --disable-features=TranslateUI,Translate \
+    --disable-infobars \
+    --disable-suggestions-service \
+    --disable-save-password-bubble \
+    --disable-session-crashed-bubble \
+    --disable-component-update \
+    --disable-background-networking \
+    --disable-sync \
+    --disable-default-apps \
+    --disable-extensions \
+    --disable-plugins-discovery \
+    --disable-breakpad \
+    --disable-hang-monitor \
+    --disable-prompt-on-repost \
+    --disable-domain-reliability \
+    --disable-client-side-phishing-detection \
+    --disable-ipc-flooding-protection \
+    --autoplay-policy=no-user-gesture-required \
+    --enable-features=OverlayScrollbar,VaapiVideoDecoder,VaapiVideoEncoder \
+    --hide-scrollbars \
+    --mute-audio=false \
+    --disable-pinch \
+    --overscroll-history-navigation=0 \
+    --enable-gpu-rasterization \
+    --enable-zero-copy \
+    --ignore-gpu-blocklist \
+    --use-gl=egl \
+    --enable-accelerated-video-decode \
+    --enable-accelerated-mjpeg-decode \
+    --v8-cache-options=code \
+    --user-data-dir=/home/kiosk/.config/tsijukebox-chromium
+
+# Restart configuration
+Restart=on-failure
+RestartSec=3
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# Timeouts
+TimeoutStartSec=60
+TimeoutStopSec=15
+
+# Watchdog
+WatchdogSec=120
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+PrivateDevices=false
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=false
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+
+# Allow access to required paths
+ReadOnlyPaths=/opt/tsijukebox
+ReadWritePaths=/home/kiosk/.config/tsijukebox-chromium
+ReadWritePaths=/home/kiosk/.cache
+TemporaryFileSystem=/tmp:size=512M,mode=1777
+
+# Resource limits - CachyOS optimized
+MemoryMax=3G
+MemoryHigh=2G
+CPUQuota=90%
+TasksMax=512
+IOWeight=80
+
+# Capabilities
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+# File descriptors
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# OOM handling
+OOMScoreAdjust=-500
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tsijukebox-kiosk
+
+[Install]
+WantedBy=graphical.target
+Alias=jukebox-kiosk.service

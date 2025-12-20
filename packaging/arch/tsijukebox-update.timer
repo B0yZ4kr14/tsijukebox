@@ -1,0 +1,28 @@
+# =============================================================================
+# TSiJUKEBOX Enterprise - Automatic Update Timer
+# Checks for updates daily at 4:00 AM
+# =============================================================================
+
+[Unit]
+Description=TSiJUKEBOX Automatic Update Check Timer
+Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
+Requires=tsijukebox-update.service
+
+[Timer]
+# Run daily at 4:00 AM
+OnCalendar=*-*-* 04:00:00
+
+# Add randomized delay up to 30 minutes to avoid thundering herd
+RandomizedDelaySec=1800
+
+# Persist timer across reboots
+Persistent=true
+
+# Don't run immediately on boot
+OnBootSec=15min
+
+# Accuracy (reduce wake-ups)
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target
