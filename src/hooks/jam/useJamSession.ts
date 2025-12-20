@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import type { Json } from '@/integrations/supabase/types';
 
 export interface JamSession {
   id: string;
@@ -247,8 +248,8 @@ export function useJamSession() {
       await supabase
         .from('jam_sessions')
         .update({ 
-          current_track: track as unknown as Record<string, unknown>,
-          playback_state: { is_playing: true, position_ms: 0, updated_at: new Date().toISOString() }
+          current_track: track as unknown as Json,
+          playback_state: { is_playing: !!track, position_ms: 0, updated_at: new Date().toISOString() }
         })
         .eq('id', session.id);
     } catch (err) {

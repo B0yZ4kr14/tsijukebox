@@ -50,6 +50,7 @@ const JukeboxStatsDashboard = lazy(() => import("./pages/JukeboxStatsDashboard")
 const VersionComparison = lazy(() => import("./pages/VersionComparison"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const LogoGitHubPreview = lazy(() => import("./pages/LogoGitHubPreview"));
+const JamSession = lazy(() => import("./pages/JamSession"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -103,6 +104,7 @@ function AppRoutes() {
         <Route path="/version-comparison" element={<VersionComparison />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/logo-github" element={<LogoGitHubPreview />} />
+        <Route path="/jam/:code" element={<JamSession />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={
