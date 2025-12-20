@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.otel-exporter]
 verify_jwt = false
+
+[functions.analyze-jam]
+verify_jwt = false
+
+[functions.manus-search]
+verify_jwt = false
