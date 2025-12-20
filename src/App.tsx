@@ -49,6 +49,7 @@ const GitHubDashboard = lazy(() => import("./pages/GitHubDashboard"));
 const JukeboxStatsDashboard = lazy(() => import("./pages/JukeboxStatsDashboard"));
 const VersionComparison = lazy(() => import("./pages/VersionComparison"));
 const LandingPage = lazy(() => import("./pages/LandingPage"));
+const LogoGitHubPreview = lazy(() => import("./pages/LogoGitHubPreview"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -101,6 +102,7 @@ function AppRoutes() {
         <Route path="/installer-metrics" element={<InstallerMetrics />} />
         <Route path="/version-comparison" element={<VersionComparison />} />
         <Route path="/landing" element={<LandingPage />} />
+        <Route path="/logo-github" element={<LogoGitHubPreview />} />
         
         {/* Protected Routes - Lazy loaded */}
         <Route path="/settings" element={

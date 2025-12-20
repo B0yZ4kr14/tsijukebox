@@ -5,6 +5,7 @@ import { PlaybackControls } from '@/components/player/PlaybackControls';
 import { PlayerControls } from '@/components/player/PlayerControls';
 import { VolumeSlider } from '@/components/player/VolumeSlider';
 import { VoiceControlButton } from '@/components/player/VoiceControlButton';
+import { CreateJamButton } from '@/components/player/CreateJamButton';
 import type { SystemStatus } from '@/lib/api/types';
 
 interface IndexPlayerSectionProps {
@@ -81,6 +82,11 @@ export function IndexPlayerSection({
             muted={status?.muted ?? false} 
           />
           <VoiceControlButton size="md" showFeedback={true} />
+        </div>
+
+        {/* Create JAM Button */}
+        <div className="mt-6">
+          <CreateJamButton />
         </div>
       </div>
     </main>
