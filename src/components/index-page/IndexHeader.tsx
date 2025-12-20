@@ -8,6 +8,7 @@ import { AudioVisualizer } from '@/components/player/AudioVisualizer';
 import { SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { LibraryPanelToggle } from '@/components/player/LibraryPanel';
 import { SideInfoPanelToggle } from '@/components/player/SideInfoPanel';
+import { NotificationsDropdown } from '@/components/ui/NotificationsDropdown';
 import { Button } from '@/components/ui/button';
 import { Download, Palette } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -103,11 +104,17 @@ export function IndexHeader({
         <div className="flex items-center gap-3 justify-end min-w-0 overflow-hidden">
           <UserBadge />
 
+          {/* Notifications dropdown - visible on sm+ */}
+          <div className="hidden sm:flex items-center gap-3">
+            <div className="w-px h-6 bg-kiosk-text/20" />
+            <NotificationsDropdown />
+          </div>
+
           {/* Panel toggles: hidden on xs, visible on sm+ */}
           <div className="hidden sm:flex items-center gap-3">
             <div className="w-px h-6 bg-kiosk-text/20" />
 
-            <SideInfoPanelToggle 
+            <SideInfoPanelToggle
               onClick={onSideInfoToggle}
               isOpen={showSideInfoPanel}
             />

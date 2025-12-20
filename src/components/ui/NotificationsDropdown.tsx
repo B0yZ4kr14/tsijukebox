@@ -22,6 +22,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useNotifications, Notification } from '@/hooks/common/useNotifications';
+import { NotificationFiltersPopover } from './NotificationFiltersPopover';
 
 function NotificationIcon({ severity }: { severity: string }) {
   switch (severity) {
@@ -57,6 +58,7 @@ function NotificationItem({
       className={`p-3 border-l-2 rounded-r-lg ${severityColors[notification.severity] || severityColors.info} ${
         !notification.read ? 'bg-muted/50' : ''
       }`}
+      data-testid={`notification-item-${notification.id}`}
     >
       <div className="flex items-start gap-2">
         <NotificationIcon severity={notification.severity} />
@@ -66,7 +68,7 @@ function NotificationItem({
               {notification.title}
             </p>
             {!notification.read && (
-              <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+              <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" data-testid="unread-indicator" />
             )}
           </div>
           {notification.message && (
@@ -88,6 +90,7 @@ function NotificationItem({
               size="icon"
               className="h-6 w-6"
               onClick={() => onMarkAsRead(notification.id)}
+              data-testid={`mark-read-${notification.id}`}
             >
               <Check className="h-3 w-3" />
             </Button>
@@ -97,6 +100,7 @@ function NotificationItem({
             size="icon"
             className="h-6 w-6 text-muted-foreground hover:text-destructive"
             onClick={() => onDelete(notification.id)}
+            data-testid={`delete-notification-${notification.id}`}
           >
             <X className="h-3 w-3" />
           </Button>
@@ -120,9 +124,13 @@ function NotificationItem({
 export function NotificationsDropdown() {
   const [open, setOpen] = useState(false);
   const {
-    notifications,
+    filteredNotifications,
     unreadCount,
     isLoading,
+    filters,
+    activeFiltersCount,
+    setFilters,
+    clearFilters,
     markAsRead,
     markAllAsRead,
     clearNotification,
@@ -132,41 +140,59 @@ export function NotificationsDropdown() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          data-testid="notifications-button"
+        >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center font-medium"
+              data-testid="notifications-unread-badge"
             >
               {unreadCount > 9 ? '9+' : unreadCount}
             </motion.span>
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80 p-0">
+      <DropdownMenuContent
+        align="end"
+        className="w-80 p-0"
+        data-testid="notifications-dropdown"
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-3 border-b">
           <h4 className="font-semibold text-sm">Notificações</h4>
           <div className="flex items-center gap-1">
+            <NotificationFiltersPopover
+              filters={filters}
+              activeFiltersCount={activeFiltersCount}
+              onFiltersChange={setFilters}
+              onClearFilters={clearFilters}
+            />
             {unreadCount > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 className="h-7 text-xs"
                 onClick={markAllAsRead}
+                data-testid="mark-all-read-button"
               >
                 <CheckCheck className="h-3 w-3 mr-1" />
                 Marcar todas
               </Button>
             )}
-            {notifications.length > 0 && (
+            {filteredNotifications.length > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 className="h-7 text-xs text-muted-foreground hover:text-destructive"
                 onClick={clearAll}
+                data-testid="clear-all-button"
               >
                 <Trash2 className="h-3 w-3" />
               </Button>
@@ -174,23 +200,43 @@ export function NotificationsDropdown() {
           </div>
         </div>
 
+        {/* Active filters indicator */}
+        {activeFiltersCount > 0 && (
+          <div className="px-3 py-2 bg-muted/50 border-b flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 text-xs"
+              onClick={clearFilters}
+              data-testid="clear-filters-button"
+            >
+              Limpar filtros
+            </Button>
+          </div>
+        )}
+
         {/* Content */}
         <ScrollArea className="h-[300px]">
           {isLoading ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
               Carregando...
             </div>
-          ) : notifications.length === 0 ? (
+          ) : filteredNotifications.length === 0 ? (
             <div className="p-8 text-center">
               <Bell className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
               <p className="text-sm text-muted-foreground">
-                Nenhuma notificação
+                {activeFiltersCount > 0
+                  ? 'Nenhuma notificação encontrada com os filtros aplicados'
+                  : 'Nenhuma notificação'}
               </p>
             </div>
           ) : (
             <div className="p-2 space-y-2">
               <AnimatePresence>
-                {notifications.map(notification => (
+                {filteredNotifications.map(notification => (
                   <NotificationItem
                     key={notification.id}
                     notification={notification}
@@ -204,10 +250,10 @@ export function NotificationsDropdown() {
         </ScrollArea>
 
         {/* Footer */}
-        {notifications.length > 0 && (
+        {filteredNotifications.length > 0 && (
           <div className="p-2 border-t text-center">
             <Badge variant="secondary" className="text-xs">
-              {notifications.length} notificação{notifications.length !== 1 ? 'ões' : ''}
+              {filteredNotifications.length} notificação{filteredNotifications.length !== 1 ? 'ões' : ''}
             </Badge>
           </div>
         )}
