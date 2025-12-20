@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Dialog,
@@ -15,6 +16,7 @@ import { Users, Lock, Globe, Music, QrCode, Copy, Check, Sparkles } from 'lucide
 import { toast } from 'sonner';
 import { DEFAULT_PLAYLISTS } from '@/lib/constants/defaultPlaylists';
 import { cn } from '@/lib/utils';
+import { useJamSession } from '@/hooks/jam';
 
 interface CreateJamModalProps {
   open: boolean;
@@ -24,6 +26,10 @@ interface CreateJamModalProps {
 type PrivacyOption = 'public' | 'private' | 'code';
 
 export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
+  const navigate = useNavigate();
+  const { createSession, isLoading: isCreatingSession } = useJamSession();
+  
+  const [hostNickname, setHostNickname] = useState('');
   const [jamName, setJamName] = useState('');
   const [privacy, setPrivacy] = useState<PrivacyOption>('public');
   const [accessCode, setAccessCode] = useState('');
@@ -34,6 +40,11 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCreateJam = async () => {
+    if (!hostNickname.trim()) {
+      toast.error('Digite seu nome');
+      return;
+    }
+    
     if (!jamName.trim()) {
       toast.error('Digite um nome para a sessão JAM');
       return;
@@ -41,18 +52,25 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
 
     setIsCreating(true);
     
-    // Simulate JAM creation (replace with actual API call)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setJamCode(generatedCode);
-    setJamCreated(true);
-    setIsCreating(false);
-    
-    toast.success('Sessão JAM criada com sucesso!', {
-      icon: '🎉',
-      description: `Código: ${generatedCode}`,
+    const code = await createSession({
+      name: jamName,
+      privacy,
+      accessCode: privacy === 'code' ? accessCode : undefined,
+      playlistId: useDefaultPlaylist ? DEFAULT_PLAYLISTS.grooveInside.id : undefined,
+      playlistName: useDefaultPlaylist ? DEFAULT_PLAYLISTS.grooveInside.name : undefined,
+      hostNickname,
     });
+    
+    if (code) {
+      setJamCode(code);
+      setJamCreated(true);
+      toast.success('Sessão JAM criada com sucesso!', {
+        icon: '🎉',
+        description: `Código: ${code}`,
+      });
+    }
+    
+    setIsCreating(false);
   };
 
   const handleCopyCode = () => {
@@ -62,10 +80,16 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleGoToSession = () => {
+    onOpenChange(false);
+    navigate(`/jam/${jamCode}`);
+  };
+
   const handleClose = () => {
     onOpenChange(false);
     // Reset state after animation
     setTimeout(() => {
+      setHostNickname('');
       setJamName('');
       setPrivacy('public');
       setAccessCode('');
@@ -99,6 +123,18 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-5 pt-4"
             >
+              {/* Seu Nome */}
+              <div className="space-y-2">
+                <Label htmlFor="host-nickname" className="text-foreground">Seu Nome</Label>
+                <Input
+                  id="host-nickname"
+                  placeholder="Como você quer ser chamado?"
+                  value={hostNickname}
+                  onChange={(e) => setHostNickname(e.target.value)}
+                  className="bg-background/50"
+                />
+              </div>
+
               {/* Nome da Sessão */}
               <div className="space-y-2">
                 <Label htmlFor="jam-name" className="text-foreground">Nome da Sessão</Label>
@@ -181,10 +217,10 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
               {/* Create Button */}
               <Button
                 onClick={handleCreateJam}
-                disabled={isCreating}
+                disabled={isCreating || isCreatingSession}
                 className="w-full button-jam-silver-neon text-zinc-900 font-bold py-6"
               >
-                {isCreating ? (
+                {isCreating || isCreatingSession ? (
                   <>
                     <motion.div
                       animate={{ rotate: 360 }}
@@ -240,13 +276,21 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
                 </div>
               </div>
 
-              <Button
-                onClick={handleClose}
-                variant="outline"
-                className="w-full"
-              >
-                Fechar
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleGoToSession}
+                  className="flex-1 button-jam-silver-neon text-zinc-900 font-bold"
+                >
+                  Entrar na Sessão
+                </Button>
+                <Button
+                  onClick={handleClose}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Fechar
+                </Button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
