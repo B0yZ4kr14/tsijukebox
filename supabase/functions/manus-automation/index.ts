@@ -15,7 +15,12 @@ interface ManusRequest {
     | 'deploy-pipeline'
     | 'generate-archpkg'
     | 'create-systemd-services'
-    | 'sync-to-github';
+    | 'sync-to-github'
+    // Novas ações de refatoração Python
+    | 'refactor-python-scripts'
+    | 'refactor-installer'
+    | 'lint-python'
+    | 'generate-python-tests';
   prompt?: string;
   taskId?: string;
   files?: string[];
@@ -26,6 +31,8 @@ interface ManusRequest {
     services?: string[];
     branch?: string;
     commitMessage?: string;
+    pythonVersion?: string;
+    testFramework?: string;
   };
 }
 
@@ -195,6 +202,197 @@ Deno.serve(async (req) => {
         6. Generate changelog entry
         
         Provide a summary of all files to be synced.`;
+        break;
+
+      // ========================================
+      // NOVAS AÇÕES DE REFATORAÇÃO PYTHON
+      // ========================================
+
+      case 'refactor-python-scripts':
+        taskPrompt = `Refatore os scripts Python principais do TSiJUKEBOX aplicando o KERNEL DE REFATORAÇÃO DE 6 FASES:
+
+        **SCRIPTS A REFATORAR:**
+        ${files?.join('\n        - ') || `- scripts/install.py (1084 linhas)
+        - scripts/update.py
+        - scripts/verify.py
+        - scripts/uninstall.py`}
+
+        **KERNEL DE 6 FASES A APLICAR:**
+
+        **FASE 1 - FALSIFICAÇÃO INICIAL:**
+        - Assuma que o código está incorreto
+        - Identifique bugs, brechas de segurança, violações de contrato
+        - Classifique por severidade: CRÍTICO, ALTO, MÉDIO, BAIXO
+
+        **FASE 2 - TESTES ADVERSARIAIS:**
+        - Teste com null/None, strings vazias, valores extremos
+        - Simule timeouts, erros de rede, dados corrompidos
+        - Documente qual entrada causa falha e o comportamento esperado
+
+        **FASE 3 - ANÁLISE SOCRÁTICA:**
+        - Pré-condições: o que deve ser verdade antes de chamar?
+        - Pós-condições: o que está garantido após execução?
+        - Invariantes: o que nunca pode ser violado?
+        - Suposições frágeis: o que o código assume implicitamente?
+
+        **FASE 4 - VIA NEGATIVA:**
+        - Remova abstrações desnecessárias
+        - Delete código duplicado
+        - Elimine comentários óbvios
+        - Simplifique antes de adicionar
+
+        **FASE 5 - REFATORAÇÃO MINIMALISTA:**
+        - Mudanças cirúrgicas, apenas o necessário
+        - Type hints completos (Python 3.10+)
+        - Async/await onde apropriado
+        - Logging estruturado com loguru
+        - Error handling com retry e fallback
+        - Docstrings Google-style
+
+        **FASE 6 - VERIFICAÇÃO:**
+        - Proponha testes unitários com pytest
+        - Caso base de sucesso
+        - Casos de erro e borda
+        - Confirme comportamento preservado
+
+        **REQUISITOS ADICIONAIS:**
+        - Python ${config?.pythonVersion || '3.10+'}
+        - Framework de testes: ${config?.testFramework || 'pytest'}
+        - Target: CachyOS/Arch Linux com systemd`;
+        break;
+
+      case 'refactor-installer':
+        taskPrompt = `Refatore os módulos do instalador TSiJUKEBOX:
+
+        **MÓDULOS A REFATORAR:**
+        ${files?.join('\n        - ') || `- scripts/installer/__init__.py
+        - scripts/installer/config.py
+        - scripts/installer/ui.py
+        - scripts/installer/db.py
+        - scripts/installer/audio.py
+        - scripts/installer/dependencies.py
+        - scripts/installer/network.py
+        - scripts/installer/system.py`}
+
+        **ARQUITETURA ALVO:**
+        1. **Dependency Injection:**
+           - Container de dependências
+           - Interfaces abstratas para todos os serviços
+           - Testes mockáveis
+
+        2. **Abstract Base Classes:**
+           - BaseInstaller
+           - BaseConfigManager
+           - BaseUIManager
+           - BaseAudioManager
+
+        3. **Plugin Architecture:**
+           - Plugins para diferentes distros (Arch, Debian, Fedora)
+           - Plugins para diferentes bancos (SQLite, PostgreSQL)
+           - Plugins para diferentes áudios (PipeWire, PulseAudio)
+
+        4. **Configuration Management:**
+           - Pydantic para validação
+           - YAML/TOML para configuração
+           - Environment variables com python-dotenv
+
+        5. **Error Handling:**
+           - Custom exceptions hierarchy
+           - Retry decorators com tenacity
+           - Graceful degradation
+
+        6. **Logging:**
+           - Loguru para logging estruturado
+           - Rich para output formatado
+           - Progress bars com tqdm
+
+        Aplique o KERNEL DE 6 FASES em cada módulo.`;
+        break;
+
+      case 'lint-python':
+        taskPrompt = `Execute linting e type checking completo nos scripts Python do TSiJUKEBOX:
+
+        **FERRAMENTAS A USAR:**
+        1. **Ruff** - Linting ultrarrápido
+           - ruff check . --fix
+           - ruff format .
+
+        2. **MyPy** - Type checking estrito
+           - mypy --strict scripts/
+           - Resolver todos os erros de tipo
+
+        3. **Bandit** - Security linting
+           - bandit -r scripts/ -ll
+           - Identificar vulnerabilidades
+
+        4. **Pylint** - Code quality
+           - pylint scripts/ --score
+           - Target: score >= 9.0
+
+        **ARQUIVOS A VERIFICAR:**
+        ${files?.join('\n        - ') || `- scripts/install.py
+        - scripts/update.py
+        - scripts/verify.py
+        - scripts/installer/**/*.py`}
+
+        **SAÍDA ESPERADA:**
+        1. Relatório de issues encontradas
+        2. Fixes aplicados automaticamente
+        3. Issues que requerem correção manual
+        4. Configuração recomendada para pyproject.toml
+        5. Pre-commit hooks para manter qualidade`;
+        break;
+
+      case 'generate-python-tests':
+        taskPrompt = `Gere testes unitários completos para os scripts Python do TSiJUKEBOX:
+
+        **FRAMEWORK:** ${config?.testFramework || 'pytest'}
+        **PYTHON VERSION:** ${config?.pythonVersion || '3.10+'}
+
+        **MÓDULOS PARA TESTAR:**
+        ${files?.join('\n        - ') || `- scripts/install.py
+        - scripts/update.py
+        - scripts/verify.py
+        - scripts/installer/config.py
+        - scripts/installer/ui.py
+        - scripts/installer/db.py
+        - scripts/installer/audio.py
+        - scripts/installer/dependencies.py`}
+
+        **ESTRUTURA DE TESTES:**
+        \`\`\`
+        tests/
+        ├── conftest.py          # Fixtures globais
+        ├── unit/
+        │   ├── test_install.py
+        │   ├── test_update.py
+        │   ├── test_verify.py
+        │   └── installer/
+        │       ├── test_config.py
+        │       ├── test_ui.py
+        │       ├── test_db.py
+        │       └── test_audio.py
+        ├── integration/
+        │   ├── test_full_install.py
+        │   └── test_database_setup.py
+        └── e2e/
+            └── test_complete_flow.py
+        \`\`\`
+
+        **REQUISITOS:**
+        1. Coverage target: >= 80%
+        2. Fixtures com pytest
+        3. Mocks com unittest.mock ou pytest-mock
+        4. Parametrização para múltiplos cenários
+        5. Markers para slow tests e integration tests
+        6. Testes para:
+           - Happy path
+           - Error handling
+           - Edge cases (null, empty, limits)
+           - Concurrency (se aplicável)
+
+        **CONFIGURAÇÃO pytest.ini:**
+        Inclua configuração completa para pytest`;
         break;
         
       case 'get-task':
