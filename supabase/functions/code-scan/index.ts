@@ -6,6 +6,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Lovable AI Gateway
+const AI_MODEL = 'google/gemini-2.5-flash';
+const LOVABLE_AI_GATEWAY = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+
 interface ScanRequest {
   code: string;
   fileName?: string;
@@ -19,9 +23,9 @@ serve(async (req) => {
   }
 
   try {
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY_ADMIN');
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY_ADMIN not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY not configured');
     }
 
     const { code, fileName = 'unknown', scanType = 'all', persist = true }: ScanRequest = await req.json();
@@ -73,34 +77,43 @@ Responda em JSON com este formato:
   "score": número de 0-100 representando qualidade geral
 }`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(LOVABLE_AI_GATEWAY, {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        model: AI_MODEL,
         messages: [
-          {
-            role: 'user',
-            content: `Analise o seguinte código do arquivo "${fileName}":\n\n\`\`\`\n${code}\n\`\`\``,
-          },
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Analise o seguinte código do arquivo "${fileName}":\n\n\`\`\`\n${code}\n\`\`\`` },
         ],
-        system: systemPrompt,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[code-scan] Anthropic API error: ${response.status} - ${errorText}`);
-      throw new Error(`Anthropic API error: ${response.status}`);
+      console.error(`[code-scan] Lovable AI error: ${response.status} - ${errorText}`);
+      
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ success: false, error: 'Rate limit exceeded, please try again later.' }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ success: false, error: 'Payment required, please add funds to your Lovable AI workspace.' }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      throw new Error(`Lovable AI error: ${response.status}`);
     }
 
-    const anthropicData = await response.json();
-    const content = anthropicData.content?.[0]?.text || '';
+    const aiData = await response.json();
+    const content = aiData.choices?.[0]?.message?.content || '';
 
     console.log(`[code-scan] Raw response received, parsing...`);
 
@@ -177,6 +190,7 @@ Responda em JSON com este formato:
         fileName,
         scannedAt,
         persistedId,
+        model: AI_MODEL,
         counts: {
           total: issuesCount,
           critical: criticalCount,

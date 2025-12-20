@@ -5,6 +5,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Lovable AI Gateway - using pro model for complex refactoring
+const AI_MODEL = 'google/gemini-2.5-pro';
+const LOVABLE_AI_GATEWAY = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+
 interface RefactorRequest {
   action: 'refactor-python' | 'refactor-docker' | 'refactor-sqlite' | 'generate-docs' | 'analyze-security' | 'optimize-archlinux';
   files: Array<{
@@ -28,11 +32,9 @@ interface RefactorResult {
   performanceGains?: string[];
 }
 
-const CLAUDE_MODEL = 'claude-opus-4-1-20250805';
-
 function buildSystemPrompt(action: string, targetDistro: string): string {
   const basePrompt = `You are an expert software architect and refactoring specialist for the TSiJUKEBOX project.
-You are using Claude Opus 4.5, the most advanced model available.
+You are using ${AI_MODEL} via Lovable AI Gateway.
 Your responses should be precise, actionable, and production-ready.
 
 Project Context:
@@ -137,18 +139,18 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY_ADMIN');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
-    if (!ANTHROPIC_API_KEY) {
-      console.error('ANTHROPIC_API_KEY_ADMIN not configured');
+    if (!LOVABLE_API_KEY) {
+      console.error('LOVABLE_API_KEY not configured');
       return new Response(
-        JSON.stringify({ error: 'Anthropic API key not configured' }),
+        JSON.stringify({ error: 'LOVABLE_API_KEY not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const { action, files, context, targetDistro = 'cachyos' } = await req.json() as RefactorRequest;
-    console.log(`Claude Opus refactor action: ${action}, files: ${files.length}`);
+    console.log(`Lovable AI refactor action: ${action}, files: ${files.length}`);
 
     if (!files || files.length === 0) {
       return new Response(
@@ -187,20 +189,18 @@ Provide your response in the following JSON format:
   "performanceGains": ["expected performance improvements"]
 }`;
 
-    console.log('Calling Claude Opus 4.5...');
+    console.log('Calling Lovable AI Gateway...');
     
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(LOVABLE_AI_GATEWAY, {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        max_tokens: 16000,
-        system: systemPrompt,
+        model: AI_MODEL,
         messages: [
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
       }),
@@ -208,54 +208,82 @@ Provide your response in the following JSON format:
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Claude API error:', errorText);
+      console.error('Lovable AI error:', response.status, errorText);
       
       // Create notification about error
       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
       const supabase = createClient(supabaseUrl, supabaseKey);
       
+      if (response.status === 429) {
+        await supabase.from('notifications').insert({
+          type: 'rate_limit',
+          severity: 'warning',
+          title: 'Rate Limit Atingido',
+          message: 'Limite de requisições excedido. Tente novamente em alguns segundos.',
+          metadata: { action },
+        });
+        return new Response(
+          JSON.stringify({ error: 'Rate limit exceeded, please try again later.' }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (response.status === 402) {
+        await supabase.from('notifications').insert({
+          type: 'payment_required',
+          severity: 'warning',
+          title: 'Créditos Esgotados',
+          message: 'Adicione créditos ao workspace do Lovable AI.',
+          metadata: { action },
+        });
+        return new Response(
+          JSON.stringify({ error: 'Payment required, please add funds to your Lovable AI workspace.' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       await supabase.from('notifications').insert({
         type: 'critical_issue',
         severity: 'warning',
-        title: 'Erro na Refatoração Claude Opus',
+        title: 'Erro na Refatoração Lovable AI',
         message: `Falha ao processar ${files.length} arquivos: ${response.status}`,
         metadata: { action, error: errorText.substring(0, 200) },
       });
       
       return new Response(
-        JSON.stringify({ error: 'Failed to call Claude API', details: errorText }),
+        JSON.stringify({ error: 'Failed to call Lovable AI', details: errorText }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const claudeResponse = await response.json();
-    console.log('Claude Opus response received');
+    const aiResponse = await response.json();
+    console.log('Lovable AI response received');
     
     // Extract the text content
-    const textContent = claudeResponse.content.find((c: { type: string }) => c.type === 'text');
-    if (!textContent) {
-      throw new Error('No text content in Claude response');
+    const content = aiResponse.choices?.[0]?.message?.content || '';
+    if (!content) {
+      throw new Error('No content in Lovable AI response');
     }
 
-    // Parse the JSON from Claude's response
+    // Parse the JSON from the response
     let result: RefactorResult;
     try {
       // Try to extract JSON from the response
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         result = JSON.parse(jsonMatch[0]);
       } else {
         throw new Error('No JSON found in response');
       }
     } catch (parseError) {
-      console.error('Failed to parse Claude response as JSON:', parseError);
+      console.error('Failed to parse Lovable AI response as JSON:', parseError);
       // Return raw response if JSON parsing fails
       result = {
         files: files.map(f => ({
           path: f.path,
           originalContent: f.content,
-          refactoredContent: textContent.text,
+          refactoredContent: content,
           changes: ['See refactored content for details'],
           improvements: ['AI-generated refactoring applied'],
         })),
@@ -277,13 +305,13 @@ Provide your response in the following JSON format:
     await supabase.from('notifications').insert({
       type: 'refactor_ready',
       severity: 'info',
-      title: `Refatoração Claude Opus Completa`,
+      title: `Refatoração Lovable AI Completa`,
       message: `${result.files.length} arquivos refatorados: ${result.summary.substring(0, 100)}`,
       metadata: { 
         action, 
         filesCount: result.files.length,
-        model: CLAUDE_MODEL,
-        usage: claudeResponse.usage,
+        model: AI_MODEL,
+        usage: aiResponse.usage,
       },
     });
 
@@ -291,8 +319,8 @@ Provide your response in the following JSON format:
       JSON.stringify({ 
         success: true, 
         result,
-        usage: claudeResponse.usage,
-        model: CLAUDE_MODEL,
+        usage: aiResponse.usage,
+        model: AI_MODEL,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

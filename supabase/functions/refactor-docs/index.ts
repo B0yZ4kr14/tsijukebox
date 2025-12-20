@@ -1,4 +1,3 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -6,7 +5,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
+// Lovable AI Gateway
+const AI_MODEL = 'google/gemini-2.5-flash';
+const LOVABLE_AI_GATEWAY = 'https://ai.gateway.lovable.dev/v1/chat/completions';
 
 interface RefactorRequest {
   code: string;
@@ -36,8 +37,9 @@ serve(async (req) => {
   }
 
   try {
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY is not configured');
     }
 
     const { code, language = 'python', type = 'refactor', context = '' }: RefactorRequest = await req.json();
@@ -49,7 +51,7 @@ serve(async (req) => {
     console.log(`Refactoring ${language} code, type: ${type}, length: ${code.length} chars`);
 
     // Build system prompt based on type
-    let systemPrompt = `You are an expert code refactoring assistant using Claude Opus 4.5. 
+    let systemPrompt = `You are an expert code refactoring assistant using ${AI_MODEL}. 
 You analyze and improve code with a focus on:
 - Correctness and robustness
 - Security best practices
@@ -119,37 +121,46 @@ ${code}
         break;
     }
 
-    // Call Claude Opus 4.5
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call Lovable AI Gateway
+    const response = await fetch(LOVABLE_AI_GATEWAY, {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-1-20250805',
-        max_tokens: 8192,
+        model: AI_MODEL,
         messages: [
-          {
-            role: 'user',
-            content: userPrompt
-          }
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
         ],
-        system: systemPrompt,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
-      throw new Error(`Anthropic API error: ${response.status}`);
+      console.error('Lovable AI error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ success: false, error: 'Rate limit exceeded, please try again later.' }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ success: false, error: 'Payment required, please add funds to your Lovable AI workspace.' }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      throw new Error(`Lovable AI error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.content[0]?.text || '';
+    const content = data.choices?.[0]?.message?.content || '';
 
-    console.log('Received response from Claude Opus 4.5');
+    console.log('Received response from Lovable AI');
 
     // Try to parse JSON from the response
     let result: RefactorResponse;

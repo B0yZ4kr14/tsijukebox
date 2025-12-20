@@ -102,76 +102,27 @@ async function callManus(action: string, config?: Record<string, unknown>): Prom
 }
 
 async function generateSovereignDeclaration(): Promise<string> {
-  const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY_ADMIN') || Deno.env.get('ANTHROPIC_API_KEY');
+  const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
   
-  if (!ANTHROPIC_API_KEY) {
-    // Fallback to Lovable AI
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      return getDefaultSovereignDeclaration();
-    }
-    
-    try {
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
-          messages: [
-            { 
-              role: 'system', 
-              content: `You are a philosophical writer specializing in libertarian/anarcho-capitalist thought.
-              Write with eloquence, impact, and conviction. Use aggressive, powerful icons.` 
-            },
-            { 
-              role: 'user', 
-              content: `Generate a "Declaration of Intellectual Sovereignty" section for a README.md.
-              
-              Key points:
-              - Intellectual property is illegitimate (ideas are non-scarce, non-rival)
-              - Copying is not theft - it's legitimate learning/replication
-              - Software is released to PUBLIC DOMAIN absolutely
-              - Reference Stephan Kinsella's "Against Intellectual Property"
-              - Include a table comparing State vs Libertarian views
-              - Add a section on taxation being institutionalized theft
-              
-              Use icons: ⚔️ 🗡️ 🛡️ 💀 🔥 🏴
-              Format in Markdown with proper headers and tables.
-              Make it eloquent and impactful.` 
-            }
-          ],
-        }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        return data.choices?.[0]?.message?.content || getDefaultSovereignDeclaration();
-      }
-    } catch (error) {
-      console.error('Lovable AI error:', error);
-    }
-    
+  if (!LOVABLE_API_KEY) {
     return getDefaultSovereignDeclaration();
   }
   
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-1-20250805',
-        max_tokens: 4000,
-        system: `You are a philosophical writer specializing in libertarian/anarcho-capitalist thought.
-        You write with eloquence, conviction, and impactful language.
-        Your prose is both intellectually rigorous and emotionally stirring.`,
+        model: 'google/gemini-2.5-pro',
         messages: [
+          { 
+            role: 'system', 
+            content: `You are a philosophical writer specializing in libertarian/anarcho-capitalist thought.
+            Write with eloquence, impact, and conviction. Use aggressive, powerful icons.` 
+          },
           { 
             role: 'user', 
             content: `Generate an eloquent "Declaration of Intellectual Sovereignty" section for a GitHub README.md.
@@ -180,19 +131,16 @@ async function generateSovereignDeclaration(): Promise<string> {
             - In the anarcho-capitalist view, intellectual property is conceptually illegitimate
             - Ideas are superabundant and non-rival - copying doesn't deprive the original
             - Patents and copyrights are state-granted monopolies creating artificial scarcity
-            - The State violates property rights by preventing you from using your own computer to copy code
             
             Include:
             1. Opening quote from Stephan Kinsella
             2. Philosophical explanation with eloquent language
-            3. Table comparing "State View" vs "Libertarian View" on Software, Copying, and Guarantees
-            4. Section on "The Conflict of Real Property"
-            5. PUBLIC DOMAIN license declaration with icons (USE, MODIFY, SELL, DISTRIBUTE)
-            6. Section on taxation being institutionalized theft, with a powerful quote
-            7. References to Mises Institute sources
+            3. Table comparing "State View" vs "Libertarian View"
+            4. PUBLIC DOMAIN license declaration with icons
+            5. Section on taxation being institutionalized theft
+            6. References to Mises Institute sources
             
-            Use aggressive icons throughout: ⚔️ 🗡️ 🛡️ 💀 🔥 🏴
-            Make it powerful, memorable, and philosophically sound.
+            Use aggressive icons: ⚔️ 🗡️ 🛡️ 💀 🔥 🏴
             Format in clean Markdown.` 
           }
         ],
@@ -201,11 +149,10 @@ async function generateSovereignDeclaration(): Promise<string> {
     
     if (response.ok) {
       const data = await response.json();
-      const textContent = data.content?.find((c: { type: string }) => c.type === 'text');
-      return textContent?.text || getDefaultSovereignDeclaration();
+      return data.choices?.[0]?.message?.content || getDefaultSovereignDeclaration();
     }
   } catch (error) {
-    console.error('Claude API error:', error);
+    console.error('Lovable AI error:', error);
   }
   
   return getDefaultSovereignDeclaration();
