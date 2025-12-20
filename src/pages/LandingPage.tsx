@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BrandText } from "@/components/ui/BrandText";
+import { ScreenshotCarousel } from "@/components/landing/ScreenshotCarousel";
+import { ThemeComparison } from "@/components/landing/ThemeComparison";
+import { StatsSection } from "@/components/landing/StatsSection";
+import { motion } from "framer-motion";
 import { 
   Music, Play, Mic2, Monitor, Cloud, Globe, Shield, Users,
-  Github, BookOpen, Download, ChevronRight, Sparkles, Zap
+  Github, BookOpen, Download, Sparkles, Zap, Eye
 } from "lucide-react";
 
 const features = [
@@ -74,28 +78,98 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Stats Section */}
       <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Em Números</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Uma solução completa para sua experiência musical
+            </p>
+          </motion.div>
+          
+          <StatsSection />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Recursos Principais</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Tudo o que você precisa para criar a experiência musical perfeita
             </p>
-          </div>
+          </motion.div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature) => (
-              <div 
+            {features.map((feature, index) => (
+              <motion.div 
                 key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
               >
                 <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm">{feature.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Screenshots Section */}
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
+              <Eye className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Preview Interativo</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Veja em Ação</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Interface moderna e intuitiva para a melhor experiência musical
+            </p>
+          </motion.div>
+          
+          <ScreenshotCarousel />
+        </div>
+      </section>
+
+      {/* Theme Comparison Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Escolha Seu Estilo</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Dois temas cuidadosamente desenhados para qualquer ambiente
+            </p>
+          </motion.div>
+          
+          <ThemeComparison />
         </div>
       </section>
 
