@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.installer-metrics]
 verify_jwt = false
+
+[functions.alert-notifications]
+verify_jwt = false

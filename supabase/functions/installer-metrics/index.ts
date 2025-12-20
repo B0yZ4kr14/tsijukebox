@@ -329,6 +329,56 @@ serve(async (req) => {
       );
     }
 
+    // GET /prometheus - Prometheus metrics endpoint
+    if (req.method === 'GET' && url.pathname.includes('/prometheus')) {
+      const { data: metrics } = await supabase
+        .from('installer_metrics')
+        .select('*')
+        .gte('started_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+
+      const allMetrics = metrics || [];
+      const successCount = allMetrics.filter(m => m.status === 'success').length;
+      const failedCount = allMetrics.filter(m => m.status === 'failed').length;
+      const runningCount = allMetrics.filter(m => m.status === 'running').length;
+      const completedMetrics = allMetrics.filter(m => m.total_duration_ms);
+      const avgDuration = completedMetrics.length > 0
+        ? completedMetrics.reduce((sum, m) => sum + (m.total_duration_ms || 0), 0) / completedMetrics.length / 1000
+        : 0;
+      const failureRate = allMetrics.length > 0 ? (failedCount / allMetrics.length) * 100 : 0;
+
+      // Group by distro
+      const distroGroups: Record<string, number> = {};
+      allMetrics.forEach(m => {
+        const distro = (m.distro_family || 'unknown').toLowerCase();
+        distroGroups[distro] = (distroGroups[distro] || 0) + 1;
+      });
+
+      let prometheusOutput = `# HELP tsijukebox_installs_total Total number of installations
+# TYPE tsijukebox_installs_total counter
+tsijukebox_installs_total{status="success"} ${successCount}
+tsijukebox_installs_total{status="failed"} ${failedCount}
+tsijukebox_installs_total{status="running"} ${runningCount}
+
+# HELP tsijukebox_install_duration_seconds Average installation duration in seconds
+# TYPE tsijukebox_install_duration_seconds gauge
+tsijukebox_install_duration_seconds ${avgDuration.toFixed(2)}
+
+# HELP tsijukebox_failure_rate Percentage of failed installations
+# TYPE tsijukebox_failure_rate gauge
+tsijukebox_failure_rate ${failureRate.toFixed(2)}
+
+# HELP tsijukebox_installs_by_distro Installations by distribution
+# TYPE tsijukebox_installs_by_distro gauge
+`;
+      Object.entries(distroGroups).forEach(([distro, count]) => {
+        prometheusOutput += `tsijukebox_installs_by_distro{distro="${distro}"} ${count}\n`;
+      });
+
+      return new Response(prometheusOutput, {
+        headers: { ...corsHeaders, 'Content-Type': 'text/plain; version=0.0.4' }
+      });
+    }
+
     return new Response(
       JSON.stringify({ error: 'Method not allowed' }),
       { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

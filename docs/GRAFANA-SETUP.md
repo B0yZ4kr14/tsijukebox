@@ -465,6 +465,47 @@ TLS/SSL Mode: require
 - Confira os logs da edge function `installer-metrics`
 - Teste a query diretamente no SQL Editor do Supabase
 
+## 9. Prometheus Datasource
+
+### Endpoint Prometheus
+
+A edge function `installer-metrics` também expõe métricas no formato Prometheus:
+
+```
+GET https://ynkqczsmcnxvapljofel.supabase.co/functions/v1/installer-metrics/prometheus
+```
+
+### Configurando no Grafana
+
+1. Vá em **Configuration** → **Data Sources** → **Add data source**
+2. Selecione **Prometheus**
+3. Configure a URL: `https://ynkqczsmcnxvapljofel.supabase.co/functions/v1/installer-metrics`
+4. Em **HTTP Headers**, adicione:
+   - Header: `apikey`
+   - Value: `[SUPABASE_ANON_KEY]`
+
+### Métricas Disponíveis
+
+| Métrica | Tipo | Descrição |
+|---------|------|-----------|
+| `tsijukebox_installs_total` | counter | Total de instalações por status |
+| `tsijukebox_install_duration_seconds` | gauge | Tempo médio de instalação |
+| `tsijukebox_failure_rate` | gauge | Taxa de falha em porcentagem |
+| `tsijukebox_installs_by_distro` | gauge | Instalações por distribuição |
+
+### Exemplo de Query PromQL
+
+```promql
+# Taxa de falha
+tsijukebox_failure_rate
+
+# Instalações por distro
+sum by (distro) (tsijukebox_installs_by_distro)
+
+# Alerta quando falha > 10%
+tsijukebox_failure_rate > 10
+```
+
 ## Suporte
 
 Para problemas ou dúvidas:
