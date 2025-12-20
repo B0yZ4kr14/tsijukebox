@@ -17,3 +17,5 @@ export {
 } from './useVoiceControl';
 export { useVoiceSearch } from './useVoiceSearch';
 export { useVolumeNormalization, type NormalizationMode, type VolumeNormalizationSettings } from './useVolumeNormalization';
+export { useVoiceCommandHistory, type VoiceCommandHistoryEntry, type VoiceHistoryStats, type HistoryFilter } from './useVoiceCommandHistory';
+export { useVoiceTraining, type VoiceTrainingSample, type VoiceTrainingSession, type SavedTrainingPattern, type TrainingStats } from './useVoiceTraining';

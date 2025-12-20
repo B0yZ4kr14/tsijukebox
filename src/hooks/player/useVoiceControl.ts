@@ -251,11 +251,39 @@ export function useVoiceControl(): UseVoiceControlReturn {
     return undefined;
   }, []);
 
+  // Dispatch history event
+  const dispatchHistoryEvent = useCallback((data: {
+    transcript: string;
+    confidence: number;
+    action: string | null;
+    searchQuery?: string;
+    matchedPattern?: string;
+    success: boolean;
+    processingTimeMs: number;
+  }) => {
+    window.dispatchEvent(new CustomEvent('voice-command-history', { detail: data }));
+  }, []);
+
   // Process recognized command
   const processCommand = useCallback((text: string, currentConfidence: number) => {
+    const startTime = performance.now();
+    let matchedAction: string | null = null;
+    let matchedPattern: string | undefined;
+    let searchQuery: string | undefined;
+    let success = false;
+
     // Check confidence threshold
     if (currentConfidence < settings.minConfidenceThreshold) {
       console.log(`Confiança ${(currentConfidence * 100).toFixed(0)}% abaixo do threshold ${(settings.minConfidenceThreshold * 100).toFixed(0)}%`);
+      
+      // Record failed attempt due to low confidence
+      dispatchHistoryEvent({
+        transcript: text,
+        confidence: currentConfidence,
+        action: null,
+        success: false,
+        processingTimeMs: performance.now() - startTime
+      });
       return;
     }
 
@@ -267,15 +295,28 @@ export function useVoiceControl(): UseVoiceControlReturn {
         try {
           const pattern = new RegExp(patternStr, 'i');
           if (pattern.test(text)) {
+            matchedAction = cmd.customAction || cmd.action;
+            matchedPattern = patternStr;
+            success = true;
             setLastCommand(cmd.action);
             
             window.dispatchEvent(new CustomEvent<VoiceCommandEvent>('voice-command', { 
               detail: { 
-                action: cmd.customAction || cmd.action, 
+                action: matchedAction, 
                 transcript: text,
                 confidence: currentConfidence
               } 
             }));
+            
+            // Record successful command
+            dispatchHistoryEvent({
+              transcript: text,
+              confidence: currentConfidence,
+              action: matchedAction,
+              matchedPattern,
+              success: true,
+              processingTimeMs: performance.now() - startTime
+            });
             
             return;
           }
@@ -289,10 +330,13 @@ export function useVoiceControl(): UseVoiceControlReturn {
     for (const cmd of VOICE_COMMANDS) {
       for (const pattern of cmd.patterns) {
         if (pattern.test(text)) {
+          matchedAction = cmd.action;
+          matchedPattern = pattern.source;
+          success = true;
           setLastCommand(cmd.action);
           
           // Extract search query if this is a search command
-          const searchQuery = cmd.extractQuery ? extractSearchQuery(text, pattern) : undefined;
+          searchQuery = cmd.extractQuery ? extractSearchQuery(text, pattern) : undefined;
           
           // Execute callback if registered
           const callback = commandCallbacksRef.current.get(cmd.action);
@@ -310,6 +354,17 @@ export function useVoiceControl(): UseVoiceControlReturn {
             } 
           }));
           
+          // Record successful command
+          dispatchHistoryEvent({
+            transcript: text,
+            confidence: currentConfidence,
+            action: matchedAction,
+            searchQuery,
+            matchedPattern,
+            success: true,
+            processingTimeMs: performance.now() - startTime
+          });
+          
           return;
         }
       }
@@ -317,7 +372,16 @@ export function useVoiceControl(): UseVoiceControlReturn {
     
     // No command matched
     setLastCommand(null);
-  }, [settings.minConfidenceThreshold, settings.customCommands, extractSearchQuery]);
+    
+    // Record failed attempt (no match)
+    dispatchHistoryEvent({
+      transcript: text,
+      confidence: currentConfidence,
+      action: null,
+      success: false,
+      processingTimeMs: performance.now() - startTime
+    });
+  }, [settings.minConfidenceThreshold, settings.customCommands, extractSearchQuery, dispatchHistoryEvent]);
 
   // Stop listening function
   const stopListening = useCallback(() => {

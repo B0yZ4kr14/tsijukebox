@@ -7,12 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   Mic, MicOff, Volume2, SkipForward, Play, Pause, RotateCcw, AlertCircle, CheckCircle2,
-  Search, Settings, Plus, Trash2, Gauge, Timer
+  Search, Settings, Plus, Trash2, Gauge, Timer, History, GraduationCap, ChevronDown
 } from 'lucide-react';
 import { useVoiceControl, VoiceLanguage } from '@/hooks/player/useVoiceControl';
+import { useVoiceCommandHistory } from '@/hooks/player/useVoiceCommandHistory';
 import { AddCustomCommandModal } from './AddCustomCommandModal';
+import { VoiceCommandHistory } from './VoiceCommandHistory';
+import { VoiceTrainingMode } from './VoiceTrainingMode';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const languageOptions: { value: VoiceLanguage; label: string; flag: string }[] = [
@@ -47,8 +51,12 @@ export function VoiceControlSection() {
     toggleCustomCommand
   } = useVoiceControl();
 
+  const { history } = useVoiceCommandHistory();
+
   const [testingMic, setTestingMic] = useState(false);
   const [showAddCommand, setShowAddCommand] = useState(false);
+  const [showTraining, setShowTraining] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const handleMicTest = () => {
     if (!isSupported) return;
@@ -415,6 +423,43 @@ export function VoiceControlSection() {
               </div>
             </div>
 
+            {/* Voice Training */}
+            <div className="space-y-3 pt-4 border-t border-kiosk-border">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-kiosk-primary" />
+                  <Label className="text-kiosk-text font-medium">Modo de Treinamento</Label>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowTraining(true)}
+                  className="border-kiosk-border"
+                >
+                  <Play className="h-4 w-4 mr-1" />
+                  Iniciar
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Grave suas próprias variações de comandos para melhorar o reconhecimento
+              </p>
+            </div>
+
+            {/* Command History */}
+            <Collapsible open={historyOpen} onOpenChange={setHistoryOpen} className="pt-4 border-t border-kiosk-border">
+              <CollapsibleTrigger className="flex items-center justify-between w-full py-2 hover:bg-kiosk-background/30 rounded-lg px-2 transition-colors">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-kiosk-primary" />
+                  <Label className="text-kiosk-text font-medium cursor-pointer">Histórico de Comandos</Label>
+                  <Badge variant="secondary" className="text-xs">{history.length}</Badge>
+                </div>
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${historyOpen ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-3">
+                <VoiceCommandHistory />
+              </CollapsibleContent>
+            </Collapsible>
+
             {/* Actions */}
             <div className="flex justify-end pt-2">
               <Button
@@ -451,6 +496,12 @@ export function VoiceControlSection() {
         isOpen={showAddCommand}
         onClose={() => setShowAddCommand(false)}
         onAdd={addCustomCommand}
+      />
+
+      <VoiceTrainingMode
+        isOpen={showTraining}
+        onClose={() => setShowTraining(false)}
+        onCommandCreated={addCustomCommand}
       />
     </>
   );
