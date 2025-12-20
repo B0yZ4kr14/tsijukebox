@@ -16,11 +16,15 @@ vi.mock('@/contexts/SettingsContext', () => ({
 vi.mock('./useMockData', () => ({
   useMockStatus: vi.fn(() => ({
     status: {
-      uptime: 3600,
-      version: '1.0.0',
-      cpuUsage: 25,
-      memoryUsage: 50,
-      activeConnections: 10,
+      cpu: 25,
+      memory: 50,
+      temp: 45,
+      playing: false,
+      volume: 80,
+      muted: false,
+      shuffle: false,
+      repeat: 'off',
+      track: null,
     },
   })),
 }));
@@ -37,11 +41,15 @@ vi.mock('./useWebSocketStatus', () => ({
 vi.mock('@/lib/api/client', () => ({
   api: {
     getStatus: vi.fn(() => Promise.resolve({
-      uptime: 7200,
-      version: '2.0.0',
-      cpuUsage: 30,
-      memoryUsage: 60,
-      activeConnections: 20,
+      cpu: 30,
+      memory: 60,
+      temp: 50,
+      playing: true,
+      volume: 75,
+      muted: false,
+      shuffle: true,
+      repeat: 'track',
+      track: { title: 'Test Song', artist: 'Test Artist', album: 'Test Album', cover: null },
     })),
   },
   ApiError: class ApiError extends Error {},
@@ -116,11 +124,15 @@ describe('useStatus', () => {
 
     vi.mocked(useWebSocketStatus).mockReturnValue({
       status: {
-        uptime: 1000,
-        version: '3.0.0',
-        cpuUsage: 15,
-        memoryUsage: 40,
-        activeConnections: 5,
+        cpu: 15,
+        memory: 40,
+        temp: 42,
+        playing: true,
+        volume: 85,
+        muted: false,
+        shuffle: false,
+        repeat: 'context',
+        track: { title: 'WS Song', artist: 'WS Artist', album: 'WS Album', cover: null },
       } as any,
       isConnected: true,
       error: null,
@@ -133,7 +145,7 @@ describe('useStatus', () => {
 
     expect(result.current.connectionType).toBe('websocket');
     expect(result.current.uiState).toBe('success');
-    expect(result.current.data?.version).toBe('3.0.0');
+    expect(result.current.data?.cpu).toBe(15);
   });
 
   it('should fallback to polling when WebSocket fails', () => {
@@ -190,7 +202,7 @@ describe('useStatus', () => {
       expect(result.current.uiState).toBe('success');
     });
 
-    expect(result.current.data?.version).toBe('2.0.0');
+    expect(result.current.data?.cpu).toBe(30);
   });
 
   it('should not fetch when disabled', () => {

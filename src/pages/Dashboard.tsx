@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useStatus, useTranslation } from '@/hooks';
+import { ComponentBoundary } from '@/components/errors/SuspenseBoundary';
 
 // Generate mock data for charts
 function generateSystemData() {
@@ -150,217 +151,227 @@ export default function Dashboard() {
       {/* Main Grid */}
       <div className="grid grid-cols-12 gap-6">
         {/* System Usage Chart */}
-        <motion.div
-          className="col-span-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="card-admin-extreme-3d h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
-                <Activity className="w-5 h-5 icon-neon-blue" />
-                {t('dashboard.systemUsage')} - {t('dashboard.last24h')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={systemData}>
-                    <defs>
-                      <linearGradient id="cpuGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.4} />
-                        <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
-                      </linearGradient>
-                      <linearGradient id="memGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#a855f7" stopOpacity={0.4} />
-                        <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
-                      </linearGradient>
-                      <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f97316" stopOpacity={0.4} />
-                        <stop offset="100%" stopColor="#f97316" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="time" tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} domain={[0, 100]} />
-                    <Tooltip contentStyle={chartTooltipStyle} />
-                    <Area type="monotone" dataKey="cpu" stroke="#06b6d4" strokeWidth={2} fill="url(#cpuGradient)" name="CPU" />
-                    <Area type="monotone" dataKey="memory" stroke="#a855f7" strokeWidth={2} fill="url(#memGradient)" name="Memória" />
-                    <Area type="monotone" dataKey="temp" stroke="#f97316" strokeWidth={2} fill="url(#tempGradient)" name="Temp °C" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex justify-center gap-6 mt-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-cyan-400" />
-                  <span className="text-xs text-kiosk-text/90">CPU</span>
+        <ComponentBoundary loadingMessage="Carregando gráfico do sistema...">
+          <motion.div
+            className="col-span-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="card-admin-extreme-3d h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+                  <Activity className="w-5 h-5 icon-neon-blue" />
+                  {t('dashboard.systemUsage')} - {t('dashboard.last24h')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={systemData}>
+                      <defs>
+                        <linearGradient id="cpuGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.4} />
+                          <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="memGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#a855f7" stopOpacity={0.4} />
+                          <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#f97316" stopOpacity={0.4} />
+                          <stop offset="100%" stopColor="#f97316" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="time" tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                      <Tooltip contentStyle={chartTooltipStyle} />
+                      <Area type="monotone" dataKey="cpu" stroke="#06b6d4" strokeWidth={2} fill="url(#cpuGradient)" name="CPU" />
+                      <Area type="monotone" dataKey="memory" stroke="#a855f7" strokeWidth={2} fill="url(#memGradient)" name="Memória" />
+                      <Area type="monotone" dataKey="temp" stroke="#f97316" strokeWidth={2} fill="url(#tempGradient)" name="Temp °C" />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-purple-400" />
-                  <span className="text-xs text-kiosk-text/90">Memória</span>
+                <div className="flex justify-center gap-6 mt-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-cyan-400" />
+                    <span className="text-xs text-kiosk-text/90">CPU</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-purple-400" />
+                    <span className="text-xs text-kiosk-text/90">Memória</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-orange-400" />
+                    <span className="text-xs text-kiosk-text/90">Temperatura</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-orange-400" />
-                  <span className="text-xs text-kiosk-text/90">Temperatura</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </ComponentBoundary>
 
         {/* Genre Distribution */}
-        <motion.div
-          className="col-span-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="card-admin-extreme-3d h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
-                <PieChartIcon className="w-5 h-5 icon-neon-blue" />
-                {t('dashboard.genres')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={genreData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={40}
-                      outerRadius={70}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {genreData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={chartTooltipStyle} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 mt-2">
-                {genreData.map((genre) => (
-                  <div key={genre.name} className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full" style={{ background: genre.color }} />
-                    <span className="text-xs text-kiosk-text/90">{genre.name}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <ComponentBoundary loadingMessage="Carregando gêneros...">
+          <motion.div
+            className="col-span-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="card-admin-extreme-3d h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+                  <PieChartIcon className="w-5 h-5 icon-neon-blue" />
+                  {t('dashboard.genres')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={genreData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={40}
+                        outerRadius={70}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {genreData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={chartTooltipStyle} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex flex-wrap justify-center gap-3 mt-2">
+                  {genreData.map((genre) => (
+                    <div key={genre.name} className="flex items-center gap-1">
+                      <div className="w-2 h-2 rounded-full" style={{ background: genre.color }} />
+                      <span className="text-xs text-kiosk-text/90">{genre.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </ComponentBoundary>
 
         {/* Playback Stats */}
-        <motion.div
-          className="col-span-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="card-admin-extreme-3d h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
-                <Music2 className="w-5 h-5 icon-neon-blue" />
-                {t('dashboard.playbackStats')} - {t('dashboard.last7days')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={playbackData}>
-                    <XAxis dataKey="day" tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={chartTooltipStyle} />
-                    <Bar dataKey="songs" fill="hsl(346, 84%, 61%)" radius={[4, 4, 0, 0]} name="Músicas" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <ComponentBoundary loadingMessage="Carregando estatísticas...">
+          <motion.div
+            className="col-span-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="card-admin-extreme-3d h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+                  <Music2 className="w-5 h-5 icon-neon-blue" />
+                  {t('dashboard.playbackStats')} - {t('dashboard.last7days')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={playbackData}>
+                      <XAxis dataKey="day" tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={chartTooltipStyle} />
+                      <Bar dataKey="songs" fill="hsl(346, 84%, 61%)" radius={[4, 4, 0, 0]} name="Músicas" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </ComponentBoundary>
 
         {/* Hourly Activity */}
-        <motion.div
-          className="col-span-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="card-admin-extreme-3d h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
-                <Clock className="w-5 h-5 icon-neon-blue" />
-                {t('dashboard.activity')} por Hora
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={hourlyActivity}>
-                    <XAxis dataKey="hour" tick={{ fill: '#888', fontSize: 9 }} axisLine={false} tickLine={false} interval={2} />
-                    <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={chartTooltipStyle} />
-                    <Line 
-                      type="monotone" 
-                      dataKey="activity" 
-                      stroke="hsl(346, 84%, 61%)" 
-                      strokeWidth={2}
-                      dot={false}
-                      name="Atividade"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <ComponentBoundary loadingMessage="Carregando atividade...">
+          <motion.div
+            className="col-span-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="card-admin-extreme-3d h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+                  <Clock className="w-5 h-5 icon-neon-blue" />
+                  {t('dashboard.activity')} por Hora
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={hourlyActivity}>
+                      <XAxis dataKey="hour" tick={{ fill: '#888', fontSize: 9 }} axisLine={false} tickLine={false} interval={2} />
+                      <YAxis tick={{ fill: '#888', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={chartTooltipStyle} />
+                      <Line 
+                        type="monotone" 
+                        dataKey="activity" 
+                        stroke="hsl(346, 84%, 61%)" 
+                        strokeWidth={2}
+                        dot={false}
+                        name="Atividade"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </ComponentBoundary>
 
         {/* Top Tracks */}
-        <motion.div
-          className="col-span-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Card className="card-admin-extreme-3d">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
-                <TrendingUp className="w-5 h-5 icon-neon-blue" />
-                {t('dashboard.topTracks')} - {t('dashboard.thisMonth')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-4 gap-4">
-                {topTracks.map((track, index) => (
-                  <motion.div
-                    key={track.name}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-kiosk-surface/50 border border-kiosk-surface"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + index * 0.05 }}
-                  >
-                    <span className="text-lg font-bold text-kiosk-primary w-6">
-                      {index + 1}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
-                      <p className="text-xs text-kiosk-text/80 truncate">{track.artist}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-kiosk-text">{track.plays}</p>
-                      <p className="text-xs text-kiosk-text/85">plays</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <ComponentBoundary loadingMessage="Carregando top tracks...">
+          <motion.div
+            className="col-span-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Card className="card-admin-extreme-3d">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+                  <TrendingUp className="w-5 h-5 icon-neon-blue" />
+                  {t('dashboard.topTracks')} - {t('dashboard.thisMonth')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-4 gap-4">
+                  {topTracks.map((track, index) => (
+                    <motion.div
+                      key={track.name}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-kiosk-surface/50 border border-kiosk-surface"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + index * 0.05 }}
+                    >
+                      <span className="text-lg font-bold text-kiosk-primary w-6">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-kiosk-text truncate">{track.name}</p>
+                        <p className="text-xs text-kiosk-text/80 truncate">{track.artist}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-kiosk-text">{track.plays}</p>
+                        <p className="text-xs text-kiosk-text/85">plays</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </ComponentBoundary>
       </div>
     </div>
   );

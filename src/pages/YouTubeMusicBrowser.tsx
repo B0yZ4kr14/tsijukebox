@@ -10,6 +10,7 @@ import { useYouTubeMusicLibrary } from '@/hooks';
 import { useSettings } from '@/contexts/SettingsContext';
 import { youtubeMusicClient } from '@/lib/api/youtubeMusic';
 import { toast } from 'sonner';
+import { ComponentBoundary } from '@/components/errors/SuspenseBoundary';
 
 export default function YouTubeMusicBrowser() {
   const navigate = useNavigate();
@@ -131,72 +132,76 @@ export default function YouTubeMusicBrowser() {
           )}
 
           {/* Quick Access */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h2 className="text-lg font-semibold text-kiosk-text mb-4">Acesso Rápido</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {quickAccessItems.map((item) => (
-                <motion.button
-                  key={item.id}
-                  onClick={item.onClick}
-                  className={`${item.color} p-4 rounded-xl text-white text-left hover:scale-[1.02] transition-transform`}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <item.icon className="w-8 h-8 mb-2" />
-                  <p className="font-semibold">{item.title}</p>
-                  <p className="text-sm text-white/90">{item.count} itens</p>
-                </motion.button>
-              ))}
-            </div>
-          </motion.section>
+          <ComponentBoundary loadingMessage="Carregando acesso rápido...">
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2 className="text-lg font-semibold text-kiosk-text mb-4">Acesso Rápido</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {quickAccessItems.map((item) => (
+                  <motion.button
+                    key={item.id}
+                    onClick={item.onClick}
+                    className={`${item.color} p-4 rounded-xl text-white text-left hover:scale-[1.02] transition-transform`}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <item.icon className="w-8 h-8 mb-2" />
+                    <p className="font-semibold">{item.title}</p>
+                    <p className="text-sm text-white/90">{item.count} itens</p>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.section>
+          </ComponentBoundary>
 
           {/* Playlists */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-kiosk-text">Suas Playlists</h2>
-              <Button variant="ghost" size="sm" className="text-[#FF0000]">
-                <Plus className="w-4 h-4 mr-1" />
-                Nova Playlist
-              </Button>
-            </div>
+          <ComponentBoundary loadingMessage="Carregando playlists...">
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-kiosk-text">Suas Playlists</h2>
+                <Button variant="ghost" size="sm" className="text-[#FF0000]">
+                  <Plus className="w-4 h-4 mr-1" />
+                  Nova Playlist
+                </Button>
+              </div>
 
-            {isLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="aspect-square rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : playlists.length === 0 ? (
-              <div className="text-center py-12 text-kiosk-text/85">
-                {/* WCAG Exception: Decorative icon at /30 opacity, not critical content */}
-                <Library className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p>Nenhuma playlist encontrada</p>
-                <p className="text-sm">Crie sua primeira playlist no YouTube Music</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {playlists.map((playlist) => (
-                  <YouTubeMusicPlaylistCard
-                    key={playlist.id}
-                    playlist={playlist}
-                    onClick={() => navigate(`/youtube-music/playlist/${playlist.id}`)}
-                  />
-                ))}
-              </div>
-            )}
-          </motion.section>
+              {isLoading ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="space-y-3">
+                      <Skeleton className="aspect-square rounded-lg" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                  ))}
+                </div>
+              ) : playlists.length === 0 ? (
+                <div className="text-center py-12 text-kiosk-text/85">
+                  {/* WCAG Exception: Decorative icon at /30 opacity, not critical content */}
+                  <Library className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                  <p>Nenhuma playlist encontrada</p>
+                  <p className="text-sm">Crie sua primeira playlist no YouTube Music</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {playlists.map((playlist) => (
+                    <YouTubeMusicPlaylistCard
+                      key={playlist.id}
+                      playlist={playlist}
+                      onClick={() => navigate(`/youtube-music/playlist/${playlist.id}`)}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.section>
+          </ComponentBoundary>
         </div>
       </div>
     </KioskLayout>
