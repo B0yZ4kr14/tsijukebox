@@ -36,5 +36,7 @@ export { CreateDeployKeyModal } from './CreateDeployKeyModal';
 export { CodeScanSection } from './CodeScanSection';
 export { ScriptRefactorSection } from './ScriptRefactorSection';
 export { ManusAutomationSection } from './ManusAutomationSection';
+export { GitHubExportSection } from './GitHubExportSection';
+export { FullstackRefactorPanel } from './FullstackRefactorPanel';
 
 export * from './backup';

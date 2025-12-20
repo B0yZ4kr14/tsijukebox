@@ -6,11 +6,27 @@ const corsHeaders = {
 };
 
 interface ManusRequest {
-  action: 'create-task' | 'get-task' | 'generate-docs' | 'generate-tutorial' | 'optimize-docker';
+  action: 
+    | 'create-task' 
+    | 'get-task' 
+    | 'generate-docs' 
+    | 'generate-tutorial' 
+    | 'optimize-docker'
+    | 'deploy-pipeline'
+    | 'generate-archpkg'
+    | 'create-systemd-services'
+    | 'sync-to-github';
   prompt?: string;
   taskId?: string;
   files?: string[];
   topic?: string;
+  config?: {
+    packageName?: string;
+    version?: string;
+    services?: string[];
+    branch?: string;
+    commitMessage?: string;
+  };
 }
 
 interface ManusTaskResponse {
@@ -44,7 +60,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { action, prompt, taskId, files, topic } = await req.json() as ManusRequest;
+    const { action, prompt, taskId, files, topic, config } = await req.json() as ManusRequest;
     console.log(`Manus automation action: ${action}`);
 
     let taskPrompt = '';
@@ -91,6 +107,94 @@ Deno.serve(async (req) => {
         ${files ? `Docker files to analyze: ${files.join(', ')}` : ''}
         
         Provide the optimized files with explanations for each improvement.`;
+        break;
+
+      case 'deploy-pipeline':
+        taskPrompt = `Create a complete CI/CD pipeline for TSiJUKEBOX:
+        
+        1. GitHub Actions workflow for:
+           - Lint and test on PR
+           - Build Docker images
+           - Deploy to staging on develop branch
+           - Deploy to production on main branch
+        2. Include:
+           - Unit test execution (Vitest)
+           - E2E tests (Playwright)
+           - Code coverage reports
+           - Security scanning
+           - Badge generation
+        3. Configure for:
+           - Branch: ${config?.branch || 'main'}
+           - Auto-deploy on merge
+           
+        Create production-ready YAML files with proper secrets handling.`;
+        break;
+
+      case 'generate-archpkg':
+        taskPrompt = `Generate a complete Arch Linux / CachyOS package for TSiJUKEBOX:
+        
+        Package Name: ${config?.packageName || 'tsijukebox'}
+        Version: ${config?.version || '4.0.0'}
+        
+        Create:
+        1. PKGBUILD file following Arch packaging guidelines
+        2. .SRCINFO file
+        3. tsijukebox.install script for post-install hooks
+        4. systemd service files
+        5. Desktop entry file
+        6. Polkit rules if needed
+        7. Udev rules for audio devices
+        
+        Target: CachyOS with Openbox kiosk mode
+        Include dependencies for:
+        - Node.js runtime
+        - SQLite
+        - PipeWire audio
+        - Chromium/Firefox for kiosk
+        
+        Follow AUR submission guidelines.`;
+        break;
+
+      case 'create-systemd-services':
+        taskPrompt = `Create systemd service configuration for TSiJUKEBOX:
+        
+        Services to create: ${config?.services?.join(', ') || 'tsijukebox, tsijukebox-kiosk, tsijukebox-backend'}
+        
+        For each service:
+        1. Main service unit file
+        2. Timer unit if needed
+        3. Socket activation where appropriate
+        4. Proper dependencies and ordering
+        5. Resource limits (cgroups)
+        6. Security hardening (sandboxing)
+        7. Logging configuration
+        8. Auto-restart policies
+        
+        Target: CachyOS/Arch Linux with Openbox
+        User: tsijukebox (non-root)
+        
+        Include:
+        - Install instructions
+        - Enable/start commands
+        - Troubleshooting tips`;
+        break;
+
+      case 'sync-to-github':
+        taskPrompt = `Orchestrate a complete sync of TSiJUKEBOX project to GitHub:
+        
+        Repository: https://github.com/B0yZ4kr14/TSiJUKEBOX
+        Branch: ${config?.branch || 'main'}
+        Commit Message: ${config?.commitMessage || 'Automated sync from TSiJUKEBOX'}
+        
+        Tasks:
+        1. Prepare all project files for export
+        2. Validate file structure
+        3. Check for sensitive data
+        4. Create comprehensive commit
+        5. Update documentation
+        6. Generate changelog entry
+        
+        Provide a summary of all files to be synced.`;
         break;
         
       case 'get-task':
@@ -147,6 +251,7 @@ Deno.serve(async (req) => {
         context: {
           project: 'TSiJUKEBOX',
           type: action,
+          config,
         },
       }),
     });
@@ -158,7 +263,7 @@ Deno.serve(async (req) => {
       // If Manus API is not available, create a mock response for development
       if (createResponse.status === 401 || createResponse.status === 403) {
         const mockTask: ManusTaskResponse = {
-          taskId: `mock-${Date.now()}`,
+          taskId: `mock-${action}-${Date.now()}`,
           taskTitle: `[Mock] ${action}`,
           taskUrl: '#',
           shareUrl: '#',
@@ -173,9 +278,9 @@ Deno.serve(async (req) => {
         await supabase.from('notifications').insert({
           type: 'task_complete',
           severity: 'info',
-          title: 'Tarefa Manus criada (modo simulação)',
+          title: `Tarefa Manus criada (modo simulação): ${action}`,
           message: `Tarefa "${action}" criada. API Manus em modo de simulação.`,
-          metadata: { taskId: mockTask.taskId, action },
+          metadata: { taskId: mockTask.taskId, action, config },
         });
         
         return new Response(
@@ -203,7 +308,7 @@ Deno.serve(async (req) => {
       severity: 'info',
       title: `Tarefa Manus iniciada: ${action}`,
       message: `Tarefa "${taskData.taskTitle || action}" foi criada e está em execução.`,
-      metadata: { taskId: taskData.taskId, action, taskUrl: taskData.taskUrl },
+      metadata: { taskId: taskData.taskId, action, taskUrl: taskData.taskUrl, config },
     });
 
     const response: ManusTaskResponse = {

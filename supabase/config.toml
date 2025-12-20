@@ -14,3 +14,9 @@ verify_jwt = false
 
 [functions.manus-automation]
 verify_jwt = false
+
+[functions.github-sync-export]
+verify_jwt = false
+
+[functions.claude-refactor-opus]
+verify_jwt = false

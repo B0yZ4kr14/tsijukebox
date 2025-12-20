@@ -36,6 +36,8 @@ import {
   StorjSection,
   GitHubSyncStatus,
   CodeScanSection,
+  GitHubExportSection,
+  FullstackRefactorPanel,
   ScriptRefactorSection,
   ManusAutomationSection
 } from '@/components/settings';

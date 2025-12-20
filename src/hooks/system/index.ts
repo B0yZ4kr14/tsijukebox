@@ -37,3 +37,19 @@ export {
 export { useGitHubSync, type GitHubSyncStatus, type UseGitHubSyncReturn } from './useGitHubSync';
 export { useCodeScan, type CodeIssue, type CodeScanResult, type UseCodeScanReturn } from './useCodeScan';
 export { useCodeRefactor, type RefactorSuggestion, type RefactorResult, type UseCodeRefactorReturn } from './useCodeRefactor';
+export { 
+  useGitHubExport, 
+  type GitHubFile, 
+  type GitHubCommit as GitHubExportCommit,
+  type GitHubSyncStatus as GitHubExportSyncStatus,
+  type UseGitHubExportReturn 
+} from './useGitHubExport';
+export {
+  useClaudeOpusRefactor,
+  type RefactorAction,
+  type TargetDistro,
+  type RefactorFile,
+  type RefactoredFile,
+  type RefactorResult as ClaudeRefactorResult,
+  type UseClaudeOpusRefactorReturn
+} from './useClaudeOpusRefactor';
