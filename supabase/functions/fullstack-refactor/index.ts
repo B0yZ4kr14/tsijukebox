@@ -217,10 +217,11 @@ Deno.serve(async (req) => {
   const requestId = crypto.randomUUID();
 
   try {
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY_ADMIN');
+    // Tenta ANTHROPIC_API_KEY_ADMIN primeiro, depois fallback para ANTHROPIC_API_KEY
+    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY_ADMIN') || Deno.env.get('ANTHROPIC_API_KEY');
     
     if (!ANTHROPIC_API_KEY) {
-      console.error(`[${requestId}] ANTHROPIC_API_KEY_ADMIN not configured`);
+      console.error(`[${requestId}] No Anthropic API key configured (tried ANTHROPIC_API_KEY_ADMIN and ANTHROPIC_API_KEY)`);
       return new Response(
         JSON.stringify({ error: 'Anthropic API key not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
