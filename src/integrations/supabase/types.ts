@@ -59,6 +59,60 @@ export type Database = {
         }
         Relationships: []
       }
+      installer_metrics: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          database_type: string | null
+          distro_family: string | null
+          distro_name: string | null
+          errors: Json | null
+          id: string
+          install_mode: string | null
+          installer_version: string | null
+          session_id: string
+          started_at: string
+          status: string
+          steps: Json | null
+          system_info: Json | null
+          total_duration_ms: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          database_type?: string | null
+          distro_family?: string | null
+          distro_name?: string | null
+          errors?: Json | null
+          id?: string
+          install_mode?: string | null
+          installer_version?: string | null
+          session_id: string
+          started_at?: string
+          status: string
+          steps?: Json | null
+          system_info?: Json | null
+          total_duration_ms?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          database_type?: string | null
+          distro_family?: string | null
+          distro_name?: string | null
+          errors?: Json | null
+          id?: string
+          install_mode?: string | null
+          installer_version?: string | null
+          session_id?: string
+          started_at?: string
+          status?: string
+          steps?: Json | null
+          system_info?: Json | null
+          total_duration_ms?: number | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null

@@ -11,13 +11,17 @@ import {
   Download,
   HardDrive,
   Database,
-  RefreshCw
+  RefreshCw,
+  ExternalLink,
+  Loader2
 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useInstallerMetrics, MetricsPeriod } from '@/hooks/system/useInstallerMetrics';
 import { 
   BarChart, 
   Bar, 
@@ -29,66 +33,41 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
-  Legend,
   Area,
   AreaChart
 } from 'recharts';
 
-// Mock data - will be replaced by real analytics from Python installer
-const mockMetrics = {
-  totalInstalls: 1234,
-  successRate: 94.5,
-  failureRate: 5.5,
-  avgTimeMinutes: 12.3,
-  todayInstalls: 47,
-  weeklyGrowth: 23.5,
-};
-
-const installsByDay = [
-  { day: 'Seg', installs: 45, success: 42, failed: 3 },
-  { day: 'Ter', installs: 52, success: 50, failed: 2 },
-  { day: 'Qua', installs: 38, success: 35, failed: 3 },
-  { day: 'Qui', installs: 61, success: 58, failed: 3 },
-  { day: 'Sex', installs: 55, success: 53, failed: 2 },
-  { day: 'Sab', installs: 32, success: 31, failed: 1 },
-  { day: 'Dom', installs: 28, success: 27, failed: 1 },
-];
-
-const installTimeHistory = [
-  { week: 'Sem 1', avgTime: 15.2 },
-  { week: 'Sem 2', avgTime: 14.1 },
-  { week: 'Sem 3', avgTime: 13.5 },
-  { week: 'Sem 4', avgTime: 12.3 },
-];
-
-const distroData = [
-  { name: 'Arch Linux', value: 45, color: 'hsl(195, 100%, 50%)' },
-  { name: 'CachyOS', value: 30, color: 'hsl(45, 100%, 50%)' },
-  { name: 'Manjaro', value: 25, color: 'hsl(280, 100%, 60%)' },
-];
-
-const databaseData = [
-  { name: 'SQLite', value: 40, color: 'hsl(195, 80%, 45%)' },
-  { name: 'MariaDB', value: 35, color: 'hsl(160, 80%, 45%)' },
-  { name: 'PostgreSQL', value: 20, color: 'hsl(220, 80%, 55%)' },
-  { name: 'Firebird', value: 5, color: 'hsl(30, 80%, 50%)' },
-];
-
-const errorTypes = [
-  { name: 'Network', count: 23, percentage: 35 },
-  { name: 'Permissions', count: 18, percentage: 27 },
-  { name: 'Dependencies', count: 15, percentage: 23 },
-  { name: 'Database', count: 10, percentage: 15 },
-];
-
 export default function InstallerMetrics() {
+  const { 
+    metrics, 
+    isLoading, 
+    period, 
+    setPeriod, 
+    refreshMetrics,
+    lastUpdated 
+  } = useInstallerMetrics();
+
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1500);
+    await refreshMetrics();
+    setIsRefreshing(false);
+  };
+
+  // Use real data or fallback to empty
+  const data = metrics || {
+    totalInstalls: 0,
+    successRate: 0,
+    failureRate: 0,
+    avgTimeMinutes: 0,
+    todayInstalls: 0,
+    weeklyGrowth: 0,
+    installsByDay: [],
+    installTimeHistory: [],
+    distroData: [],
+    databaseData: [],
+    errorTypes: [],
   };
 
   return (
@@ -134,16 +113,34 @@ export default function InstallerMetrics() {
             </div>
           </div>
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
+          <div className="flex items-center gap-2">
+            <Select value={period} onValueChange={(v) => setPeriod(v as MetricsPeriod)}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="today">Hoje</SelectItem>
+                <SelectItem value="week">Semana</SelectItem>
+                <SelectItem value="month">Mês</SelectItem>
+                <SelectItem value="all">Tudo</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing || isLoading}
+              className="gap-2"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              )}
+              Atualizar
+            </Button>
+          </div>
         </motion.header>
 
         <div className="max-w-7xl mx-auto space-y-6 pb-8">
@@ -162,7 +159,7 @@ export default function InstallerMetrics() {
                   </div>
                   <div>
                     <p className="text-xs text-kiosk-text/70">Total Instalações</p>
-                    <p className="text-2xl font-bold text-kiosk-text">{mockMetrics.totalInstalls.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-kiosk-text">{data.totalInstalls.toLocaleString()}</p>
                   </div>
                 </div>
               </CardContent>
@@ -176,7 +173,7 @@ export default function InstallerMetrics() {
                   </div>
                   <div>
                     <p className="text-xs text-kiosk-text/70">Taxa de Sucesso</p>
-                    <p className="text-2xl font-bold text-green-400">{mockMetrics.successRate}%</p>
+                    <p className="text-2xl font-bold text-green-400">{data.successRate}%</p>
                   </div>
                 </div>
               </CardContent>
@@ -190,7 +187,7 @@ export default function InstallerMetrics() {
                   </div>
                   <div>
                     <p className="text-xs text-kiosk-text/70">Tempo Médio</p>
-                    <p className="text-2xl font-bold text-kiosk-text">{mockMetrics.avgTimeMinutes} min</p>
+                    <p className="text-2xl font-bold text-kiosk-text">{data.avgTimeMinutes} min</p>
                   </div>
                 </div>
               </CardContent>
@@ -204,7 +201,7 @@ export default function InstallerMetrics() {
                   </div>
                   <div>
                     <p className="text-xs text-kiosk-text/70">Crescimento Semanal</p>
-                    <p className="text-2xl font-bold text-purple-400">+{mockMetrics.weeklyGrowth}%</p>
+                    <p className="text-2xl font-bold text-purple-400">+{data.weeklyGrowth}%</p>
                   </div>
                 </div>
               </CardContent>
@@ -228,7 +225,7 @@ export default function InstallerMetrics() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={installsByDay}>
+                    <BarChart data={data.installsByDay}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
@@ -262,7 +259,7 @@ export default function InstallerMetrics() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
-                    <AreaChart data={installTimeHistory}>
+                    <AreaChart data={data.installTimeHistory}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} unit=" min" />
@@ -307,7 +304,7 @@ export default function InstallerMetrics() {
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
-                        data={distroData}
+                        data={data.distroData}
                         cx="50%"
                         cy="50%"
                         innerRadius={40}
@@ -315,7 +312,7 @@ export default function InstallerMetrics() {
                         paddingAngle={2}
                         dataKey="value"
                       >
-                        {distroData.map((entry, index) => (
+                        {data.distroData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
@@ -329,7 +326,7 @@ export default function InstallerMetrics() {
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-wrap gap-2 justify-center mt-2">
-                    {distroData.map((entry) => (
+                    {data.distroData.map((entry) => (
                       <Badge 
                         key={entry.name} 
                         variant="outline" 
@@ -361,7 +358,7 @@ export default function InstallerMetrics() {
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
-                        data={databaseData}
+                        data={data.databaseData}
                         cx="50%"
                         cy="50%"
                         innerRadius={40}
@@ -369,7 +366,7 @@ export default function InstallerMetrics() {
                         paddingAngle={2}
                         dataKey="value"
                       >
-                        {databaseData.map((entry, index) => (
+                        {data.databaseData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
@@ -383,7 +380,7 @@ export default function InstallerMetrics() {
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-wrap gap-2 justify-center mt-2">
-                    {databaseData.map((entry) => (
+                    {data.databaseData.map((entry) => (
                       <Badge 
                         key={entry.name} 
                         variant="outline" 
@@ -413,7 +410,7 @@ export default function InstallerMetrics() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {errorTypes.map((error) => (
+                    {data.errorTypes.map((error) => (
                       <div key={error.name} className="space-y-1">
                         <div className="flex justify-between text-sm">
                           <span className="text-kiosk-text">{error.name}</span>

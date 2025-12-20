@@ -59,3 +59,9 @@ export {
   type RefactoredScript,
   type UseScriptRefactorReturn
 } from './useScriptRefactor';
+export {
+  useInstallerMetrics,
+  type InstallerMetrics,
+  type MetricsPeriod,
+  type UseInstallerMetricsReturn
+} from './useInstallerMetrics';
