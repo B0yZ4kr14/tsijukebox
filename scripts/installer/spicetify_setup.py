@@ -182,14 +182,24 @@ class SpicetifySetup:
         else:
             self.logger.error(f"Spicetify installation failed: {err}")
             
-            # Try AUR method
+            # Try AUR method with dynamic helper (paru preferred)
             self.logger.info("Trying AUR installation...")
-            code, _, err = self._run_command(
-                ["yay", "-S", "--noconfirm", "spicetify-cli"],
-                capture=True
-            )
-            
-            return code == 0
+            aur_helper = self._detect_aur_helper()
+            if aur_helper:
+                code, _, err = self._run_command(
+                    [aur_helper, "-S", "--noconfirm", "spicetify-cli"],
+                    capture=True
+                )
+                return code == 0
+            return False
+    
+    def _detect_aur_helper(self) -> str:
+        """Detect available AUR helper (paru preferred)."""
+        import shutil
+        for helper in ["paru", "yay"]:
+            if shutil.which(helper):
+                return helper
+        return ""
     
     def _add_to_path(self) -> None:
         """Add Spicetify to PATH."""

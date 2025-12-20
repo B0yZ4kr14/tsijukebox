@@ -75,13 +75,21 @@ class PackageManagerHandler:
             return 1, "", str(e)
     
     def update_system(self) -> bool:
-        """Update system packages."""
-        self.logger.info("Updating system packages...")
+        """Update system packages using paru -Sy --noconfirm."""
+        self.logger.info("Updating system packages with paru...")
         
-        code, _, err = self._run_command(
-            ["pacman", "-Syu", "--noconfirm"],
-            sudo=True
-        )
+        # Usar paru se disponível, senão pacman
+        if self.aur_helper == "paru":
+            cmd = ["paru", "-Sy", "--noconfirm"]
+            sudo = False  # paru não precisa de sudo
+        elif self.aur_helper:
+            cmd = [self.aur_helper, "-Sy", "--noconfirm"]
+            sudo = False
+        else:
+            cmd = ["pacman", "-Sy", "--noconfirm"]
+            sudo = True
+        
+        code, _, err = self._run_command(cmd, sudo=sudo)
         
         if code == 0:
             self.logger.success("System updated successfully")
@@ -237,8 +245,8 @@ class PackageManagerHandler:
         
         return results
     
-    def install_aur_helper(self, helper: str = "yay") -> bool:
-        """Install an AUR helper (yay or paru)."""
+    def install_aur_helper(self, helper: str = "paru") -> bool:
+        """Install an AUR helper (paru or yay). Defaults to paru."""
         if self.aur_helper:
             self.logger.info(f"AUR helper already available: {self.aur_helper}")
             return True

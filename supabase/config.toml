@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.manus-search]
 verify_jwt = false
+
+[functions.refactor-docs]
+verify_jwt = false
