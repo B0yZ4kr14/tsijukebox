@@ -1,0 +1,104 @@
+# Stale Issues and Pull Requests Configuration
+# https://github.com/actions/stale
+
+# Number of days of inactivity before an issue becomes stale
+daysUntilStale: 60
+
+# Number of days of inactivity before a stale issue is closed
+daysUntilClose: 14
+
+# Only issues or pull requests with all of these labels are checked if stale
+onlyLabels: []
+
+# Issues or pull requests with these labels are never considered stale
+exemptLabels:
+  - pinned
+  - security
+  - bug
+  - critical
+  - "in progress"
+  - "help wanted"
+  - "good first issue"
+
+# Set to true to ignore issues in a project (defaults to false)
+exemptProjects: false
+
+# Set to true to ignore issues in a milestone (defaults to false)
+exemptMilestones: false
+
+# Set to true to ignore issues with an assignee (defaults to false)
+exemptAssignees: false
+
+# Label to use when marking an issue as stale
+staleLabel: stale
+
+# Comment to post when marking an issue as stale
+markComment: >
+  This issue has been automatically marked as stale because it has not had
+  recent activity. It will be closed in 14 days if no further activity occurs.
+  
+  If this issue is still relevant:
+  - Add a comment with an update
+  - Remove the `stale` label
+  
+  Thank you for your contributions to TSiJUKEBOX! 🎵
+
+# Comment to post when closing a stale issue
+closeComment: >
+  This issue has been automatically closed due to inactivity.
+  
+  If you believe this issue is still relevant, please feel free to:
+  - Open a new issue with updated information
+  - Reference this issue in the new one
+  
+  Thank you for your contributions to TSiJUKEBOX! 🎵
+
+# Comment to post when removing the stale label
+unmarkComment: false
+
+# Limit the number of actions per hour
+limitPerRun: 30
+
+# Remove stale label when the issue is updated
+removeStaleWhenUpdated: true
+
+# Close stale issues
+closeIssues: true
+
+# Close stale pull requests
+closePrs: true
+
+# Number of days of inactivity before a stale PR is closed
+daysUntilPrClose: 21
+
+# Labels on pull requests that are exempt from stale
+exemptPrLabels:
+  - pinned
+  - security
+  - "in progress"
+  - "awaiting review"
+
+# Label to use when marking a PR as stale
+stalePrLabel: stale
+
+# Message when marking a PR as stale
+stalePrMessage: >
+  This pull request has been automatically marked as stale because it has not had
+  recent activity. It will be closed in 21 days if no further activity occurs.
+  
+  If this PR is still in progress:
+  - Add a comment with an update
+  - Push new commits
+  - Remove the `stale` label
+  
+  Thank you for your contributions to TSiJUKEBOX! 🎵
+
+# Message when closing a stale PR
+closePrMessage: >
+  This pull request has been automatically closed due to inactivity.
+  
+  If you would like to continue working on this:
+  - Open a new PR with your changes
+  - Reference this PR in the description
+  
+  Thank you for your contributions to TSiJUKEBOX! 🎵

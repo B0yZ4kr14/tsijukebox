@@ -1,0 +1,137 @@
+# Release Drafter Configuration
+# https://github.com/release-drafter/release-drafter
+
+name-template: 'v$RESOLVED_VERSION 🎵'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'feat'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+  - title: '🔒 Security'
+    labels:
+      - 'security'
+  - title: '⚡ Performance'
+    labels:
+      - 'performance'
+      - 'perf'
+  - title: '🎨 Styling'
+    labels:
+      - 'style'
+      - 'ui'
+      - 'design'
+  - title: '♿ Accessibility'
+    labels:
+      - 'accessibility'
+      - 'a11y'
+  - title: '🧪 Testing'
+    labels:
+      - 'test'
+      - 'testing'
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
+      - 'deps'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+  minor:
+    labels:
+      - 'minor'
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'patch'
+      - 'fix'
+      - 'bugfix'
+      - 'chore'
+  default: patch
+
+autolabeler:
+  - label: 'documentation'
+    files:
+      - '*.md'
+      - 'docs/**/*'
+    branch:
+      - '/docs{0,1}\/.+/'
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+      - '/bugfix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'enhancement'
+    branch:
+      - '/feature\/.+/'
+      - '/feat\/.+/'
+    title:
+      - '/feat/i'
+      - '/feature/i'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+  - label: 'dependencies'
+    files:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'bun.lockb'
+  - label: 'security'
+    files:
+      - 'SECURITY.md'
+      - '.github/SECURITY.md'
+  - label: 'test'
+    files:
+      - '**/*.test.ts'
+      - '**/*.test.tsx'
+      - '**/*.spec.ts'
+      - 'e2e/**/*'
+  - label: 'accessibility'
+    files:
+      - '**/a11y*'
+      - '**/accessibility*'
+      - 'docs/ACCESSIBILITY.md'
+
+exclude-labels:
+  - 'skip-changelog'
+  - 'wontfix'
+  - 'duplicate'
+  - 'invalid'
+
+no-changes-template: 'No changes since last release.'
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  ## 📊 Stats
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+  ---
+
+  <p align="center">
+    <sub>🎵 TSiJUKEBOX Enterprise - A música, amplificada.</sub>
+  </p>

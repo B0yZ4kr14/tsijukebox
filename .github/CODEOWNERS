@@ -1,0 +1,63 @@
+# TSiJUKEBOX Code Owners
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# These owners will be requested for review when someone opens a pull request
+# that modifies code that they own.
+
+# Global owners (fallback for everything)
+* @B0yZ4kr14
+
+# Core application
+/src/ @B0yZ4kr14
+
+# Components
+/src/components/ @B0yZ4kr14
+
+# Hooks
+/src/hooks/ @B0yZ4kr14
+
+# API and integrations
+/src/lib/api/ @B0yZ4kr14
+
+# Authentication
+/src/lib/auth/ @B0yZ4kr14
+/src/components/auth/ @B0yZ4kr14
+
+# UI Components (shadcn)
+/src/components/ui/ @B0yZ4kr14
+
+# Configuration files
+/*.config.* @B0yZ4kr14
+/tailwind.config.ts @B0yZ4kr14
+/vite.config.ts @B0yZ4kr14
+
+# Documentation
+/docs/ @B0yZ4kr14
+*.md @B0yZ4kr14
+
+# CI/CD and GitHub config
+/.github/ @B0yZ4kr14
+
+# Supabase
+/supabase/ @B0yZ4kr14
+
+# Docker
+/docker/ @B0yZ4kr14
+
+# Installer scripts
+/scripts/installer/ @B0yZ4kr14
+
+# Packaging
+/packaging/ @B0yZ4kr14
+
+# Tests
+/e2e/ @B0yZ4kr14
+/src/**/__tests__/ @B0yZ4kr14
+*.test.ts @B0yZ4kr14
+*.test.tsx @B0yZ4kr14
+*.spec.ts @B0yZ4kr14
+
+# Security-sensitive files (require explicit approval)
+SECURITY.md @B0yZ4kr14
+/docs/SECURITY.md @B0yZ4kr14
+/.env* @B0yZ4kr14

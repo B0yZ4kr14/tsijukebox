@@ -1,0 +1,23 @@
+# TSiJUKEBOX Funding Configuration
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# GitHub Sponsors username
+github: [B0yZ4kr14]
+
+# Patreon username
+# patreon: 
+
+# Open Collective username
+# open_collective: 
+
+# Ko-fi username
+# ko_fi: 
+
+# Tidelift package-manager/package-name
+# tidelift: 
+
+# Custom sponsorship URLs (up to 4)
+custom: 
+  - https://github.com/sponsors/B0yZ4kr14
+  # - https://www.buymeacoffee.com/your-username
+  # - https://paypal.me/your-username
