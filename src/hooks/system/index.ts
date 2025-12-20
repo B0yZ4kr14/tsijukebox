@@ -1,5 +1,9 @@
 // System hooks barrel export
 export { useStatus } from './useStatus';
+export { useVersionMetrics } from './useVersionMetrics';
+export type { VersionMetrics, RegressionAnalysis, ComparisonData } from './useVersionMetrics';
+export { useOpenTelemetry } from './useOpenTelemetry';
+export type { Trace, TraceSpan } from './useOpenTelemetry';
 export { useNetworkStatus } from './useNetworkStatus';
 export { useConnectionMonitor } from './useConnectionMonitor';
 export { useWebSocketStatus } from './useWebSocketStatus';

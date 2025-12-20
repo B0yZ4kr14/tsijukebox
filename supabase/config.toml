@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.alert-notifications]
 verify_jwt = false
+
+[functions.otel-exporter]
+verify_jwt = false
