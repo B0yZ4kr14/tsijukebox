@@ -57,6 +57,58 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ---
 
+## 📸 Preview
+
+<div align="center">
+
+### 🎯 Setup Wizard
+  
+<img src="https://via.placeholder.com/800x450/1a1a2e/00ff88?text=🎯+Setup+Wizard+-+9+Passos+Simples" alt="Setup Wizard" width="800">
+
+*Configuração inicial guiada com 9 etapas intuitivas*
+
+---
+
+### 📊 Dashboard de Estatísticas
+
+<img src="https://via.placeholder.com/800x450/1a1a2e/00d4ff?text=📊+Dashboard+-+Monitoramento+Real-Time" alt="Dashboard" width="800">
+
+*CPU, Memória, Temperatura + Top Músicas em tempo real*
+
+---
+
+### 🎵 Integração Spotify
+
+<img src="https://via.placeholder.com/800x450/1a1a2e/1db954?text=🎵+Spotify+Connect+-+Playlists+%26+Player" alt="Spotify Integration" width="800">
+
+*Conecte sua conta e acesse todas as suas playlists*
+
+---
+
+### 🎨 Brand Guidelines
+
+<img src="https://via.placeholder.com/800x450/1a1a2e/ff00ff?text=🎨+Design+System+-+Neon+Palette" alt="Brand Guidelines" width="800">
+
+*Paleta Neon completa com gradientes e tipografia*
+
+---
+
+### 🎬 Demo em Ação
+
+<img src="https://via.placeholder.com/800x300/0d0d1a/00ff88?text=🎬+GIF+Animado+-+Navegação+Completa" alt="Demo GIF" width="800">
+
+*Veja o sistema em funcionamento*
+
+</div>
+
+> 💡 **Dica:** Substitua os placeholders acima por screenshots reais do seu sistema usando:
+> ```bash
+> # Capture screenshots e salve em public/screenshots/
+> scrot -d 3 public/screenshots/dashboard.png
+> ```
+
+---
+
 ## ✨ Features
 
 | Feature | Descrição | Status |
