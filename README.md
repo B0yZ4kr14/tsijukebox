@@ -6,6 +6,7 @@
   **Sistema Kiosk Musical PWA com Integração Spotify/YouTube Music**
   
   [![GitHub](https://img.shields.io/badge/GitHub-TSiJUKEBOX-181717?style=flat-square&logo=github)](https://github.com/B0yZ4kr14/TSiJUKEBOX)
+  [![CI/CD](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml/badge.svg)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml)
   ![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
   ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
   ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)

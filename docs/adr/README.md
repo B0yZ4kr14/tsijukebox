@@ -34,6 +34,7 @@ Related documents, issues, or previous ADRs.
 | ADR | Title | Status | Date |
 |-----|-------|--------|------|
 | [ADR-0001](ADR-0001-repository-structure.md) | Repository Structure | Accepted | 2024-12-21 |
+| [ADR-0002](ADR-0002-refactoring-priorities.md) | Refactoring Priorities | Proposed | 2024-12-21 |
 
 ## Creating a New ADR
 
