@@ -48,6 +48,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.1.0] - 2024-12-22
+
+### Added
+
+#### 🔌 Sistema de Plugins
+- **PluginManager**: Gerenciador modular de extensões
+- **Plugins Built-in**: youtube-music-dl, spotify-downloader, discord-integration, lyrics-fetcher
+- **Plugin API**: Interface para criação de plugins customizados
+- **Hot-reload**: Atualização de plugins sem restart
+
+#### 🏥 Sistema de Monitoramento
+- **HealthCheck CLI**: Verificação rápida de saúde (`--health-check`)
+  - Códigos de saída: 0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN
+  - Compatível com Nagios, Zabbix, PRTG
+- **SystemdHealthTimer**: Timer automático com alertas
+  - Verificação a cada 5 minutos (configurável)
+  - Suporte a Telegram, Email, Discord, Database
+- **HealthDashboard**: Página `/health` com monitoramento em tempo real
+  - Cards de status de serviços
+  - Gauges circulares para CPU/RAM/Disco
+  - Gráficos de histórico de métricas
+  - Timeline de alertas
+  - Conexão WebSocket persistente
+- **useHealthMonitorWebSocket**: Hook para streaming de métricas em tempo real
+
+#### 🎨 Galeria Spicetify
+- **SpicetifyThemeGallery**: Página `/spicetify-themes`
+  - Grid visual com 12+ temas
+  - Preview mockado do player Spotify
+  - Filtros por categoria (Dark, Light, Colorful, Minimal)
+  - Instalação com um clique
+  - Indicador do tema ativo
+- **ThemePreviewCard**: Componente de preview com hover effects
+
+#### ⚡ Edge Functions
+- **health-monitor-ws**: WebSocket para streaming de métricas
+  - Atualização a cada 30 segundos
+  - Reconexão automática
+  - Dados de CPU, RAM, Disco, Serviços, Alertas
+
+#### 🛠️ Instalador
+- **ConfigMigrator**: Migração automática de configurações entre versões
+- **--migrate**: Flag para migração de configurações
+- **--install-timer**: Instalação do timer systemd
+- **--plugin NAME**: Instalação de plugins individuais
+- **--list-plugins**: Lista plugins disponíveis
+- **--health-check**: Verificação rápida de saúde
+
+### Changed
+- **CommandDeck**: Refatorado para mini-rail bar discreto
+  - Posição: `bottom-24 left-0` (não sobrepõe SideInfoPanel)
+  - Expansão horizontal ao invés de vertical
+  - Z-index harmonizado com outros painéis
+- **alert-notifications**: Suporte a Telegram adicionado
+- **Documentação**: Atualizada para v4.1.0
+
+### Fixed
+- Sobreposição do CommandDeck sobre SideInfoPanel
+- Reconexão WebSocket em caso de perda de conexão
+
+---
+
 ## [4.0.0] - 2024-12-19
 
 ### Added

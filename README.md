@@ -9,7 +9,7 @@
   [![CI/CD](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml/badge.svg)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml)
   [![Coverage TS](https://img.shields.io/badge/dynamic/json?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage-summary.json&query=$.total.lines.pct&suffix=%25&label=coverage%20ts&color=brightgreen&style=flat-square)](https://B0yZ4kr14.github.io/TSiJUKEBOX/)
   [![Coverage Python](https://img.shields.io/badge/coverage%20python-80%25-brightgreen?style=flat-square&logo=python&logoColor=white)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml)
-  ![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
+  ![Version](https://img.shields.io/badge/version-4.1.0-blue?style=flat-square)
   ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
   ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript)
@@ -125,6 +125,10 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 | 📊 **System Monitor** | CPU, RAM, temperatura em tempo real | ✅ |
 | 🌐 **i18n** | Português, English, Español | ✅ |
 | ♿ **WCAG 2.1 AA** | Acessibilidade validada | ✅ |
+| 🔌 **Plugin System** | Extensões modulares (youtube-dl, discord) | ✅ |
+| 🏥 **Health Dashboard** | Monitoramento WebSocket em tempo real | ✅ |
+| 🎨 **Spicetify Gallery** | Galeria de temas com preview e one-click install | ✅ |
+| ⏱️ **Systemd Timer** | Alertas automáticos via Telegram/Email/Discord | ✅ |
 
 ---
 
@@ -260,6 +264,8 @@ Este software é liberado ao **DOMÍNIO PÚBLICO** sem quaisquer restrições:
 | [Production Deploy](docs/PRODUCTION-DEPLOY.md) | Deploy em produção |
 | [Developer Guide](docs/DEVELOPER-GUIDE.md) | Guia para desenvolvedores |
 | [API Reference](docs/API-REFERENCE.md) | Referência de APIs |
+| [Plugins](docs/PLUGINS.md) | Sistema de plugins e extensões |
+| [Monitoring](docs/MONITORING.md) | HealthCheck, Timer e Dashboard |
 
 ---
 

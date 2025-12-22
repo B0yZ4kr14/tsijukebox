@@ -7,12 +7,12 @@
 <p align="center">
   <strong>Documentação Completa de Hooks e Contexts</strong>
   <br>
-  Versão 4.0.0 | Dezembro 2025
+  Versão 4.1.0 | Dezembro 2024
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Contexts-6-blue?style=flat-square" alt="Contexts">
-  <img src="https://img.shields.io/badge/Hooks-57-green?style=flat-square" alt="Hooks">
+  <img src="https://img.shields.io/badge/Hooks-60+-green?style=flat-square" alt="Hooks">
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178c6?style=flat-square" alt="TypeScript">
 </p>
 
@@ -53,6 +53,7 @@
   - [useWeatherForecast](#useweatherforecast)
   - [useConnectionMonitor](#useconnectionmonitor)
   - [useWebSocketStatus](#usewebsocketstatus)
+  - [useHealthMonitorWebSocket](#usehealthmonitorwebsocket)
   - [useLogs](#uselogs)
   - [useMockData](#usemockdata)
   - [useStorjClient](#usestorjclient)
@@ -746,6 +747,72 @@ function useMediaProviderStorage(): {
   setProvider: (provider: MediaProvider) => void;
 };
 ```
+
+---
+
+### useHealthMonitorWebSocket
+
+Hook para conexão WebSocket com streaming de métricas de saúde em tempo real.
+
+**Importação:**
+```typescript
+import { useHealthMonitorWebSocket } from '@/hooks/system/useHealthMonitorWebSocket';
+```
+
+**Interface:**
+```typescript
+interface HealthMetrics {
+  timestamp: string;
+  services: Record<string, 'active' | 'inactive' | 'failed'>;
+  metrics: {
+    cpuPercent: number;
+    memoryPercent: number;
+    diskFreeGb: number;
+    diskTotalGb: number;
+  };
+  alerts: Array<{
+    id: string;
+    severity: 'info' | 'warning' | 'critical';
+    message: string;
+    timestamp: string;
+  }>;
+}
+
+function useHealthMonitorWebSocket(): {
+  data: HealthMetrics | null;
+  isConnected: boolean;
+  error: Error | null;
+  reconnect: () => void;
+};
+```
+
+**Exemplo de Uso:**
+```typescript
+function HealthWidget() {
+  const { data, isConnected, error, reconnect } = useHealthMonitorWebSocket();
+  
+  if (error) {
+    return <button onClick={reconnect}>Reconectar</button>;
+  }
+  
+  if (!isConnected || !data) {
+    return <Spinner />;
+  }
+  
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <MetricGauge label="CPU" value={data.metrics.cpuPercent} />
+      <MetricGauge label="RAM" value={data.metrics.memoryPercent} />
+      <ServiceList services={data.services} />
+    </div>
+  );
+}
+```
+
+**Características:**
+- Reconexão automática com exponential backoff
+- Dados atualizados a cada 30 segundos
+- Compatível com edge function `health-monitor-ws`
 
 ---
 

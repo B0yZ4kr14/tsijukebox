@@ -422,6 +422,29 @@ chore: update dependencies
 - [API Reference](API-REFERENCE.md)
 - [Design System](DESIGN-SYSTEM.md)
 - [Security Guide](SECURITY.md)
+- [Plugins](PLUGINS.md) - Sistema de plugins e extensões
+- [Monitoring](MONITORING.md) - HealthCheck, Timer e Dashboard
+
+---
+
+## 🆕 Novas Páginas v4.1.0
+
+| Página | Rota | Descrição |
+|--------|------|-----------|
+| **HealthDashboard** | `/health` | Monitoramento em tempo real via WebSocket |
+| **SpicetifyThemeGallery** | `/spicetify-themes` | Galeria de temas com preview e one-click install |
+
+---
+
+## ⚡ Edge Functions
+
+| Função | Descrição |
+|--------|-----------|
+| `health-monitor-ws` | WebSocket para streaming de métricas |
+| `spotify-auth` | Autenticação OAuth Spotify |
+| `youtube-music-auth` | Autenticação YouTube Music |
+| `lyrics-search` | Busca de letras |
+| `alert-notifications` | Alertas via Telegram/Email/Discord |
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Guia de instalação amigável para iniciantes**
 
-![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-4.1.0-blue?style=flat-square)
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=arch-linux&logoColor=white)
 ![CachyOS](https://img.shields.io/badge/CachyOS-00ADD8?style=flat-square)
 
@@ -106,6 +106,58 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 | `--auto` | Instalação automática sem confirmações | (interativo) |
 | `--uninstall` | Remover instalação existente | - |
 
+### 🆕 Comandos Avançados v4.1.0
+
+| Flag | Descrição | Exemplo |
+|------|-----------|---------|
+| `--health-check` | Verificação rápida de saúde | `python3 install.py --health-check` |
+| `--alert-on-failure` | Enviar alertas em caso de falha | `--health-check --alert-on-failure` |
+| `--alert-channels` | Canais de alerta | `--alert-channels telegram,email` |
+| `--install-timer` | Instalar timer systemd | `--install-timer --alert-channels telegram` |
+| `--timer-interval` | Intervalo do timer | `--timer-interval 10m` |
+| `--plugin NAME` | Instalar plugin | `--plugin youtube-music-dl` |
+| `--list-plugins` | Listar plugins disponíveis | `python3 install.py --list-plugins` |
+| `--all-plugins` | Instalar todos os plugins | `--all-plugins` |
+| `--migrate` | Migrar configurações | `python3 install.py --migrate` |
+
+---
+
+## 🏥 Health Check
+
+Verificação rápida de saúde do sistema compatível com Nagios, Zabbix e PRTG:
+
+```bash
+# Verificação básica (retorna código de saída 0, 1, 2 ou 3)
+python3 install.py --health-check
+echo $?  # 0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN
+
+# Com alertas automáticos em caso de falha
+python3 install.py --health-check --alert-on-failure --alert-channels telegram
+
+# Instalação de timer systemd (verifica a cada 5 minutos)
+sudo python3 install.py --install-timer --alert-channels telegram,email
+```
+
+📖 [Documentação completa de Monitoramento](MONITORING.md)
+
+---
+
+## 🔌 Sistema de Plugins
+
+Instale extensões modulares para funcionalidades adicionais:
+
+```bash
+# Listar plugins disponíveis
+python3 install.py --list-plugins
+
+# Instalar plugins
+sudo python3 install.py --plugin youtube-music-dl
+sudo python3 install.py --plugin discord-integration
+sudo python3 install.py --plugin spotify-downloader
+```
+
+📖 [Documentação completa de Plugins](PLUGINS.md)
+
 ---
 
 ## 🔧 Exemplos de Uso
@@ -180,7 +232,7 @@ systemctl status tsijukebox grafana-server prometheus
 
 ### Saída Esperada:
 ```
-✅ TSiJUKEBOX v4.0.0 - Verificação de Instalação
+✅ TSiJUKEBOX v4.1.0 - Verificação de Instalação
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ Serviço tsijukebox: ativo
