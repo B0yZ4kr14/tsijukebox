@@ -11,3 +11,8 @@ export { CommitFilters } from './CommitFilters';
 export { GitHubDashboardCharts } from './GitHubDashboardCharts';
 export { SyncHistoryPanel } from './SyncHistoryPanel';
 export { FileSelectionModal } from './FileSelectionModal';
+export { 
+  GitHubDashboardSkeleton, 
+  GitHubErrorState, 
+  GitHubEmptyState 
+} from './GitHubDashboardSkeleton';

@@ -38,7 +38,9 @@ import {
   CacheIndicator,
   GitHubDashboardCharts,
   SyncHistoryPanel,
-  FileSelectionModal
+  FileSelectionModal,
+  GitHubDashboardSkeleton,
+  GitHubErrorState,
 } from '@/components/github';
 
 export default function GitHubDashboard() {
@@ -184,20 +186,26 @@ export default function GitHubDashboard() {
           </div>
         </motion.header>
 
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 mb-6"
-          >
-            <p className="text-destructive">{error}</p>
-          </motion.div>
+        {/* Error State */}
+        {error && !isLoading && (
+          <GitHubErrorState 
+            error={error} 
+            onRetry={() => refetch(true)} 
+          />
         )}
 
-        {/* Auto-Sync Panel */}
-        <div className="mb-8">
-          <AutoSyncPanel autoSync={autoSync} />
-        </div>
+        {/* Loading State with Skeleton */}
+        {isLoading && !repoInfo && (
+          <GitHubDashboardSkeleton />
+        )}
+
+        {/* Main Content - Only show when loaded */}
+        {!isLoading && !error && (
+          <>
+            {/* Auto-Sync Panel */}
+            <div className="mb-8">
+              <AutoSyncPanel autoSync={autoSync} />
+            </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -281,6 +289,8 @@ export default function GitHubDashboard() {
               {(repoInfo.size / 1024).toFixed(1)} MB
             </p>
           </motion.div>
+        )}
+          </>
         )}
       </div>
     </KioskLayout>
