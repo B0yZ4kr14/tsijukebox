@@ -18,7 +18,9 @@ OPÇÕES:
     --no-spotify                Não instalar Spotify/Spicetify
     --no-spotify-cli            Não instalar spotify-cli-linux
     --no-monitoring             Não instalar Grafana/Prometheus
+    --skip-packages             Pular instalação de pacotes (re-configuração)
     --dry-run                   Simular instalação (não executa comandos)
+    --interactive, -i           Modo interativo: escolher componentes via menu
     --uninstall                 Remover instalação existente
     --verbose                   Output detalhado
 
@@ -85,6 +87,131 @@ WEB_PACKAGES = ['nginx', 'avahi', 'nss-mdns']
 
 # Login managers suportados
 SUPPORTED_LOGIN_MANAGERS = ['sddm', 'gdm', 'lightdm', 'ly', 'greetd', 'getty']
+
+
+# =============================================================================
+# MENU INTERATIVO
+# =============================================================================
+
+class InteractiveMenu:
+    """Menu interativo para seleção de componentes da instalação."""
+    
+    def __init__(self):
+        self.options = {
+            'spotify': True,
+            'spotify_cli': True,
+            'monitoring': True,
+            'autologin': True,
+            'chromium': True,
+            'kiosk': False,
+        }
+        self.database = 'sqlite'
+    
+    def clear_screen(self):
+        """Limpa a tela do terminal."""
+        print("\033[2J\033[H", end="")
+    
+    def show_menu(self) -> Dict[str, bool]:
+        """Exibe menu e retorna opções selecionadas."""
+        self.clear_screen()
+        
+        # Símbolos de checkbox
+        def cb(val: bool) -> str:
+            return f"{Colors.GREEN}[x]{Colors.RESET}" if val else f"{Colors.WHITE}[ ]{Colors.RESET}"
+        
+        def rb(val: str, opt: str) -> str:
+            return f"{Colors.GREEN}(•){Colors.RESET}" if val == opt else f"{Colors.WHITE}( ){Colors.RESET}"
+        
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🎵 TSiJUKEBOX - INSTALAÇÃO INTERATIVA{Colors.RESET}{Colors.CYAN}                      ║
+╠════════════════════════════════════════════════════════════════╣
+║   Selecione os componentes que deseja instalar:               ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+
+{Colors.YELLOW}━━━ COMPONENTES ━━━{Colors.RESET}
+
+  {Colors.BOLD}1{Colors.RESET}. {cb(self.options['spotify'])} Spotify + Spicetify {Colors.CYAN}(player principal){Colors.RESET}
+  {Colors.BOLD}2{Colors.RESET}. {cb(self.options['spotify_cli'])} spotify-cli-linux {Colors.CYAN}(comandos sp-play, sp-next...){Colors.RESET}
+  {Colors.BOLD}3{Colors.RESET}. {cb(self.options['monitoring'])} Monitoramento {Colors.CYAN}(Grafana + Prometheus){Colors.RESET}
+  {Colors.BOLD}4{Colors.RESET}. {cb(self.options['autologin'])} Configurar autologin
+  {Colors.BOLD}5{Colors.RESET}. {cb(self.options['chromium'])} Chromium como homepage
+  {Colors.BOLD}6{Colors.RESET}. {cb(self.options['kiosk'])} Modo Kiosk {Colors.CYAN}(tela cheia, sem desktop){Colors.RESET}
+
+{Colors.YELLOW}━━━ BANCO DE DADOS ━━━{Colors.RESET}
+
+  {Colors.BOLD}a{Colors.RESET}. {rb(self.database, 'sqlite')} SQLite {Colors.GREEN}(padrão, leve){Colors.RESET}
+  {Colors.BOLD}b{Colors.RESET}. {rb(self.database, 'mariadb')} MariaDB {Colors.CYAN}(multi-usuário){Colors.RESET}
+  {Colors.BOLD}c{Colors.RESET}. {rb(self.database, 'postgresql')} PostgreSQL {Colors.CYAN}(avançado){Colors.RESET}
+
+{Colors.WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{Colors.RESET}
+  {Colors.GREEN}[1-6]{Colors.RESET} Toggle componente   {Colors.GREEN}[a-c]{Colors.RESET} Selecionar DB
+  {Colors.GREEN}[Enter]{Colors.RESET} Confirmar          {Colors.GREEN}[q]{Colors.RESET} Cancelar
+{Colors.WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{Colors.RESET}
+""")
+        
+        while True:
+            try:
+                choice = input(f"{Colors.CYAN}→ Escolha: {Colors.RESET}").strip().lower()
+            except EOFError:
+                raise KeyboardInterrupt()
+            
+            if choice == '':
+                # Confirmar seleção
+                self._print_summary()
+                return self.options
+            elif choice == 'q':
+                raise KeyboardInterrupt()
+            elif choice == '1':
+                self.options['spotify'] = not self.options['spotify']
+                # Se desativar spotify, desativar spotify_cli também
+                if not self.options['spotify']:
+                    self.options['spotify_cli'] = False
+            elif choice == '2':
+                # Só pode ativar se spotify estiver ativo
+                if self.options['spotify']:
+                    self.options['spotify_cli'] = not self.options['spotify_cli']
+                else:
+                    print(f"{Colors.YELLOW}  ⚠️  Spotify precisa estar ativado para usar spotify-cli{Colors.RESET}")
+                    continue
+            elif choice == '3':
+                self.options['monitoring'] = not self.options['monitoring']
+            elif choice == '4':
+                self.options['autologin'] = not self.options['autologin']
+            elif choice == '5':
+                self.options['chromium'] = not self.options['chromium']
+            elif choice == '6':
+                self.options['kiosk'] = not self.options['kiosk']
+            elif choice == 'a':
+                self.database = 'sqlite'
+            elif choice == 'b':
+                self.database = 'mariadb'
+            elif choice == 'c':
+                self.database = 'postgresql'
+            else:
+                print(f"{Colors.RED}  ✗ Opção inválida: {choice}{Colors.RESET}")
+                continue
+            
+            # Redesenhar menu
+            return self.show_menu()
+    
+    def _print_summary(self):
+        """Imprime resumo das seleções."""
+        print(f"\n{Colors.GREEN}✓ Configuração selecionada:{Colors.RESET}")
+        
+        components = []
+        if self.options['spotify']:
+            components.append("Spotify/Spicetify")
+        if self.options['spotify_cli']:
+            components.append("spotify-cli")
+        if self.options['monitoring']:
+            components.append("Monitoramento")
+        if self.options['kiosk']:
+            components.append("Modo Kiosk")
+        
+        print(f"  • Componentes: {', '.join(components) if components else 'Nenhum'}")
+        print(f"  • Banco de dados: {self.database}")
+        print()
 
 
 # =============================================================================
@@ -1063,19 +1190,23 @@ def run_installation(args: argparse.Namespace) -> bool:
     user = args.user or system_info.user
     music_dir = args.music_dir or "Musics"
     
-    # 1. Instalar paru se necessário
-    if not system_info.has_paru:
-        if not install_paru():
-            log_error("Falha ao instalar paru")
-            return False
-    
-    # 2. Atualizar sistema
-    log_step("Atualizando sistema com paru -Sy...")
-    run_command(['paru', '-Sy', '--noconfirm'], capture=True, check=False)
-    
-    # 3. Instalar pacotes base
-    log_step("Instalando pacotes base...")
-    install_packages(BASE_PACKAGES, system_info=system_info)
+    # 1-3. Instalação de pacotes (pular se --skip-packages)
+    if getattr(args, 'skip_packages', False):
+        log_warning("⏭️  Pulando instalação de pacotes (--skip-packages)")
+    else:
+        # 1. Instalar paru se necessário
+        if not system_info.has_paru:
+            if not install_paru():
+                log_error("Falha ao instalar paru")
+                return False
+        
+        # 2. Atualizar sistema
+        log_step("Atualizando sistema com paru -Sy...")
+        run_command(['paru', '-Sy', '--noconfirm'], capture=True, check=False)
+        
+        # 3. Instalar pacotes base
+        log_step("Instalando pacotes base...")
+        install_packages(BASE_PACKAGES, system_info=system_info)
     
     # 4. Configurar diretório de músicas
     setup_music_directory(user, music_dir)
@@ -1167,8 +1298,12 @@ def main():
                        help='Não instalar spotify-cli-linux (CLI para terminal)')
     parser.add_argument('--no-monitoring', action='store_true',
                        help='Não instalar Grafana/Prometheus')
+    parser.add_argument('--skip-packages', action='store_true',
+                       help='Pular instalação de pacotes (útil para re-configuração)')
     parser.add_argument('--dry-run', action='store_true',
                        help='Simular instalação sem executar comandos')
+    parser.add_argument('--interactive', '-i', action='store_true',
+                       help='Modo interativo: escolher componentes via menu')
     parser.add_argument('--uninstall', action='store_true',
                        help='Remover instalação existente')
     parser.add_argument('--verbose', '-v', action='store_true',
@@ -1182,6 +1317,28 @@ def main():
     if args.dry_run:
         DRY_RUN = True
         log_warning("🧪 MODO DRY-RUN: Nenhum comando será executado de fato")
+    
+    # Modo interativo: exibir menu de seleção
+    if args.interactive:
+        log_info("🎛️  Modo interativo ativado")
+        menu = InteractiveMenu()
+        try:
+            choices = menu.show_menu()
+            
+            # Aplicar escolhas do menu aos argumentos
+            args.no_spotify = not choices['spotify']
+            args.no_spotify_cli = not choices['spotify_cli']
+            args.no_monitoring = not choices['monitoring']
+            args.database = menu.database
+            
+            # Configurações adicionais baseadas no menu
+            if choices['kiosk']:
+                args.mode = 'kiosk'
+            
+            log_success("Configuração interativa aplicada!")
+        except KeyboardInterrupt:
+            log_warning("\nInstalação cancelada pelo usuário")
+            sys.exit(130)
     
     # Verificar root
     check_root()
