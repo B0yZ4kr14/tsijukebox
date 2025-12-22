@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+  "$comment": "Exemplo de configuração para install.py --config-file",
+  
+  "mode": "full",
+  "database": "sqlite",
+  "user": null,
+  "music_dir": "Musics",
+  
+  "no_spotify": false,
+  "no_spotify_cli": false,
+  "no_monitoring": false,
+  "skip_packages": false,
+  
+  "autologin": true,
+  "kiosk": false,
+  "chromium_homepage": true,
+  
+  "custom_packages": [
+    "neovim",
+    "htop",
+    "btop"
+  ]
+}

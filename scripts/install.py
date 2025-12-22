@@ -21,6 +21,8 @@ OPÇÕES:
     --skip-packages             Pular instalação de pacotes (re-configuração)
     --dry-run                   Simular instalação (não executa comandos)
     --interactive, -i           Modo interativo: escolher componentes via menu
+    --config-file, -c FILE      Carregar configuração de arquivo JSON
+    --validate                  Validar instalação existente (não instala)
     --uninstall                 Remover instalação existente
     --verbose                   Output detalhado
 
@@ -36,9 +38,10 @@ import json
 import shutil
 import argparse
 import subprocess
+import socket
 from pathlib import Path
-from typing import Optional, List, Dict, Tuple
-from dataclasses import dataclass
+from typing import Optional, List, Dict, Tuple, Any
+from dataclasses import dataclass, field
 
 # Import opcional para spotify-cli-linux
 try:
@@ -219,6 +222,23 @@ class InteractiveMenu:
 # =============================================================================
 
 @dataclass
+class InstallConfig:
+    """Configuração de instalação carregada de arquivo JSON."""
+    mode: str = 'full'
+    database: str = 'sqlite'
+    user: Optional[str] = None
+    music_dir: str = 'Musics'
+    no_spotify: bool = False
+    no_spotify_cli: bool = False
+    no_monitoring: bool = False
+    skip_packages: bool = False
+    autologin: bool = True
+    kiosk: bool = False
+    chromium_homepage: bool = True
+    custom_packages: List[str] = field(default_factory=list)
+
+
+@dataclass
 class SystemInfo:
     """Informações do sistema detectadas."""
     distro: str
@@ -229,6 +249,234 @@ class SystemInfo:
     installed_packages: List[str]
     has_paru: bool
     has_spotify: bool
+
+
+# =============================================================================
+# VALIDAÇÃO PÓS-INSTALAÇÃO
+# =============================================================================
+
+class PostInstallValidator:
+    """Valida se a instalação está funcionando corretamente."""
+    
+    SERVICES = ['tsijukebox']
+    OPTIONAL_SERVICES = ['grafana', 'prometheus', 'prometheus-node-exporter']
+    REQUIRED_DIRS = [INSTALL_DIR, CONFIG_DIR, LOG_DIR, DATA_DIR]
+    PORTS = {
+        5173: 'TSiJUKEBOX Web',
+        3000: 'Grafana',
+        9090: 'Prometheus',
+        9100: 'Node Exporter',
+    }
+    
+    def __init__(self, args: argparse.Namespace):
+        self.args = args
+        self.results: List[Tuple[str, bool, str, str]] = []  # (name, ok, level, message)
+    
+    def _add_result(self, name: str, ok: bool, level: str, message: str = ""):
+        """Adiciona resultado de verificação."""
+        self.results.append((name, ok, level, message))
+    
+    def check_service(self, service: str, required: bool = True) -> bool:
+        """Verifica se um serviço systemd está ativo."""
+        code, stdout, _ = run_command(
+            ['systemctl', 'is-active', service],
+            capture=True, check=False
+        )
+        is_active = stdout.strip() == 'active'
+        
+        if is_active:
+            self._add_result(f"Serviço {service}", True, "OK", "ativo")
+        elif required:
+            self._add_result(f"Serviço {service}", False, "ERROR", "inativo (obrigatório)")
+        else:
+            self._add_result(f"Serviço {service}", False, "WARN", "inativo (opcional)")
+        
+        return is_active
+    
+    def check_port(self, port: int, name: str, required: bool = True) -> bool:
+        """Verifica se uma porta está respondendo."""
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(2)
+            result = sock.connect_ex(('localhost', port))
+            sock.close()
+            is_open = result == 0
+            
+            if is_open:
+                self._add_result(f"Porta {port} ({name})", True, "OK", "aberta")
+            elif required:
+                self._add_result(f"Porta {port} ({name})", False, "ERROR", "fechada")
+            else:
+                self._add_result(f"Porta {port} ({name})", False, "WARN", "fechada (opcional)")
+            
+            return is_open
+        except Exception:
+            self._add_result(f"Porta {port} ({name})", False, "ERROR", "erro ao verificar")
+            return False
+    
+    def check_directories(self) -> bool:
+        """Verifica se diretórios foram criados."""
+        all_ok = True
+        for dir_path in self.REQUIRED_DIRS:
+            if dir_path.exists():
+                self._add_result(f"Diretório {dir_path}", True, "OK", "existe")
+            else:
+                self._add_result(f"Diretório {dir_path}", False, "ERROR", "não encontrado")
+                all_ok = False
+        return all_ok
+    
+    def check_database(self) -> bool:
+        """Verifica se banco de dados está acessível."""
+        db_path = DATA_DIR / 'tsijukebox.db'
+        if db_path.exists():
+            size = db_path.stat().st_size
+            self._add_result("Banco SQLite", True, "OK", f"existe ({size} bytes)")
+            return True
+        else:
+            self._add_result("Banco SQLite", False, "WARN", "não encontrado")
+            return False
+    
+    def check_config_files(self) -> bool:
+        """Verifica arquivos de configuração."""
+        config_files = [
+            CONFIG_DIR / 'config.yaml',
+            CONFIG_DIR / 'nginx.conf',
+        ]
+        all_ok = True
+        for cfg in config_files:
+            if cfg.exists():
+                self._add_result(f"Config {cfg.name}", True, "OK", "existe")
+            else:
+                self._add_result(f"Config {cfg.name}", False, "WARN", "não encontrado")
+                all_ok = False
+        return all_ok
+    
+    def validate_all(self) -> bool:
+        """Executa todas as validações."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🔍 VALIDAÇÃO PÓS-INSTALAÇÃO{Colors.RESET}{Colors.CYAN}                                 ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        # Serviços obrigatórios
+        print(f"{Colors.YELLOW}━━━ SERVIÇOS SYSTEMD ━━━{Colors.RESET}")
+        for service in self.SERVICES:
+            self.check_service(service, required=True)
+        
+        # Serviços opcionais (monitoramento)
+        if not getattr(self.args, 'no_monitoring', False):
+            for service in self.OPTIONAL_SERVICES:
+                self.check_service(service, required=False)
+        
+        # Diretórios
+        print(f"\n{Colors.YELLOW}━━━ DIRETÓRIOS ━━━{Colors.RESET}")
+        self.check_directories()
+        
+        # Banco de dados
+        print(f"\n{Colors.YELLOW}━━━ BANCO DE DADOS ━━━{Colors.RESET}")
+        self.check_database()
+        
+        # Arquivos de configuração
+        print(f"\n{Colors.YELLOW}━━━ CONFIGURAÇÕES ━━━{Colors.RESET}")
+        self.check_config_files()
+        
+        # Portas
+        print(f"\n{Colors.YELLOW}━━━ PORTAS ━━━{Colors.RESET}")
+        self.check_port(5173, 'TSiJUKEBOX', required=True)
+        if not getattr(self.args, 'no_monitoring', False):
+            self.check_port(3000, 'Grafana', required=False)
+            self.check_port(9090, 'Prometheus', required=False)
+        
+        # Exibir resultados
+        self._print_results()
+        
+        # Retornar True se não houver erros críticos
+        errors = sum(1 for _, ok, level, _ in self.results if not ok and level == "ERROR")
+        return errors == 0
+    
+    def _print_results(self):
+        """Exibe resultados da validação."""
+        print(f"\n{Colors.WHITE}━━━ RESULTADOS ━━━{Colors.RESET}\n")
+        
+        for name, ok, level, message in self.results:
+            if ok:
+                icon = f"{Colors.GREEN}✓{Colors.RESET}"
+            elif level == "ERROR":
+                icon = f"{Colors.RED}✗{Colors.RESET}"
+            else:
+                icon = f"{Colors.YELLOW}⚠{Colors.RESET}"
+            
+            print(f"  {icon} {name}: {message}")
+        
+        # Resumo
+        total = len(self.results)
+        passed = sum(1 for _, ok, _, _ in self.results if ok)
+        errors = sum(1 for _, ok, level, _ in self.results if not ok and level == "ERROR")
+        warns = sum(1 for _, ok, level, _ in self.results if not ok and level == "WARN")
+        
+        print()
+        if errors == 0:
+            print(f"{Colors.GREEN}✅ Validação concluída: {passed}/{total} verificações OK{Colors.RESET}")
+            if warns > 0:
+                print(f"{Colors.YELLOW}   ({warns} avisos){Colors.RESET}")
+        else:
+            print(f"{Colors.RED}❌ Validação falhou: {errors} erros encontrados{Colors.RESET}")
+            print(f"{Colors.YELLOW}   Sugestão: verifique os serviços com 'systemctl status <serviço>'{Colors.RESET}")
+
+
+# =============================================================================
+# CARREGAMENTO DE CONFIGURAÇÃO JSON
+# =============================================================================
+
+def load_config_file(config_path: str) -> Dict[str, Any]:
+    """Carrega configuração de arquivo JSON."""
+    path = Path(config_path)
+    
+    if not path.exists():
+        log_error(f"Arquivo de configuração não encontrado: {config_path}")
+        sys.exit(1)
+    
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        log_success(f"Configuração carregada: {config_path}")
+        return config
+    except json.JSONDecodeError as e:
+        log_error(f"JSON inválido em {config_path}: {e}")
+        sys.exit(1)
+    except Exception as e:
+        log_error(f"Erro ao ler {config_path}: {e}")
+        sys.exit(1)
+
+
+def apply_config_to_args(args: argparse.Namespace, config: Dict[str, Any]) -> None:
+    """Aplica configuração JSON aos argumentos do parser."""
+    # Mapeamento direto de chaves JSON para atributos args
+    direct_mapping = {
+        'mode': 'mode',
+        'database': 'database',
+        'user': 'user',
+        'music_dir': 'music_dir',
+        'no_spotify': 'no_spotify',
+        'no_spotify_cli': 'no_spotify_cli',
+        'no_monitoring': 'no_monitoring',
+        'skip_packages': 'skip_packages',
+    }
+    
+    for json_key, arg_key in direct_mapping.items():
+        if json_key in config:
+            setattr(args, arg_key, config[json_key])
+    
+    # Configurações especiais
+    if config.get('kiosk', False):
+        args.mode = 'kiosk'
+    
+    # Log das configurações aplicadas
+    log_info(f"  • Modo: {args.mode}")
+    log_info(f"  • Database: {args.database}")
+    if args.user:
+        log_info(f"  • Usuário: {args.user}")
 
 
 # =============================================================================
@@ -1240,6 +1488,16 @@ def run_installation(args: argparse.Namespace) -> bool:
     # 11. Criar serviços systemd
     create_systemd_services(user)
     
+    # 12. Validação pós-instalação automática
+    if not DRY_RUN:
+        print()
+        log_step("Executando validação pós-instalação...")
+        validator = PostInstallValidator(args)
+        validation_ok = validator.validate_all()
+        
+        if not validation_ok:
+            log_warning("Algumas verificações falharam. Verifique os erros acima.")
+    
     # Relatório final
     print(f"""
 {Colors.GREEN}╔══════════════════════════════════════════════════════════════════╗
@@ -1267,6 +1525,7 @@ def run_installation(args: argparse.Namespace) -> bool:
   • sp-next/prev   - Trocar música
   • sp-lyrics      - Ver letra da música atual
   • systemctl status tsijukebox  - Status do serviço
+  • sudo python3 install.py --validate  - Verificar instalação
 
 {Colors.GREEN}Obrigado por usar TSiJUKEBOX Enterprise! 🎵{Colors.RESET}
 """)
@@ -1304,6 +1563,10 @@ def main():
                        help='Simular instalação sem executar comandos')
     parser.add_argument('--interactive', '-i', action='store_true',
                        help='Modo interativo: escolher componentes via menu')
+    parser.add_argument('--config-file', '-c', type=str,
+                       help='Carregar configuração de arquivo JSON')
+    parser.add_argument('--validate', action='store_true',
+                       help='Validar instalação existente (não instala)')
     parser.add_argument('--uninstall', action='store_true',
                        help='Remover instalação existente')
     parser.add_argument('--verbose', '-v', action='store_true',
@@ -1317,6 +1580,13 @@ def main():
     if args.dry_run:
         DRY_RUN = True
         log_warning("🧪 MODO DRY-RUN: Nenhum comando será executado de fato")
+    
+    # Carregar configuração de arquivo JSON (se fornecido)
+    if args.config_file:
+        log_info(f"📄 Carregando configuração de: {args.config_file}")
+        config = load_config_file(args.config_file)
+        apply_config_to_args(args, config)
+        log_success("Configuração JSON aplicada!")
     
     # Modo interativo: exibir menu de seleção
     if args.interactive:
@@ -1339,6 +1609,13 @@ def main():
         except KeyboardInterrupt:
             log_warning("\nInstalação cancelada pelo usuário")
             sys.exit(130)
+    
+    # Modo validação: apenas verificar instalação existente
+    if args.validate:
+        log_info("🔍 Executando validação pós-instalação...")
+        validator = PostInstallValidator(args)
+        success = validator.validate_all()
+        sys.exit(0 if success else 1)
     
     # Verificar root
     check_root()
