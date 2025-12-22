@@ -7,8 +7,8 @@ const corsHeaders = {
 };
 
 interface AlertPayload {
-  type: 'failure_rate' | 'error_spike' | 'installation_stuck' | 'custom';
-  channel: 'email' | 'slack' | 'discord' | 'database';
+  type: 'failure_rate' | 'error_spike' | 'installation_stuck' | 'health_check_failure' | 'now_playing' | 'custom';
+  channel: 'email' | 'slack' | 'discord' | 'telegram' | 'database';
   title: string;
   message: string;
   severity: 'info' | 'warning' | 'critical';
@@ -217,6 +217,40 @@ serve(async (req) => {
           }
         } catch (error) {
           results.discord = { success: false, error: String(error) };
+        }
+        break;
+      }
+
+      case 'telegram': {
+        const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN');
+        const chatId = Deno.env.get('TELEGRAM_CHAT_ID');
+        
+        if (!botToken || !chatId) {
+          results.telegram = { success: false, error: 'TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not configured' };
+          break;
+        }
+
+        const telegramText = `${SEVERITY_EMOJIS[severity]} *${title}*\n\n${message}${metadata ? `\n\n\`\`\`\n${JSON.stringify(metadata, null, 2)}\n\`\`\`` : ''}`;
+
+        try {
+          const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: telegramText,
+              parse_mode: 'Markdown',
+            }),
+          });
+
+          if (response.ok) {
+            results.telegram = { success: true };
+          } else {
+            const error = await response.text();
+            results.telegram = { success: false, error };
+          }
+        } catch (error) {
+          results.telegram = { success: false, error: String(error) };
         }
         break;
       }

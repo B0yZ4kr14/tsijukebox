@@ -628,8 +628,195 @@ class ConfigBackup:
 
 
 # =============================================================================
-# DOCTOR DIAGNOSTIC (--doctor, --doctor-fix)
+# SYSTEMD HEALTH TIMER (--install-timer, --uninstall-timer)
 # =============================================================================
+
+class SystemdHealthTimer:
+    """Cria timer systemd para health-check automático com alertas."""
+    
+    TIMER_PATH = Path("/etc/systemd/system/tsijukebox-healthcheck.timer")
+    SERVICE_PATH = Path("/etc/systemd/system/tsijukebox-healthcheck.service")
+    ENV_PATH = CONFIG_DIR / "healthcheck.env"
+    
+    TIMER_UNIT = """[Unit]
+Description=TSiJUKEBOX Health Check Timer
+Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=tsijukebox-healthcheck.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+"""
+    
+    SERVICE_UNIT = """[Unit]
+Description=TSiJUKEBOX Health Check Service
+Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
+After=network.target tsijukebox.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 {install_dir}/scripts/install.py --health-check --alert-on-failure
+User=root
+EnvironmentFile=-{env_path}
+TimeoutStartSec=60
+
+[Install]
+WantedBy=multi-user.target
+"""
+    
+    def __init__(self):
+        self.install_dir = INSTALL_DIR
+    
+    def install(self, alert_channels: List[str] = None) -> bool:
+        """Instala timer e service de health-check."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}⏰ INSTALANDO HEALTH CHECK TIMER{Colors.RESET}{Colors.CYAN}                           ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        # Criar diretório de config se não existir
+        CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Criar arquivo de ambiente
+        log_step("Criando arquivo de configuração...")
+        env_content = self._generate_env_file(alert_channels or ['database'])
+        
+        if not DRY_RUN:
+            self.ENV_PATH.write_text(env_content)
+            log_success(f"Arquivo de ambiente criado: {self.ENV_PATH}")
+        
+        # Criar service unit
+        log_step("Criando service unit...")
+        service_content = self.SERVICE_UNIT.format(
+            install_dir=self.install_dir,
+            env_path=self.ENV_PATH
+        )
+        
+        if not DRY_RUN:
+            self.SERVICE_PATH.write_text(service_content)
+            log_success(f"Service criado: {self.SERVICE_PATH}")
+        
+        # Criar timer unit
+        log_step("Criando timer unit...")
+        if not DRY_RUN:
+            self.TIMER_PATH.write_text(self.TIMER_UNIT)
+            log_success(f"Timer criado: {self.TIMER_PATH}")
+        
+        # Recarregar systemd
+        log_step("Recarregando systemd...")
+        run_command(['systemctl', 'daemon-reload'], check=False)
+        
+        # Habilitar e iniciar timer
+        log_step("Habilitando timer...")
+        run_command(['systemctl', 'enable', 'tsijukebox-healthcheck.timer'], check=False)
+        run_command(['systemctl', 'start', 'tsijukebox-healthcheck.timer'], check=False)
+        
+        log_success("Health check timer instalado e ativado!")
+        log_info("  O sistema será verificado a cada 5 minutos")
+        log_info(f"  Status: systemctl status tsijukebox-healthcheck.timer")
+        
+        # Configurar alertas interativamente se solicitado
+        if alert_channels and 'telegram' in alert_channels:
+            self._configure_telegram()
+        
+        return True
+    
+    def _generate_env_file(self, channels: List[str]) -> str:
+        """Gera conteúdo do arquivo de ambiente."""
+        lines = [
+            "# TSiJUKEBOX Health Check Configuration",
+            "# Gerado automaticamente pelo instalador",
+            "",
+            f"ALERT_CHANNELS={','.join(channels)}",
+            "",
+            "# Telegram (preencha se usar alertas via Telegram)",
+            "TELEGRAM_BOT_TOKEN=",
+            "TELEGRAM_CHAT_ID=",
+            "",
+            "# Discord (preencha se usar alertas via Discord)",
+            "DISCORD_WEBHOOK_URL=",
+            "",
+            "# Email (preencha se usar alertas via Email)",
+            "RESEND_API_KEY=",
+            "ALERT_EMAIL=admin@example.com",
+            "",
+            "# Supabase (para alertas via database)",
+            f"SUPABASE_URL=https://ynkqczsmcnxvapljofel.supabase.co",
+            "SUPABASE_ANON_KEY=",
+        ]
+        return '\n'.join(lines)
+    
+    def _configure_telegram(self):
+        """Configura alertas via Telegram interativamente."""
+        print(f"\n{Colors.YELLOW}━━━ CONFIGURAR TELEGRAM ━━━{Colors.RESET}\n")
+        
+        try:
+            bot_token = input(f"{Colors.CYAN}Telegram Bot Token (do @BotFather): {Colors.RESET}").strip()
+            chat_id = input(f"{Colors.CYAN}Chat ID (do @userinfobot): {Colors.RESET}").strip()
+            
+            if bot_token and chat_id:
+                # Atualizar arquivo de ambiente
+                env_content = self.ENV_PATH.read_text()
+                env_content = env_content.replace("TELEGRAM_BOT_TOKEN=", f"TELEGRAM_BOT_TOKEN={bot_token}")
+                env_content = env_content.replace("TELEGRAM_CHAT_ID=", f"TELEGRAM_CHAT_ID={chat_id}")
+                self.ENV_PATH.write_text(env_content)
+                log_success("Telegram configurado!")
+            else:
+                log_warning("Configuração do Telegram pulada")
+        except (EOFError, KeyboardInterrupt):
+            log_warning("Configuração do Telegram cancelada")
+    
+    def uninstall(self) -> bool:
+        """Remove timer e service de health-check."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🗑️  REMOVENDO HEALTH CHECK TIMER{Colors.RESET}{Colors.CYAN}                           ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        # Parar e desabilitar timer
+        log_step("Parando timer...")
+        run_command(['systemctl', 'stop', 'tsijukebox-healthcheck.timer'], check=False)
+        run_command(['systemctl', 'disable', 'tsijukebox-healthcheck.timer'], check=False)
+        
+        # Remover arquivos
+        for path in [self.TIMER_PATH, self.SERVICE_PATH]:
+            if path.exists():
+                log_step(f"Removendo {path}...")
+                if not DRY_RUN:
+                    path.unlink()
+        
+        # Recarregar systemd
+        run_command(['systemctl', 'daemon-reload'], check=False)
+        
+        log_success("Health check timer removido!")
+        return True
+    
+    def status(self) -> Dict[str, Any]:
+        """Retorna status do timer."""
+        code, stdout, _ = run_command(
+            ['systemctl', 'is-active', 'tsijukebox-healthcheck.timer'],
+            capture=True, check=False
+        )
+        is_active = stdout.strip() == 'active'
+        
+        code, stdout, _ = run_command(
+            ['systemctl', 'list-timers', '--no-pager', 'tsijukebox-healthcheck.timer'],
+            capture=True, check=False
+        )
+        
+        return {
+            'installed': self.TIMER_PATH.exists(),
+            'active': is_active,
+            'env_configured': self.ENV_PATH.exists(),
+            'timer_info': stdout if is_active else None,
+        }
+
 
 # =============================================================================
 # HEALTH CHECK (--health-check) - Verificação rápida para monitoramento
@@ -650,10 +837,13 @@ class HealthCheck:
     EXIT_CRITICAL = 2
     EXIT_UNKNOWN = 3
     
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, alert_on_failure: bool = False, alert_channels: List[str] = None):
         self.verbose = verbose
+        self.alert_on_failure = alert_on_failure
+        self.alert_channels = alert_channels or ['database']
         self.status = self.EXIT_OK
         self.messages: List[str] = []
+        self.checks_results: List[Dict[str, Any]] = []
     
     def _log(self, message: str):
         """Adiciona mensagem ao log."""
@@ -696,6 +886,32 @@ class HealthCheck:
         except Exception:
             return False
     
+    def check_memory(self, max_percent: float = 90.0) -> bool:
+        """Verifica se uso de memória está abaixo do limite."""
+        try:
+            with open('/proc/meminfo', 'r') as f:
+                lines = f.readlines()
+            mem_total = mem_available = 0
+            for line in lines:
+                if line.startswith('MemTotal:'):
+                    mem_total = int(line.split()[1])
+                elif line.startswith('MemAvailable:'):
+                    mem_available = int(line.split()[1])
+            if mem_total > 0:
+                used_percent = ((mem_total - mem_available) / mem_total) * 100
+                return used_percent < max_percent
+            return True
+        except Exception:
+            return True
+    
+    def check_cpu_load(self, max_load: float = 5.0) -> bool:
+        """Verifica se load average está abaixo do limite."""
+        try:
+            load1, _, _ = os.getloadavg()
+            return load1 < max_load
+        except Exception:
+            return True
+    
     def run(self) -> int:
         """Executa health check e retorna código de saída."""
         checks = [
@@ -703,6 +919,8 @@ class HealthCheck:
             ("tsijukebox.service", lambda: self.check_service('tsijukebox'), True),
             ("port-5173", lambda: self.check_port(5173), True),
             ("disk-space-1gb", lambda: self.check_disk(1.0), True),
+            ("memory-usage", lambda: self.check_memory(90.0), True),
+            ("cpu-load", lambda: self.check_cpu_load(5.0), False),
             ("grafana.service", lambda: self.check_service('grafana'), False),
             ("prometheus.service", lambda: self.check_service('prometheus'), False),
             ("nginx.service", lambda: self.check_service('nginx'), False),
@@ -711,6 +929,9 @@ class HealthCheck:
         for name, check_fn, required in checks:
             try:
                 ok = check_fn()
+                status = 'ok' if ok else ('critical' if required else 'warning')
+                self.checks_results.append({'name': name, 'ok': ok, 'required': required, 'status': status})
+                
                 if ok:
                     self._log(f"OK: {name}")
                 else:
@@ -723,6 +944,7 @@ class HealthCheck:
             except Exception as e:
                 self.status = max(self.status, self.EXIT_UNKNOWN)
                 self._log(f"UNKNOWN: {name} ({e})")
+                self.checks_results.append({'name': name, 'ok': False, 'required': required, 'status': 'unknown', 'error': str(e)})
         
         # Sempre imprimir se houver problemas
         if self.status != self.EXIT_OK and not self.verbose:
@@ -730,7 +952,128 @@ class HealthCheck:
                 if not msg.startswith("OK:"):
                     print(msg)
         
+        # Enviar alertas se configurado
+        if self.alert_on_failure and self.status != self.EXIT_OK:
+            self._send_alerts()
+        
         return self.status
+    
+    def _send_alerts(self):
+        """Envia alertas para os canais configurados."""
+        failed_checks = [c for c in self.checks_results if not c['ok']]
+        if not failed_checks:
+            return
+        
+        severity = 'critical' if self.status == self.EXIT_CRITICAL else 'warning'
+        title = f"TSiJUKEBOX Health Check {'CRÍTICO' if severity == 'critical' else 'Aviso'}"
+        message = "Verificações com falha:\n" + "\n".join([f"- {c['name']} ({c['status']})" for c in failed_checks])
+        
+        for channel in self.alert_channels:
+            self._send_alert_to_channel(channel, title, message, severity, failed_checks)
+    
+    def _send_alert_to_channel(self, channel: str, title: str, message: str, severity: str, metadata: Any):
+        """Envia alerta para um canal específico."""
+        import urllib.request
+        import urllib.error
+        
+        if channel == 'telegram':
+            self._send_telegram_alert(title, message, severity)
+        elif channel == 'discord':
+            self._send_discord_alert(title, message, severity)
+        elif channel == 'database':
+            self._send_database_alert(title, message, severity, metadata)
+    
+    def _send_telegram_alert(self, title: str, message: str, severity: str):
+        """Envia alerta via Telegram."""
+        import urllib.request
+        import urllib.error
+        
+        bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+        
+        if not bot_token or not chat_id:
+            if self.verbose:
+                print("WARN: Telegram não configurado")
+            return
+        
+        emoji = '🚨' if severity == 'critical' else '⚠️'
+        text = f"{emoji} *{title}*\n\n{message}"
+        
+        try:
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            data = json.dumps({
+                'chat_id': chat_id,
+                'text': text,
+                'parse_mode': 'Markdown'
+            }).encode('utf-8')
+            
+            req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+            urllib.request.urlopen(req, timeout=10)
+            
+            if self.verbose:
+                print("OK: Alerta enviado via Telegram")
+        except Exception as e:
+            if self.verbose:
+                print(f"WARN: Falha ao enviar alerta Telegram: {e}")
+    
+    def _send_discord_alert(self, title: str, message: str, severity: str):
+        """Envia alerta via Discord webhook."""
+        import urllib.request
+        import urllib.error
+        
+        webhook_url = os.environ.get('DISCORD_WEBHOOK_URL')
+        
+        if not webhook_url:
+            if self.verbose:
+                print("WARN: Discord não configurado")
+            return
+        
+        color = 0xe74c3c if severity == 'critical' else 0xf39c12
+        
+        try:
+            data = json.dumps({
+                'embeds': [{
+                    'title': title,
+                    'description': message,
+                    'color': color
+                }]
+            }).encode('utf-8')
+            
+            req = urllib.request.Request(webhook_url, data=data, headers={'Content-Type': 'application/json'})
+            urllib.request.urlopen(req, timeout=10)
+            
+            if self.verbose:
+                print("OK: Alerta enviado via Discord")
+        except Exception as e:
+            if self.verbose:
+                print(f"WARN: Falha ao enviar alerta Discord: {e}")
+    
+    def _send_database_alert(self, title: str, message: str, severity: str, metadata: Any):
+        """Registra alerta no banco de dados via edge function."""
+        import urllib.request
+        import urllib.error
+        
+        supabase_url = os.environ.get('SUPABASE_URL', 'https://ynkqczsmcnxvapljofel.supabase.co')
+        
+        try:
+            url = f"{supabase_url}/functions/v1/alert-notifications"
+            data = json.dumps({
+                'type': 'health_check_failure',
+                'channel': 'database',
+                'title': title,
+                'message': message,
+                'severity': severity,
+                'metadata': {'checks': metadata, 'hostname': socket.gethostname()}
+            }).encode('utf-8')
+            
+            req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+            urllib.request.urlopen(req, timeout=10)
+            
+            if self.verbose:
+                print("OK: Alerta registrado no banco")
+        except Exception as e:
+            if self.verbose:
+                print(f"WARN: Falha ao registrar alerta no banco: {e}")
 
 
 # =============================================================================
@@ -866,11 +1209,186 @@ class PluginManager:
                 log_error("Falha na instalação")
                 return False
         
+        # Plugin: youtube-music-dl (NOVO)
+        class YouTubeMusicDLPlugin(PluginBase):
+            name = "youtube-music-dl"
+            version = "1.0.0"
+            description = "Baixa músicas do YouTube Music integrado ao TSiJUKEBOX"
+            author = "B0.y_Z4kr14"
+            required_packages = ['yt-dlp', 'ffmpeg']
+            required_commands = ['yt-dlp', 'ffmpeg']
+            
+            def install(self) -> bool:
+                log_step("Instalando youtube-music-dl...")
+                
+                # 1. Instalar yt-dlp e ffmpeg
+                code, _, _ = run_command(['pacman', '-S', '--noconfirm', 'yt-dlp', 'ffmpeg'], check=False, capture=True)
+                if code != 0:
+                    # Fallback pip
+                    run_command(['pip', 'install', '--user', 'yt-dlp'], check=False, capture=True)
+                
+                # 2. Criar script wrapper /usr/local/bin/ytm-dl
+                log_step("Criando wrapper ytm-dl...")
+                script_content = '''#!/bin/bash
+# youtube-music-dl wrapper para TSiJUKEBOX
+# Baixa músicas do YouTube Music com metadados
+
+MUSIC_DIR="${TSIJUKEBOX_MUSIC_DIR:-$HOME/Musics}"
+COOKIES_FROM="${COOKIES_FROM:-firefox}"
+
+usage() {
+    echo "Uso: ytm-dl [OPTIONS] <URL>"
+    echo ""
+    echo "Opções:"
+    echo "  -d, --dir DIR      Diretório de saída (padrão: $MUSIC_DIR)"
+    echo "  -p, --playlist     Baixar playlist inteira"
+    echo "  -q, --quality Q    Qualidade de áudio (0-9, 0=melhor)"
+    echo "  -h, --help         Mostrar esta ajuda"
+    exit 0
+}
+
+QUALITY=0
+PLAYLIST_OPTS=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -d|--dir) MUSIC_DIR="$2"; shift 2 ;;
+        -p|--playlist) PLAYLIST_OPTS="--yes-playlist"; shift ;;
+        -q|--quality) QUALITY="$2"; shift 2 ;;
+        -h|--help) usage ;;
+        *) break ;;
+    esac
+done
+
+if [ -z "$1" ]; then
+    usage
+fi
+
+mkdir -p "$MUSIC_DIR"
+
+yt-dlp --extract-audio --audio-format mp3 --audio-quality "$QUALITY" \\
+       --output "$MUSIC_DIR/%(artist)s/%(album)s/%(title)s.%(ext)s" \\
+       --embed-thumbnail --add-metadata \\
+       --cookies-from-browser "$COOKIES_FROM" \\
+       --sponsorblock-remove all \\
+       --parse-metadata "%(uploader)s:%(artist)s" \\
+       $PLAYLIST_OPTS \\
+       "$@"
+
+echo ""
+echo "✅ Download concluído! Arquivos em: $MUSIC_DIR"
+'''
+                wrapper_path = Path('/usr/local/bin/ytm-dl')
+                if not DRY_RUN:
+                    wrapper_path.write_text(script_content)
+                    wrapper_path.chmod(0o755)
+                
+                log_success("youtube-music-dl instalado!")
+                log_info("  Uso: ytm-dl <URL do YouTube Music>")
+                log_info("       ytm-dl --playlist <URL da Playlist>")
+                log_info("       ytm-dl --dir ~/MinhasMusicas <URL>")
+                return True
+        
+        # Plugin: discord-integration (NOVO)
+        class DiscordIntegrationPlugin(PluginBase):
+            name = "discord-integration"
+            version = "1.0.0"
+            description = "Notificações de reprodução e controle remoto via Discord"
+            author = "B0.y_Z4kr14"
+            required_packages = ['pypresence']
+            required_commands = []
+            
+            def install(self) -> bool:
+                log_step("Instalando discord-integration...")
+                
+                # 1. Instalar pypresence para Rich Presence
+                code, _, _ = run_command(['pip', 'install', '--user', 'pypresence'], check=False, capture=True)
+                
+                # 2. Configurar webhook
+                print(f"\n{Colors.YELLOW}━━━ CONFIGURAR DISCORD ━━━{Colors.RESET}\n")
+                
+                try:
+                    webhook_url = input(f"{Colors.CYAN}Discord Webhook URL (Enter para pular): {Colors.RESET}").strip()
+                    
+                    if webhook_url:
+                        env_file = CONFIG_DIR / 'discord.env'
+                        CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+                        env_content = f"""# Discord Integration Configuration
+DISCORD_WEBHOOK_URL={webhook_url}
+DISCORD_RICH_PRESENCE=true
+DISCORD_NOTIFY_ON_PLAY=true
+"""
+                        if not DRY_RUN:
+                            env_file.write_text(env_content)
+                        log_success(f"Configuração salva em: {env_file}")
+                except (EOFError, KeyboardInterrupt):
+                    log_warning("Configuração pulada")
+                
+                # 3. Criar script de Rich Presence
+                log_step("Criando serviço de Rich Presence...")
+                
+                rpc_script = '''#!/usr/bin/env python3
+"""Discord Rich Presence para TSiJUKEBOX"""
+import os
+import time
+import subprocess
+from pypresence import Presence
+from datetime import datetime
+
+CLIENT_ID = "1234567890"  # Placeholder - usar ID real
+
+def get_spotify_status():
+    """Obtém status atual do Spotify via sp-status."""
+    try:
+        result = subprocess.run(['sp-status'], capture_output=True, text=True, timeout=5)
+        if result.returncode == 0:
+            return result.stdout.strip()
+    except:
+        pass
+    return None
+
+def main():
+    try:
+        RPC = Presence(CLIENT_ID)
+        RPC.connect()
+        print("Discord Rich Presence conectado!")
+        
+        while True:
+            status = get_spotify_status()
+            if status and " - " in status:
+                artist, song = status.split(" - ", 1)
+                RPC.update(
+                    details=song[:128],
+                    state=f"por {artist}"[:128],
+                    large_image="tsijukebox",
+                    large_text="TSiJUKEBOX",
+                    start=int(datetime.now().timestamp())
+                )
+            time.sleep(15)
+    except Exception as e:
+        print(f"Erro: {e}")
+
+if __name__ == "__main__":
+    main()
+'''
+                rpc_path = INSTALL_DIR / 'scripts' / 'discord_rpc.py'
+                if not DRY_RUN:
+                    rpc_path.parent.mkdir(parents=True, exist_ok=True)
+                    rpc_path.write_text(rpc_script)
+                    rpc_path.chmod(0o755)
+                
+                log_success("discord-integration instalado!")
+                log_info("  Configuração: /etc/tsijukebox/discord.env")
+                log_info("  Rich Presence: scripts/discord_rpc.py")
+                return True
+        
         # Registrar plugins
         self.BUILTIN_PLUGINS = {
             'spotify-downloader': SpotifyDownloaderPlugin,
             'youtube-dl': YoutubeDLPlugin,
             'lyrics-fetcher': LyricsFetcherPlugin,
+            'youtube-music-dl': YouTubeMusicDLPlugin,
+            'discord-integration': DiscordIntegrationPlugin,
         }
         self.plugins.update(self.BUILTIN_PLUGINS)
     
@@ -953,6 +1471,204 @@ class PluginManager:
         except Exception as e:
             log_error(f"Erro ao executar plugin: {e}")
             return False
+
+
+# =============================================================================
+# CONFIG MIGRATOR (--migrate)
+# =============================================================================
+
+class ConfigMigrator:
+    """Migra configurações entre versões do TSiJUKEBOX."""
+    
+    # Mapeamento de migrações por versão
+    MIGRATIONS = {
+        '3.0.0': '_migrate_v3_to_v4',
+        '4.0.0': '_migrate_v4_to_v41',
+        '4.1.0': None,  # Versão atual
+    }
+    
+    VERSION_ORDER = ['3.0.0', '4.0.0', '4.1.0']
+    
+    def __init__(self, from_version: Optional[str] = None, to_version: str = VERSION):
+        self.from_version = from_version
+        self.to_version = to_version
+        self.changes_made: List[str] = []
+    
+    def detect_version(self) -> str:
+        """Detecta versão atual da instalação."""
+        # 1. Verificar arquivo de versão
+        version_file = CONFIG_DIR / 'version'
+        if version_file.exists():
+            return version_file.read_text().strip()
+        
+        # 2. Verificar formato do config.yaml
+        config_yaml = CONFIG_DIR / 'config.yaml'
+        if config_yaml.exists():
+            content = config_yaml.read_text()
+            # v4+ tem seção 'integrations'
+            if 'integrations:' in content:
+                return '4.0.0'
+            # v3 tinha 'spotify_enabled'
+            if 'spotify_enabled:' in content:
+                return '3.0.0'
+        
+        # 3. Verificar estrutura de diretórios
+        if (INSTALL_DIR / 'scripts').exists():
+            return '4.0.0'
+        
+        return 'unknown'
+    
+    def _version_index(self, version: str) -> int:
+        """Retorna índice da versão na ordem."""
+        try:
+            return self.VERSION_ORDER.index(version)
+        except ValueError:
+            return -1
+    
+    def _should_apply(self, migration_version: str, current: str, target: str) -> bool:
+        """Verifica se uma migração deve ser aplicada."""
+        mig_idx = self._version_index(migration_version)
+        cur_idx = self._version_index(current)
+        tgt_idx = self._version_index(target)
+        
+        # Aplicar se migração está entre current e target
+        return cur_idx < mig_idx <= tgt_idx
+    
+    def migrate(self, dry_run: bool = False) -> bool:
+        """Executa migração entre versões."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🔄 MIGRAÇÃO DE CONFIGURAÇÕES{Colors.RESET}{Colors.CYAN}                               ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        # Detectar versão atual
+        current = self.from_version or self.detect_version()
+        log_info(f"Versão detectada: {current}")
+        log_info(f"Versão alvo: {self.to_version}")
+        
+        if current == 'unknown':
+            log_error("Não foi possível detectar a versão atual")
+            log_info("Use --migrate <versão> para especificar manualmente")
+            return False
+        
+        if current == self.to_version:
+            log_success("Sistema já está na versão mais recente!")
+            return True
+        
+        # Backup automático
+        if not dry_run:
+            log_step("Criando backup antes da migração...")
+            backup = ConfigBackup()
+            backup_path = backup.create_backup(f"pre-migrate-{current}")
+            if backup_path:
+                log_success(f"Backup criado: {backup_path}")
+            else:
+                log_warning("Falha ao criar backup, continuando...")
+        
+        # Aplicar migrações em sequência
+        log_step("Aplicando migrações...")
+        
+        for version, migration_fn_name in self.MIGRATIONS.items():
+            if self._should_apply(version, current, self.to_version):
+                if migration_fn_name:
+                    log_info(f"  Aplicando migração para {version}...")
+                    migration_fn = getattr(self, migration_fn_name, None)
+                    if migration_fn:
+                        success = migration_fn(dry_run)
+                        if not success:
+                            log_error(f"Migração para {version} falhou")
+                            return False
+                        self.changes_made.append(f"Migração {version}")
+                else:
+                    log_info(f"  Versão {version} não requer migração")
+        
+        # Atualizar arquivo de versão
+        if not dry_run:
+            (CONFIG_DIR / 'version').write_text(self.to_version)
+        
+        # Resumo
+        print(f"\n{Colors.GREEN}━━━ MIGRAÇÃO CONCLUÍDA ━━━{Colors.RESET}\n")
+        
+        if self.changes_made:
+            log_success(f"Alterações aplicadas:")
+            for change in self.changes_made:
+                log_info(f"  • {change}")
+        else:
+            log_info("Nenhuma alteração necessária")
+        
+        log_success(f"Sistema atualizado para v{self.to_version}")
+        return True
+    
+    def _migrate_v3_to_v4(self, dry_run: bool = False) -> bool:
+        """Migra de v3.x para v4.0."""
+        config_yaml = CONFIG_DIR / 'config.yaml'
+        
+        if not config_yaml.exists():
+            log_warning("config.yaml não encontrado, pulando migração de config")
+            return True
+        
+        log_step("Migrando config.yaml de v3 para v4...")
+        
+        content = config_yaml.read_text()
+        
+        # Transformações
+        transformations = [
+            # Renomear campos
+            ('spotify_enabled: true', 'integrations:\n  spotify:\n    enabled: true'),
+            ('spotify_enabled: false', 'integrations:\n  spotify:\n    enabled: false'),
+            ('db_type:', 'database:\n  type:'),
+            # Adicionar novas seções
+        ]
+        
+        for old, new in transformations:
+            if old in content:
+                content = content.replace(old, new)
+                self.changes_made.append(f"Transformado: {old[:30]}...")
+        
+        if not dry_run:
+            config_yaml.write_text(content)
+        
+        return True
+    
+    def _migrate_v4_to_v41(self, dry_run: bool = False) -> bool:
+        """Migra de v4.0 para v4.1."""
+        log_step("Migrando para v4.1...")
+        
+        # v4.1 adiciona suporte a plugins e health-check
+        config_yaml = CONFIG_DIR / 'config.yaml'
+        
+        if config_yaml.exists():
+            content = config_yaml.read_text()
+            
+            # Adicionar seção de plugins se não existir
+            if 'plugins:' not in content:
+                content += '''
+
+# Plugins habilitados
+plugins:
+  enabled: true
+  auto_update: false
+'''
+                self.changes_made.append("Adicionada seção 'plugins'")
+            
+            # Adicionar seção de monitoring
+            if 'health_check:' not in content:
+                content += '''
+
+# Health Check
+health_check:
+  enabled: true
+  interval_minutes: 5
+  alert_channels:
+    - database
+'''
+                self.changes_made.append("Adicionada seção 'health_check'")
+            
+            if not dry_run:
+                config_yaml.write_text(content)
+        
+        return True
 
 
 # =============================================================================
@@ -2447,6 +3163,22 @@ def main():
     # Health check para monitoramento
     parser.add_argument('--health-check', action='store_true',
                        help='Verificação rápida de saúde (retorna código de saída para monitoramento)')
+    parser.add_argument('--alert-on-failure', action='store_true',
+                       help='Enviar alerta se health-check falhar')
+    parser.add_argument('--alert-channels', type=str, default='database',
+                       help='Canais de alerta separados por vírgula (telegram,discord,email,database)')
+    
+    # Timer systemd para health-check
+    parser.add_argument('--install-timer', action='store_true',
+                       help='Instalar timer systemd para health-check automático')
+    parser.add_argument('--uninstall-timer', action='store_true',
+                       help='Remover timer systemd de health-check')
+    parser.add_argument('--timer-status', action='store_true',
+                       help='Verificar status do timer de health-check')
+    
+    # Migração de configurações
+    parser.add_argument('--migrate', type=str, nargs='?', const='auto', metavar='FROM_VERSION',
+                       help='Migrar configurações para versão atual (detecta versão automaticamente)')
     
     # Sistema de plugins
     parser.add_argument('--plugin', type=str, metavar='NAME',
@@ -2534,9 +3266,48 @@ def main():
     
     # --health-check: Verificação rápida para monitoramento
     if args.health_check:
-        health = HealthCheck(verbose=args.verbose)
+        alert_channels = args.alert_channels.split(',') if args.alert_channels else ['database']
+        health = HealthCheck(
+            verbose=args.verbose,
+            alert_on_failure=args.alert_on_failure,
+            alert_channels=alert_channels
+        )
         exit_code = health.run()
         sys.exit(exit_code)
+    
+    # --install-timer: Instalar timer de health-check
+    if args.install_timer:
+        check_root()
+        alert_channels = args.alert_channels.split(',') if args.alert_channels else ['database']
+        timer = SystemdHealthTimer()
+        success = timer.install(alert_channels)
+        sys.exit(0 if success else 1)
+    
+    # --uninstall-timer: Remover timer
+    if args.uninstall_timer:
+        check_root()
+        timer = SystemdHealthTimer()
+        success = timer.uninstall()
+        sys.exit(0 if success else 1)
+    
+    # --timer-status: Status do timer
+    if args.timer_status:
+        timer = SystemdHealthTimer()
+        status = timer.status()
+        print(f"\n{Colors.CYAN}━━━ STATUS DO TIMER ━━━{Colors.RESET}\n")
+        print(f"  Instalado: {'Sim' if status['installed'] else 'Não'}")
+        print(f"  Ativo: {'Sim' if status['active'] else 'Não'}")
+        print(f"  Configuração: {'OK' if status['env_configured'] else 'Pendente'}")
+        if status['timer_info']:
+            print(f"\n{status['timer_info']}")
+        sys.exit(0)
+    
+    # --migrate: Migrar configurações
+    if args.migrate:
+        from_version = args.migrate if args.migrate != 'auto' else None
+        migrator = ConfigMigrator(from_version=from_version)
+        success = migrator.migrate(dry_run=args.dry_run)
+        sys.exit(0 if success else 1)
     
     # --list-plugins: Listar plugins disponíveis
     if args.list_plugins:
