@@ -1,4 +1,4 @@
-import { lazy, useEffect } from "react";
+import { lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,10 +7,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { useConnectionMonitor, useFileChangeDetector } from "@/hooks/system";
+import { useConnectionMonitor, useFileChangeDetector, useAutoSync } from "@/hooks/system";
 import { ContrastDebugPanel } from "@/components/debug/ContrastDebugPanel";
 import { ErrorBoundary, SuspenseBoundary, PageBoundary } from "@/components/errors";
-import { Music } from "lucide-react";
+import { DevFileChangeMonitor } from "@/components/dev";
 
 // Eagerly loaded pages (critical path)
 import Index from "./pages/Index";
@@ -55,24 +55,35 @@ const HealthDashboard = lazy(() => import("./pages/HealthDashboard"));
 const SpicetifyThemeGallery = lazy(() => import("./pages/SpicetifyThemeGallery"));
 const JamSession = lazy(() => import("./pages/JamSession"));
 
-// DEV-only file change monitor component
-function DevFileChangeMonitor() {
-  const { isDetecting, startDetection, detectedFiles, lastDetection } = useFileChangeDetector();
+// DEV-only file change monitor wrapper with hooks connected
+function DevFileChangeMonitorWrapper() {
+  const { 
+    detectedFiles, 
+    isDetecting, 
+    startDetection,
+    lastDetection 
+  } = useFileChangeDetector();
+  
+  const { triggerSync, isSyncing, pendingCount } = useAutoSync();
 
-  // Auto-start detection in DEV mode
-  useEffect(() => {
-    startDetection();
-    console.log('[DevFileChangeMonitor] Auto-started file change detection');
-  }, [startDetection]);
+  // Determine sync status based on state
+  const syncStatus = isSyncing 
+    ? 'syncing' 
+    : pendingCount > 0 
+      ? 'pending' 
+      : 'idle';
 
-  // Log detected files for debugging
-  useEffect(() => {
-    if (detectedFiles.length > 0) {
-      console.log('[DevFileChangeMonitor] Detected files:', detectedFiles.map(f => f.path));
-    }
-  }, [detectedFiles]);
-
-  return null; // No visual indicator, just background detection
+  return (
+    <DevFileChangeMonitor
+      detectedFiles={detectedFiles}
+      isDetecting={isDetecting}
+      onStartDetection={startDetection}
+      lastDetection={lastDetection}
+      onSyncNow={triggerSync}
+      isSyncing={isSyncing}
+      syncStatus={syncStatus}
+    />
+  );
 }
 
 const queryClient = new QueryClient({
@@ -217,7 +228,7 @@ const App = () => (
               <AppRoutes />
             </BrowserRouter>
             {/* DEV-only components */}
-            {import.meta.env.DEV && <DevFileChangeMonitor />}
+            {import.meta.env.DEV && <DevFileChangeMonitorWrapper />}
             {import.meta.env.DEV && <ContrastDebugPanel />}
           </TooltipProvider>
         </UserProvider>
