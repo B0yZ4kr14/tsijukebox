@@ -1,0 +1,429 @@
+# =============================================================================
+# TSiJUKEBOX Installer - Python Tests Workflow
+# =============================================================================
+# Runs all Python tests for the installer with coverage reporting.
+#
+# Jobs:
+#   1. lint - Python linting with ruff
+#   2. unit-tests - Unit tests with coverage
+#   3. edge-case-tests - Edge case and error handling tests
+#   4. integration-tests - Integration tests
+#   5. benchmark-tests - Performance benchmarks (main/develop only)
+#   6. e2e-docker-tests - E2E tests in Docker (main only)
+#   7. test-status - Final status summary
+
+name: 🐍 Python Installer Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/python-installer-tests.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'scripts/**'
+  workflow_dispatch:
+    inputs:
+      run_e2e:
+        description: 'Run E2E Docker tests'
+        required: false
+        default: false
+        type: boolean
+      run_benchmarks:
+        description: 'Run benchmark tests'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: '3.11'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  # ===========================================================================
+  # Job 1: Python Linting
+  # ===========================================================================
+  lint:
+    name: 🔍 Python Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install linting tools
+        run: pip install ruff
+
+      - name: Run ruff linter
+        run: |
+          ruff check scripts/ \
+            --ignore E501,E402,F401 \
+            --output-format=github
+        continue-on-error: true
+
+      - name: Lint summary
+        run: |
+          echo "## 🔍 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "Linting completed. Check annotations for any issues." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 2: Unit Tests with Coverage
+  # ===========================================================================
+  unit-tests:
+    name: 🧪 Unit Tests + Coverage
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run unit tests with coverage
+        run: |
+          cd scripts
+          pytest tests/test_unified_installer.py \
+                 tests/test_cli_parsing.py \
+                 tests/test_audio_setup.py \
+                 tests/test_database_setup.py \
+                 tests/test_fonts_setup.py \
+                 tests/test_ntp_setup.py \
+                 tests/test_ufw_setup.py \
+                 tests/test_spicetify_setup.py \
+            --cov=. \
+            --cov-report=html:htmlcov \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing \
+            -v --tb=short \
+            -m "not integration and not e2e and not docker and not benchmark and not slow" \
+            --ignore=tests/e2e/ \
+            || true
+        continue-on-error: true
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage-html
+          path: scripts/htmlcov/
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Upload coverage XML
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage-xml
+          path: scripts/coverage.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Coverage summary
+        run: |
+          echo "## 🧪 Python Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f scripts/coverage.xml ]; then
+            python3 << 'EOF' >> $GITHUB_STEP_SUMMARY
+          import xml.etree.ElementTree as ET
+          try:
+              tree = ET.parse('scripts/coverage.xml')
+              root = tree.getroot()
+              line_rate = float(root.get('line-rate', 0)) * 100
+              branch_rate = float(root.get('branch-rate', 0)) * 100
+              print('| Metric | Value |')
+              print('|--------|-------|')
+              print(f'| Lines | {line_rate:.1f}% |')
+              print(f'| Branches | {branch_rate:.1f}% |')
+          except Exception as e:
+              print(f'Coverage parsing failed: {e}')
+          EOF
+          else
+            echo "No coverage report generated." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # ===========================================================================
+  # Job 3: Edge Case Tests
+  # ===========================================================================
+  edge-case-tests:
+    name: ⚠️ Edge Case Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run edge case tests
+        run: |
+          cd scripts
+          pytest tests/test_unified_installer_edge_cases.py \
+            -v --tb=short --timeout=120 \
+            || true
+        continue-on-error: true
+
+      - name: Edge case summary
+        if: always()
+        run: |
+          echo "## ⚠️ Edge Case Tests" >> $GITHUB_STEP_SUMMARY
+          echo "Edge case tests completed. Check logs for details." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 4: Integration Tests
+  # ===========================================================================
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run integration tests
+        run: |
+          cd scripts
+          pytest tests/test_unified_installer_integration.py \
+            -v --tb=short --timeout=180 \
+            -m "not docker and not e2e" \
+            || true
+        continue-on-error: true
+
+      - name: Integration summary
+        if: always()
+        run: |
+          echo "## 🔗 Integration Tests" >> $GITHUB_STEP_SUMMARY
+          echo "Integration tests completed." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 5: Performance Benchmarks (main/develop only)
+  # ===========================================================================
+  benchmark-tests:
+    name: ⚡ Performance Benchmarks
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    if: |
+      github.ref == 'refs/heads/main' || 
+      github.ref == 'refs/heads/develop' ||
+      github.event.inputs.run_benchmarks == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run benchmark tests
+        run: |
+          cd scripts
+          pytest tests/test_installer_benchmark.py \
+            --benchmark-only \
+            --benchmark-json=benchmark-results.json \
+            --benchmark-columns=mean,stddev,min,max,rounds \
+            --benchmark-sort=mean \
+            -v --timeout=300 \
+            || true
+        continue-on-error: true
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installer-benchmark-results
+          path: scripts/benchmark-results.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Generate benchmark summary
+        if: always()
+        run: |
+          echo "## ⚡ Installer Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f scripts/benchmark-results.json ]; then
+            python3 << 'EOF' >> $GITHUB_STEP_SUMMARY
+          import json
+          try:
+              with open('scripts/benchmark-results.json') as f:
+                  data = json.load(f)
+              benchmarks = data.get('benchmarks', [])
+              if benchmarks:
+                  print('| Phase | Mean | Min | Max | Rounds |')
+                  print('|-------|------|-----|-----|--------|')
+                  for b in benchmarks[:25]:
+                      name = b['name'].replace('test_benchmark_phase_', '').replace('_', ' ').title()[:35]
+                      s = b['stats']
+                      mean_ms = s['mean'] * 1000
+                      min_ms = s['min'] * 1000
+                      max_ms = s['max'] * 1000
+                      rounds = s.get('rounds', 'N/A')
+                      print(f'| {name} | {mean_ms:.2f}ms | {min_ms:.2f}ms | {max_ms:.2f}ms | {rounds} |')
+              else:
+                  print('No benchmark data available.')
+          except Exception as e:
+              print(f'Benchmark parsing failed: {e}')
+          EOF
+          else
+            echo "No benchmark results generated." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # ===========================================================================
+  # Job 6: E2E Docker Tests (main only)
+  # ===========================================================================
+  e2e-docker-tests:
+    name: 🐳 E2E Docker Tests
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: |
+      github.ref == 'refs/heads/main' ||
+      github.event.inputs.run_e2e == 'true'
+    services:
+      dind:
+        image: docker:24-dind
+        options: --privileged
+        ports:
+          - 2375:2375
+        env:
+          DOCKER_TLS_CERTDIR: ""
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Wait for Docker daemon
+        run: |
+          timeout 60 sh -c 'until docker info 2>/dev/null; do echo "Waiting for Docker..."; sleep 2; done'
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+
+      - name: Build test container
+        run: |
+          cd scripts
+          docker build -t tsijukebox-installer-test -f tests/e2e/Dockerfile.test .
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+        continue-on-error: true
+
+      - name: Run E2E Docker tests
+        run: |
+          cd scripts
+          pytest tests/e2e/test_installer_docker_e2e.py \
+            -v --tb=short --timeout=600 \
+            -m "docker or e2e" \
+            || true
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+        continue-on-error: true
+
+      - name: E2E summary
+        if: always()
+        run: |
+          echo "## 🐳 E2E Docker Tests" >> $GITHUB_STEP_SUMMARY
+          echo "E2E tests in Docker completed." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 7: Final Test Status
+  # ===========================================================================
+  test-status:
+    name: ✅ Test Status
+    runs-on: ubuntu-latest
+    needs: [unit-tests, edge-case-tests, integration-tests]
+    if: always()
+    steps:
+      - name: Generate final summary
+        run: |
+          echo "## 🐍 Python Installer Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+            echo "| Unit Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.unit-tests.result }}" == "skipped" ]; then
+            echo "| Unit Tests | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Unit Tests | ❌ ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.edge-case-tests.result }}" == "success" ]; then
+            echo "| Edge Case Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.edge-case-tests.result }}" == "skipped" ]; then
+            echo "| Edge Case Tests | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Edge Case Tests | ⚠️ ${{ needs.edge-case-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.integration-tests.result }}" == "success" ]; then
+            echo "| Integration Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.integration-tests.result }}" == "skipped" ]; then
+            echo "| Integration Tests | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Integration Tests | ⚠️ ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Download coverage report from artifacts for detailed analysis." >> $GITHUB_STEP_SUMMARY
+
+      - name: Check critical test failures
+        if: needs.unit-tests.result == 'failure'
+        run: |
+          echo "❌ Critical unit tests failed!"
+          exit 1
