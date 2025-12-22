@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import type { Json } from '@/integrations/supabase/types';
 
 export interface AuditLog {
   id: string;
@@ -190,7 +191,7 @@ export function useLogAudit() {
     target_type?: string;
     target_id?: string;
     target_name?: string;
-    details?: object;
+    details?: Json;
     status?: 'success' | 'failure' | 'pending';
     error_message?: string;
   }) => {

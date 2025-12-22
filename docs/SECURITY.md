@@ -284,6 +284,90 @@ console.log('User login:', { email, password: '[REDACTED]' });
 
 ---
 
+## Audit Logging System
+
+### Overview
+
+TSiJUKEBOX implements comprehensive audit logging to track administrative actions and security-relevant events. All audit logs are immutable and accessible only to administrators.
+
+### Audit Log Structure
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Unique identifier |
+| `timestamp` | Timestamp | When the event occurred |
+| `actor_id` | UUID | User who performed the action |
+| `actor_email` | Text | Email of the actor |
+| `actor_role` | Text | Role of the actor |
+| `action` | Text | Action performed |
+| `category` | Text | Category (kiosk, user, system, security) |
+| `severity` | Text | Severity level (info, warning, critical) |
+| `target_type` | Text | Type of affected resource |
+| `target_id` | Text | ID of affected resource |
+| `target_name` | Text | Name of affected resource |
+| `details` | JSON | Action-specific details |
+| `metadata` | JSON | Additional context (IP, user-agent) |
+| `status` | Text | Outcome (success, failure, pending) |
+| `error_message` | Text | Error details if failed |
+
+### Audited Events
+
+| Category | Events |
+|----------|--------|
+| **Kiosk** | command_sent, command_executed, command_failed, kiosk_offline, kiosk_recovered |
+| **User** | role_changed, user_created, user_deleted, permissions_changed |
+| **System** | login_success, login_failed, settings_changed |
+| **Security** | password_reset, session_revoked, suspicious_activity |
+
+### Access Control
+
+- Only administrators can read audit logs
+- Logs are inserted automatically by the system
+- Logs cannot be modified or deleted (immutable)
+
+### Retention Policy
+
+| Severity | Retention Period |
+|----------|------------------|
+| Info | 90 days |
+| Warning | 180 days |
+| Critical | 1 year |
+
+### Querying Audit Logs
+
+```typescript
+import { useAuditLogs } from '@/hooks/useAuditLogs';
+
+// Fetch logs with filters
+const { logs, isLoading, filters, updateFilters } = useAuditLogs({
+  category: 'kiosk',
+  severity: 'critical',
+  startDate: new Date('2024-01-01'),
+});
+
+// Log an audit event
+import { useLogAudit } from '@/hooks/useAuditLogs';
+
+const { logAudit } = useLogAudit();
+await logAudit({
+  action: 'command_sent',
+  category: 'kiosk',
+  severity: 'info',
+  target_type: 'kiosk',
+  target_id: 'kiosk-001',
+  target_name: 'Main Lobby Kiosk',
+  details: { command: 'restart' },
+});
+```
+
+### Export Functionality
+
+The AuditLogViewer component provides export options:
+- **JSON**: Full structured data export
+- **CSV**: Spreadsheet-compatible format
+
+---
+
 ## Security Checklist
 
 ### Development
