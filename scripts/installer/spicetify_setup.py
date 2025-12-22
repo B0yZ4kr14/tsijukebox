@@ -9,12 +9,62 @@ import os
 import shutil
 import json
 import time
+import random
 from pathlib import Path
-from typing import Optional, Dict, Any, List
-from dataclasses import dataclass
+from typing import Optional, Dict, Any, List, Callable, TypeVar
+from dataclasses import dataclass, field
 
 from config import Config
 from utils.logger import Logger
+
+# Type variable for generic retry function
+T = TypeVar('T')
+
+
+@dataclass
+class RetryConfig:
+    """
+    Configuração para retry com backoff exponencial.
+    
+    Attributes:
+        max_attempts: Número máximo de tentativas
+        initial_delay: Delay inicial em segundos
+        max_delay: Delay máximo em segundos
+        exponential_base: Base para cálculo exponencial
+        jitter: Adicionar variação aleatória ao delay
+        jitter_factor: Fator de jitter (0.0 a 1.0)
+    """
+    max_attempts: int = 5
+    initial_delay: float = 2.0
+    max_delay: float = 60.0
+    exponential_base: float = 2.0
+    jitter: bool = True
+    jitter_factor: float = 0.1
+    
+    def calculate_delay(self, attempt: int) -> float:
+        """Calcula o delay para uma tentativa específica."""
+        delay = min(
+            self.initial_delay * (self.exponential_base ** attempt),
+            self.max_delay
+        )
+        
+        if self.jitter:
+            jitter_range = delay * self.jitter_factor
+            delay += random.uniform(-jitter_range, jitter_range)
+        
+        return max(0.1, delay)  # Mínimo de 100ms
+
+
+@dataclass
+class RetryResult:
+    """Resultado de uma operação com retry."""
+    success: bool
+    value: Any = None
+    attempts: int = 0
+    total_time: float = 0.0
+    last_error: Optional[str] = None
+    attempt_details: List[Dict[str, Any]] = field(default_factory=list)
+
 
 @dataclass
 class SpicetifyStatus:
@@ -173,16 +223,102 @@ class SpicetifySetup:
         self.logger.warning("Não foi possível detectar instalação do Spotify")
         return None
     
-    def detect_prefs_path(self) -> Optional[Path]:
+    def _retry_with_backoff(
+        self,
+        func: Callable[[], Optional[T]],
+        config: RetryConfig,
+        description: str
+    ) -> RetryResult:
         """
-        Auto-detecta o arquivo de preferências do Spotify.
+        Executa função com retry e backoff exponencial.
+        
+        Args:
+            func: Função a ser executada (deve retornar None em caso de falha)
+            config: Configuração de retry
+            description: Descrição da operação para logs
+            
+        Returns:
+            RetryResult com resultado da operação
+        """
+        start_time = time.time()
+        attempt_details = []
+        last_error = None
+        
+        for attempt in range(config.max_attempts):
+            attempt_start = time.time()
+            
+            try:
+                result = func()
+                
+                if result is not None:
+                    elapsed = time.time() - start_time
+                    attempt_details.append({
+                        "attempt": attempt + 1,
+                        "success": True,
+                        "duration": time.time() - attempt_start
+                    })
+                    
+                    self.logger.info(
+                        f"{description}: sucesso na tentativa {attempt + 1}/{config.max_attempts} "
+                        f"({elapsed:.1f}s total)"
+                    )
+                    
+                    return RetryResult(
+                        success=True,
+                        value=result,
+                        attempts=attempt + 1,
+                        total_time=elapsed,
+                        attempt_details=attempt_details
+                    )
+                
+                last_error = "Resultado None"
+                
+            except Exception as e:
+                last_error = str(e)
+                self.logger.debug(f"{description}: erro na tentativa {attempt + 1}: {e}")
+            
+            attempt_details.append({
+                "attempt": attempt + 1,
+                "success": False,
+                "duration": time.time() - attempt_start,
+                "error": last_error
+            })
+            
+            # Não espera após a última tentativa
+            if attempt < config.max_attempts - 1:
+                delay = config.calculate_delay(attempt)
+                
+                self.logger.info(
+                    f"{description}: tentativa {attempt + 1}/{config.max_attempts} falhou. "
+                    f"Aguardando {delay:.1f}s antes da próxima tentativa..."
+                )
+                
+                time.sleep(delay)
+        
+        elapsed = time.time() - start_time
+        self.logger.warning(
+            f"{description}: todas as {config.max_attempts} tentativas falharam ({elapsed:.1f}s total)"
+        )
+        
+        return RetryResult(
+            success=False,
+            value=None,
+            attempts=config.max_attempts,
+            total_time=elapsed,
+            last_error=last_error,
+            attempt_details=attempt_details
+        )
+    
+    def _detect_prefs_path_once(self) -> Optional[Path]:
+        """
+        Tenta detectar o arquivo prefs uma única vez.
         
         Returns:
             Path para o arquivo prefs ou None se não encontrado
         """
         user_home = self._get_user_home()
         
-        # Caminhos ajustados para o usuário atual
+        # Caminhos conhecidos ajustados para o usuário atual
         search_paths = {
             "config-spotify": user_home / ".config/spotify/prefs",
             "flatpak": user_home / ".var/app/com.spotify.Client/config/spotify/prefs",
@@ -192,7 +328,7 @@ class SpicetifySetup:
         
         for name, path in search_paths.items():
             if path.exists():
-                self.logger.info(f"Prefs detectado: {name} em {path}")
+                self.logger.debug(f"Prefs detectado: {name} em {path}")
                 return path
         
         # Fallback: procurar recursivamente em locais comuns
@@ -207,13 +343,108 @@ class SpicetifySetup:
                 try:
                     for prefs in base.rglob("prefs"):
                         if "spotify" in str(prefs).lower():
-                            self.logger.info(f"Prefs encontrado via busca: {prefs}")
+                            self.logger.debug(f"Prefs encontrado via busca: {prefs}")
                             return prefs
                 except PermissionError:
                     continue
         
-        self.logger.warning("Não foi possível detectar arquivo prefs do Spotify")
         return None
+    
+    def detect_prefs_path(self, with_retry: bool = False) -> Optional[Path]:
+        """
+        Auto-detecta o arquivo de preferências do Spotify.
+        
+        Args:
+            with_retry: Se True, usa retry com backoff exponencial
+            
+        Returns:
+            Path para o arquivo prefs ou None se não encontrado
+        """
+        # Tenta detecção simples primeiro
+        result = self._detect_prefs_path_once()
+        
+        if result is not None:
+            self.logger.info(f"Prefs detectado: {result}")
+            return result
+        
+        if not with_retry:
+            self.logger.warning("Não foi possível detectar arquivo prefs do Spotify")
+            return None
+        
+        # Se não encontrou e retry está habilitado, tenta com backoff
+        return self.detect_prefs_path_with_retry().value
+    
+    def detect_prefs_path_with_retry(
+        self,
+        max_attempts: int = 6,
+        initial_delay: float = 2.0,
+        max_delay: float = 60.0
+    ) -> RetryResult:
+        """
+        Detecta prefs_path com retry e backoff exponencial.
+        
+        Útil quando o Spotify foi recém-iniciado e o arquivo prefs
+        ainda não foi criado.
+        
+        Args:
+            max_attempts: Número máximo de tentativas
+            initial_delay: Delay inicial em segundos
+            max_delay: Delay máximo em segundos
+            
+        Returns:
+            RetryResult com o caminho encontrado ou None
+        """
+        config = RetryConfig(
+            max_attempts=max_attempts,
+            initial_delay=initial_delay,
+            max_delay=max_delay,
+            exponential_base=2.0,
+            jitter=True
+        )
+        
+        result = self._retry_with_backoff(
+            self._detect_prefs_path_once,
+            config,
+            "Detecção de prefs_path"
+        )
+        
+        if not result.success:
+            # Tenta criar arquivo prefs vazio como último recurso
+            self.logger.info("Tentando criar arquivo prefs vazio...")
+            prefs_path = self._create_empty_prefs()
+            
+            if prefs_path:
+                return RetryResult(
+                    success=True,
+                    value=prefs_path,
+                    attempts=result.attempts + 1,
+                    total_time=result.total_time,
+                    last_error=None,
+                    attempt_details=result.attempt_details
+                )
+        
+        return result
+    
+    def _create_empty_prefs(self) -> Optional[Path]:
+        """
+        Cria arquivo prefs vazio se não existir.
+        
+        Returns:
+            Path para o arquivo criado ou None se falhar
+        """
+        user_home = self._get_user_home()
+        prefs_path = user_home / ".config/spotify/prefs"
+        
+        try:
+            prefs_path.parent.mkdir(parents=True, exist_ok=True)
+            prefs_path.touch()
+            
+            self.logger.info(f"Arquivo prefs criado: {prefs_path}")
+            return prefs_path
+            
+        except Exception as e:
+            self.logger.error(f"Falha ao criar arquivo prefs: {e}")
+            return None
     
     def _fix_spotify_permissions(self, spotify_path: Path) -> bool:
         """

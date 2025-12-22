@@ -1,0 +1,109 @@
+# TSiJUKEBOX Installer - CachyOS Test Container
+# =============================================
+# Container CachyOS para testes E2E do instalador.
+#
+# Build:
+#   docker build -t tsijukebox-test-cachyos -f Dockerfile.cachyos ..
+#
+# Run:
+#   docker run --rm -it tsijukebox-test-cachyos
+
+# CachyOS é baseado em Arch com otimizações de performance
+FROM archlinux:latest
+
+LABEL maintainer="TSiJUKEBOX Team"
+LABEL description="CachyOS-like test container for TSiJUKEBOX installer E2E tests"
+LABEL distro="cachyos"
+LABEL version="1.0.0"
+
+# Simula ambiente CachyOS (baseado em Arch com otimizações)
+ENV DISTRO_NAME="CachyOS Linux"
+ENV DISTRO_FAMILY="arch"
+ENV DISTRO_ID="cachyos"
+
+# Atualiza sistema e instala dependências base
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+        python \
+        python-pip \
+        python-pytest \
+        sudo \
+        base-devel \
+        git \
+        curl \
+        wget \
+        which \
+        procps-ng \
+        iproute2 \
+        nodejs \
+        npm \
+        sqlite \
+        && \
+    pacman -Scc --noconfirm
+
+# Cria arquivo de release simulando CachyOS
+RUN echo 'NAME="CachyOS Linux"' > /etc/os-release && \
+    echo 'PRETTY_NAME="CachyOS Linux"' >> /etc/os-release && \
+    echo 'ID=cachyos' >> /etc/os-release && \
+    echo 'ID_LIKE=arch' >> /etc/os-release && \
+    echo 'BUILD_ID=rolling' >> /etc/os-release && \
+    echo 'HOME_URL="https://cachyos.org/"' >> /etc/os-release && \
+    echo 'LOGO=cachyos' >> /etc/os-release
+
+# Cria usuário de teste não-root
+RUN useradd -m -s /bin/bash testuser && \
+    echo "testuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    mkdir -p /home/testuser/.config && \
+    mkdir -p /home/testuser/.local/share && \
+    chown -R testuser:testuser /home/testuser
+
+# Cria diretórios de trabalho
+RUN mkdir -p /app/scripts /app/logs /app/data && \
+    chown -R testuser:testuser /app
+
+# Cria diretórios do TSiJUKEBOX
+RUN mkdir -p /opt/tsijukebox /etc/tsijukebox /var/log/tsijukebox /var/lib/tsijukebox && \
+    chown -R testuser:testuser /opt/tsijukebox /var/log/tsijukebox /var/lib/tsijukebox
+
+# Configura variáveis de ambiente
+ENV HOME=/home/testuser
+ENV USER=testuser
+ENV TSIJUKEBOX_TEST=1
+ENV TSIJUKEBOX_DISTRO=cachyos
+ENV PYTHONPATH=/app/scripts
+ENV PATH="/home/testuser/.local/bin:${PATH}"
+
+# Copia scripts
+WORKDIR /app/scripts
+COPY . /app/scripts/
+
+# Ajusta permissões
+RUN chown -R testuser:testuser /app && \
+    chmod +x /app/scripts/*.py 2>/dev/null || true
+
+# Instala dependências Python
+RUN pip install --break-system-packages \
+    pytest \
+    pytest-mock \
+    pytest-benchmark \
+    pytest-timeout \
+    || pip install \
+    pytest \
+    pytest-mock \
+    pytest-benchmark \
+    pytest-timeout
+
+# Simula paru (wrapper para pacman em ambiente de teste)
+RUN echo '#!/bin/bash' > /usr/local/bin/paru && \
+    echo 'exec pacman "$@"' >> /usr/local/bin/paru && \
+    chmod +x /usr/local/bin/paru
+
+# Troca para usuário de teste
+USER testuser
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python3 -c "print('healthy')" || exit 1
+
+# Comando padrão
+CMD ["python3", "-m", "pytest", "tests/", "-v", "--tb=short", "-m", "not docker"]
