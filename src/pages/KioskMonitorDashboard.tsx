@@ -17,10 +17,12 @@ import {
   WifiOff,
   Server,
   History,
-  Zap
+  Zap,
+  Shield,
 } from 'lucide-react';
 import { useKioskMonitor, type KioskConnection } from '@/hooks/system/useKioskMonitor';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuditLogViewer } from '@/components/audit/AuditLogViewer';
 
 export default function KioskMonitorDashboard() {
   const { 
@@ -36,6 +38,7 @@ export default function KioskMonitorDashboard() {
   } = useKioskMonitor();
   
   const [selectedKiosk, setSelectedKiosk] = useState<KioskConnection | null>(null);
+  const [activeTab, setActiveTab] = useState('kiosks');
 
   if (error) {
     return (
@@ -118,87 +121,107 @@ export default function KioskMonitorDashboard() {
         />
       </div>
 
-      {/* Lista de Kiosks */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5" />
-                Kiosks Conectados
-              </CardTitle>
-              <CardDescription>
-                Clique em um kiosk para ver detalhes
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : kiosks.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Monitor className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Nenhum kiosk conectado ainda.</p>
-                  <p className="text-sm mt-2">
-                    Instale o TSiJUKEBOX em modo kiosk para ver os dispositivos aqui.
-                  </p>
-                </div>
-              ) : (
-                <ScrollArea className="h-[400px]">
-                  <div className="space-y-2">
-                    <AnimatePresence>
-                      {kiosks.map((kiosk) => (
-                        <motion.div
-                          key={kiosk.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                        >
-                          <KioskRow
-                            kiosk={kiosk}
-                            isSelected={selectedKiosk?.id === kiosk.id}
-                            onClick={() => setSelectedKiosk(kiosk)}
-                            getTimeSinceHeartbeat={getTimeSinceHeartbeat}
-                            getStatusIcon={getStatusIcon}
-                            formatUptime={formatUptime}
-                          />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                </ScrollArea>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+      {/* Tabs: Kiosks / Auditoria */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="kiosks" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            Kiosks
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Auditoria
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Detalhes do Kiosk Selecionado */}
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <HardDrive className="h-5 w-5" />
-                Detalhes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selectedKiosk ? (
-                <KioskDetails 
-                  kiosk={selectedKiosk} 
-                  getStatusColor={getStatusColor}
-                  formatUptime={formatUptime}
-                />
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Cpu className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Selecione um kiosk para ver detalhes</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        <TabsContent value="kiosks" className="mt-6">
+          {/* Lista de Kiosks */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" />
+                    Kiosks Conectados
+                  </CardTitle>
+                  <CardDescription>
+                    Clique em um kiosk para ver detalhes
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : kiosks.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Monitor className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>Nenhum kiosk conectado ainda.</p>
+                      <p className="text-sm mt-2">
+                        Instale o TSiJUKEBOX em modo kiosk para ver os dispositivos aqui.
+                      </p>
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-[400px]">
+                      <div className="space-y-2">
+                        <AnimatePresence>
+                          {kiosks.map((kiosk) => (
+                            <motion.div
+                              key={kiosk.id}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                            >
+                              <KioskRow
+                                kiosk={kiosk}
+                                isSelected={selectedKiosk?.id === kiosk.id}
+                                onClick={() => setSelectedKiosk(kiosk)}
+                                getTimeSinceHeartbeat={getTimeSinceHeartbeat}
+                                getStatusIcon={getStatusIcon}
+                                formatUptime={formatUptime}
+                              />
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detalhes do Kiosk Selecionado */}
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <HardDrive className="h-5 w-5" />
+                    Detalhes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {selectedKiosk ? (
+                    <KioskDetails 
+                      kiosk={selectedKiosk} 
+                      getStatusColor={getStatusColor}
+                      formatUptime={formatUptime}
+                    />
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Cpu className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">Selecione um kiosk para ver detalhes</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="audit" className="mt-6">
+          <AuditLogViewer category="kiosk" />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

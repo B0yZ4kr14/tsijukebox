@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          actor_role: string | null
+          category: string
+          created_at: string | null
+          details: Json | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          severity: string | null
+          status: string | null
+          target_id: string | null
+          target_name: string | null
+          target_type: string | null
+          timestamp: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          category: string
+          created_at?: string | null
+          details?: Json | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          severity?: string | null
+          status?: string | null
+          target_id?: string | null
+          target_name?: string | null
+          target_type?: string | null
+          timestamp?: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          category?: string
+          created_at?: string | null
+          details?: Json | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          severity?: string | null
+          status?: string | null
+          target_id?: string | null
+          target_name?: string | null
+          target_type?: string | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
       code_scan_history: {
         Row: {
           created_at: string | null

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useLogAudit } from '@/hooks/useAuditLogs';
 import {
   RefreshCw,
   Container,
@@ -84,6 +85,7 @@ export function KioskRemoteControl({ kiosk, onActionComplete }: KioskRemoteContr
   const [isLoading, setIsLoading] = useState<CommandType | null>(null);
   const [customCommand, setCustomCommand] = useState('');
   const [showCommandInput, setShowCommandInput] = useState(false);
+  const { logAudit } = useLogAudit();
 
   const sendCommand = async (command: CommandType, params: Json = {}) => {
     setIsLoading(command);
@@ -98,10 +100,36 @@ export function KioskRemoteControl({ kiosk, onActionComplete }: KioskRemoteContr
 
       if (error) throw error;
 
+      // Registrar no audit log
+      await logAudit({
+        action: 'kiosk_command_sent',
+        category: 'kiosk',
+        severity: command === 'custom_command' ? 'warning' : 'info',
+        target_type: 'kiosk',
+        target_id: kiosk.machine_id,
+        target_name: kiosk.hostname,
+        details: { command, params },
+        status: 'success',
+      });
+
       toast.success(`Comando "${command}" enviado para ${kiosk.hostname}`);
       onActionComplete?.();
     } catch (error) {
       console.error('Error sending command:', error);
+      
+      // Registrar falha no audit log
+      await logAudit({
+        action: 'kiosk_command_sent',
+        category: 'kiosk',
+        severity: 'warning',
+        target_type: 'kiosk',
+        target_id: kiosk.machine_id,
+        target_name: kiosk.hostname,
+        details: { command, params },
+        status: 'failure',
+        error_message: error instanceof Error ? error.message : 'Erro desconhecido',
+      });
+
       toast.error(`Erro ao enviar comando: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     } finally {
       setIsLoading(null);
