@@ -16,7 +16,9 @@ OPÇÕES:
     --user USERNAME             Usuário do sistema (padrão: detectado)
     --music-dir DIR             Diretório de músicas (padrão: ~/Musics)
     --no-spotify                Não instalar Spotify/Spicetify
+    --no-spotify-cli            Não instalar spotify-cli-linux
     --no-monitoring             Não instalar Grafana/Prometheus
+    --dry-run                   Simular instalação (não executa comandos)
     --uninstall                 Remover instalação existente
     --verbose                   Output detalhado
 
@@ -52,6 +54,9 @@ INSTALL_DIR = Path("/opt/tsijukebox")
 CONFIG_DIR = Path("/etc/tsijukebox")
 LOG_DIR = Path("/var/log/tsijukebox")
 DATA_DIR = Path("/var/lib/tsijukebox")
+
+# Modo dry-run global
+DRY_RUN = False
 
 # Cores ANSI
 class Colors:
@@ -136,11 +141,18 @@ def run_command(
     user: Optional[str] = None
 ) -> Tuple[int, str, str]:
     """Executa comando shell com tratamento de erros."""
+    global DRY_RUN
+    
     if sudo and os.geteuid() != 0:
         cmd = ["sudo"] + cmd
     
     if user and os.geteuid() == 0:
         cmd = ["sudo", "-u", user] + cmd
+    
+    # Modo dry-run: simular execução sem rodar comandos
+    if DRY_RUN:
+        log_info(f"[DRY-RUN] {' '.join(cmd)}")
+        return 0, "[dry-run output]", ""
     
     try:
         result = subprocess.run(
@@ -1075,7 +1087,10 @@ def run_installation(args: argparse.Namespace) -> bool:
     if not args.no_spotify:
         install_spotify_spicetify(user, system_info)
         configure_spotify_only_session(user)
-        install_spotify_cli_tools(user)  # Instalar spotify-cli-linux
+        
+        # Instalar spotify-cli-linux (se não --no-spotify-cli)
+        if not args.no_spotify_cli:
+            install_spotify_cli_tools(user)
     
     # 7. Configurar Chromium
     configure_chromium_homepage(user)
@@ -1148,8 +1163,12 @@ def main():
                        help='Diretório de músicas (padrão: Musics)')
     parser.add_argument('--no-spotify', action='store_true',
                        help='Não instalar Spotify/Spicetify')
+    parser.add_argument('--no-spotify-cli', action='store_true',
+                       help='Não instalar spotify-cli-linux (CLI para terminal)')
     parser.add_argument('--no-monitoring', action='store_true',
                        help='Não instalar Grafana/Prometheus')
+    parser.add_argument('--dry-run', action='store_true',
+                       help='Simular instalação sem executar comandos')
     parser.add_argument('--uninstall', action='store_true',
                        help='Remover instalação existente')
     parser.add_argument('--verbose', '-v', action='store_true',
@@ -1157,6 +1176,12 @@ def main():
     parser.add_argument('--version', action='version', version=f'TSiJUKEBOX Installer v{VERSION}')
     
     args = parser.parse_args()
+    
+    # Ativar modo dry-run
+    global DRY_RUN
+    if args.dry_run:
+        DRY_RUN = True
+        log_warning("🧪 MODO DRY-RUN: Nenhum comando será executado de fato")
     
     # Verificar root
     check_root()
