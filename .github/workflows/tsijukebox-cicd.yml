@@ -145,12 +145,54 @@ jobs:
         run: mypy scripts/installer/ --ignore-missing-imports || true
 
   # ============================================
-  # Job 5: Production Build
+  # Job 5: Python Unit Tests
+  # ============================================
+  test-python:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    needs: python-lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install test dependencies
+        run: |
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run pytest with coverage
+        run: |
+          cd scripts
+          pytest tests/ \
+            --cov=. \
+            --cov-report=xml:../coverage-python.xml \
+            --cov-report=term-missing \
+            -v \
+            --tb=short \
+            -m "not integration"
+        env:
+          CI: true
+
+      - name: Upload Python coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-python
+          path: coverage-python.xml
+          retention-days: 7
+
+  # ============================================
+  # Job 6: Production Build
   # ============================================
   build:
     name: Production Build
     runs-on: ubuntu-latest
-    needs: [test-unit, test-e2e]
+    needs: [test-unit, test-e2e, test-python]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -177,7 +219,7 @@ jobs:
           retention-days: 30
 
   # ============================================
-  # Job 6: AUR Package Build
+  # Job 7: AUR Package Build
   # ============================================
   aur-build:
     name: AUR Package Build
