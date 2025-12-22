@@ -319,6 +319,71 @@ export type Database = {
         }
         Relationships: []
       }
+      kiosk_connections: {
+        Row: {
+          config: Json | null
+          crash_count: number | null
+          created_at: string | null
+          events: Json | null
+          hostname: string
+          id: string
+          install_id: string | null
+          ip_address: string | null
+          last_event: string | null
+          last_event_at: string | null
+          last_heartbeat: string | null
+          machine_id: string | null
+          metrics: Json | null
+          status: string | null
+          updated_at: string | null
+          uptime_seconds: number | null
+        }
+        Insert: {
+          config?: Json | null
+          crash_count?: number | null
+          created_at?: string | null
+          events?: Json | null
+          hostname: string
+          id?: string
+          install_id?: string | null
+          ip_address?: string | null
+          last_event?: string | null
+          last_event_at?: string | null
+          last_heartbeat?: string | null
+          machine_id?: string | null
+          metrics?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          uptime_seconds?: number | null
+        }
+        Update: {
+          config?: Json | null
+          crash_count?: number | null
+          created_at?: string | null
+          events?: Json | null
+          hostname?: string
+          id?: string
+          install_id?: string | null
+          ip_address?: string | null
+          last_event?: string | null
+          last_event_at?: string | null
+          last_heartbeat?: string | null
+          machine_id?: string | null
+          metrics?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          uptime_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kiosk_connections_install_id_fkey"
+            columns: ["install_id"]
+            isOneToOne: false
+            referencedRelation: "installer_metrics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string | null
