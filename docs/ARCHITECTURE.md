@@ -22,6 +22,7 @@
 - [Organização de Hooks](#organização-de-hooks)
 - [Fluxo de Autenticação](#fluxo-de-autenticação)
 - [Integrações Externas](#integrações-externas)
+- [Sistema de Auto-Sync](#sistema-de-auto-sync)
 - [Estrutura de Diretórios](#estrutura-de-diretórios)
 
 ---
@@ -53,7 +54,7 @@ graph TB
     subgraph "☁️ Backend - Lovable Cloud"
         Auth["🔐 Authentication<br/>(Email + OAuth)"]
         DB[("🗄️ Database<br/>(PostgreSQL)")]
-        Edge["⚡ Edge Functions<br/>(4 endpoints)"]
+        Edge["⚡ Edge Functions<br/>(22 endpoints)"]
         Storage["📁 File Storage<br/>(Buckets)"]
     end
     
@@ -214,6 +215,28 @@ erDiagram
         timestamp updated_at
     }
     
+    PENDING_SYNC_FILES {
+        uuid id PK
+        text file_path UK
+        text file_hash
+        text category "critical | important | docs | config | other"
+        integer priority
+        text status "pending | syncing | synced | error"
+        timestamp detected_at
+        timestamp synced_at
+        text error_message
+    }
+    
+    PLAYBACK_STATS {
+        uuid id PK
+        text track_id
+        text track_name
+        text artist_name
+        text provider
+        timestamp played_at
+        boolean completed
+    }
+    
     AUTH_USERS ||--o{ USER_ROLES : "has roles"
     
 ```
@@ -262,6 +285,12 @@ mindmap
       useLogs
       useStatus
       useContrastDebug
+      useAutoSync
+      useFileChangeDetector
+      useGitHubSync
+      useCodeScan
+      useCodeRefactor
+      usePlaybackStats
     🔧 Common
       useTranslation
       useDebounce
@@ -364,16 +393,52 @@ graph TB
         LM["Local Music"]
     end
     
-    subgraph "⚡ Edge Functions"
-        SA["spotify-auth"]
-        YA["youtube-music-auth"]
-        LS["lyrics-search"]
-        GH["github-repo"]
+    subgraph "⚡ Edge Functions (22)"
+        subgraph "🔄 Auto-Sync"
+            FCW["file-change-webhook"]
+            ASR["auto-sync-repository"]
+            GSE["github-sync-export"]
+        end
+        
+        subgraph "🎵 Music"
+            SA["spotify-auth"]
+            YA["youtube-music-auth"]
+            LS["lyrics-search"]
+            AJ["analyze-jam"]
+            TP["track-playback"]
+        end
+        
+        subgraph "🛠️ Code & Docs"
+            CS["code-scan"]
+            CR["code-refactor"]
+            FSR["fullstack-refactor"]
+            RD["refactor-docs"]
+            DO["doc-orchestrator"]
+        end
+        
+        subgraph "🤖 AI"
+            MA["manus-automation"]
+            MS["manus-search"]
+            PR["perplexity-research"]
+        end
+        
+        subgraph "📊 Monitoring"
+            HM["health-monitor-ws"]
+            OE["otel-exporter"]
+            AN["alert-notifications"]
+            IM["installer-metrics"]
+        end
+        
+        subgraph "🔧 Utilities"
+            GH["github-repo"]
+            SS["screenshot-service"]
+        end
     end
     
     subgraph "☁️ Cloud Services"
         Storj["Storj<br/>(Backup)"]
         Weather["Weather API<br/>(Widget)"]
+        GitHub["GitHub API"]
     end
     
     subgraph "🔧 Local Tools"
@@ -389,17 +454,139 @@ graph TB
     LM --> Spicetify
     LM --> SSH
     
+    GSE --> GitHub
     Storj --> |"S3 Compatible"| SA
 ```
 
-### Edge Functions
+### Edge Functions (22 funções)
 
-| Função | Endpoint | Descrição |
-|--------|----------|-----------|
-| `spotify-auth` | `/functions/v1/spotify-auth` | OAuth flow do Spotify |
-| `youtube-music-auth` | `/functions/v1/youtube-music-auth` | OAuth flow do YouTube Music |
-| `lyrics-search` | `/functions/v1/lyrics-search` | Busca de letras sincronizadas |
-| `github-repo` | `/functions/v1/github-repo` | Integração com GitHub |
+| Categoria | Função | Descrição |
+|-----------|--------|-----------|
+| **Auto-Sync** | `file-change-webhook` | Recebe detecção de mudanças de arquivos |
+| **Auto-Sync** | `auto-sync-repository` | Orquestra push automático para GitHub |
+| **Auto-Sync** | `github-sync-export` | Cria commits e pushes no GitHub |
+| **Music** | `spotify-auth` | OAuth flow do Spotify |
+| **Music** | `youtube-music-auth` | OAuth flow do YouTube Music |
+| **Music** | `lyrics-search` | Busca de letras sincronizadas |
+| **Music** | `analyze-jam` | Análise de sessões Jam colaborativas |
+| **Music** | `track-playback` | Estatísticas de reprodução |
+| **Code** | `code-scan` | Análise de qualidade de código |
+| **Code** | `code-refactor` | Refatoração automática de código |
+| **Code** | `fullstack-refactor` | Refatoração fullstack completa |
+| **Docs** | `refactor-docs` | Geração de documentação |
+| **Docs** | `doc-orchestrator` | Orquestração de documentação |
+| **AI** | `manus-automation` | Automação com Manus AI |
+| **AI** | `manus-search` | Busca inteligente com Manus |
+| **AI** | `perplexity-research` | Pesquisa com Perplexity AI |
+| **Monitoring** | `health-monitor-ws` | Monitor de saúde via WebSocket |
+| **Monitoring** | `otel-exporter` | Exportador OpenTelemetry |
+| **Monitoring** | `alert-notifications` | Sistema de notificações e alertas |
+| **Monitoring** | `installer-metrics` | Métricas de instalação |
+| **Utility** | `github-repo` | Integração geral com GitHub |
+| **Utility** | `screenshot-service` | Serviço de capturas de tela |
+
+---
+
+## Sistema de Auto-Sync
+
+O TSiJUKEBOX possui um sistema automático de sincronização com GitHub que detecta mudanças em arquivos durante o desenvolvimento e cria commits automaticamente.
+
+### Arquitetura do Auto-Sync
+
+```mermaid
+flowchart TB
+    subgraph "🖥️ Development Environment"
+        HMR["Vite HMR Events"]
+        DEV["DevFileChangeMonitor<br/>(App.tsx)"]
+    end
+    
+    subgraph "🪝 Hooks Layer"
+        FCD["useFileChangeDetector"]
+        AS["useAutoSync"]
+    end
+    
+    subgraph "⚡ Edge Functions"
+        WH["file-change-webhook"]
+        AR["auto-sync-repository"]
+        GS["github-sync-export"]
+    end
+    
+    subgraph "💾 Database"
+        PSF[("pending_sync_files")]
+    end
+    
+    subgraph "🌐 External"
+        GH["GitHub API"]
+    end
+    
+    HMR -->|"beforeUpdate"| DEV
+    DEV -->|"track"| FCD
+    FCD -->|"POST"| WH
+    WH -->|"UPSERT"| PSF
+    PSF -->|"Realtime"| AS
+    AS -->|"trigger"| AR
+    AR -->|"push"| GS
+    GS -->|"commit"| GH
+```
+
+### Fluxo de Detecção de Arquivos
+
+```mermaid
+sequenceDiagram
+    participant V as Vite Build
+    participant D as DevFileChangeMonitor
+    participant H as useFileChangeDetector
+    participant W as file-change-webhook
+    participant DB as pending_sync_files
+    participant A as useAutoSync
+    participant G as GitHub
+
+    V->>D: HMR update event
+    D->>H: File changed in src/
+    H->>H: shouldTrackFile() check
+    H->>W: POST files to webhook
+    W->>W: Categorize + hash
+    W->>DB: UPSERT pending file
+    DB-->>A: Realtime notification
+    Note over A: Scheduler: 30 min default
+    A->>G: Push via auto-sync-repository
+    G-->>A: Commit SHA
+    A->>DB: UPDATE status = 'synced'
+```
+
+### Padrões de Arquivos
+
+| Categoria | Padrão | Prioridade |
+|-----------|--------|------------|
+| **Critical** | `src/**/*.tsx`, `src/**/*.ts` | 1 |
+| **Important** | `supabase/functions/**/*` | 2 |
+| **Docs** | `docs/**/*.md`, `*.md` | 3 |
+| **Config** | `*.json`, `*.toml`, `*.yaml` | 4 |
+| **Other** | Demais arquivos | 5 |
+
+### Hooks do Sistema
+
+```typescript
+// Detecção de mudanças (DEV only)
+const { 
+  detectedFiles, 
+  isDetecting, 
+  startDetection,
+  stopDetection,
+  submitFilesForSync 
+} = useFileChangeDetector();
+
+// Sincronização automática
+const {
+  isEnabled,
+  pendingCount,
+  nextSync,
+  enable,
+  disable,
+  triggerSync,
+  setSyncInterval
+} = useAutoSync();
+```
 
 ---
 
@@ -441,7 +628,7 @@ TSiJUKEBOX/
 │   └── 📁 integrations/        # Supabase client
 │
 ├── 📁 supabase/
-│   ├── 📁 functions/           # Edge Functions (4)
+│   ├── 📁 functions/           # Edge Functions (22)
 │   └── config.toml             # Supabase config
 │
 ├── 📁 docs/                    # Documentação
@@ -569,11 +756,15 @@ graph TB
 
 ## Próximos Passos
 
-- [ ] Implementar WebSocket para real-time updates
+- [x] ~~Implementar WebSocket para real-time updates~~ ✅ (Realtime em pending_sync_files)
+- [x] ~~Implementar CI/CD pipeline completo~~ ✅ (Sistema de Auto-Sync)
+- [x] ~~Sistema de detecção de mudanças~~ ✅ (useFileChangeDetector + DevFileChangeMonitor)
+- [x] ~~Testes unitários para hooks de sistema~~ ✅ (useAutoSync + useFileChangeDetector tests)
 - [ ] Adicionar suporte a múltiplos idiomas (i18n completo)
 - [ ] Implementar modo offline com IndexedDB
-- [ ] Adicionar testes de integração para Edge Functions
-- [ ] Implementar CI/CD pipeline completo
+- [ ] Adicionar testes E2E para Edge Functions
+- [ ] Dashboard de métricas de Auto-Sync
+- [ ] Implementar retry automático em falhas de sync
 
 ---
 
