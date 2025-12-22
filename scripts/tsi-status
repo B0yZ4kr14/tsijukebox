@@ -1,0 +1,327 @@
+#!/usr/bin/env python3
+"""
+tsi-status - Resumo rápido do sistema TSiJUKEBOX
+================================================
+Mostra status do serviço, porta, Spotify e últimos erros.
+
+Uso:
+    tsi-status
+    tsi-status --json
+    tsi-status --verbose
+
+Autor: TSiJUKEBOX Team
+Licença: Domínio Público
+"""
+
+import os
+import sys
+import json
+import socket
+import argparse
+import subprocess
+from pathlib import Path
+from datetime import datetime
+from typing import Tuple, Dict, List, Any
+
+# =============================================================================
+# CORES
+# =============================================================================
+
+class C:
+    R = '\033[91m'   # Red
+    G = '\033[92m'   # Green
+    Y = '\033[93m'   # Yellow
+    B = '\033[94m'   # Blue
+    M = '\033[95m'   # Magenta
+    C = '\033[96m'   # Cyan
+    W = '\033[97m'   # White
+    D = '\033[90m'   # Dim/Gray
+    X = '\033[0m'    # Reset
+    BOLD = '\033[1m'
+
+
+# =============================================================================
+# FUNÇÕES
+# =============================================================================
+
+def run_command(cmd: List[str], timeout: int = 10) -> Tuple[int, str, str]:
+    """Executa comando e retorna (código, stdout, stderr)."""
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=timeout
+        )
+        return result.returncode, result.stdout, result.stderr
+    except subprocess.TimeoutExpired:
+        return -1, "", "timeout"
+    except Exception as e:
+        return -1, "", str(e)
+
+
+def check_service(name: str) -> Tuple[bool, str, bool]:
+    """
+    Verifica status de um serviço.
+    Retorna (ativo, status_text, habilitado).
+    """
+    code, stdout, _ = run_command(['systemctl', 'is-active', name])
+    active = stdout.strip() == 'active'
+    
+    code2, stdout2, _ = run_command(['systemctl', 'is-enabled', name])
+    enabled = stdout2.strip() == 'enabled'
+    
+    return active, stdout.strip(), enabled
+
+
+def check_port(port: int) -> bool:
+    """Verifica se porta está aberta."""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        result = sock.connect_ex(('localhost', port))
+        sock.close()
+        return result == 0
+    except:
+        return False
+
+
+def get_spotify_status() -> Tuple[str, bool]:
+    """Obtém status do Spotify via spotify-cli."""
+    # Tentar sp (spotify-cli-linux)
+    code, stdout, _ = run_command(['sp', 'status'], timeout=3)
+    if code == 0 and stdout.strip():
+        lines = stdout.strip().split('\n')
+        if lines:
+            return lines[0][:60], True
+    
+    # Tentar spotifyd
+    code, stdout, _ = run_command(['systemctl', '--user', 'is-active', 'spotifyd'])
+    if stdout.strip() == 'active':
+        return "spotifyd running", True
+    
+    # Tentar spotify desktop
+    code, stdout, _ = run_command(['pgrep', '-x', 'spotify'])
+    if code == 0:
+        return "Spotify desktop running", True
+    
+    return "not playing", False
+
+
+def get_last_errors(service: str = "tsijukebox", n: int = 3) -> List[str]:
+    """Obtém últimos erros do serviço."""
+    code, stdout, _ = run_command([
+        'journalctl', '-u', service, '-p', 'err', '-n', str(n),
+        '--no-pager', '-q', '-o', 'short-iso'
+    ])
+    
+    if code == 0 and stdout.strip():
+        lines = stdout.strip().split('\n')
+        # Filtrar linhas vazias e "-- No entries --"
+        return [l for l in lines if l.strip() and '-- No entries --' not in l][:n]
+    
+    return []
+
+
+def get_uptime(service: str = "tsijukebox") -> str:
+    """Obtém uptime do serviço."""
+    code, stdout, _ = run_command([
+        'systemctl', 'show', service, '--property=ActiveEnterTimestamp'
+    ])
+    
+    if code == 0 and stdout.strip():
+        try:
+            line = stdout.strip()
+            if '=' in line:
+                timestamp = line.split('=', 1)[1].strip()
+                if timestamp:
+                    return timestamp
+        except:
+            pass
+    
+    return "N/A"
+
+
+def get_memory_usage(service: str = "tsijukebox") -> str:
+    """Obtém uso de memória do serviço."""
+    code, stdout, _ = run_command([
+        'systemctl', 'show', service, '--property=MemoryCurrent'
+    ])
+    
+    if code == 0 and stdout.strip():
+        try:
+            line = stdout.strip()
+            if '=' in line:
+                value = line.split('=', 1)[1].strip()
+                if value.isdigit():
+                    mb = int(value) / (1024 * 1024)
+                    return f"{mb:.1f} MB"
+        except:
+            pass
+    
+    return "N/A"
+
+
+# =============================================================================
+# OUTPUT
+# =============================================================================
+
+def print_status(verbose: bool = False) -> Dict[str, Any]:
+    """Imprime status e retorna dados."""
+    data = {
+        "timestamp": datetime.now().isoformat(),
+        "service": {},
+        "port": {},
+        "spotify": {},
+        "errors": []
+    }
+    
+    print(f"""
+{C.C}╔═══════════════════════════════════════════╗
+║   {C.BOLD}{C.W}🎵 TSiJUKEBOX STATUS{C.X}{C.C}                      ║
+╚═══════════════════════════════════════════╝{C.X}
+""")
+    
+    # Serviço TSiJUKEBOX
+    tsi_active, tsi_status, tsi_enabled = check_service('tsijukebox')
+    data["service"] = {
+        "name": "tsijukebox",
+        "active": tsi_active,
+        "status": tsi_status,
+        "enabled": tsi_enabled
+    }
+    
+    icon = f"{C.G}●{C.X}" if tsi_active else f"{C.R}●{C.X}"
+    enabled_str = f"{C.D}(enabled){C.X}" if tsi_enabled else f"{C.D}(disabled){C.X}"
+    print(f"  {icon} Serviço TSiJUKEBOX: {tsi_status} {enabled_str}")
+    
+    if verbose and tsi_active:
+        uptime = get_uptime()
+        memory = get_memory_usage()
+        print(f"    {C.D}Desde: {uptime}{C.X}")
+        print(f"    {C.D}Memória: {memory}{C.X}")
+        data["service"]["uptime"] = uptime
+        data["service"]["memory"] = memory
+    
+    # Porta
+    port = 5173
+    port_open = check_port(port)
+    data["port"] = {"number": port, "open": port_open}
+    
+    icon = f"{C.G}●{C.X}" if port_open else f"{C.R}●{C.X}"
+    print(f"  {icon} Porta {port}: {'aberta' if port_open else 'fechada'}")
+    
+    # Spotify
+    spotify_status, spotify_ok = get_spotify_status()
+    data["spotify"] = {"status": spotify_status, "active": spotify_ok}
+    
+    icon = f"{C.B}♪{C.X}" if spotify_ok else f"{C.D}♪{C.X}"
+    print(f"  {icon} Spotify: {spotify_status}")
+    
+    # Últimos erros
+    errors = get_last_errors(n=3 if verbose else 2)
+    data["errors"] = errors
+    
+    if errors:
+        print(f"\n{C.Y}━━━ ÚLTIMOS ERROS ━━━{C.X}")
+        for err in errors:
+            # Truncar linha longa
+            err_display = err[:70] + "..." if len(err) > 70 else err
+            print(f"  {C.R}•{C.X} {err_display}")
+    else:
+        print(f"\n  {C.G}✓{C.X} Sem erros recentes")
+    
+    # Sugestão se houver problemas
+    if not tsi_active or not port_open:
+        print(f"\n{C.D}💡 Dica: Execute 'sudo python3 diagnose-service.py --auto-fix' para corrigir{C.X}")
+    
+    # Linha final
+    print()
+    
+    return data
+
+
+def print_json() -> None:
+    """Imprime status em JSON."""
+    data = {
+        "timestamp": datetime.now().isoformat(),
+        "service": {},
+        "port": {},
+        "spotify": {},
+        "errors": []
+    }
+    
+    # Coletar dados silenciosamente
+    tsi_active, tsi_status, tsi_enabled = check_service('tsijukebox')
+    data["service"] = {
+        "name": "tsijukebox",
+        "active": tsi_active,
+        "status": tsi_status,
+        "enabled": tsi_enabled,
+        "uptime": get_uptime(),
+        "memory": get_memory_usage()
+    }
+    
+    port = 5173
+    data["port"] = {"number": port, "open": check_port(port)}
+    
+    spotify_status, spotify_ok = get_spotify_status()
+    data["spotify"] = {"status": spotify_status, "active": spotify_ok}
+    
+    data["errors"] = get_last_errors(n=5)
+    
+    # Health score
+    score = 0
+    if tsi_active:
+        score += 40
+    if data["port"]["open"]:
+        score += 30
+    if not data["errors"]:
+        score += 20
+    if spotify_ok:
+        score += 10
+    
+    data["health_score"] = score
+    data["healthy"] = score >= 70
+    
+    print(json.dumps(data, indent=2, ensure_ascii=False))
+
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description='tsi-status - Resumo rápido do sistema TSiJUKEBOX'
+    )
+    
+    parser.add_argument(
+        '--json', '-j',
+        action='store_true',
+        help='Output em formato JSON'
+    )
+    parser.add_argument(
+        '--verbose', '-v',
+        action='store_true',
+        help='Mostrar informações detalhadas'
+    )
+    
+    args = parser.parse_args()
+    
+    if args.json:
+        print_json()
+        return 0
+    
+    data = print_status(verbose=args.verbose)
+    
+    # Código de saída baseado em saúde
+    if not data["service"]["active"]:
+        return 1
+    if not data["port"]["open"]:
+        return 2
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
