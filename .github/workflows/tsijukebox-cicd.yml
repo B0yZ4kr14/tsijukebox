@@ -187,6 +187,66 @@ jobs:
           retention-days: 7
 
   # ============================================
+  # Job 5.1: Python Integration Tests (with Docker)
+  # ============================================
+  test-python-integration:
+    name: Python Integration Tests
+    runs-on: ubuntu-latest
+    needs: test-python
+    services:
+      dind:
+        image: docker:24-dind
+        options: --privileged
+        ports:
+          - 2375:2375
+        env:
+          DOCKER_TLS_CERTDIR: ""
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install test dependencies
+        run: pip install -r scripts/requirements-test.txt
+
+      - name: Wait for Docker
+        run: |
+          timeout 30 sh -c 'until docker info; do sleep 1; done'
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+
+      - name: Run integration tests
+        run: |
+          cd scripts
+          pytest tests/ \
+            -m "integration" \
+            -v \
+            --tb=short \
+            --timeout=120
+        env:
+          CI: true
+          DOCKER_HOST: tcp://localhost:2375
+
+      - name: Run Docker-specific tests
+        run: |
+          cd scripts
+          pytest tests/ \
+            -m "docker" \
+            -v \
+            --tb=short \
+            --timeout=300
+        env:
+          CI: true
+          DOCKER_HOST: tcp://localhost:2375
+        continue-on-error: true
+
+  # ============================================
   # Job 6: Production Build
   # ============================================
   build:
