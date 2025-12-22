@@ -4,9 +4,10 @@
 
 **Guia de instalação amigável para iniciantes**
 
-![Version](https://img.shields.io/badge/version-4.1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-5.0.0-blue?style=flat-square)
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=arch-linux&logoColor=white)
 ![CachyOS](https://img.shields.io/badge/CachyOS-00ADD8?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
 </div>
 
@@ -17,35 +18,84 @@
 Abra o terminal e cole este comando:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
 ```
 
-**Pronto!** O instalador fará todo o trabalho automaticamente.
+**Pronto!** O instalador unificado fará todo o trabalho automaticamente, incluindo:
+
+- ✅ Docker + Docker Compose
+- ✅ UFW Firewall configurado
+- ✅ NTP (sincronização de tempo)
+- ✅ Nginx (proxy reverso)
+- ✅ Grafana + Prometheus (monitoramento)
+- ✅ Spotify + Spicetify (player customizado)
+- ✅ spotify-cli-linux (controle via terminal)
+- ✅ Autologin configurado
+- ✅ Serviços systemd
 
 ---
 
 ## 📊 O Que Você Vai Ver
 
-Durante a instalação, uma barra de progresso visual mostra cada etapa:
+Durante a instalação, o progresso é exibido em tempo real:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║  🚀 TSiJUKEBOX Enterprise Installer v4.1.0                                    ║
-║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
+║  🚀 TSiJUKEBOX Enterprise - Unified Installer v5.0.0                          ║
+║  Instalador unificado com Docker + todas as integrações                       ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-✅ [1/10] Sistema detectado: CachyOS Linux (cachyos)
-✅ [2/10] Usuário configurado: joao
-✅ [3/10] AUR helper instalado: paru
-🔄 [4/10] Instalando pacotes base... ████████████░░░░░░░░ 60%
-⏳ [5/10] Configurando Spotify + Spicetify...
-⏳ [6/10] Instalando Grafana + Prometheus...
-⏳ [7/10] Configurando banco de dados SQLite...
-⏳ [8/10] Criando serviços systemd...
-⏳ [9/10] Configurando modo kiosk...
-⏳ [10/10] Verificação final...
+[1/13] Verificando sistema...
+✓  Usuário: joao
+✓  Distro: CachyOS Linux (cachyos)
+✓  AUR helper: paru
+✓  RAM: 16.0 GB
+✓  Disco livre: 120.5 GB
+✓  Login manager: sddm
 
-Tempo estimado restante: ~5 minutos
+[2/13] Configurando Docker...
+✓  Docker configurado
+
+[3/13] Configurando firewall UFW...
+✓  UFW configurado (deny incoming, allow outgoing)
+✓  Regras: SSH, HTTP, HTTPS, TSiJUKEBOX, Grafana
+
+[4/13] Configurando sincronização de tempo...
+✓  NTP configurado via systemd-timesyncd
+
+[5/13] Configurando Nginx...
+✓  Nginx configurado como proxy reverso
+
+[6/13] Configurando Grafana + Prometheus...
+✓  Monitoramento configurado
+
+[7/13] Instalando Spotify...
+✓  Spotify instalado via spotify-launcher
+
+[8/13] Configurando Spicetify...
+✓  Spicetify configurado com tema Dribbblish
+
+[9/13] Instalando spotify-cli-linux...
+✓  spotify-cli instalado (sp-play, sp-next, sp-pause...)
+
+[10/13] Configurando autologin...
+✓  Autologin configurado via SDDM
+
+[11/13] Fazendo deploy da aplicação...
+✓  Aplicação deployada via Docker
+
+[12/13] Criando serviços systemd...
+✓  Serviço tsijukebox habilitado
+
+[13/13] Verificando instalação...
+✓  Docker: OK
+✓  Nginx: ativo
+✓  Grafana: ativo
+✓  Prometheus: ativo
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  🎉 INSTALAÇÃO CONCLUÍDA COM SUCESSO!                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -56,17 +106,17 @@ Escolha o modo que melhor se adapta ao seu uso:
 
 ### 🎵 Modo Completo (Padrão)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
 ```
 **Ideal para:** Uso doméstico com todas as funcionalidades
 
-**Inclui:** Spotify, Monitoramento, Interface Web, Karaokê
+**Inclui:** Docker, UFW, NTP, Nginx, Grafana, Prometheus, Spotify, Spicetify, spotify-cli, Autologin
 
 ---
 
 ### 🖥️ Modo Kiosk
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3 - --mode kiosk
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode kiosk
 ```
 **Ideal para:** Bares, eventos, festas, karaokês
 
@@ -80,7 +130,7 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ### 🖧 Modo Server
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3 - --mode server --no-spotify
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode server --no-spotify
 ```
 **Ideal para:** Servidores headless, streaming remoto
 
@@ -92,71 +142,41 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ---
 
+### 🔧 Modo Minimal
+```bash
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode minimal --no-monitoring --no-spotify
+```
+**Ideal para:** Instalação mínima apenas com o essencial
+
+---
+
 ## 📋 Todas as Opções Disponíveis
+
+### Opções Principais
 
 | Flag | Descrição | Valor Padrão |
 |------|-----------|--------------|
-| `--mode` | Modo de instalação: `full`, `kiosk`, `server` | `full` |
-| `--database` | Banco de dados: `sqlite`, `mariadb`, `postgresql` | `sqlite` |
+| `--mode` | Modo: `full`, `kiosk`, `server`, `minimal` | `full` |
 | `--user` | Usuário do sistema para o serviço | Usuário atual |
-| `--music-dir` | Diretório para arquivos de música | `~/Musics` |
-| `--no-spotify` | Não instalar Spotify/Spicetify | (instala) |
+| `--timezone` | Timezone do sistema | `America/Sao_Paulo` |
+| `--auto`, `-y` | Instalação automática sem confirmações | (interativo) |
+| `--dry-run` | Simular instalação sem executar | - |
+| `--verbose`, `-v` | Output detalhado | - |
+| `--quiet`, `-q` | Modo silencioso | - |
+
+### Componentes (usar `--no-COMPONENTE` para desativar)
+
+| Flag | Descrição | Padrão |
+|------|-----------|--------|
+| `--no-docker` | Não instalar Docker | (instala) |
+| `--no-ufw` | Não configurar UFW firewall | (configura) |
+| `--no-ntp` | Não configurar sincronização de tempo | (configura) |
+| `--no-nginx` | Não instalar Nginx | (instala) |
 | `--no-monitoring` | Não instalar Grafana/Prometheus | (instala) |
-| `--no-backup` | Não configurar backup automático | (configura) |
-| `--auto` | Instalação automática sem confirmações | (interativo) |
-| `--uninstall` | Remover instalação existente | - |
-
-### 🆕 Comandos Avançados v4.1.0
-
-| Flag | Descrição | Exemplo |
-|------|-----------|---------|
-| `--health-check` | Verificação rápida de saúde | `python3 install.py --health-check` |
-| `--alert-on-failure` | Enviar alertas em caso de falha | `--health-check --alert-on-failure` |
-| `--alert-channels` | Canais de alerta | `--alert-channels telegram,email` |
-| `--install-timer` | Instalar timer systemd | `--install-timer --alert-channels telegram` |
-| `--timer-interval` | Intervalo do timer | `--timer-interval 10m` |
-| `--plugin NAME` | Instalar plugin | `--plugin youtube-music-dl` |
-| `--list-plugins` | Listar plugins disponíveis | `python3 install.py --list-plugins` |
-| `--all-plugins` | Instalar todos os plugins | `--all-plugins` |
-| `--migrate` | Migrar configurações | `python3 install.py --migrate` |
-
----
-
-## 🏥 Health Check
-
-Verificação rápida de saúde do sistema compatível com Nagios, Zabbix e PRTG:
-
-```bash
-# Verificação básica (retorna código de saída 0, 1, 2 ou 3)
-python3 install.py --health-check
-echo $?  # 0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN
-
-# Com alertas automáticos em caso de falha
-python3 install.py --health-check --alert-on-failure --alert-channels telegram
-
-# Instalação de timer systemd (verifica a cada 5 minutos)
-sudo python3 install.py --install-timer --alert-channels telegram,email
-```
-
-📖 [Documentação completa de Monitoramento](MONITORING.md)
-
----
-
-## 🔌 Sistema de Plugins
-
-Instale extensões modulares para funcionalidades adicionais:
-
-```bash
-# Listar plugins disponíveis
-python3 install.py --list-plugins
-
-# Instalar plugins
-sudo python3 install.py --plugin youtube-music-dl
-sudo python3 install.py --plugin discord-integration
-sudo python3 install.py --plugin spotify-downloader
-```
-
-📖 [Documentação completa de Plugins](PLUGINS.md)
+| `--no-spotify` | Não instalar Spotify | (instala) |
+| `--no-spicetify` | Não instalar Spicetify | (instala) |
+| `--no-spotify-cli` | Não instalar spotify-cli-linux | (instala) |
+| `--no-autologin` | Não configurar autologin | (configura) |
 
 ---
 
@@ -164,26 +184,31 @@ sudo python3 install.py --plugin spotify-downloader
 
 ### Instalação Personalizada
 ```bash
-# Modo kiosk com MariaDB e diretório de música customizado
-curl -fsSL .../install.py | sudo python3 - \
+# Modo kiosk com timezone específico
+curl -fsSL .../unified-installer.py | sudo python3 - \
   --mode kiosk \
-  --database mariadb \
-  --music-dir /mnt/musicas
+  --timezone America/New_York
 ```
 
 ### Instalação Mínima
 ```bash
-# Apenas o essencial, sem extras
-curl -fsSL .../install.py | sudo python3 - \
+# Apenas Docker + App, sem extras
+curl -fsSL .../unified-installer.py | sudo python3 - \
   --no-spotify \
   --no-monitoring \
-  --no-backup
+  --no-autologin
+```
+
+### Simular Instalação
+```bash
+# Ver o que seria feito sem executar
+curl -fsSL .../unified-installer.py | sudo python3 - --dry-run --verbose
 ```
 
 ### Instalação Totalmente Automática
 ```bash
 # Sem confirmações, usar todos os padrões
-curl -fsSL .../install.py | sudo python3 - --auto
+curl -fsSL .../unified-installer.py | sudo python3 - --auto
 ```
 
 ---
@@ -194,26 +219,42 @@ curl -fsSL .../install.py | sudo python3 - --auto
 
 | Componente | Descrição | Espaço |
 |------------|-----------|--------|
+| 🐳 **Docker** | Containerização da aplicação | ~500MB |
+| 🔥 **UFW** | Firewall com regras pré-configuradas | ~5MB |
+| ⏰ **NTP** | Sincronização de tempo via timesyncd/chrony | ~2MB |
+| 🌐 **Nginx** | Proxy reverso e servidor web | ~10MB |
 | 🎵 **Spotify + Spicetify** | Player com temas customizados | ~500MB |
+| 🎹 **spotify-cli-linux** | Controle do Spotify via terminal | ~5MB |
 | 📊 **Grafana** | Dashboards de monitoramento | ~200MB |
 | 📈 **Prometheus** | Coleta de métricas | ~100MB |
-| 🌐 **Nginx** | Servidor web e proxy reverso | ~10MB |
-| 💾 **SQLite** | Banco de dados local | ~5MB |
 
-### Serviços Systemd
+### Regras UFW Configuradas
 
-Após a instalação, estes serviços estarão disponíveis:
+| Porta | Serviço | Acesso |
+|-------|---------|--------|
+| 22 | SSH | Qualquer |
+| 80 | HTTP | Qualquer |
+| 443 | HTTPS | Qualquer |
+| 5173 | TSiJUKEBOX | Qualquer |
+| 3000 | Grafana | Qualquer |
+| 9090 | Prometheus | Local |
+| 9100 | Node Exporter | Local |
+
+### Aliases spotify-cli
+
+Após a instalação, você terá estes comandos disponíveis:
 
 ```bash
-# Verificar status
-systemctl status tsijukebox
-
-# Iniciar/Parar
-sudo systemctl start tsijukebox
-sudo systemctl stop tsijukebox
-
-# Habilitar no boot
-sudo systemctl enable tsijukebox
+sp-play     # Iniciar reprodução
+sp-pause    # Pausar
+sp-next     # Próxima música
+sp-prev     # Música anterior
+sp-status   # Status atual
+sp-song     # Nome da música atual
+sp-artist   # Nome do artista
+sp-album    # Nome do álbum
+sp-lyrics   # Letras da música
+sp-art      # URL da arte do álbum
 ```
 
 ---
@@ -226,20 +267,23 @@ Após a instalação, execute este comando para verificar se tudo está funciona
 # Script de verificação automática
 tsijukebox --verify
 
-# Ou manualmente:
-systemctl status tsijukebox grafana-server prometheus
+# Ou verificar manualmente:
+systemctl status tsijukebox docker nginx grafana prometheus
 ```
 
 ### Saída Esperada:
 ```
-✅ TSiJUKEBOX v4.1.0 - Verificação de Instalação
+✅ TSiJUKEBOX v5.0.0 - Verificação de Instalação
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Serviço tsijukebox: ativo
-✅ Serviço grafana-server: ativo
-✅ Serviço prometheus: ativo
-✅ Banco de dados SQLite: conectado
-✅ Spotify: autenticado
+✅ Docker: ativo
+✅ Nginx: ativo
+✅ Grafana: ativo
+✅ Prometheus: ativo
+✅ UFW: ativo (6 regras)
+✅ NTP: sincronizado
+✅ Spotify: instalado
+✅ Spicetify: aplicado
 ✅ Interface web: http://localhost:5173
 
 🎉 Instalação verificada com sucesso!
@@ -277,6 +321,24 @@ sudo pacman -S python
 curl ... | sudo python3
 ```
 
+### "Docker não inicia"
+```bash
+# Verificar logs
+journalctl -u docker -f
+
+# Reiniciar serviço
+sudo systemctl restart docker
+```
+
+### "UFW bloqueando conexões"
+```bash
+# Verificar regras
+sudo ufw status numbered
+
+# Adicionar regra temporária
+sudo ufw allow 8080/tcp
+```
+
 ### "Erro de conexão com Spotify"
 ```bash
 # Reconfigurar autenticação
@@ -296,20 +358,22 @@ journalctl -u tsijukebox -f
 Para remover completamente:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3 - --uninstall
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --uninstall
 ```
 
 Ou manualmente:
 ```bash
 # Parar serviços
-sudo systemctl stop tsijukebox grafana-server prometheus
+sudo systemctl stop tsijukebox grafana prometheus nginx
+
+# Remover containers Docker
+sudo docker-compose -f /opt/tsijukebox/docker-compose.yml down
 
 # Remover pacotes
-sudo pacman -Rns tsijukebox spotify spicetify-cli grafana prometheus
+sudo pacman -Rns spotify spicetify-cli grafana prometheus
 
 # Remover dados
-rm -rf ~/.config/tsijukebox
-rm -rf /var/lib/tsijukebox
+sudo rm -rf /opt/tsijukebox /etc/tsijukebox /var/lib/tsijukebox /var/log/tsijukebox
 ```
 
 ---
@@ -320,6 +384,8 @@ rm -rf /var/lib/tsijukebox
 - 🏭 [Deploy em Produção](PRODUCTION-DEPLOY.md)
 - 🔧 [Troubleshooting](TROUBLESHOOTING.md)
 - 🎨 [Customização de Temas](THEMES.md)
+- 📊 [Monitoramento Avançado](MONITORING.md)
+- 🔌 [Sistema de Plugins](PLUGINS.md)
 
 ---
 
@@ -333,6 +399,6 @@ rm -rf /var/lib/tsijukebox
 
 ---
 
-*TSiJUKEBOX Enterprise — A música, amplificada.* 🎵
+*TSiJUKEBOX Enterprise v5.0.0 — A música, amplificada.* 🎵
 
 </div>
