@@ -188,8 +188,59 @@ class YouTubeMusicClient {
     }
   }
 
+  /**
+   * Validates the current access token by making a lightweight API call.
+   * Returns the user info if valid, null otherwise.
+   */
   async validateToken(): Promise<YouTubeMusicUser | null> {
-    return this.getCurrentUser();
+    if (!this.tokens?.accessToken) {
+      return null;
+    }
+    
+    try {
+      // Make a direct call to YouTube API to check token validity
+      const response = await fetch(
+        'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
+        {
+          headers: {
+            'Authorization': `Bearer ${this.tokens.accessToken}`,
+          },
+        }
+      );
+      
+      if (!response.ok) {
+        console.warn('YouTube Music token validation failed:', response.status);
+        return null;
+      }
+      
+      const data = await response.json();
+      
+      if (data.items && data.items.length > 0) {
+        const channel = data.items[0];
+        return {
+          id: channel.id,
+          name: channel.snippet.title,
+          email: '',
+          imageUrl: channel.snippet.thumbnails?.default?.url || null,
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.warn('Error validating YouTube Music token:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Checks if the current token is expired based on expiresAt timestamp.
+   */
+  isTokenExpired(): boolean {
+    if (!this.tokens?.expiresAt) {
+      return true;
+    }
+    // Add 5 minute buffer
+    return Date.now() >= this.tokens.expiresAt - 5 * 60 * 1000;
   }
 
   // Library

@@ -45,6 +45,8 @@
 
 - [Arquitetura](Dev-Architecture.md)
 - [API Reference](Dev-API-Reference.md)
+- [API Spotify](API-Spotify-Integration.md)
+- [API YouTube Music](API-YouTube-Music-Integration.md)
 - [Contribuir](Dev-Contributing.md)
 - [Testes](Dev-Testing.md)
 

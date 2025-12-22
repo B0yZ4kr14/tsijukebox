@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useCallback, useState, useEffect } from 'react';
+import React, { createContext, useContext, useCallback, useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { youtubeMusicClient, YouTubeMusicTokens, YouTubeMusicUser } from '@/lib/api/youtubeMusic';
 
 export interface YouTubeMusicSettings {
@@ -54,6 +55,7 @@ export function YouTubeMusicProvider({ children }: { children: React.ReactNode }
   });
 
   // Persist settings to localStorage
+  // Persist settings to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(YOUTUBE_MUSIC_STORAGE_KEY, JSON.stringify(settings));
@@ -61,6 +63,74 @@ export function YouTubeMusicProvider({ children }: { children: React.ReactNode }
       console.warn('Failed to save YouTube Music settings to localStorage');
     }
   }, [settings]);
+
+  // Validate token on app load
+  const hasValidatedToken = useRef(false);
+  
+  useEffect(() => {
+    const validateSavedToken = async () => {
+      // Only validate once and if we have tokens
+      if (hasValidatedToken.current || !settings.tokens || !settings.isConnected) {
+        return;
+      }
+      
+      hasValidatedToken.current = true;
+      
+      try {
+        // Check if token is expired locally first
+        const now = Date.now();
+        if (settings.tokens.expiresAt && settings.tokens.expiresAt < now) {
+          console.log('YouTube Music token expired, attempting refresh...');
+          
+          // Try to refresh the token
+          if (settings.tokens.refreshToken && settings.clientId && settings.clientSecret) {
+            try {
+              const newTokens = await youtubeMusicClient.refreshTokens();
+              setYouTubeMusicTokens(newTokens);
+              console.log('YouTube Music token refreshed successfully');
+              return;
+            } catch (refreshError) {
+              console.warn('Failed to refresh YouTube Music token:', refreshError);
+            }
+          }
+          
+          // Refresh failed, clear auth
+          clearYouTubeMusicAuth();
+          toast.warning('Sessão do YouTube Music expirada. Por favor, reconecte sua conta.');
+          return;
+        }
+        
+        // Validate token by making a simple API call
+        const user = await youtubeMusicClient.validateToken();
+        if (!user) {
+          console.warn('YouTube Music token validation failed');
+          
+          // Try refresh before clearing
+          if (settings.tokens.refreshToken && settings.clientId && settings.clientSecret) {
+            try {
+              const newTokens = await youtubeMusicClient.refreshTokens();
+              setYouTubeMusicTokens(newTokens);
+              return;
+            } catch {
+              // Refresh failed
+            }
+          }
+          
+          clearYouTubeMusicAuth();
+          toast.warning('Token do YouTube Music inválido. Por favor, reconecte sua conta.');
+        } else {
+          // Update user info if needed
+          if (!settings.user || settings.user.id !== user.id) {
+            setYouTubeMusicUser(user);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to validate YouTube Music token:', error);
+      }
+    };
+    
+    validateSavedToken();
+  }, [settings.tokens, settings.isConnected, settings.clientId, settings.clientSecret]);
 
   const setYouTubeMusicCredentials = useCallback((clientId: string, clientSecret: string) => {
     youtubeMusicClient.setCredentials({ clientId, clientSecret });
