@@ -9,3 +9,5 @@ export { AutoSyncPanel } from './AutoSyncPanel';
 export { CacheIndicator } from './CacheIndicator';
 export { CommitFilters } from './CommitFilters';
 export { GitHubDashboardCharts } from './GitHubDashboardCharts';
+export { SyncHistoryPanel } from './SyncHistoryPanel';
+export { FileSelectionModal } from './FileSelectionModal';

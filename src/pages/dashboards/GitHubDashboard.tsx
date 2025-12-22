@@ -36,7 +36,9 @@ import {
   BranchesSection,
   AutoSyncPanel,
   CacheIndicator,
-  GitHubDashboardCharts
+  GitHubDashboardCharts,
+  SyncHistoryPanel,
+  FileSelectionModal
 } from '@/components/github';
 
 export default function GitHubDashboard() {
