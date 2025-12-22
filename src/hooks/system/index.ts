@@ -76,3 +76,9 @@ export {
   type SyncResult,
   type UseGitHubFullSyncReturn
 } from './useGitHubFullSync';
+export {
+  useAutoSync,
+  type AutoSyncConfig,
+  type AutoSyncStatus,
+  type UseAutoSyncReturn
+} from './useAutoSync';

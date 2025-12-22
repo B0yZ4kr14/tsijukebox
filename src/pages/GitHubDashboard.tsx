@@ -33,6 +33,7 @@ import {
 
 import { useGitHubStats, GitHubCommit } from '@/hooks/system/useGitHubStats';
 import { useGitHubFullSync, FileToSync } from '@/hooks/system/useGitHubFullSync';
+import { useAutoSync } from '@/hooks/system/useAutoSync';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,6 +45,7 @@ import { LogoBrand } from '@/components/ui/LogoBrand';
 import { CommitFilters } from '@/components/github/CommitFilters';
 import { CacheIndicator } from '@/components/github/CacheIndicator';
 import { GitHubDashboardCharts } from '@/components/github/GitHubDashboardCharts';
+import { AutoSyncPanel } from '@/components/github/AutoSyncPanel';
 import { getCommitTypeInfo } from '@/lib/constants/commitTypes';
 import { ComponentBoundary } from '@/components/errors';
 import { toast } from 'sonner';
@@ -123,6 +125,7 @@ export default function GitHubDashboard() {
   } = useGitHubStats();
 
   const { isSyncing, syncFiles, lastSync } = useGitHubFullSync();
+  const autoSync = useAutoSync();
 
   const [filteredCommits, setFilteredCommits] = useState<GitHubCommit[]>([]);
   
@@ -201,6 +204,12 @@ export default function GitHubDashboard() {
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 <Github className="h-6 w-6" />
                 GitHub Dashboard
+                <Badge 
+                  variant={autoSync.isEnabled ? 'default' : 'secondary'}
+                  className={autoSync.isEnabled ? 'bg-green-600 text-xs' : 'text-xs'}
+                >
+                  {autoSync.isEnabled ? '🔄 Auto' : '⏸️ Manual'}
+                </Badge>
               </h1>
               {repoInfo && (
                 <p className="text-muted-foreground text-sm">{repoInfo.full_name}</p>
@@ -255,6 +264,11 @@ export default function GitHubDashboard() {
             <p className="text-destructive">{error}</p>
           </motion.div>
         )}
+
+        {/* Auto-Sync Panel */}
+        <div className="mb-8">
+          <AutoSyncPanel autoSync={autoSync} />
+        </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
