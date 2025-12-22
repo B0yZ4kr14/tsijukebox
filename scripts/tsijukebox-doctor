@@ -1,0 +1,849 @@
+#!/usr/bin/env python3
+"""
+TSiJUKEBOX Doctor - System Diagnostic and Repair Tool
+======================================================
+Interactive diagnostic script that detects and fixes installation problems.
+
+Usage:
+    tsijukebox-doctor              # Check all systems
+    tsijukebox-doctor --repair     # Auto-fix problems
+    tsijukebox-doctor --json       # JSON output
+    tsijukebox-doctor --verbose    # Detailed output
+    tsijukebox-doctor --fix npm    # Fix specific issue
+
+Author: B0.y_Z4kr14
+License: Public Domain
+"""
+
+import os
+import sys
+import json
+import socket
+import argparse
+import subprocess
+import shutil
+from pathlib import Path
+from datetime import datetime
+from dataclasses import dataclass, field, asdict
+from typing import List, Dict, Optional, Tuple, Any
+from enum import Enum
+
+
+# =============================================================================
+# CONSTANTS
+# =============================================================================
+
+VERSION = "1.0.0"
+INSTALL_DIR = Path("/opt/tsijukebox")
+CONFIG_DIR = Path("/etc/tsijukebox")
+LOG_DIR = Path("/var/log/tsijukebox")
+DATA_DIR = Path("/var/lib/tsijukebox")
+REPO_URL = "https://github.com/B0yZ4kr14/TSiJUKEBOX.git"
+
+
+# =============================================================================
+# COLORS
+# =============================================================================
+
+class Colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    GRAY = '\033[90m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+
+
+# =============================================================================
+# DATA CLASSES
+# =============================================================================
+
+class CheckStatus(Enum):
+    OK = "ok"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+    SKIPPED = "skipped"
+
+
+@dataclass
+class CheckResult:
+    """Result of a single diagnostic check."""
+    name: str
+    status: CheckStatus
+    message: str
+    details: Optional[str] = None
+    repair_command: Optional[str] = None
+    repair_function: Optional[str] = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "status": self.status.value,
+            "message": self.message,
+            "details": self.details,
+            "repair_command": self.repair_command,
+        }
+
+
+@dataclass
+class DiagnosticReport:
+    """Complete diagnostic report."""
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
+    version: str = VERSION
+    hostname: str = field(default_factory=socket.gethostname)
+    checks: List[CheckResult] = field(default_factory=list)
+    repairs_attempted: List[str] = field(default_factory=list)
+    repairs_successful: List[str] = field(default_factory=list)
+    
+    def add_check(self, result: CheckResult):
+        self.checks.append(result)
+    
+    def get_summary(self) -> Dict[str, int]:
+        summary = {s.value: 0 for s in CheckStatus}
+        for check in self.checks:
+            summary[check.status.value] += 1
+        return summary
+    
+    def has_errors(self) -> bool:
+        return any(c.status in (CheckStatus.ERROR, CheckStatus.CRITICAL) for c in self.checks)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "timestamp": self.timestamp,
+            "version": self.version,
+            "hostname": self.hostname,
+            "summary": self.get_summary(),
+            "checks": [c.to_dict() for c in self.checks],
+            "repairs_attempted": self.repairs_attempted,
+            "repairs_successful": self.repairs_successful,
+        }
+
+
+# =============================================================================
+# DIAGNOSTIC ENGINE
+# =============================================================================
+
+class DiagnosticEngine:
+    """Main diagnostic engine."""
+    
+    def __init__(self, verbose: bool = False, json_output: bool = False):
+        self.verbose = verbose
+        self.json_output = json_output
+        self.report = DiagnosticReport()
+        self.user = os.environ.get('SUDO_USER', os.environ.get('USER', 'root'))
+    
+    def run_command(self, cmd: List[str], capture: bool = True) -> Tuple[int, str, str]:
+        """Execute a shell command."""
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=capture,
+                text=True,
+                timeout=30
+            )
+            return result.returncode, result.stdout, result.stderr
+        except subprocess.TimeoutExpired:
+            return -1, "", "Command timed out"
+        except Exception as e:
+            return -1, "", str(e)
+    
+    def print_status(self, status: CheckStatus, name: str, message: str):
+        """Print colored status message."""
+        if self.json_output:
+            return
+        
+        icons = {
+            CheckStatus.OK: f"{Colors.GREEN}✓{Colors.RESET}",
+            CheckStatus.WARNING: f"{Colors.YELLOW}⚠{Colors.RESET}",
+            CheckStatus.ERROR: f"{Colors.RED}✗{Colors.RESET}",
+            CheckStatus.CRITICAL: f"{Colors.RED}{Colors.BOLD}✗✗{Colors.RESET}",
+            CheckStatus.SKIPPED: f"{Colors.GRAY}○{Colors.RESET}",
+        }
+        
+        icon = icons.get(status, "?")
+        print(f"  {icon} {name}: {message}")
+    
+    # =========================================================================
+    # CHECKS: Directories
+    # =========================================================================
+    
+    def check_directories(self) -> List[CheckResult]:
+        """Check required directories exist."""
+        results = []
+        
+        dirs = [
+            (INSTALL_DIR, "Diretório de instalação", True),
+            (CONFIG_DIR, "Diretório de configuração", True),
+            (LOG_DIR, "Diretório de logs", False),
+            (DATA_DIR, "Diretório de dados", True),
+        ]
+        
+        for path, name, required in dirs:
+            if path.exists():
+                result = CheckResult(
+                    name=name,
+                    status=CheckStatus.OK,
+                    message=f"existe ({path})"
+                )
+            else:
+                result = CheckResult(
+                    name=name,
+                    status=CheckStatus.ERROR if required else CheckStatus.WARNING,
+                    message=f"não encontrado ({path})",
+                    repair_command=f"sudo mkdir -p {path}",
+                    repair_function="repair_directories"
+                )
+            
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Repository
+    # =========================================================================
+    
+    def check_repository(self) -> List[CheckResult]:
+        """Check repository status."""
+        results = []
+        
+        # Check if repository exists
+        if not INSTALL_DIR.exists():
+            result = CheckResult(
+                name="Repositório",
+                status=CheckStatus.ERROR,
+                message="não clonado",
+                repair_command=f"sudo git clone --depth 1 {REPO_URL} {INSTALL_DIR}",
+                repair_function="repair_repository"
+            )
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+            return results
+        
+        # Check package.json
+        package_json = INSTALL_DIR / "package.json"
+        if package_json.exists():
+            result = CheckResult(
+                name="package.json",
+                status=CheckStatus.OK,
+                message="presente"
+            )
+        else:
+            result = CheckResult(
+                name="package.json",
+                status=CheckStatus.ERROR,
+                message="ausente - repositório corrompido",
+                repair_command=f"sudo rm -rf {INSTALL_DIR} && sudo git clone --depth 1 {REPO_URL} {INSTALL_DIR}",
+                repair_function="repair_repository"
+            )
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        # Check node_modules
+        node_modules = INSTALL_DIR / "node_modules"
+        if node_modules.exists():
+            # Count modules
+            module_count = len(list(node_modules.iterdir())) if node_modules.is_dir() else 0
+            result = CheckResult(
+                name="node_modules",
+                status=CheckStatus.OK,
+                message=f"instalados ({module_count} módulos)"
+            )
+        else:
+            result = CheckResult(
+                name="node_modules",
+                status=CheckStatus.WARNING,
+                message="npm install necessário",
+                repair_command=f"cd {INSTALL_DIR} && sudo npm install",
+                repair_function="repair_npm"
+            )
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        # Check git status
+        code, stdout, _ = self.run_command(['git', '-C', str(INSTALL_DIR), 'status', '--porcelain'])
+        if code == 0:
+            if stdout.strip():
+                result = CheckResult(
+                    name="Git status",
+                    status=CheckStatus.WARNING,
+                    message="modificações locais detectadas",
+                    details=stdout[:200]
+                )
+            else:
+                result = CheckResult(
+                    name="Git status",
+                    status=CheckStatus.OK,
+                    message="limpo"
+                )
+        else:
+            result = CheckResult(
+                name="Git status",
+                status=CheckStatus.WARNING,
+                message="não é um repositório git"
+            )
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Services
+    # =========================================================================
+    
+    def check_services(self) -> List[CheckResult]:
+        """Check systemd services."""
+        results = []
+        
+        services = [
+            ("tsijukebox", True),
+            ("grafana-server", False),
+            ("prometheus", False),
+            ("prometheus-node-exporter", False),
+        ]
+        
+        for service, required in services:
+            code, stdout, _ = self.run_command(['systemctl', 'is-active', service])
+            is_active = stdout.strip() == 'active'
+            
+            if is_active:
+                result = CheckResult(
+                    name=f"Serviço {service}",
+                    status=CheckStatus.OK,
+                    message="ativo"
+                )
+            else:
+                # Check if enabled
+                code2, stdout2, _ = self.run_command(['systemctl', 'is-enabled', service])
+                is_enabled = stdout2.strip() == 'enabled'
+                
+                if required:
+                    result = CheckResult(
+                        name=f"Serviço {service}",
+                        status=CheckStatus.ERROR,
+                        message=f"inativo (enabled={is_enabled})",
+                        repair_command=f"sudo systemctl start {service}",
+                        repair_function="repair_services"
+                    )
+                else:
+                    result = CheckResult(
+                        name=f"Serviço {service}",
+                        status=CheckStatus.SKIPPED,
+                        message=f"inativo (opcional)"
+                    )
+            
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Ports
+    # =========================================================================
+    
+    def check_ports(self) -> List[CheckResult]:
+        """Check if ports are accessible."""
+        results = []
+        
+        ports = [
+            (5173, "TSiJUKEBOX Web", True),
+            (3000, "Grafana", False),
+            (9090, "Prometheus", False),
+            (9100, "Node Exporter", False),
+        ]
+        
+        for port, name, required in ports:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(2)
+                result_code = sock.connect_ex(('localhost', port))
+                sock.close()
+                is_open = result_code == 0
+                
+                if is_open:
+                    result = CheckResult(
+                        name=f"Porta {port} ({name})",
+                        status=CheckStatus.OK,
+                        message="acessível"
+                    )
+                else:
+                    result = CheckResult(
+                        name=f"Porta {port} ({name})",
+                        status=CheckStatus.ERROR if required else CheckStatus.WARNING,
+                        message="fechada"
+                    )
+            except Exception as e:
+                result = CheckResult(
+                    name=f"Porta {port} ({name})",
+                    status=CheckStatus.WARNING,
+                    message=f"erro: {e}"
+                )
+            
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Database
+    # =========================================================================
+    
+    def check_database(self) -> List[CheckResult]:
+        """Check database status."""
+        results = []
+        
+        db_path = DATA_DIR / "tsijukebox.db"
+        
+        if db_path.exists():
+            size = db_path.stat().st_size
+            if size > 0:
+                result = CheckResult(
+                    name="Banco SQLite",
+                    status=CheckStatus.OK,
+                    message=f"OK ({size:,} bytes)"
+                )
+            else:
+                result = CheckResult(
+                    name="Banco SQLite",
+                    status=CheckStatus.WARNING,
+                    message="vazio (0 bytes)",
+                    repair_function="repair_database"
+                )
+        else:
+            result = CheckResult(
+                name="Banco SQLite",
+                status=CheckStatus.WARNING,
+                message="não encontrado",
+                repair_function="repair_database"
+            )
+        
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Configuration
+    # =========================================================================
+    
+    def check_configuration(self) -> List[CheckResult]:
+        """Check configuration files."""
+        results = []
+        
+        config_files = [
+            (CONFIG_DIR / "config.yaml", "config.yaml", True),
+            (CONFIG_DIR / "nginx.conf", "nginx.conf", False),
+            (Path("/etc/systemd/system/tsijukebox.service"), "systemd service", True),
+        ]
+        
+        for path, name, required in config_files:
+            if path.exists():
+                result = CheckResult(
+                    name=f"Config {name}",
+                    status=CheckStatus.OK,
+                    message="presente"
+                )
+            else:
+                result = CheckResult(
+                    name=f"Config {name}",
+                    status=CheckStatus.ERROR if required else CheckStatus.WARNING,
+                    message="ausente",
+                    repair_function="repair_config"
+                )
+            
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Permissions
+    # =========================================================================
+    
+    def check_permissions(self) -> List[CheckResult]:
+        """Check file and directory permissions."""
+        results = []
+        
+        dirs_to_check = [
+            (INSTALL_DIR, self.user),
+            (DATA_DIR, self.user),
+            (LOG_DIR, self.user),
+        ]
+        
+        for path, expected_owner in dirs_to_check:
+            if not path.exists():
+                continue
+            
+            try:
+                stat_info = path.stat()
+                import pwd
+                owner = pwd.getpwuid(stat_info.st_uid).pw_name
+                
+                if owner == expected_owner or owner == 'root':
+                    result = CheckResult(
+                        name=f"Permissões {path.name}",
+                        status=CheckStatus.OK,
+                        message=f"owner={owner}"
+                    )
+                else:
+                    result = CheckResult(
+                        name=f"Permissões {path.name}",
+                        status=CheckStatus.WARNING,
+                        message=f"owner={owner} (esperado: {expected_owner})",
+                        repair_command=f"sudo chown -R {expected_owner}:{expected_owner} {path}",
+                        repair_function="repair_permissions"
+                    )
+            except Exception as e:
+                result = CheckResult(
+                    name=f"Permissões {path.name}",
+                    status=CheckStatus.WARNING,
+                    message=f"erro: {e}"
+                )
+            
+            results.append(result)
+            self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Disk Space
+    # =========================================================================
+    
+    def check_disk_space(self) -> List[CheckResult]:
+        """Check available disk space."""
+        results = []
+        
+        try:
+            total, used, free = shutil.disk_usage("/")
+            free_gb = free / (1024 ** 3)
+            used_percent = (used / total) * 100
+            
+            if free_gb > 5:
+                result = CheckResult(
+                    name="Espaço em disco",
+                    status=CheckStatus.OK,
+                    message=f"{free_gb:.1f} GB livres ({used_percent:.0f}% usado)"
+                )
+            elif free_gb > 1:
+                result = CheckResult(
+                    name="Espaço em disco",
+                    status=CheckStatus.WARNING,
+                    message=f"{free_gb:.1f} GB livres - considere liberar espaço"
+                )
+            else:
+                result = CheckResult(
+                    name="Espaço em disco",
+                    status=CheckStatus.CRITICAL,
+                    message=f"CRÍTICO: apenas {free_gb:.2f} GB livres!"
+                )
+        except Exception as e:
+            result = CheckResult(
+                name="Espaço em disco",
+                status=CheckStatus.WARNING,
+                message=f"erro: {e}"
+            )
+        
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # CHECKS: Network
+    # =========================================================================
+    
+    def check_network(self) -> List[CheckResult]:
+        """Check network connectivity."""
+        results = []
+        
+        # Check DNS
+        try:
+            socket.gethostbyname("github.com")
+            result = CheckResult(
+                name="DNS",
+                status=CheckStatus.OK,
+                message="resolvendo"
+            )
+        except socket.gaierror:
+            result = CheckResult(
+                name="DNS",
+                status=CheckStatus.ERROR,
+                message="falha na resolução"
+            )
+        
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        # Check internet connectivity
+        code, _, _ = self.run_command(['curl', '-s', '--max-time', '5', '-o', '/dev/null', 'https://github.com'])
+        if code == 0:
+            result = CheckResult(
+                name="Internet",
+                status=CheckStatus.OK,
+                message="conectado"
+            )
+        else:
+            result = CheckResult(
+                name="Internet",
+                status=CheckStatus.WARNING,
+                message="sem conexão (algumas funcionalidades podem falhar)"
+            )
+        
+        results.append(result)
+        self.print_status(result.status, result.name, result.message)
+        
+        return results
+    
+    # =========================================================================
+    # REPAIR FUNCTIONS
+    # =========================================================================
+    
+    def repair_directories(self) -> bool:
+        """Repair missing directories."""
+        success = True
+        for path in [INSTALL_DIR, CONFIG_DIR, LOG_DIR, DATA_DIR]:
+            if not path.exists():
+                code, _, _ = self.run_command(['sudo', 'mkdir', '-p', str(path)])
+                if code != 0:
+                    success = False
+                else:
+                    self.report.repairs_successful.append(f"Criado {path}")
+        return success
+    
+    def repair_repository(self) -> bool:
+        """Repair repository installation."""
+        if INSTALL_DIR.exists():
+            self.run_command(['sudo', 'rm', '-rf', str(INSTALL_DIR)])
+        
+        code, _, _ = self.run_command([
+            'sudo', 'git', 'clone', '--depth', '1', REPO_URL, str(INSTALL_DIR)
+        ])
+        
+        if code == 0:
+            self.report.repairs_successful.append("Repositório clonado")
+            return True
+        return False
+    
+    def repair_npm(self) -> bool:
+        """Run npm install."""
+        code, _, _ = self.run_command(
+            ['sudo', 'npm', 'install'],
+            capture=True
+        )
+        
+        if code == 0:
+            self.report.repairs_successful.append("npm install executado")
+            return True
+        return False
+    
+    def repair_services(self) -> bool:
+        """Restart services."""
+        services = ['tsijukebox']
+        success = True
+        
+        for service in services:
+            code, _, _ = self.run_command(['sudo', 'systemctl', 'restart', service])
+            if code == 0:
+                self.report.repairs_successful.append(f"Serviço {service} reiniciado")
+            else:
+                success = False
+        
+        return success
+    
+    def repair_permissions(self) -> bool:
+        """Fix permissions."""
+        success = True
+        for path in [INSTALL_DIR, DATA_DIR, LOG_DIR]:
+            if path.exists():
+                code, _, _ = self.run_command([
+                    'sudo', 'chown', '-R', f'{self.user}:{self.user}', str(path)
+                ])
+                if code == 0:
+                    self.report.repairs_successful.append(f"Permissões corrigidas: {path}")
+                else:
+                    success = False
+        return success
+    
+    def repair_all(self) -> int:
+        """Execute all repairs for failed checks."""
+        repairs_done = 0
+        
+        for check in self.report.checks:
+            if check.status in (CheckStatus.ERROR, CheckStatus.WARNING):
+                if check.repair_command:
+                    self.report.repairs_attempted.append(check.repair_command)
+                    print(f"\n{Colors.YELLOW}→ Executando: {check.repair_command}{Colors.RESET}")
+                    
+                    # Parse and execute command
+                    parts = check.repair_command.split(' && ')
+                    success = True
+                    for part in parts:
+                        cmd_parts = part.split()
+                        code, stdout, stderr = self.run_command(cmd_parts)
+                        if code != 0:
+                            print(f"{Colors.RED}  Erro: {stderr}{Colors.RESET}")
+                            success = False
+                    
+                    if success:
+                        print(f"{Colors.GREEN}  ✓ Sucesso{Colors.RESET}")
+                        self.report.repairs_successful.append(check.name)
+                        repairs_done += 1
+        
+        return repairs_done
+    
+    # =========================================================================
+    # MAIN RUN
+    # =========================================================================
+    
+    def run_all_checks(self):
+        """Run all diagnostic checks."""
+        if not self.json_output:
+            print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🩺 TSiJUKEBOX DOCTOR v{VERSION}{Colors.RESET}{Colors.CYAN}                               ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        sections = [
+            ("DIRETÓRIOS", self.check_directories),
+            ("REPOSITÓRIO", self.check_repository),
+            ("SERVIÇOS", self.check_services),
+            ("PORTAS", self.check_ports),
+            ("BANCO DE DADOS", self.check_database),
+            ("CONFIGURAÇÃO", self.check_configuration),
+            ("PERMISSÕES", self.check_permissions),
+            ("DISCO", self.check_disk_space),
+            ("REDE", self.check_network),
+        ]
+        
+        for section_name, check_func in sections:
+            if not self.json_output:
+                print(f"\n{Colors.YELLOW}━━━ {section_name} ━━━{Colors.RESET}")
+            
+            results = check_func()
+            for result in results:
+                self.report.add_check(result)
+    
+    def print_summary(self):
+        """Print summary of results."""
+        if self.json_output:
+            return
+        
+        summary = self.report.get_summary()
+        
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}📊 RESUMO{Colors.RESET}{Colors.CYAN}                                                    ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+
+  {Colors.GREEN}✓ OK:{Colors.RESET}       {summary['ok']}
+  {Colors.YELLOW}⚠ Avisos:{Colors.RESET}   {summary['warning']}
+  {Colors.RED}✗ Erros:{Colors.RESET}    {summary['error']}
+  {Colors.RED}✗✗ Crítico:{Colors.RESET} {summary['critical']}
+  {Colors.GRAY}○ Pulados:{Colors.RESET}  {summary['skipped']}
+""")
+        
+        if self.report.has_errors():
+            print(f"{Colors.YELLOW}💡 Execute com --repair para tentar corrigir automaticamente{Colors.RESET}")
+        else:
+            print(f"{Colors.GREEN}✅ Sistema saudável!{Colors.RESET}")
+
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='TSiJUKEBOX Doctor - Diagnóstico e Reparo do Sistema',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    parser.add_argument('--repair', '-r', action='store_true',
+                       help='Corrigir problemas automaticamente')
+    parser.add_argument('--json', '-j', action='store_true',
+                       help='Saída em formato JSON')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                       help='Saída detalhada')
+    parser.add_argument('--fix', type=str, metavar='ISSUE',
+                       help='Corrigir problema específico (npm, repo, services, permissions)')
+    parser.add_argument('--output', '-o', type=str, metavar='FILE',
+                       help='Salvar relatório em arquivo')
+    
+    args = parser.parse_args()
+    
+    # Check if running as root for repairs
+    if args.repair or args.fix:
+        if os.geteuid() != 0:
+            print(f"{Colors.RED}Erro: --repair requer privilégios de root{Colors.RESET}")
+            print(f"Execute: sudo tsijukebox-doctor --repair")
+            sys.exit(1)
+    
+    engine = DiagnosticEngine(
+        verbose=args.verbose,
+        json_output=args.json
+    )
+    
+    # Run specific fix
+    if args.fix:
+        fix_map = {
+            'npm': engine.repair_npm,
+            'repo': engine.repair_repository,
+            'repository': engine.repair_repository,
+            'services': engine.repair_services,
+            'permissions': engine.repair_permissions,
+            'dirs': engine.repair_directories,
+            'directories': engine.repair_directories,
+        }
+        
+        if args.fix.lower() in fix_map:
+            print(f"{Colors.CYAN}→ Executando reparo: {args.fix}{Colors.RESET}")
+            success = fix_map[args.fix.lower()]()
+            if success:
+                print(f"{Colors.GREEN}✓ Reparo concluído com sucesso{Colors.RESET}")
+                sys.exit(0)
+            else:
+                print(f"{Colors.RED}✗ Reparo falhou{Colors.RESET}")
+                sys.exit(1)
+        else:
+            print(f"{Colors.RED}Reparo desconhecido: {args.fix}{Colors.RESET}")
+            print(f"Opções válidas: {', '.join(fix_map.keys())}")
+            sys.exit(1)
+    
+    # Run all checks
+    engine.run_all_checks()
+    
+    # Auto-repair if requested
+    if args.repair:
+        print(f"\n{Colors.CYAN}━━━ EXECUTANDO REPAROS ━━━{Colors.RESET}")
+        repairs = engine.repair_all()
+        print(f"\n{Colors.GREEN}Reparos executados: {repairs}{Colors.RESET}")
+    
+    # Print summary
+    engine.print_summary()
+    
+    # JSON output
+    if args.json:
+        print(json.dumps(engine.report.to_dict(), indent=2, ensure_ascii=False))
+    
+    # Save report if requested
+    if args.output:
+        output_path = Path(args.output)
+        with open(output_path, 'w') as f:
+            json.dump(engine.report.to_dict(), f, indent=2, ensure_ascii=False)
+        print(f"\n{Colors.GREEN}Relatório salvo em: {output_path}{Colors.RESET}")
+    
+    # Exit code based on results
+    if engine.report.has_errors():
+        sys.exit(1)
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

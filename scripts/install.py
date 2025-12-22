@@ -231,6 +231,112 @@ class InteractiveMenu:
 # =============================================================================
 
 @dataclass
+class InstallationCheckpoint:
+    """Checkpoint para rollback de instalação."""
+    name: str
+    state: Dict[str, Any]
+    rollback_commands: List[str]
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat() if 'datetime' in dir() else "")
+    
+    def __post_init__(self):
+        from datetime import datetime
+        if not self.timestamp:
+            self.timestamp = datetime.now().isoformat()
+
+
+class RollbackManager:
+    """Gerenciador de rollback para instalação."""
+    
+    def __init__(self):
+        self.checkpoints: List[InstallationCheckpoint] = []
+        self._lock = False
+    
+    def create_checkpoint(self, name: str, state: Dict[str, Any], rollback_commands: List[str]) -> None:
+        """Cria novo checkpoint."""
+        checkpoint = InstallationCheckpoint(
+            name=name,
+            state=state,
+            rollback_commands=rollback_commands
+        )
+        self.checkpoints.append(checkpoint)
+        if not QUIET_MODE:
+            log_info(f"📍 Checkpoint criado: {name}")
+    
+    def has_checkpoints(self) -> bool:
+        return len(self.checkpoints) > 0
+    
+    def get_checkpoint(self, name: str) -> Optional[InstallationCheckpoint]:
+        for cp in self.checkpoints:
+            if cp.name == name:
+                return cp
+        return None
+    
+    def rollback_to(self, checkpoint_name: str) -> bool:
+        """Reverte até checkpoint específico."""
+        target_idx = None
+        for i, cp in enumerate(self.checkpoints):
+            if cp.name == checkpoint_name:
+                target_idx = i
+                break
+        
+        if target_idx is None:
+            return False
+        
+        # Reverter do mais recente até o target (não inclui target)
+        for cp in reversed(self.checkpoints[target_idx + 1:]):
+            self._execute_rollback(cp)
+        
+        self.checkpoints = self.checkpoints[:target_idx + 1]
+        return True
+    
+    def rollback_all(self) -> bool:
+        """Reverte todos os checkpoints."""
+        if not self.checkpoints:
+            return True
+        
+        log_warning("⏪ Iniciando rollback completo...")
+        
+        for cp in reversed(self.checkpoints):
+            self._execute_rollback(cp)
+        
+        self.checkpoints.clear()
+        log_success("Rollback completo executado")
+        return True
+    
+    def _execute_rollback(self, checkpoint: InstallationCheckpoint) -> None:
+        """Executa comandos de rollback de um checkpoint."""
+        log_info(f"↩️  Revertendo: {checkpoint.name}")
+        
+        for cmd in checkpoint.rollback_commands:
+            if DRY_RUN:
+                log_info(f"  [DRY-RUN] {cmd}")
+                continue
+            
+            try:
+                parts = cmd.split()
+                subprocess.run(parts, capture_output=True, check=False)
+            except Exception as e:
+                log_warning(f"  Falha ao executar: {cmd} ({e})")
+    
+    def cleanup(self) -> None:
+        """Limpa checkpoints após sucesso."""
+        self.checkpoints.clear()
+    
+    def export_state(self) -> Dict[str, Any]:
+        """Exporta estado para debug."""
+        return {
+            "checkpoints": [
+                {"name": cp.name, "timestamp": cp.timestamp, "commands": len(cp.rollback_commands)}
+                for cp in self.checkpoints
+            ]
+        }
+
+
+# Import datetime for checkpoints
+from datetime import datetime
+
+
+@dataclass
 class InstallConfig:
     """Configuração de instalação carregada de arquivo JSON."""
     mode: str = 'full'

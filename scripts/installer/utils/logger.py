@@ -6,10 +6,11 @@ Provides structured logging with colored output, file logging, and JSON export.
 
 Features:
 - Colored console output with severity levels
-- File logging with rotation
+- File logging with automatic rotation
 - JSON structured logging for debugging
 - Progress bars and spinners
 - Timestamps and context tracking
+- Configurable verbosity levels via env var or flag
 
 Author: B0.y_Z4kr14
 License: Public Domain (see docs/CREDITS.md)
@@ -25,10 +26,12 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass, field, asdict
+from logging.handlers import RotatingFileHandler
 
 
 class LogLevel(Enum):
-    """Log severity levels with color codes"""
+    """Log severity levels with color codes and numeric values."""
+    TRACE = ('TRACE', '\033[90m', 5)       # Dark gray - most verbose
     DEBUG = ('DEBUG', '\033[90m', 10)      # Gray
     INFO = ('INFO', '\033[94m', 20)        # Blue
     SUCCESS = ('SUCCESS', '\033[92m', 25)  # Green
@@ -47,11 +50,26 @@ class LogLevel(Enum):
     @property
     def level(self) -> int:
         return self.value[2]
+    
+    @classmethod
+    def from_string(cls, level_str: str) -> 'LogLevel':
+        """Convert string to LogLevel."""
+        level_map = {
+            'trace': cls.TRACE,
+            'debug': cls.DEBUG,
+            'info': cls.INFO,
+            'success': cls.SUCCESS,
+            'warning': cls.WARNING,
+            'warn': cls.WARNING,
+            'error': cls.ERROR,
+            'critical': cls.CRITICAL,
+        }
+        return level_map.get(level_str.lower(), cls.INFO)
 
 
 @dataclass
 class LogEntry:
-    """Structured log entry for JSON export"""
+    """Structured log entry for JSON export."""
     timestamp: str
     level: str
     message: str
@@ -66,7 +84,19 @@ class LogEntry:
 
 class Logger:
     """
-    Unified logging system with colored output and file logging.
+    Unified logging system with colored output, file logging, and rotation.
+    
+    Features:
+    - Console output with colors and severity levels
+    - File logging with automatic rotation
+    - JSON structured logging
+    - Configurable via environment variables
+    - Thread-safe singleton pattern
+    
+    Environment Variables:
+        TSIJUKEBOX_LOG_LEVEL: Set log level (trace, debug, info, warning, error, critical)
+        TSIJUKEBOX_LOG_DIR: Override log directory
+        TSIJUKEBOX_LOG_JSON: Enable/disable JSON logging (true/false)
     
     Usage:
         logger = Logger(name='installer', log_dir='/var/log/jukebox')
@@ -83,7 +113,7 @@ class Logger:
     _lock = threading.Lock()
     
     def __new__(cls, name: str = 'default', **kwargs):
-        """Singleton pattern per logger name"""
+        """Singleton pattern per logger name."""
         with cls._lock:
             if name not in cls._instances:
                 instance = super().__new__(cls)
@@ -94,7 +124,7 @@ class Logger:
         self,
         name: str = 'default',
         log_dir: Optional[Path] = None,
-        console_level: LogLevel = LogLevel.INFO,
+        console_level: Optional[LogLevel] = None,
         file_level: LogLevel = LogLevel.DEBUG,
         json_logging: bool = True,
         max_file_size_mb: int = 10,
@@ -106,46 +136,93 @@ class Logger:
         Args:
             name: Logger name (used for file naming)
             log_dir: Directory for log files (default: /var/log/jukebox)
-            console_level: Minimum level for console output
+            console_level: Minimum level for console output (auto-detect from env if None)
             file_level: Minimum level for file output
             json_logging: Whether to create JSON log file
-            max_file_size_mb: Max size before rotation
-            backup_count: Number of backup files to keep
+            max_file_size_mb: Max size before rotation (default: 10MB)
+            backup_count: Number of backup files to keep (default: 5)
         """
         if hasattr(self, '_initialized'):
             return
         
         self.name = name
-        self.log_dir = log_dir or Path('/var/log/jukebox')
-        self.console_level = console_level
+        
+        # Check environment variables for configuration
+        env_log_dir = os.environ.get('TSIJUKEBOX_LOG_DIR')
+        env_log_level = os.environ.get('TSIJUKEBOX_LOG_LEVEL')
+        env_json = os.environ.get('TSIJUKEBOX_LOG_JSON', 'true').lower()
+        
+        self.log_dir = Path(env_log_dir) if env_log_dir else (log_dir or Path('/var/log/jukebox'))
+        
+        # Determine console level from env, parameter, or default
+        if console_level:
+            self.console_level = console_level
+        elif env_log_level:
+            self.console_level = LogLevel.from_string(env_log_level)
+        else:
+            self.console_level = LogLevel.INFO
+        
         self.file_level = file_level
-        self.json_logging = json_logging
+        self.json_logging = json_logging if env_json != 'false' else False
         self.max_file_size = max_file_size_mb * 1024 * 1024
         self.backup_count = backup_count
         
         self._entries: List[LogEntry] = []
         self._context: Optional[str] = None
         self._start_time = datetime.now()
+        self._file_handler: Optional[RotatingFileHandler] = None
         
-        # Ensure log directory exists
-        self.log_dir.mkdir(parents=True, exist_ok=True)
+        # Ensure log directory exists (only if we can)
+        try:
+            self.log_dir.mkdir(parents=True, exist_ok=True)
+        except PermissionError:
+            # Fall back to temp directory if we can't write to log dir
+            import tempfile
+            self.log_dir = Path(tempfile.gettempdir()) / 'tsijukebox-logs'
+            self.log_dir.mkdir(parents=True, exist_ok=True)
         
         # Log file paths
         self.log_file = self.log_dir / f'{name}.log'
         self.json_file = self.log_dir / f'{name}.json'
         
+        # Setup rotating file handler
+        self._setup_file_handler()
+        
         self._initialized = True
     
+    def _setup_file_handler(self):
+        """Setup rotating file handler for log rotation."""
+        try:
+            self._file_handler = RotatingFileHandler(
+                self.log_file,
+                maxBytes=self.max_file_size,
+                backupCount=self.backup_count,
+                encoding='utf-8'
+            )
+            self._file_handler.setLevel(logging.DEBUG)
+            
+            formatter = logging.Formatter(
+                '%(asctime)s [%(levelname)s] %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+            )
+            self._file_handler.setFormatter(formatter)
+        except Exception:
+            self._file_handler = None
+    
+    def set_level(self, level: LogLevel) -> None:
+        """Set console log level dynamically."""
+        self.console_level = level
+    
     def set_context(self, context: str) -> None:
-        """Set current context (e.g., 'database_setup', 'package_install')"""
+        """Set current context (e.g., 'database_setup', 'package_install')."""
         self._context = context
     
     def clear_context(self) -> None:
-        """Clear current context"""
+        """Clear current context."""
         self._context = None
     
     def _format_message(self, level: LogLevel, message: str, extra: Optional[Dict] = None) -> str:
-        """Format message with colors and timestamp for console"""
+        """Format message with colors and timestamp for console."""
         timestamp = datetime.now().strftime('%H:%M:%S')
         
         # Build formatted message
@@ -166,7 +243,7 @@ class Logger:
         return ' '.join(parts)
     
     def _format_file_message(self, level: LogLevel, message: str, extra: Optional[Dict] = None) -> str:
-        """Format message for file output (no colors)"""
+        """Format message for file output (no colors)."""
         timestamp = datetime.now().isoformat()
         
         parts = [timestamp, f"[{level.label}]"]
@@ -183,7 +260,7 @@ class Logger:
         return ' '.join(parts)
     
     def _create_entry(self, level: LogLevel, message: str, extra: Optional[Dict] = None) -> LogEntry:
-        """Create structured log entry"""
+        """Create structured log entry."""
         import inspect
         
         # Get caller info
@@ -208,16 +285,31 @@ class Logger:
         )
     
     def _log(self, level: LogLevel, message: str, extra: Optional[Dict] = None) -> None:
-        """Core logging method"""
+        """Core logging method."""
         # Console output
         if level.level >= self.console_level.level:
             print(self._format_message(level, message, extra))
         
-        # File output
+        # File output with rotation
         if level.level >= self.file_level.level:
             try:
-                with open(self.log_file, 'a', encoding='utf-8') as f:
-                    f.write(self._format_file_message(level, message, extra) + '\n')
+                if self._file_handler:
+                    # Use RotatingFileHandler for automatic rotation
+                    record = logging.LogRecord(
+                        name=self.name,
+                        level=level.level,
+                        pathname='',
+                        lineno=0,
+                        msg=self._format_file_message(level, message, extra),
+                        args=(),
+                        exc_info=None
+                    )
+                    record.levelname = level.label
+                    self._file_handler.emit(record)
+                else:
+                    # Fallback to direct file write
+                    with open(self.log_file, 'a', encoding='utf-8') as f:
+                        f.write(self._format_file_message(level, message, extra) + '\n')
             except Exception:
                 pass  # Fail silently for file logging
         
@@ -226,32 +318,36 @@ class Logger:
             entry = self._create_entry(level, message, extra)
             self._entries.append(entry)
     
+    def trace(self, message: str, **extra) -> None:
+        """Log trace message (most verbose)."""
+        self._log(LogLevel.TRACE, message, extra or None)
+    
     def debug(self, message: str, **extra) -> None:
-        """Log debug message"""
+        """Log debug message."""
         self._log(LogLevel.DEBUG, message, extra or None)
     
     def info(self, message: str, **extra) -> None:
-        """Log info message"""
+        """Log info message."""
         self._log(LogLevel.INFO, message, extra or None)
     
     def success(self, message: str, **extra) -> None:
-        """Log success message"""
+        """Log success message."""
         self._log(LogLevel.SUCCESS, message, extra or None)
     
     def warning(self, message: str, **extra) -> None:
-        """Log warning message"""
+        """Log warning message."""
         self._log(LogLevel.WARNING, message, extra or None)
     
     def error(self, message: str, **extra) -> None:
-        """Log error message"""
+        """Log error message."""
         self._log(LogLevel.ERROR, message, extra or None)
     
     def critical(self, message: str, **extra) -> None:
-        """Log critical message"""
+        """Log critical message."""
         self._log(LogLevel.CRITICAL, message, extra or None)
     
     def progress(self, current: int, total: int, message: str = '', width: int = 40) -> None:
-        """Display progress bar"""
+        """Display progress bar."""
         percent = current / total if total > 0 else 0
         filled = int(width * percent)
         bar = '█' * filled + '░' * (width - filled)
@@ -263,18 +359,18 @@ class Logger:
             print()  # New line when complete
     
     def spinner(self, message: str, frames: List[str] = None) -> 'SpinnerContext':
-        """Create spinner context manager"""
+        """Create spinner context manager."""
         return SpinnerContext(self, message, frames)
     
     def section(self, title: str) -> None:
-        """Print section header"""
+        """Print section header."""
         line = '─' * 60
         print(f"\n{LogLevel.INFO.color}{line}{self.RESET}")
         print(f"{self.BOLD}{LogLevel.INFO.color}  {title}{self.RESET}")
         print(f"{LogLevel.INFO.color}{line}{self.RESET}\n")
     
     def export_json(self, filepath: Optional[Path] = None) -> Path:
-        """Export all log entries to JSON file"""
+        """Export all log entries to JSON file."""
         output_path = filepath or self.json_file
         
         export_data = {
@@ -282,6 +378,7 @@ class Logger:
             'started_at': self._start_time.isoformat(),
             'exported_at': datetime.now().isoformat(),
             'total_entries': len(self._entries),
+            'summary': self.get_summary(),
             'entries': [entry.to_dict() for entry in self._entries],
         }
         
@@ -291,16 +388,34 @@ class Logger:
         return output_path
     
     def get_summary(self) -> Dict[str, int]:
-        """Get count of entries by level"""
+        """Get count of entries by level."""
         summary = {level.label: 0 for level in LogLevel}
         for entry in self._entries:
             if entry.level in summary:
                 summary[entry.level] += 1
         return summary
+    
+    def get_entries(self, level: Optional[LogLevel] = None) -> List[LogEntry]:
+        """Get log entries, optionally filtered by level."""
+        if level is None:
+            return self._entries.copy()
+        return [e for e in self._entries if e.level == level.label]
+    
+    def clear_entries(self) -> None:
+        """Clear all stored log entries."""
+        self._entries.clear()
+    
+    def close(self) -> None:
+        """Close file handlers and export JSON."""
+        if self.json_logging and self._entries:
+            self.export_json()
+        
+        if self._file_handler:
+            self._file_handler.close()
 
 
 class SpinnerContext:
-    """Context manager for spinner animation"""
+    """Context manager for spinner animation."""
     
     DEFAULT_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
     
@@ -348,6 +463,9 @@ def setup_logger(
     name: str = 'installer',
     log_dir: Optional[Path] = None,
     verbose: bool = False,
+    log_level: Optional[str] = None,
+    rotation_mb: int = 10,
+    backup_count: int = 5,
 ) -> Logger:
     """
     Factory function to create configured logger.
@@ -355,12 +473,21 @@ def setup_logger(
     Args:
         name: Logger name
         log_dir: Log directory path
-        verbose: Enable debug output
+        verbose: Enable debug output (overridden by log_level)
+        log_level: Explicit log level string (trace, debug, info, warning, error, critical)
+        rotation_mb: Max file size in MB before rotation
+        backup_count: Number of backup files to keep
     
     Returns:
         Configured Logger instance
     """
-    console_level = LogLevel.DEBUG if verbose else LogLevel.INFO
+    # Determine console level
+    if log_level:
+        console_level = LogLevel.from_string(log_level)
+    elif verbose:
+        console_level = LogLevel.DEBUG
+    else:
+        console_level = LogLevel.INFO
     
     return Logger(
         name=name,
@@ -368,4 +495,6 @@ def setup_logger(
         console_level=console_level,
         file_level=LogLevel.DEBUG,
         json_logging=True,
+        max_file_size_mb=rotation_mb,
+        backup_count=backup_count,
     )
