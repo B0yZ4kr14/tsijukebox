@@ -380,6 +380,86 @@ jobs:
           echo "E2E tests in Docker completed." >> $GITHUB_STEP_SUMMARY
 
   # ===========================================================================
+  # Job 7: Multi-Distro Tests (main only)
+  # ===========================================================================
+  multi-distro-tests:
+    name: 🐧 Multi-Distro Tests
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: |
+      github.ref == 'refs/heads/main' ||
+      github.event.inputs.run_e2e == 'true'
+    strategy:
+      matrix:
+        distro: [archlinux, cachyos, endeavouros, manjaro]
+      fail-fast: false
+    services:
+      dind:
+        image: docker:24-dind
+        options: --privileged
+        ports:
+          - 2375:2375
+        env:
+          DOCKER_TLS_CERTDIR: ""
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Wait for Docker daemon
+        run: |
+          timeout 60 sh -c 'until docker info 2>/dev/null; do echo "Waiting for Docker..."; sleep 2; done'
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+
+      - name: Get Dockerfile name
+        id: dockerfile
+        run: |
+          if [ "${{ matrix.distro }}" == "archlinux" ]; then
+            echo "name=Dockerfile.test" >> $GITHUB_OUTPUT
+          else
+            echo "name=Dockerfile.${{ matrix.distro }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build ${{ matrix.distro }} image
+        run: |
+          cd scripts
+          docker build -t tsijukebox-test-${{ matrix.distro }} \
+            -f tests/e2e/${{ steps.dockerfile.outputs.name }} .
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+        continue-on-error: true
+
+      - name: Run multi-distro tests on ${{ matrix.distro }}
+        run: |
+          cd scripts
+          pytest tests/e2e/test_standalone_multi_distro.py \
+            -v --tb=short --timeout=600 \
+            -k "${{ matrix.distro }}" \
+            -m "docker or e2e" \
+            || true
+        env:
+          DOCKER_HOST: tcp://localhost:2375
+        continue-on-error: true
+
+      - name: Multi-distro summary
+        if: always()
+        run: |
+          echo "## 🐧 Multi-Distro Tests: ${{ matrix.distro }}" >> $GITHUB_STEP_SUMMARY
+          echo "Tests on ${{ matrix.distro }} completed." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
   # Job 7: Final Test Status
   # ===========================================================================
   test-status:
