@@ -39,5 +39,6 @@ export { ScriptRefactorSection } from './ScriptRefactorSection';
 export { ManusAutomationSection } from './ManusAutomationSection';
 export { GitHubExportSection } from './GitHubExportSection';
 export { FullstackRefactorPanel } from './FullstackRefactorPanel';
+export { SpotifySetupWizard } from './SpotifySetupWizard';
 
 export * from './backup';

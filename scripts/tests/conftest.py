@@ -406,3 +406,59 @@ def mock_dmi_physical() -> str:
 def system_detector() -> SystemDetector:
     """Create a SystemDetector instance."""
     return SystemDetector()
+
+
+# =============================================================================
+# SPICETIFY SETUP FIXTURES
+# =============================================================================
+
+# Import SpicetifySetup for fixtures
+try:
+    from installer.spicetify_setup import SpicetifySetup, SpicetifyStatus, SPOTIFY_PATHS, PREFS_PATHS
+    SPICETIFY_AVAILABLE = True
+except ImportError:
+    SPICETIFY_AVAILABLE = False
+
+
+@pytest.fixture
+def spicetify_setup(temp_dir: Path):
+    """Create a SpicetifySetup instance for testing."""
+    if not SPICETIFY_AVAILABLE:
+        pytest.skip("SpicetifySetup not available")
+    setup = SpicetifySetup(user="testuser")
+    setup._user_home = temp_dir
+    return setup
+
+
+@pytest.fixture
+def mock_spotify_installation(temp_dir: Path) -> Path:
+    """Create a mock Spotify installation structure."""
+    spotify_dir = temp_dir / ".local/share/spotify-launcher/install/usr/share/spotify"
+    apps_dir = spotify_dir / "Apps"
+    apps_dir.mkdir(parents=True)
+    (apps_dir / "xpui.spa").touch()
+    (apps_dir / "login.spa").touch()
+    return spotify_dir
+
+
+@pytest.fixture
+def mock_spotify_prefs(temp_dir: Path) -> Path:
+    """Create a mock Spotify prefs file."""
+    prefs_dir = temp_dir / ".config/spotify"
+    prefs_dir.mkdir(parents=True)
+    prefs_file = prefs_dir / "prefs"
+    prefs_file.write_text(
+        "app.player.volume=100\n"
+        "app.browser.zoom-level=100\n"
+    )
+    return prefs_file
+
+
+@pytest.fixture
+def mock_flatpak_prefs(temp_dir: Path) -> Path:
+    """Create a mock Flatpak Spotify prefs file."""
+    prefs_dir = temp_dir / ".var/app/com.spotify.Client/config/spotify"
+    prefs_dir.mkdir(parents=True)
+    prefs_file = prefs_dir / "prefs"
+    prefs_file.write_text("app.player.volume=80\n")
+    return prefs_file

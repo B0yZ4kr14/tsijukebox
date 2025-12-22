@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Download } from 'lucide-react';
+import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Download, Sparkles } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -39,7 +39,8 @@ import {
   GitHubExportSection,
   FullstackRefactorPanel,
   ScriptRefactorSection,
-  ManusAutomationSection
+  ManusAutomationSection,
+  SpotifySetupWizard
 } from '@/components/settings';
 import { VolumeNormalizationSection } from '@/components/settings/VolumeNormalizationSection';
 import { VoiceControlSection } from '@/components/settings/VoiceControlSection';
@@ -68,6 +69,7 @@ export default function Settings() {
   const [localClientId, setLocalClientId] = useState(spotify.clientId);
   const [localClientSecret, setLocalClientSecret] = useState(spotify.clientSecret);
   const [showClientSecret, setShowClientSecret] = useState(false);
+  const [showSpotifyWizard, setShowSpotifyWizard] = useState(false);
 
   const handleDemoModeToggle = (checked: boolean) => {
     setDemoMode(checked);
@@ -307,6 +309,18 @@ export default function Settings() {
 
                 {/* Credentials Form */}
                 <div className="space-y-3">
+                  {/* Wizard Button */}
+                  {!spotify.isConnected && !spotify.clientId && (
+                    <Button
+                      onClick={() => setShowSpotifyWizard(true)}
+                      variant="outline"
+                      className="w-full mb-2 border-[#1DB954]/50 text-[#1DB954] hover:bg-[#1DB954]/10"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Configurar com Assistente Guiado
+                    </Button>
+                  )}
+                  
                   <div className="space-y-2">
                     <Label htmlFor="clientId" className="text-label-yellow">Client ID</Label>
                     <Input
@@ -410,6 +424,18 @@ export default function Settings() {
                     <p>Renovação automática ativa ✓</p>
                   </div>
                 )}
+
+                {/* Spotify Setup Wizard */}
+                <SpotifySetupWizard
+                  isOpen={showSpotifyWizard}
+                  onClose={() => setShowSpotifyWizard(false)}
+                  onComplete={(clientId, clientSecret) => {
+                    setSpotifyCredentials(clientId, clientSecret);
+                    setLocalClientId(clientId);
+                    setLocalClientSecret(clientSecret);
+                    setShowSpotifyWizard(false);
+                  }}
+                />
               </div>
             </SettingsSection>
 
