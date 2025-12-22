@@ -4,6 +4,13 @@
 
 ---
 
+## ⚡ Instalação Rápida
+
+- [🚀 Um Comando](Install-OneCommand.md)
+- [📋 Requisitos](../INSTALLATION.md#system-requirements)
+
+---
+
 ## 🐧 CachyOS / Arch Linux
 
 - [Instalação CachyOS](Install-CachyOS.md)
@@ -44,6 +51,7 @@
 ## 👨‍💻 Desenvolvimento
 
 - [Arquitetura](Dev-Architecture.md)
+- [Sistema de Rotas](Dev-Routes.md)
 - [API Reference](Dev-API-Reference.md)
 - [API Spotify](API-Spotify-Integration.md)
 - [API YouTube Music](API-YouTube-Music-Integration.md)
@@ -55,5 +63,6 @@
 ## 📚 Referência
 
 - [Changelog](../CHANGELOG.md)
+- [ROUTES.md](../ROUTES.md)
 - [FAQ](../TROUBLESHOOTING.md)
 - [Glossário](../GLOSSARY.md)

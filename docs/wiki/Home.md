@@ -1,18 +1,31 @@
 # 🎵 TSiJUKEBOX Wiki
 
-> **Enterprise Music System** - Sistema kiosk musical profissional com integração Spotify, YouTube Music e arquivos locais.
+> **Enterprise Music System v4.2.0** - Sistema kiosk musical profissional com integração Spotify, YouTube Music e arquivos locais.
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
-[![License](https://img.shields.io/badge/license-Public%20Domain-green)](../LICENSE)
-[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-success)](ACCESSIBILITY.md)
+[![Version](https://img.shields.io/badge/version-4.2.0-blue)](../CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-Public%20Domain-green)](../../LICENSE)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-success)](../ACCESSIBILITY.md)
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6)](https://typescriptlang.org)
+
+---
+
+## ⚡ Instalação em Um Comando
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+```
+
+**✅ Compatível com:** Arch Linux • CachyOS • Manjaro • EndeavourOS
+
+[📖 Guia Completo de Instalação](Install-OneCommand.md)
 
 ---
 
 ## 📖 Navegação Rápida
 
 ### 🚀 Primeiros Passos
+- [⚡ Instalação em Um Comando](Install-OneCommand.md)
 - [Tutorial: Primeira Configuração](Tutorial-First-Setup.md)
 - [Requisitos do Sistema](../INSTALLATION.md#system-requirements)
 - [Instalação Completa](../INSTALLATION.md)
@@ -45,6 +58,7 @@
 
 ### 👨‍💻 Desenvolvimento
 - [Arquitetura do Sistema](Dev-Architecture.md)
+- [Sistema de Rotas](Dev-Routes.md)
 - [Referência da API](Dev-API-Reference.md)
 - [Como Contribuir](Dev-Contributing.md)
 - [Guia de Testes](Dev-Testing.md)
@@ -60,16 +74,20 @@ Integração com múltiplos provedores de música:
 - **Arquivos Locais** - Suporte a MP3, FLAC, AAC, OGG
 
 ### Modos de Operação
-- **Kiosk Mode** - Ideal para bares, restaurantes e estabelecimentos
-- **Karaoke Mode** - Letras sincronizadas em tela cheia
-- **Admin Mode** - Controle total do sistema
+| Modo | Comando | Descrição |
+|------|---------|-----------|
+| 🎵 **Completo** | `sudo python3 install.py` | Uso doméstico com tudo |
+| 🖥️ **Kiosk** | `sudo python3 install.py --mode kiosk` | Bares, eventos, karaokês |
+| 🖧 **Server** | `sudo python3 install.py --mode server` | Servidor headless |
 
 ### Recursos Enterprise
-- Role-Based Access Control (RBAC)
-- Cloud Backup via Storj
-- Multi-idioma (PT-BR, EN, ES)
-- WCAG 2.1 AA Compliance
-- PWA (Progressive Web App)
+| Feature | Descrição | Status |
+|---------|-----------|--------|
+| 🔐 **RBAC** | Role-Based Access Control | ✅ |
+| ☁️ **Cloud Backup** | Storj, Google Drive, AWS S3 | ✅ |
+| 🌐 **i18n** | PT-BR, EN, ES | ✅ |
+| ♿ **WCAG 2.1 AA** | Acessibilidade validada | ✅ |
+| 📱 **PWA** | Progressive Web App | ✅ |
 
 ---
 
@@ -86,12 +104,25 @@ Integração com múltiplos provedores de música:
 
 ---
 
+## 📦 O Que é Instalado Automaticamente
+
+| Componente | Descrição |
+|------------|-----------|
+| 🎵 **Spotify + Spicetify** | Player com temas customizados |
+| 📊 **Grafana + Prometheus** | Monitoramento em tempo real |
+| 🌐 **Nginx** | Servidor web e proxy reverso |
+| 💾 **SQLite** | Banco de dados local |
+| ⚙️ **Systemd Services** | Autostart e gerenciamento |
+
+---
+
 ## 🔗 Links Úteis
 
 - [Repositório GitHub](https://github.com/B0yZ4kr14/TSiJUKEBOX)
 - [Documentação Principal](../README.md)
 - [Changelog](../CHANGELOG.md)
 - [Código de Conduta](../../CODE_OF_CONDUCT.md)
+- [Sistema de Rotas](../ROUTES.md)
 
 ---
 
@@ -101,4 +132,13 @@ Contribuições são bem-vindas! Consulte o [Guia de Contribuição](Dev-Contrib
 
 ---
 
-*TSiJUKEBOX - Dedicated to the Public Domain*
+## ⚔️ Licenciamento
+
+Este software é dedicado ao **DOMÍNIO PÚBLICO** sem quaisquer restrições.
+
+> *"Ideias são superabundantes e não-rivais. A mimese jamais configurará expropriação."*  
+> — **Stephan Kinsella**
+
+---
+
+*TSiJUKEBOX v4.2.0 - Dedicated to the Public Domain*
