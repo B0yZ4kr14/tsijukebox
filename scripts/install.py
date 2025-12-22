@@ -36,6 +36,13 @@ from pathlib import Path
 from typing import Optional, List, Dict, Tuple
 from dataclasses import dataclass
 
+# Import opcional para spotify-cli-linux
+try:
+    from installer.spotify_cli_setup import SpotifyCLISetup, install_spotify_cli
+    HAS_SPOTIFY_CLI_SETUP = True
+except ImportError:
+    HAS_SPOTIFY_CLI_SETUP = False
+
 # =============================================================================
 # CONSTANTES E CONFIGURAÇÃO
 # =============================================================================
@@ -935,6 +942,39 @@ def install_spotify_spicetify(user: str, system_info: SystemInfo) -> bool:
 
 
 # =============================================================================
+# INSTALAÇÃO DO SPOTIFY-CLI-LINUX
+# =============================================================================
+
+def install_spotify_cli_tools(user: str) -> bool:
+    """Instala spotify-cli-linux para controle via terminal."""
+    log_step("Instalando spotify-cli-linux...")
+    
+    if not HAS_SPOTIFY_CLI_SETUP:
+        log_warning("Módulo spotify_cli_setup não encontrado, usando pip diretamente")
+        # Fallback: instalar diretamente via pip
+        result = subprocess.run(
+            ['sudo', '-u', user, 'pip', 'install', '--user', '--break-system-packages', 'spotify-cli-linux'],
+            capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            log_success("spotify-cli-linux instalado via pip")
+            return True
+        log_warning(f"Falha ao instalar spotify-cli-linux: {result.stderr}")
+        return False
+    
+    try:
+        setup = SpotifyCLISetup(user, verbose=True)
+        if setup.full_setup():
+            log_success("spotify-cli-linux configurado com aliases")
+            return True
+        log_warning("Falha na configuração completa do spotify-cli-linux")
+        return False
+    except Exception as e:
+        log_warning(f"Erro ao configurar spotify-cli-linux: {e}")
+        return False
+
+
+# =============================================================================
 # CRIAÇÃO DE SERVIÇOS SYSTEMD
 # =============================================================================
 
@@ -1035,6 +1075,7 @@ def run_installation(args: argparse.Namespace) -> bool:
     if not args.no_spotify:
         install_spotify_spicetify(user, system_info)
         configure_spotify_only_session(user)
+        install_spotify_cli_tools(user)  # Instalar spotify-cli-linux
     
     # 7. Configurar Chromium
     configure_chromium_homepage(user)
@@ -1075,6 +1116,10 @@ def run_installation(args: argparse.Namespace) -> bool:
 {Colors.MAGENTA}Comandos úteis:{Colors.RESET}
   • tsi-browser    - Abre TSiJUKEBOX no Chromium (kiosk)
   • tsi-kiosk      - Modo kiosk completo
+  • sp-status      - Status atual do Spotify (artista - música)
+  • sp-play/pause  - Controlar reprodução
+  • sp-next/prev   - Trocar música
+  • sp-lyrics      - Ver letra da música atual
   • systemctl status tsijukebox  - Status do serviço
 
 {Colors.GREEN}Obrigado por usar TSiJUKEBOX Enterprise! 🎵{Colors.RESET}
