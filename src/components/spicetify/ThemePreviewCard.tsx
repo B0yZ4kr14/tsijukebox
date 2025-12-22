@@ -47,7 +47,6 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
     }
   };
 
-  // Default colors if not provided
   const colors = {
     main: theme.colors?.main || '#181818',
     sidebar: theme.colors?.sidebar || '#121212',
@@ -74,45 +73,19 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
       >
         {/* Mock Spotify Player */}
         <div className="aspect-video relative overflow-hidden rounded-t-lg">
-          <div 
-            className="absolute inset-0 flex"
-            style={{ 
-              '--theme-main': colors.main,
-              '--theme-sidebar': colors.sidebar,
-              '--theme-player': colors.player,
-              '--theme-accent': colors.accent,
-              '--theme-text': colors.text,
-            } as React.CSSProperties}
-          >
+          <div className="absolute inset-0 flex">
             {/* Sidebar mock */}
             <div 
               className="w-1/4 h-full p-2 flex flex-col gap-2"
               style={{ backgroundColor: colors.sidebar }}
             >
-              {/* Logo placeholder */}
               <div className="w-6 h-6 rounded bg-white/10" />
-              
-              {/* Nav items */}
               <div className="space-y-1.5 mt-2">
                 {[1, 2, 3].map((i) => (
-                  <div 
-                    key={i} 
-                    className="flex items-center gap-1.5"
-                  >
+                  <div key={i} className="flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded bg-white/20" />
                     <div className="flex-1 h-2 rounded bg-white/15" />
                   </div>
-                ))}
-              </div>
-              
-              {/* Playlists */}
-              <div className="mt-auto space-y-1">
-                {[1, 2].map((i) => (
-                  <div 
-                    key={i} 
-                    className="h-2 rounded bg-white/10"
-                    style={{ width: `${60 + i * 15}%` }}
-                  />
                 ))}
               </div>
             </div>
@@ -122,15 +95,10 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
               className="flex-1 flex flex-col"
               style={{ backgroundColor: colors.main }}
             >
-              {/* Header area */}
               <div className="p-3 flex-1">
-                {/* Album grid */}
                 <div className="grid grid-cols-3 gap-1.5">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div 
-                      key={i}
-                      className="aspect-square rounded bg-white/10"
-                    />
+                    <div key={i} className="aspect-square rounded bg-white/10" />
                   ))}
                 </div>
               </div>
@@ -140,16 +108,11 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
                 className="h-14 flex items-center px-3 gap-3"
                 style={{ backgroundColor: colors.player }}
               >
-                {/* Album art */}
                 <div className="w-10 h-10 rounded bg-white/20 flex-shrink-0" />
-                
-                {/* Track info */}
                 <div className="flex-1 space-y-1">
                   <div className="w-20 h-2 rounded" style={{ backgroundColor: colors.text + '40' }} />
                   <div className="w-14 h-1.5 rounded" style={{ backgroundColor: colors.text + '20' }} />
                 </div>
-                
-                {/* Controls */}
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} />
                   <div 
@@ -160,14 +123,9 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
                   </div>
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} />
                 </div>
-                
-                {/* Progress bar */}
                 <div className="w-24 space-y-0.5">
                   <div className="h-1 rounded-full bg-white/20 overflow-hidden">
-                    <div 
-                      className="h-full w-1/3 rounded-full"
-                      style={{ backgroundColor: colors.accent }}
-                    />
+                    <div className="h-full w-1/3 rounded-full" style={{ backgroundColor: colors.accent }} />
                   </div>
                 </div>
               </div>
@@ -181,37 +139,12 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Button 
-              size="sm" 
-              variant="outline" 
-              onClick={(e) => {
-                e.stopPropagation();
-                onPreview();
-              }}
-              className="gap-1"
-            >
+            <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); onPreview(); }} className="gap-1">
               <Eye className="w-4 h-4" />
               Preview
             </Button>
-            <Button 
-              size="sm" 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleApply();
-              }}
-              disabled={isApplying || isActive}
-              className="gap-1"
-            >
-              {isApplying ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <Download className="w-4 h-4" />
-                </motion.div>
-              ) : (
-                <Download className="w-4 h-4" />
-              )}
+            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleApply(); }} disabled={isApplying || isActive} className="gap-1">
+              <Download className="w-4 h-4" />
               {isActive ? 'Ativo' : 'Aplicar'}
             </Button>
           </motion.div>
@@ -240,7 +173,6 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
                 <span className="truncate">{theme.author}</span>
               </div>
             </div>
-            
             {theme.category && (
               <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">
                 {theme.category}
