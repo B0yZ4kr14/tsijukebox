@@ -7,11 +7,13 @@
   
   [![GitHub](https://img.shields.io/badge/GitHub-TSiJUKEBOX-181717?style=flat-square&logo=github)](https://github.com/B0yZ4kr14/TSiJUKEBOX)
   [![CI/CD](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml/badge.svg)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml)
-  [![Coverage](https://img.shields.io/badge/dynamic/json?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage-summary.json&query=$.total.lines.pct&suffix=%25&label=coverage&color=brightgreen&style=flat-square)](https://B0yZ4kr14.github.io/TSiJUKEBOX/)
+  [![Coverage TS](https://img.shields.io/badge/dynamic/json?url=https://B0yZ4kr14.github.io/TSiJUKEBOX/coverage-summary.json&query=$.total.lines.pct&suffix=%25&label=coverage%20ts&color=brightgreen&style=flat-square)](https://B0yZ4kr14.github.io/TSiJUKEBOX/)
+  [![Coverage Python](https://img.shields.io/badge/coverage%20python-80%25-brightgreen?style=flat-square&logo=python&logoColor=white)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions/workflows/tsijukebox-cicd.yml)
   ![Version](https://img.shields.io/badge/version-4.0.0-blue?style=flat-square)
   ![License](https://img.shields.io/badge/license-Public_Domain-green?style=flat-square)
   ![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript)
+  ![Python](https://img.shields.io/badge/Python-3.11+-3776ab?style=flat-square&logo=python&logoColor=white)
   ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=arch-linux&logoColor=white)
   ![WCAG](https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility)
   
@@ -145,6 +147,8 @@ Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
 
 ## 🧪 Testes
 
+### TypeScript/React
+
 | Tipo | Comando | Descrição |
 |------|---------|-----------|
 | 🔬 **Unit** | `npm run test:unit` | Testes unitários |
@@ -154,12 +158,22 @@ Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
 | 🖥️ **UI** | `npm run test:ui` | Vitest UI no navegador |
 | 📋 **All** | `npm run test:all` | Executar todos os testes |
 
-**📊 [Dashboard de Cobertura](https://B0yZ4kr14.github.io/TSiJUKEBOX/)**
+### Python (Instalador)
+
+| Tipo | Comando | Descrição |
+|------|---------|-----------|
+| 🐍 **Unit** | `make test-python` | Testes unitários Python |
+| 📊 **Coverage** | `make test-python-coverage` | Cobertura Python |
 
 ```bash
-# Gerar relatório de cobertura local
-./scripts/coverage-report.sh
+# Executar testes Python
+cd scripts && pytest tests/ -v
+
+# Com cobertura
+cd scripts && pytest tests/ --cov=. --cov-report=term-missing
 ```
+
+**📊 [Dashboard de Cobertura](https://B0yZ4kr14.github.io/TSiJUKEBOX/)**
 
 ---
 

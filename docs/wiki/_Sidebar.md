@@ -4,6 +4,15 @@
 
 ---
 
+## 🐧 CachyOS / Arch Linux
+
+- [Instalação CachyOS](Install-CachyOS.md)
+- [Configuração de Shell](Shell-Configuration.md)
+- [Setup Openbox Kiosk](Openbox-Kiosk-Setup.md)
+- [Referência de Dependências](Dependencies-Reference.md)
+
+---
+
 ## 🚀 Tutoriais
 
 - [Primeira Configuração](Tutorial-First-Setup.md)

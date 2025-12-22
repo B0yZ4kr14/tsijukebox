@@ -17,6 +17,12 @@
 - [Requisitos do Sistema](../INSTALLATION.md#system-requirements)
 - [Instalação Completa](../INSTALLATION.md)
 
+### 🐧 CachyOS / Arch Linux
+- [Instalação CachyOS](Install-CachyOS.md)
+- [Configuração de Shell](Shell-Configuration.md)
+- [Setup Openbox Kiosk](Openbox-Kiosk-Setup.md)
+- [Referência de Dependências](Dependencies-Reference.md)
+
 ### 🎧 Integrações de Música
 - [Integração Spotify](Tutorial-Spotify-Integration.md)
 - [YouTube Music](Tutorial-YouTube-Music.md)
