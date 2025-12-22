@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+  "$comment": "Configuração BASE para herança. Use com: -c base.json -c override.json",
+  
+  "mode": "full",
+  "database": "sqlite",
+  "music_dir": "Musics",
+  
+  "no_spotify": false,
+  "no_spotify_cli": false,
+  "no_monitoring": false,
+  "skip_packages": false,
+  
+  "autologin": true,
+  "kiosk": false,
+  "chromium_homepage": true
+}
