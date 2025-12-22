@@ -16,10 +16,12 @@ CARACTERÍSTICAS:
     ✅ Docker para aplicação web
     ✅ SQLite local (volume montado no container)
     ✅ Openbox em modo kiosk
-    ✅ Autologin + Autostart X
+    ✅ Autologin + Autostart X (detecta login manager automaticamente)
     ✅ Chromium fullscreen
     ✅ Watchdog com recovery automático
+    ✅ Modo de recuperação de emergência (Ctrl+Alt+Shift+R)
     ✅ Notificações via webhook
+    ✅ Detecta usuário vigente automaticamente
 
 SISTEMAS SUPORTADOS:
     - CachyOS
@@ -27,11 +29,20 @@ SISTEMAS SUPORTADOS:
     - Manjaro
     - EndeavourOS
 
+LOGIN MANAGERS SUPORTADOS:
+    - SDDM
+    - GDM
+    - LightDM
+    - Ly
+    - greetd
+    - getty (fallback)
+
 AUTOR: TSiJUKEBOX Team
-VERSÃO: 2.0.0
+VERSÃO: 2.1.0
 """
 
 import argparse
+import grp
 import json
 import os
 import pwd
@@ -43,6 +54,7 @@ import time
 import urllib.request
 from dataclasses import dataclass, field
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple
 
@@ -50,10 +62,22 @@ from typing import Callable, Dict, List, Optional, Tuple
 # CONFIGURAÇÃO
 # ============================================================================
 
+class LoginManager(Enum):
+    """Login managers suportados."""
+    SDDM = 'sddm'
+    GDM = 'gdm'
+    LIGHTDM = 'lightdm'
+    LY = 'ly'
+    GREETD = 'greetd'
+    GETTY = 'getty'
+    UNKNOWN = 'unknown'
+
+
 @dataclass
 class KioskConfig:
     """Configuração do ambiente kiosk."""
-    user: str = 'kiosk'
+    user: str = ''  # Detectado automaticamente se vazio
+    login_manager: str = ''  # Detectado automaticamente se vazio
     app_port: int = 80
     docker_image: str = 'ghcr.io/b0yz4kr14/tsijukebox:latest'
     install_dir: str = '/opt/tsijukebox'
@@ -91,8 +115,48 @@ class InstallResult:
 # CONSTANTES
 # ============================================================================
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 GITHUB_REPO = "B0yZ4kr14/TSiJUKEBOX"
+
+# Login managers suportados com seus arquivos de configuração
+LOGIN_MANAGER_CONFIGS = {
+    'sddm': {
+        'service': 'sddm.service',
+        'config_dir': '/etc/sddm.conf.d',
+        'config_file': 'autologin.conf',
+        'binary': 'sddm',
+    },
+    'gdm': {
+        'service': 'gdm.service',
+        'config_dir': '/etc/gdm',
+        'config_file': 'custom.conf',
+        'binary': 'gdm',
+    },
+    'lightdm': {
+        'service': 'lightdm.service',
+        'config_dir': '/etc/lightdm/lightdm.conf.d',
+        'config_file': '50-autologin.conf',
+        'binary': 'lightdm',
+    },
+    'ly': {
+        'service': 'ly.service',
+        'config_dir': '/etc/ly',
+        'config_file': 'config.ini',
+        'binary': 'ly',
+    },
+    'greetd': {
+        'service': 'greetd.service',
+        'config_dir': '/etc/greetd',
+        'config_file': 'config.toml',
+        'binary': 'greetd',
+    },
+    'getty': {
+        'service': 'getty@tty1.service',
+        'config_dir': '/etc/systemd/system/getty@tty1.service.d',
+        'config_file': 'autologin.conf',
+        'binary': 'agetty',
+    },
+}
 
 # Pacotes necessários para cada distribuição
 ARCH_PACKAGES = {
@@ -332,14 +396,16 @@ class DockerKioskInstaller:
     
     PHASES: List[InstallPhase] = [
         InstallPhase("system_check", "Verificando sistema", "phase_system_check"),
+        InstallPhase("detect_environment", "Detectando ambiente", "phase_detect_environment"),
         InstallPhase("create_directories", "Criando diretórios", "phase_create_directories"),
         InstallPhase("install_packages", "Instalando pacotes base", "phase_install_packages"),
         InstallPhase("install_docker", "Instalando Docker", "phase_install_docker"),
-        InstallPhase("create_user", "Criando usuário kiosk", "phase_create_user"),
+        InstallPhase("configure_user", "Configurando usuário", "phase_configure_user"),
         InstallPhase("setup_sqlite", "Configurando SQLite", "phase_setup_sqlite"),
         InstallPhase("setup_docker_compose", "Criando Docker Compose", "phase_setup_docker_compose"),
         InstallPhase("pull_image", "Baixando imagem Docker", "phase_pull_image"),
         InstallPhase("setup_openbox", "Configurando Openbox", "phase_setup_openbox"),
+        InstallPhase("setup_recovery", "Configurando modo recuperação", "phase_setup_recovery"),
         InstallPhase("setup_xinitrc", "Configurando X11", "phase_setup_xinitrc"),
         InstallPhase("setup_autologin", "Configurando autologin", "phase_setup_autologin"),
         InstallPhase("setup_chromium", "Configurando Chromium kiosk", "phase_setup_chromium"),
@@ -355,6 +421,8 @@ class DockerKioskInstaller:
         self.start_time = datetime.now()
         self.results: List[InstallResult] = []
         self.distro_info: Dict[str, str] = {}
+        self.detected_login_manager: str = 'getty'
+        self.detected_user: str = ''
     
     def run(self) -> bool:
         """Executa todas as fases de instalação."""
@@ -491,6 +559,114 @@ class DockerKioskInstaller:
             details={'distro': distro_id, 'distro_info': self.distro_info}
         )
     
+    def phase_detect_environment(self) -> InstallResult:
+        """Detecta login manager e usuário vigente."""
+        # Detectar usuário vigente
+        self.detected_user = self._detect_current_user()
+        if self.config.user == '':
+            self.config.user = self.detected_user
+        
+        # Detectar login manager
+        self.detected_login_manager = self._detect_login_manager()
+        if self.config.login_manager == '':
+            self.config.login_manager = self.detected_login_manager
+        
+        self.log.info(f"Usuário detectado: {self.config.user}")
+        self.log.info(f"Login manager detectado: {self.config.login_manager}")
+        
+        return InstallResult(
+            True,
+            f"Ambiente detectado: usuário={self.config.user}, dm={self.config.login_manager}",
+            details={'user': self.config.user, 'login_manager': self.config.login_manager}
+        )
+    
+    def _detect_current_user(self) -> str:
+        """Detecta o usuário atual (quem executou sudo)."""
+        # 1. Verificar SUDO_USER
+        sudo_user = os.environ.get('SUDO_USER')
+        if sudo_user and sudo_user != 'root':
+            try:
+                pwd.getpwnam(sudo_user)
+                return sudo_user
+            except KeyError:
+                pass
+        
+        # 2. Verificar LOGNAME ou USER
+        for var in ['LOGNAME', 'USER']:
+            user = os.environ.get(var)
+            if user and user != 'root':
+                try:
+                    pwd.getpwnam(user)
+                    return user
+                except KeyError:
+                    pass
+        
+        # 3. Verificar via 'who'
+        try:
+            result = self._run_command(['who'], check=False)
+            if result.returncode == 0 and result.stdout.strip():
+                first_user = result.stdout.strip().split()[0]
+                if first_user and first_user != 'root':
+                    try:
+                        pwd.getpwnam(first_user)
+                        return first_user
+                    except KeyError:
+                        pass
+        except Exception:
+            pass
+        
+        # 4. Buscar primeiro usuário com UID >= 1000
+        try:
+            for pw in pwd.getpwall():
+                if 1000 <= pw.pw_uid < 60000 and pw.pw_shell not in ['/usr/bin/nologin', '/bin/false']:
+                    return pw.pw_name
+        except Exception:
+            pass
+        
+        # 5. Fallback para 'kiosk'
+        return 'kiosk'
+    
+    def _detect_login_manager(self) -> str:
+        """Detecta o login manager ativo no sistema."""
+        # Lista de login managers para verificar (em ordem de prioridade)
+        managers = ['sddm', 'gdm', 'lightdm', 'ly', 'greetd']
+        
+        # 1. Verificar serviços systemd ativos
+        for dm in managers:
+            try:
+                result = self._run_command(
+                    ['systemctl', 'is-active', f'{dm}.service'],
+                    check=False
+                )
+                if result.stdout.strip() == 'active':
+                    self.log.info(f"Login manager ativo: {dm}")
+                    return dm
+            except Exception:
+                continue
+        
+        # 2. Verificar serviços habilitados
+        for dm in managers:
+            try:
+                result = self._run_command(
+                    ['systemctl', 'is-enabled', f'{dm}.service'],
+                    check=False
+                )
+                if result.stdout.strip() == 'enabled':
+                    self.log.info(f"Login manager habilitado: {dm}")
+                    return dm
+            except Exception:
+                continue
+        
+        # 3. Verificar binários instalados
+        for dm in managers:
+            if shutil.which(dm):
+                self.log.info(f"Login manager instalado: {dm}")
+                return dm
+        
+        # 4. Fallback para getty
+        self.log.info("Usando getty (fallback)")
+        return 'getty'
+    
     def phase_create_directories(self) -> InstallResult:
         """Cria diretórios necessários."""
         dirs = [
@@ -543,24 +719,40 @@ class DockerKioskInstaller:
         
         return InstallResult(True, "Docker instalado e rodando")
     
-    def phase_create_user(self) -> InstallResult:
-        """Cria usuário kiosk dedicado."""
+    def phase_configure_user(self) -> InstallResult:
+        """Configura usuário para kiosk (usa existente ou cria novo)."""
         user = self.config.user
         
         # Verificar se usuário já existe
         try:
-            pwd.getpwnam(user)
-            self.log.info(f"Usuário {user} já existe")
+            user_info = pwd.getpwnam(user)
+            self.log.info(f"Usuário {user} já existe (UID: {user_info.pw_uid})")
         except KeyError:
-            # Criar usuário
+            # Criar usuário apenas se não existir
+            self.log.info(f"Criando novo usuário: {user}")
             self._run_command([
                 'useradd', '-m', '-s', '/bin/bash',
-                '-G', 'audio,video,docker',
+                '-G', 'audio,video',
                 user
             ])
         
         # Adicionar aos grupos necessários
-        self._run_command(['usermod', '-aG', 'audio,video,docker', user], check=False)
+        required_groups = ['audio', 'video', 'docker', 'input']
+        optional_groups = ['wheel', 'users', 'render', 'lp']
+        
+        for group in required_groups:
+            try:
+                grp.getgrnam(group)
+                self._run_command(['usermod', '-aG', group, user], check=False)
+            except KeyError:
+                self.log.warning(f"Grupo {group} não existe, pulando...")
+        
+        for group in optional_groups:
+            try:
+                grp.getgrnam(group)
+                self._run_command(['usermod', '-aG', group, user], check=False)
+            except KeyError:
+                pass  # Grupos opcionais
         
         # Permitir usuário iniciar X sem root
         xwrapper_config = '/etc/X11/Xwrapper.config'
@@ -676,7 +868,7 @@ networks:
         openbox_dir = f"{user_home}/.config/openbox"
         Path(openbox_dir).mkdir(parents=True, exist_ok=True)
         
-        # rc.xml - Configuração principal
+        # rc.xml - Configuração principal com modo de recuperação
         rc_xml = """<?xml version="1.0" encoding="UTF-8"?>
 <openbox_config xmlns="http://openbox.org/3.4/rc">
   <resistance><strength>10</strength><screen_edge_strength>20</screen_edge_strength></resistance>
@@ -685,14 +877,29 @@ networks:
   <theme><name>Clearlooks</name></theme>
   <desktops><number>1</number></desktops>
   <keyboard>
-    <!-- Atalho de emergência: Ctrl+Alt+Backspace para sair -->
+    <!-- Atalho de emergência: Ctrl+Alt+Backspace para sair do X -->
     <keybind key="C-A-BackSpace">
       <action name="Exit"><prompt>no</prompt></action>
     </keybind>
+    
     <!-- Atalho para reiniciar Chromium: Ctrl+Alt+R -->
     <keybind key="C-A-r">
       <action name="Execute">
         <command>pkill chromium; sleep 2; /usr/local/bin/start-kiosk.sh</command>
+      </action>
+    </keybind>
+    
+    <!-- MODO DE RECUPERAÇÃO DE EMERGÊNCIA: Ctrl+Alt+Shift+R -->
+    <keybind key="C-A-S-r">
+      <action name="Execute">
+        <command>/usr/local/bin/kiosk-recovery.sh</command>
+      </action>
+    </keybind>
+    
+    <!-- Atalho para terminal de emergência: Ctrl+Alt+T -->
+    <keybind key="C-A-t">
+      <action name="Execute">
+        <command>xterm -fa 'Monospace' -fs 12 -bg black -fg green -e 'bash'</command>
       </action>
     </keybind>
   </keyboard>
@@ -706,6 +913,12 @@ networks:
       <shade>no</shade>
       <focus>yes</focus>
       <fullscreen>yes</fullscreen>
+    </application>
+    <!-- Exceção: XTerm mostra decorações para facilitar fechamento -->
+    <application class="XTerm">
+      <decor>yes</decor>
+      <fullscreen>no</fullscreen>
+      <maximized>no</maximized>
     </application>
   </applications>
 </openbox_config>
@@ -754,7 +967,172 @@ done
             for f in files:
                 os.chown(os.path.join(root, f), uid, -1)
         
-        return InstallResult(True, "Openbox configurado")
+        return InstallResult(True, "Openbox configurado com atalhos de emergência")
+    
+    def phase_setup_recovery(self) -> InstallResult:
+        """Configura modo de recuperação de emergência."""
+        recovery_script = f"""#!/bin/bash
+# TSiJUKEBOX - Modo de Recuperação de Emergência
+# Acessível via Ctrl+Alt+Shift+R
+
+LOG_FILE="{self.config.log_dir}/recovery.log"
+APP_URL="http://localhost:{self.config.app_port}"
+
+log() {{
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}}
+
+show_header() {{
+    clear
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║        🔧 TSiJUKEBOX - MODO DE RECUPERAÇÃO                   ║"
+    echo "║                                                              ║"
+    echo "║  Pressione o número correspondente à opção desejada         ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+}}
+
+show_status() {{
+    echo "═══════════════════════ DIAGNÓSTICO ═══════════════════════════"
+    echo ""
+    
+    # Status do Docker
+    echo -n "🐳 Docker:      "
+    if docker ps | grep -q tsijukebox; then
+        echo -e "\\033[32m● Rodando\\033[0m"
+    else
+        echo -e "\\033[31m● Parado\\033[0m"
+    fi
+    
+    # Status do Chromium
+    echo -n "🌐 Chromium:    "
+    if pgrep -x chromium > /dev/null 2>&1; then
+        echo -e "\\033[32m● Rodando\\033[0m"
+    else
+        echo -e "\\033[31m● Parado\\033[0m"
+    fi
+    
+    # Status da aplicação
+    echo -n "📱 Aplicação:   "
+    if curl -sf "$APP_URL" > /dev/null 2>&1; then
+        echo -e "\\033[32m● Acessível\\033[0m"
+    else
+        echo -e "\\033[31m● Inacessível\\033[0m"
+    fi
+    
+    # Status da rede
+    echo -n "🌍 Rede:        "
+    if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
+        echo -e "\\033[32m● Conectada\\033[0m"
+    else
+        echo -e "\\033[33m● Sem internet (local ok)\\033[0m"
+    fi
+    
+    # Memória
+    echo -n "💾 Memória:     "
+    free -h | awk '/^Mem:/ {{printf "%s usado de %s\\n", $3, $2}}'
+    
+    # Disco
+    echo -n "💿 Disco:       "
+    df -h / | awk 'NR==2 {{printf "%s usado de %s (%s)\\n", $3, $2, $5}}'
+    
+    # Uptime
+    echo -n "⏱️  Uptime:      "
+    uptime -p
+    
+    echo ""
+    echo "════════════════════════════════════════════════════════════════"
+}}
+
+show_menu() {{
+    echo ""
+    echo "  [1] 🔄 Reiniciar Chromium"
+    echo "  [2] 🐳 Reiniciar Container Docker"
+    echo "  [3] 📋 Ver logs do Watchdog"
+    echo "  [4] 📋 Ver logs do Container"
+    echo "  [5] 🔌 Reiniciar sistema"
+    echo "  [6] 💻 Abrir terminal bash"
+    echo "  [7] 🔍 Atualizar diagnóstico"
+    echo "  [0] ❌ Fechar (voltar ao kiosk)"
+    echo ""
+    echo -n "Escolha uma opção: "
+}}
+
+restart_chromium() {{
+    log "Reiniciando Chromium..."
+    pkill -9 chromium || true
+    sleep 2
+    DISPLAY=:0 /usr/local/bin/start-kiosk.sh &
+    echo "✅ Chromium reiniciado"
+    sleep 2
+}}
+
+restart_container() {{
+    log "Reiniciando container Docker..."
+    cd {self.config.install_dir}
+    docker compose down || true
+    sleep 3
+    docker compose up -d
+    echo "✅ Container reiniciado. Aguardando inicialização..."
+    sleep 10
+}}
+
+view_watchdog_logs() {{
+    echo ""
+    echo "═══════════════ ÚLTIMAS 30 LINHAS DO WATCHDOG ═══════════════"
+    tail -n 30 {self.config.log_dir}/watchdog.log 2>/dev/null || echo "Arquivo de log não encontrado"
+    echo "══════════════════════════════════════════════════════════════"
+    echo ""
+    read -p "Pressione ENTER para voltar..."
+}}
+
+view_container_logs() {{
+    echo ""
+    echo "═══════════════ ÚLTIMAS 50 LINHAS DO CONTAINER ═══════════════"
+    docker logs --tail 50 tsijukebox 2>&1
+    echo "═══════════════════════════════════════════════════════════════"
+    echo ""
+    read -p "Pressione ENTER para voltar..."
+}}
+
+# Abrir XTerm com interface de recuperação
+export DISPLAY=:0
+xterm -fa 'Monospace' -fs 11 -bg '#1a1a2e' -fg '#00ff00' -geometry 90x35 -T "TSiJUKEBOX Recovery" -e bash -c '
+    while true; do
+        show_header
+        show_status
+        show_menu
+        
+        read -n 1 choice
+        echo ""
+        
+        case $choice in
+            1) restart_chromium ;;
+            2) restart_container ;;
+            3) view_watchdog_logs ;;
+            4) view_container_logs ;;
+            5) 
+                echo "Reiniciando sistema em 5 segundos..."
+                sleep 5
+                sudo reboot
+                ;;
+            6)
+                echo "Digite 'exit' para voltar ao menu"
+                bash
+                ;;
+            7) continue ;;
+            0) exit 0 ;;
+            *) echo "Opção inválida"; sleep 1 ;;
+        esac
+    done
+'
+"""
+        self._write_file('/usr/local/bin/kiosk-recovery.sh', recovery_script, mode=0o755)
+        
+        # Adicionar xterm aos pacotes se não estiver
+        self._run_command(['pacman', '-S', '--noconfirm', '--needed', 'xterm'], check=False)
+        
+        return InstallResult(True, "Modo de recuperação configurado (Ctrl+Alt+Shift+R)")
     
     def phase_setup_xinitrc(self) -> InstallResult:
         """Configura .xinitrc para iniciar X automaticamente."""
@@ -794,20 +1172,139 @@ fi
         return InstallResult(True, "X11 configurado para auto-start")
     
     def phase_setup_autologin(self) -> InstallResult:
-        """Configura autologin via getty."""
-        override_dir = "/etc/systemd/system/getty@tty1.service.d"
-        Path(override_dir).mkdir(parents=True, exist_ok=True)
+        """Configura autologin baseado no login manager detectado."""
+        dm = self.config.login_manager
+        user = self.config.user
+        session = 'openbox'
         
-        autologin_conf = f"""[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --autologin {self.config.user} --noclear %I $TERM
-"""
-        self._write_file(f"{override_dir}/autologin.conf", autologin_conf)
+        self.log.info(f"Configurando autologin para {dm}...")
+        
+        success = False
+        message = ""
+        
+        if dm == 'sddm':
+            success, message = self._configure_sddm_autologin(user, session)
+        elif dm == 'gdm':
+            success, message = self._configure_gdm_autologin(user)
+        elif dm == 'lightdm':
+            success, message = self._configure_lightdm_autologin(user, session)
+        elif dm == 'ly':
+            success, message = self._configure_ly_autologin(user)
+        elif dm == 'greetd':
+            success, message = self._configure_greetd_autologin(user, session)
+        else:
+            # Fallback para getty
+            success, message = self._configure_getty_autologin(user)
         
         # Recarregar systemd
         self._run_command(['systemctl', 'daemon-reload'])
         
-        return InstallResult(True, f"Autologin configurado para {self.config.user}")
+        return InstallResult(success, message)
+    
+    def _configure_sddm_autologin(self, user: str, session: str) -> Tuple[bool, str]:
+        """Configura autologin para SDDM."""
+        config_dir = Path('/etc/sddm.conf.d')
+        config_dir.mkdir(parents=True, exist_ok=True)
+        
+        content = f"""[Autologin]
+User={user}
+Session={session}
+Relogin=true
+"""
+        self._write_file(str(config_dir / 'autologin.conf'), content)
+        return True, f"SDDM autologin configurado para {user}"
+    
+    def _configure_gdm_autologin(self, user: str) -> Tuple[bool, str]:
+        """Configura autologin para GDM."""
+        config_path = Path('/etc/gdm/custom.conf')
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        content = f"""[daemon]
+AutomaticLoginEnable=True
+AutomaticLogin={user}
+
+[security]
+
+[xdmcp]
+
+[chooser]
+
+[debug]
+"""
+        self._write_file(str(config_path), content)
+        return True, f"GDM autologin configurado para {user}"
+    
+    def _configure_lightdm_autologin(self, user: str, session: str) -> Tuple[bool, str]:
+        """Configura autologin para LightDM."""
+        config_dir = Path('/etc/lightdm/lightdm.conf.d')
+        config_dir.mkdir(parents=True, exist_ok=True)
+        
+        content = f"""[Seat:*]
+autologin-user={user}
+autologin-user-timeout=0
+autologin-session={session}
+user-session={session}
+"""
+        self._write_file(str(config_dir / '50-autologin.conf'), content)
+        
+        # Adicionar usuário ao grupo autologin se existir
+        try:
+            grp.getgrnam('autologin')
+            self._run_command(['usermod', '-aG', 'autologin', user], check=False)
+        except KeyError:
+            pass
+        
+        return True, f"LightDM autologin configurado para {user}"
+    
+    def _configure_ly_autologin(self, user: str) -> Tuple[bool, str]:
+        """Configura autologin para Ly."""
+        config_path = Path('/etc/ly/config.ini')
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Ly usa formato INI
+        content = f"""# Ly configuration
+animate = true
+animation = 1
+bigclock = none
+blank_password = false
+clear_password = true
+default_user = {user}
+hide_borders = false
+hide_f1_commands = false
+lang = pt
+load = true
+save = true
+"""
+        self._write_file(str(config_path), content)
+        return True, f"Ly autologin configurado para {user}"
+    
+    def _configure_greetd_autologin(self, user: str, session: str) -> Tuple[bool, str]:
+        """Configura autologin para greetd."""
+        config_path = Path('/etc/greetd/config.toml')
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        content = f"""[terminal]
+vt = 1
+
+[default_session]
+command = "startx /usr/bin/openbox-session -- :0"
+user = "{user}"
+"""
+        self._write_file(str(config_path), content)
+        return True, f"greetd autologin configurado para {user}"
+    
+    def _configure_getty_autologin(self, user: str) -> Tuple[bool, str]:
+        """Configura autologin via getty (fallback)."""
+        override_dir = Path('/etc/systemd/system/getty@tty1.service.d')
+        override_dir.mkdir(parents=True, exist_ok=True)
+        
+        content = f"""[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin {user} --noclear %I $TERM
+"""
+        self._write_file(str(override_dir / 'autologin.conf'), content)
+        return True, f"getty autologin configurado para {user}"
+    
     
     def phase_setup_chromium(self) -> InstallResult:
         """Configura script de inicialização do Chromium kiosk."""
@@ -1178,10 +1675,20 @@ Exemplos:
   sudo python3 install-docker-kiosk.py --port 8080
   sudo python3 install-docker-kiosk.py --webhook https://api.example.com/events
   sudo python3 install-docker-kiosk.py --no-reboot
+  
+  # Usar usuário específico em vez de detectar automaticamente
+  sudo python3 install-docker-kiosk.py --user myjukebox
+  
+  # Forçar login manager específico
+  sudo python3 install-docker-kiosk.py --login-manager sddm
+
+Login Managers Suportados: sddm, gdm, lightdm, ly, greetd, getty
         """
     )
     
-    parser.add_argument('--user', default='kiosk', help='Nome do usuário kiosk (default: kiosk)')
+    parser.add_argument('--user', default='', help='Nome do usuário kiosk (padrão: detecta automaticamente)')
+    parser.add_argument('--login-manager', default='', choices=['', 'sddm', 'gdm', 'lightdm', 'ly', 'greetd', 'getty'],
+                        help='Login manager para autologin (padrão: detecta automaticamente)')
     parser.add_argument('--port', type=int, default=80, help='Porta da aplicação (default: 80)')
     parser.add_argument('--webhook', help='URL do webhook para notificações')
     parser.add_argument('--timezone', default='America/Sao_Paulo', help='Timezone (default: America/Sao_Paulo)')
@@ -1193,9 +1700,10 @@ Exemplos:
     
     args = parser.parse_args()
     
-    # Criar configuração
+    # Criar configuração (user e login_manager vazios serão detectados automaticamente)
     config = KioskConfig(
         user=args.user,
+        login_manager=args.login_manager,
         app_port=args.port,
         webhook_url=args.webhook,
         timezone=args.timezone,

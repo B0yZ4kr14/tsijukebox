@@ -57,7 +57,8 @@ sudo python3 install-docker-kiosk.py
 
 | Opção | Descrição | Padrão |
 |-------|-----------|--------|
-| `--user` | Nome do usuário kiosk | `kiosk` |
+| `--user` | Nome do usuário kiosk | **auto-detectado** |
+| `--login-manager` | Login manager para autologin | **auto-detectado** |
 | `--port` | Porta da aplicação | `80` |
 | `--webhook` | URL para notificações | - |
 | `--timezone` | Fuso horário | `America/Sao_Paulo` |
@@ -65,6 +66,24 @@ sudo python3 install-docker-kiosk.py
 | `--rotation` | Rotação (0, 90, 180, 270) | `0` |
 | `--show-cursor` | Manter cursor visível | `false` |
 | `--no-reboot` | Não reiniciar após instalação | `false` |
+
+### Detecção Automática
+
+O instalador detecta automaticamente:
+
+1. **Usuário vigente**: Usa `$SUDO_USER` ou busca o primeiro usuário com UID >= 1000
+2. **Login manager**: Verifica serviços ativos/habilitados (SDDM, GDM, LightDM, Ly, greetd) ou usa getty como fallback
+
+### Login Managers Suportados
+
+| Login Manager | Arquivo de Configuração |
+|---------------|-------------------------|
+| SDDM | `/etc/sddm.conf.d/autologin.conf` |
+| GDM | `/etc/gdm/custom.conf` |
+| LightDM | `/etc/lightdm/lightdm.conf.d/50-autologin.conf` |
+| Ly | `/etc/ly/config.ini` |
+| greetd | `/etc/greetd/config.toml` |
+| getty | `/etc/systemd/system/getty@tty1.service.d/autologin.conf` |
 
 ### Exemplos
 
@@ -78,8 +97,11 @@ sudo python3 install-docker-kiosk.py --webhook https://api.example.com/kiosk-eve
 # Resolução específica com rotação
 sudo python3 install-docker-kiosk.py --resolution 1920x1080 --rotation 90
 
-# Usuário personalizado sem reboot automático
-sudo python3 install-docker-kiosk.py --user myjukebox --no-reboot
+# Forçar usuário e login manager específicos
+sudo python3 install-docker-kiosk.py --user myjukebox --login-manager sddm
+
+# Usar usuário atual sem criar novo
+sudo python3 install-docker-kiosk.py --no-reboot
 ```
 
 ---
@@ -203,9 +225,54 @@ Ctrl+Alt+Backspace
 # Reiniciar Chromium
 Ctrl+Alt+R
 
+# MODO DE RECUPERAÇÃO DE EMERGÊNCIA
+Ctrl+Alt+Shift+R
+
+# Abrir terminal de emergência
+Ctrl+Alt+T
+
 # Acessar terminal (de outra máquina via SSH)
-ssh kiosk@<ip-do-kiosk>
+ssh usuario@<ip-do-kiosk>
 ```
+
+---
+
+## 🚨 Modo de Recuperação de Emergência
+
+O instalador configura um **modo de recuperação** acessível via **Ctrl+Alt+Shift+R**.
+
+### Funcionalidades do Modo de Recuperação
+
+Ao pressionar `Ctrl+Alt+Shift+R`, um terminal interativo é aberto com:
+
+1. **Diagnóstico completo do sistema**:
+   - Status do Docker container
+   - Status do Chromium
+   - Acessibilidade da aplicação
+   - Conectividade de rede
+   - Uso de memória e disco
+   - Uptime do sistema
+
+2. **Menu de ações**:
+   | Opção | Ação |
+   |-------|------|
+   | `[1]` | Reiniciar Chromium |
+   | `[2]` | Reiniciar Container Docker |
+   | `[3]` | Ver logs do Watchdog |
+   | `[4]` | Ver logs do Container |
+   | `[5]` | Reiniciar sistema |
+   | `[6]` | Abrir terminal bash |
+   | `[7]` | Atualizar diagnóstico |
+   | `[0]` | Fechar (voltar ao kiosk) |
+
+### Quando usar o Modo de Recuperação
+
+- ❌ Chromium travou ou fechou
+- ❌ Container Docker parou
+- ❌ Aplicação não responde
+- ❌ Tela preta ou congelada
+- ❌ Problemas de rede
+- ❌ Necessidade de verificar logs
 
 ### Banco de Dados
 
@@ -374,10 +441,40 @@ Se configurado com `--webhook`, o sistema envia notificações para eventos:
 ## 📝 Notas
 
 - O sistema reinicia automaticamente após a instalação
-- O usuário `kiosk` não possui senha (autologin)
+- O instalador detecta e usa o usuário que executou `sudo` (não cria usuário novo)
 - Para acesso remoto, configure SSH antes da instalação
 - O watchdog verifica o sistema a cada 30 segundos
 - Backups automáticos podem ser configurados via cron
+- **Atalhos de emergência disponíveis**:
+  - `Ctrl+Alt+Shift+R` - Modo de recuperação com diagnósticos
+  - `Ctrl+Alt+R` - Reiniciar Chromium
+  - `Ctrl+Alt+T` - Abrir terminal
+  - `Ctrl+Alt+Backspace` - Sair do X
+
+---
+
+## 🔐 Login Managers
+
+O instalador detecta automaticamente o login manager do sistema e configura o autologin apropriadamente.
+
+### Verificar qual login manager está configurado
+
+```bash
+# Ver qual DM foi detectado
+cat /opt/tsijukebox/version.json | grep login_manager
+
+# Verificar configuração do SDDM
+cat /etc/sddm.conf.d/autologin.conf
+
+# Verificar configuração do GDM
+cat /etc/gdm/custom.conf
+
+# Verificar configuração do LightDM
+cat /etc/lightdm/lightdm.conf.d/50-autologin.conf
+
+# Verificar configuração do getty
+cat /etc/systemd/system/getty@tty1.service.d/autologin.conf
+```
 
 ---
 
@@ -389,5 +486,5 @@ Se configurado com `--webhook`, o sistema envia notificações para eventos:
 
 ---
 
-*Versão do Instalador: 2.0.0*
+*Versão do Instalador: 2.1.0*
 *Última atualização: Dezembro 2024*
