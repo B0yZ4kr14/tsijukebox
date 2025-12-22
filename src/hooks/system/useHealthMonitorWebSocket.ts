@@ -52,12 +52,10 @@ export function useHealthMonitorWebSocket(
   const connect = useCallback(() => {
     if (!enabled || !SUPABASE_URL) return;
 
-    // Clean up existing connection
     if (wsRef.current) {
       wsRef.current.close();
     }
 
-    // Convert HTTPS to WSS
     const wsUrl = SUPABASE_URL.replace('https://', 'wss://').replace('http://', 'ws://');
     const fullUrl = `${wsUrl}/functions/v1/health-monitor-ws`;
 
@@ -98,7 +96,6 @@ export function useHealthMonitorWebSocket(
         setIsConnected(false);
         onDisconnect?.();
 
-        // Exponential backoff reconnect
         if (enabled && reconnectAttempts.current < 5) {
           const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
           reconnectAttempts.current++;
