@@ -1,0 +1,8 @@
+{
+  "$comment": "Override para PRODUÇÃO. Use: -c config-base.json -c config-production-override.json",
+  
+  "database": "postgresql",
+  "no_monitoring": false,
+  "kiosk": false,
+  "skip_packages": false
+}

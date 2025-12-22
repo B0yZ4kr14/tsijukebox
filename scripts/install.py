@@ -21,8 +21,15 @@ OPÇÕES:
     --skip-packages             Pular instalação de pacotes (re-configuração)
     --dry-run                   Simular instalação (não executa comandos)
     --interactive, -i           Modo interativo: escolher componentes via menu
-    --config-file, -c FILE      Carregar configuração de arquivo JSON
+    --config-file, -c FILE      Arquivos JSON de configuração (suporta múltiplos para herança)
     --validate                  Validar instalação existente (não instala)
+    --generate-config FILE      Gerar config.json interativamente
+    --backup LABEL              Criar backup das configurações antes de reinstalar
+    --restore FILE              Restaurar backup de configurações
+    --list-backups              Listar backups disponíveis
+    --doctor                    Diagnosticar problemas e sugerir correções
+    --doctor-fix                Diagnosticar e aplicar correções automaticamente
+    --quiet, -q                 Modo silencioso (apenas erros)
     --uninstall                 Remover instalação existente
     --verbose                   Output detalhado
 
@@ -60,8 +67,9 @@ CONFIG_DIR = Path("/etc/tsijukebox")
 LOG_DIR = Path("/var/log/tsijukebox")
 DATA_DIR = Path("/var/lib/tsijukebox")
 
-# Modo dry-run global
+# Modos globais
 DRY_RUN = False
+QUIET_MODE = False
 
 # Cores ANSI
 class Colors:
@@ -426,28 +434,483 @@ class PostInstallValidator:
 
 
 # =============================================================================
-# CARREGAMENTO DE CONFIGURAÇÃO JSON
+# CONFIG GENERATOR (--generate-config)
 # =============================================================================
 
+class ConfigGenerator:
+    """Gera arquivo de configuração JSON interativamente."""
+    
+    def __init__(self):
+        self.menu = InteractiveMenu()
+    
+    def generate(self, output_path: str = 'config.json') -> bool:
+        """Gera config.json baseado nas escolhas do usuário."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}📝 GERADOR DE CONFIGURAÇÃO{Colors.RESET}{Colors.CYAN}                                 ║
+║   Responda as perguntas para gerar seu config.json              ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        try:
+            choices = self.menu.show_menu()
+        except KeyboardInterrupt:
+            log_warning("Geração cancelada")
+            return False
+        
+        # Coletar informações adicionais
+        print(f"\n{Colors.YELLOW}━━━ CONFIGURAÇÕES ADICIONAIS ━━━{Colors.RESET}\n")
+        
+        try:
+            user = input(f"{Colors.CYAN}Usuário do sistema (Enter para auto-detectar): {Colors.RESET}").strip()
+            music_dir = input(f"{Colors.CYAN}Diretório de músicas (Enter para 'Musics'): {Colors.RESET}").strip() or "Musics"
+        except EOFError:
+            user = ""
+            music_dir = "Musics"
+        
+        # Construir config
+        config = {
+            "$schema": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+            "_comment": "Gerado por: python3 install.py --generate-config",
+            "mode": "kiosk" if choices.get('kiosk') else "full",
+            "database": self.menu.database,
+            "music_dir": music_dir,
+            "no_spotify": not choices['spotify'],
+            "no_spotify_cli": not choices['spotify_cli'],
+            "no_monitoring": not choices['monitoring'],
+            "skip_packages": False,
+            "autologin": choices['autologin'],
+            "kiosk": choices['kiosk'],
+            "chromium_homepage": choices['chromium'],
+        }
+        
+        # Adicionar user apenas se especificado
+        if user:
+            config["user"] = user
+        
+        # Salvar arquivo
+        path = Path(output_path)
+        try:
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            
+            log_success(f"Configuração salva em: {path.absolute()}")
+            log_info(f"Use: sudo python3 install.py --config-file {output_path}")
+            return True
+        except Exception as e:
+            log_error(f"Falha ao salvar configuração: {e}")
+            return False
+
+
+# =============================================================================
+# CONFIG BACKUP (--backup, --restore, --list-backups)
+# =============================================================================
+
+class ConfigBackup:
+    """Gerencia backups de configuração do TSiJUKEBOX."""
+    
+    BACKUP_DIR = Path("/var/backups/tsijukebox")
+    
+    def __init__(self):
+        self.BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    
+    def create_backup(self, label: str = "") -> Optional[Path]:
+        """Cria backup completo das configurações."""
+        import tarfile
+        from datetime import datetime
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"tsijukebox_backup_{timestamp}"
+        if label and label != 'auto':
+            backup_name += f"_{label}"
+        backup_path = self.BACKUP_DIR / f"{backup_name}.tar.gz"
+        
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}💾 BACKUP DE CONFIGURAÇÕES{Colors.RESET}{Colors.CYAN}                                 ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        files_backed_up = 0
+        
+        try:
+            with tarfile.open(backup_path, "w:gz") as tar:
+                # Config dir
+                if CONFIG_DIR.exists():
+                    tar.add(CONFIG_DIR, arcname="etc/tsijukebox")
+                    log_success(f"  {CONFIG_DIR}")
+                    files_backed_up += 1
+                
+                # Database
+                db_path = DATA_DIR / 'tsijukebox.db'
+                if db_path.exists():
+                    tar.add(db_path, arcname="var/lib/tsijukebox/tsijukebox.db")
+                    log_success(f"  {db_path}")
+                    files_backed_up += 1
+                
+                # Spotify/Spicetify configs por usuário
+                home_dir = Path("/home")
+                if home_dir.exists():
+                    for user_home in home_dir.iterdir():
+                        if user_home.is_dir():
+                            spicetify = user_home / ".spicetify"
+                            if spicetify.exists():
+                                tar.add(spicetify, arcname=f"home/{user_home.name}/.spicetify")
+                                log_success(f"  {spicetify}")
+                                files_backed_up += 1
+                            
+                            spotify_prefs = user_home / ".config" / "spotify" / "prefs"
+                            if spotify_prefs.exists():
+                                tar.add(spotify_prefs, arcname=f"home/{user_home.name}/.config/spotify/prefs")
+                                log_success(f"  {spotify_prefs}")
+                                files_backed_up += 1
+            
+            size_kb = backup_path.stat().st_size / 1024
+            log_success(f"\n✅ Backup criado: {backup_path}")
+            log_info(f"   {files_backed_up} itens | {size_kb:.1f} KB")
+            
+            return backup_path
+        except Exception as e:
+            log_error(f"Falha ao criar backup: {e}")
+            return None
+    
+    def restore_backup(self, backup_path: str) -> bool:
+        """Restaura backup de configurações."""
+        import tarfile
+        
+        path = Path(backup_path)
+        if not path.exists():
+            log_error(f"Arquivo de backup não encontrado: {backup_path}")
+            return False
+        
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}📦 RESTAURANDO BACKUP{Colors.RESET}{Colors.CYAN}                                       ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        try:
+            with tarfile.open(path, "r:gz") as tar:
+                tar.extractall("/")
+            log_success(f"Backup restaurado de: {backup_path}")
+            return True
+        except Exception as e:
+            log_error(f"Falha ao restaurar backup: {e}")
+            return False
+    
+    def list_backups(self) -> List[Path]:
+        """Lista backups disponíveis."""
+        backups = sorted(self.BACKUP_DIR.glob("tsijukebox_backup_*.tar.gz"), reverse=True)
+        
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}📋 BACKUPS DISPONÍVEIS{Colors.RESET}{Colors.CYAN}                                      ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        if not backups:
+            log_warning("Nenhum backup encontrado")
+            log_info(f"Diretório de backups: {self.BACKUP_DIR}")
+            return []
+        
+        for backup in backups:
+            size_kb = backup.stat().st_size / 1024
+            mtime = backup.stat().st_mtime
+            from datetime import datetime
+            date_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+            print(f"  {Colors.GREEN}•{Colors.RESET} {backup.name}")
+            print(f"    {Colors.WHITE}Data: {date_str} | Tamanho: {size_kb:.1f} KB{Colors.RESET}")
+        
+        print(f"\n{Colors.CYAN}Para restaurar:{Colors.RESET}")
+        print(f"  sudo python3 install.py --restore {backups[0]}")
+        
+        return backups
+
+
+# =============================================================================
+# DOCTOR DIAGNOSTIC (--doctor, --doctor-fix)
+# =============================================================================
+
+class DoctorDiagnostic:
+    """Diagnostica problemas e sugere/aplica correções."""
+    
+    def __init__(self, auto_fix: bool = False):
+        self.auto_fix = auto_fix
+        self.issues: List[Dict[str, Any]] = []
+    
+    def add_issue(self, name: str, severity: str, description: str, fix_cmd: Optional[List[str]] = None):
+        """Registra um problema encontrado."""
+        self.issues.append({
+            'name': name,
+            'severity': severity,  # 'critical', 'warning', 'info'
+            'description': description,
+            'fix_cmd': fix_cmd,
+        })
+    
+    def check_services(self):
+        """Verifica serviços systemd."""
+        services = [
+            ('tsijukebox', True, ['systemctl', 'restart', 'tsijukebox']),
+            ('grafana', False, ['systemctl', 'restart', 'grafana']),
+            ('prometheus', False, ['systemctl', 'restart', 'prometheus']),
+        ]
+        
+        for service, required, fix_cmd in services:
+            code, stdout, _ = run_command(['systemctl', 'is-active', service], capture=True, check=False)
+            if stdout.strip() != 'active':
+                severity = 'critical' if required else 'warning'
+                self.add_issue(
+                    f"Serviço {service} inativo",
+                    severity,
+                    f"O serviço {service} não está rodando",
+                    fix_cmd
+                )
+    
+    def check_permissions(self):
+        """Verifica permissões de diretórios."""
+        dirs = [
+            (CONFIG_DIR, 0o755),
+            (LOG_DIR, 0o755),
+            (DATA_DIR, 0o755),
+            (INSTALL_DIR, 0o755),
+        ]
+        
+        for dir_path, expected_mode in dirs:
+            if dir_path.exists():
+                stat = dir_path.stat()
+                mode = stat.st_mode & 0o777
+                if mode != expected_mode:
+                    self.add_issue(
+                        f"Permissões incorretas em {dir_path}",
+                        'warning',
+                        f"Esperado {oct(expected_mode)}, encontrado {oct(mode)}",
+                        ['chmod', oct(expected_mode)[2:], str(dir_path)]
+                    )
+            else:
+                self.add_issue(
+                    f"Diretório não existe: {dir_path}",
+                    'critical',
+                    f"O diretório {dir_path} não foi criado",
+                    ['mkdir', '-p', str(dir_path)]
+                )
+    
+    def check_configs(self):
+        """Verifica arquivos de configuração."""
+        required_configs = [
+            CONFIG_DIR / 'config.yaml',
+        ]
+        
+        for config_path in required_configs:
+            if not config_path.exists():
+                self.add_issue(
+                    f"Config ausente: {config_path.name}",
+                    'warning',
+                    f"Arquivo de configuração {config_path} não encontrado",
+                    None  # Sem fix automático
+                )
+    
+    def check_disk_space(self):
+        """Verifica espaço em disco."""
+        total, used, free = shutil.disk_usage("/")
+        free_gb = free / (1024**3)
+        
+        if free_gb < 1:
+            self.add_issue(
+                "Pouco espaço em disco",
+                'critical',
+                f"Apenas {free_gb:.1f} GB disponíveis",
+                None
+            )
+        elif free_gb < 5:
+            self.add_issue(
+                "Espaço em disco baixo",
+                'warning',
+                f"{free_gb:.1f} GB disponíveis (recomendado: > 5GB)",
+                None
+            )
+    
+    def check_database(self):
+        """Verifica integridade do banco de dados."""
+        db_path = DATA_DIR / 'tsijukebox.db'
+        if db_path.exists():
+            if shutil.which('sqlite3'):
+                code, stdout, stderr = run_command(
+                    ['sqlite3', str(db_path), 'PRAGMA integrity_check;'],
+                    capture=True, check=False
+                )
+                if code != 0 or 'ok' not in stdout.lower():
+                    self.add_issue(
+                        "Banco de dados pode estar corrompido",
+                        'critical',
+                        f"Integrity check falhou: {stderr or stdout}",
+                        None
+                    )
+        else:
+            self.add_issue(
+                "Banco de dados não encontrado",
+                'info',
+                f"Arquivo {db_path} não existe (será criado na primeira execução)",
+                None
+            )
+    
+    def check_network_ports(self):
+        """Verifica se portas estão disponíveis."""
+        ports = [
+            (5173, 'TSiJUKEBOX Web', True),
+            (3000, 'Grafana', False),
+            (9090, 'Prometheus', False),
+        ]
+        
+        for port, name, required in ports:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(2)
+                result = sock.connect_ex(('localhost', port))
+                sock.close()
+                
+                if result != 0 and required:
+                    self.add_issue(
+                        f"Porta {port} ({name}) não responde",
+                        'warning',
+                        f"Serviço pode não estar rodando corretamente",
+                        None
+                    )
+            except Exception:
+                pass
+    
+    def run_all_checks(self) -> bool:
+        """Executa todas as verificações."""
+        print(f"""
+{Colors.CYAN}╔════════════════════════════════════════════════════════════════╗
+║   {Colors.BOLD}{Colors.WHITE}🩺 TSiJUKEBOX DOCTOR{Colors.RESET}{Colors.CYAN}                                          ║
+║   Diagnosticando problemas comuns...                            ║
+╚════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+        
+        log_step("Verificando serviços...")
+        self.check_services()
+        
+        log_step("Verificando permissões...")
+        self.check_permissions()
+        
+        log_step("Verificando configurações...")
+        self.check_configs()
+        
+        log_step("Verificando espaço em disco...")
+        self.check_disk_space()
+        
+        log_step("Verificando banco de dados...")
+        self.check_database()
+        
+        log_step("Verificando portas de rede...")
+        self.check_network_ports()
+        
+        # Exibir resultados
+        self._print_results()
+        
+        # Aplicar correções se auto_fix
+        if self.auto_fix and self.issues:
+            self._apply_fixes()
+        
+        return len([i for i in self.issues if i['severity'] == 'critical']) == 0
+    
+    def _print_results(self):
+        """Exibe resultados do diagnóstico."""
+        if not self.issues:
+            print(f"\n{Colors.GREEN}✅ Nenhum problema encontrado! Sistema saudável.{Colors.RESET}\n")
+            return
+        
+        print(f"\n{Colors.YELLOW}━━━ PROBLEMAS ENCONTRADOS ({len(self.issues)}) ━━━{Colors.RESET}\n")
+        
+        for issue in self.issues:
+            if issue['severity'] == 'critical':
+                icon = f"{Colors.RED}🔴{Colors.RESET}"
+            elif issue['severity'] == 'warning':
+                icon = f"{Colors.YELLOW}🟡{Colors.RESET}"
+            else:
+                icon = f"{Colors.BLUE}🔵{Colors.RESET}"
+            
+            print(f"  {icon} {issue['name']}")
+            print(f"     {Colors.WHITE}{issue['description']}{Colors.RESET}")
+            if issue['fix_cmd']:
+                cmd_str = ' '.join(issue['fix_cmd'])
+                print(f"     {Colors.GREEN}Fix: sudo {cmd_str}{Colors.RESET}")
+            print()
+        
+        # Sugerir --doctor-fix se houver correções disponíveis
+        fixable = [i for i in self.issues if i['fix_cmd']]
+        if fixable and not self.auto_fix:
+            print(f"{Colors.CYAN}💡 {len(fixable)} problemas podem ser corrigidos automaticamente:{Colors.RESET}")
+            print(f"   sudo python3 install.py --doctor-fix\n")
+    
+    def _apply_fixes(self):
+        """Aplica correções automáticas."""
+        print(f"\n{Colors.CYAN}━━━ APLICANDO CORREÇÕES AUTOMÁTICAS ━━━{Colors.RESET}\n")
+        
+        fixed = 0
+        for issue in self.issues:
+            if issue['fix_cmd']:
+                log_step(f"Corrigindo: {issue['name']}")
+                code, _, _ = run_command(issue['fix_cmd'], check=False)
+                if code == 0:
+                    log_success(f"  Corrigido!")
+                    fixed += 1
+                else:
+                    log_error(f"  Falha ao corrigir")
+        
+        if fixed > 0:
+            print(f"\n{Colors.GREEN}✅ {fixed} correções aplicadas com sucesso!{Colors.RESET}")
+            print(f"{Colors.YELLOW}   Recomendado: execute --doctor novamente para verificar{Colors.RESET}\n")
+
+
+# =============================================================================
+# CARREGAMENTO DE CONFIGURAÇÃO JSON (COM HERANÇA)
+# =============================================================================
+
+def deep_merge(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+    """Mescla recursivamente dois dicionários. Override sobrescreve base."""
+    result = base.copy()
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = deep_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
+
+
+def load_config_files(config_paths: List[str]) -> Dict[str, Any]:
+    """Carrega e mescla múltiplos arquivos de configuração com herança."""
+    merged_config: Dict[str, Any] = {}
+    
+    log_info("📄 Carregando configurações com herança:")
+    
+    for config_path in config_paths:
+        path = Path(config_path)
+        
+        if not path.exists():
+            log_error(f"Arquivo de configuração não encontrado: {config_path}")
+            sys.exit(1)
+        
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            
+            # Deep merge: override sobrescreve base
+            merged_config = deep_merge(merged_config, config)
+            log_info(f"  ✓ {config_path}")
+        except json.JSONDecodeError as e:
+            log_error(f"JSON inválido em {config_path}: {e}")
+            sys.exit(1)
+        except Exception as e:
+            log_error(f"Erro ao ler {config_path}: {e}")
+            sys.exit(1)
+    
+    return merged_config
+
+
 def load_config_file(config_path: str) -> Dict[str, Any]:
-    """Carrega configuração de arquivo JSON."""
-    path = Path(config_path)
-    
-    if not path.exists():
-        log_error(f"Arquivo de configuração não encontrado: {config_path}")
-        sys.exit(1)
-    
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-        log_success(f"Configuração carregada: {config_path}")
-        return config
-    except json.JSONDecodeError as e:
-        log_error(f"JSON inválido em {config_path}: {e}")
-        sys.exit(1)
-    except Exception as e:
-        log_error(f"Erro ao ler {config_path}: {e}")
-        sys.exit(1)
+    """Carrega configuração de um único arquivo JSON (compatibilidade)."""
+    return load_config_files([config_path])
 
 
 def apply_config_to_args(args: argparse.Namespace, config: Dict[str, Any]) -> None:
@@ -484,8 +947,10 @@ def apply_config_to_args(args: argparse.Namespace, config: Dict[str, Any]) -> No
 # =============================================================================
 
 def log(message: str, color: str = Colors.WHITE, prefix: str = ""):
-    """Log colorido no terminal."""
-    print(f"{color}{prefix}{message}{Colors.RESET}")
+    """Log colorido no terminal. Respeita QUIET_MODE."""
+    global QUIET_MODE
+    if not QUIET_MODE:
+        print(f"{color}{prefix}{message}{Colors.RESET}")
 
 
 def log_success(message: str):
@@ -493,7 +958,8 @@ def log_success(message: str):
 
 
 def log_error(message: str):
-    log(message, Colors.RED, "❌ ")
+    """Erros sempre são exibidos, mesmo em modo quiet."""
+    print(f"{Colors.RED}❌ {message}{Colors.RESET}", file=sys.stderr)
 
 
 def log_warning(message: str):
@@ -1544,6 +2010,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
+    # Argumentos principais
     parser.add_argument('--mode', choices=['kiosk', 'server', 'full'],
                        default='full', help='Modo de instalação')
     parser.add_argument('--database', choices=['sqlite', 'mariadb', 'postgresql'],
@@ -1563,17 +2030,46 @@ def main():
                        help='Simular instalação sem executar comandos')
     parser.add_argument('--interactive', '-i', action='store_true',
                        help='Modo interativo: escolher componentes via menu')
-    parser.add_argument('--config-file', '-c', type=str,
-                       help='Carregar configuração de arquivo JSON')
+    
+    # Configuração de arquivo JSON (suporta múltiplos para herança)
+    parser.add_argument('--config-file', '-c', type=str, action='append', dest='config_files',
+                       help='Arquivos JSON de configuração (use múltiplas vezes para herança)')
+    
+    # Comandos de validação e diagnóstico
     parser.add_argument('--validate', action='store_true',
                        help='Validar instalação existente (não instala)')
+    parser.add_argument('--doctor', action='store_true',
+                       help='Diagnosticar problemas e sugerir correções')
+    parser.add_argument('--doctor-fix', action='store_true',
+                       help='Diagnosticar e aplicar correções automaticamente')
+    
+    # Gerador de configuração
+    parser.add_argument('--generate-config', type=str, nargs='?', const='config.json', metavar='FILE',
+                       help='Gerar config.json interativamente (padrão: config.json)')
+    
+    # Backup e restore
+    parser.add_argument('--backup', nargs='?', const='auto', metavar='LABEL',
+                       help='Criar backup das configurações (label opcional)')
+    parser.add_argument('--restore', type=str, metavar='FILE',
+                       help='Restaurar backup de configurações')
+    parser.add_argument('--list-backups', action='store_true',
+                       help='Listar backups disponíveis')
+    
+    # Outros
     parser.add_argument('--uninstall', action='store_true',
                        help='Remover instalação existente')
+    parser.add_argument('--quiet', '-q', action='store_true',
+                       help='Modo silencioso (apenas erros)')
     parser.add_argument('--verbose', '-v', action='store_true',
                        help='Modo verboso')
     parser.add_argument('--version', action='version', version=f'TSiJUKEBOX Installer v{VERSION}')
     
     args = parser.parse_args()
+    
+    # Ativar modo quiet (antes de qualquer log)
+    global QUIET_MODE
+    if args.quiet:
+        QUIET_MODE = True
     
     # Ativar modo dry-run
     global DRY_RUN
@@ -1581,10 +2077,56 @@ def main():
         DRY_RUN = True
         log_warning("🧪 MODO DRY-RUN: Nenhum comando será executado de fato")
     
-    # Carregar configuração de arquivo JSON (se fornecido)
-    if args.config_file:
-        log_info(f"📄 Carregando configuração de: {args.config_file}")
-        config = load_config_file(args.config_file)
+    # =========================================================================
+    # COMANDOS STANDALONE (não requerem root, executam e saem)
+    # =========================================================================
+    
+    # --generate-config: Gerar config.json interativamente
+    if args.generate_config:
+        generator = ConfigGenerator()
+        success = generator.generate(args.generate_config)
+        sys.exit(0 if success else 1)
+    
+    # --list-backups: Listar backups disponíveis
+    if args.list_backups:
+        backup_mgr = ConfigBackup()
+        backup_mgr.list_backups()
+        sys.exit(0)
+    
+    # --backup: Criar backup das configurações
+    if args.backup:
+        check_root()
+        backup_mgr = ConfigBackup()
+        result = backup_mgr.create_backup(args.backup)
+        sys.exit(0 if result else 1)
+    
+    # --restore: Restaurar backup
+    if args.restore:
+        check_root()
+        backup_mgr = ConfigBackup()
+        success = backup_mgr.restore_backup(args.restore)
+        sys.exit(0 if success else 1)
+    
+    # --doctor ou --doctor-fix: Diagnóstico
+    if args.doctor or args.doctor_fix:
+        doctor = DoctorDiagnostic(auto_fix=args.doctor_fix)
+        success = doctor.run_all_checks()
+        sys.exit(0 if success else 1)
+    
+    # --validate: Validar instalação existente
+    if args.validate:
+        log_info("🔍 Executando validação pós-instalação...")
+        validator = PostInstallValidator(args)
+        success = validator.validate_all()
+        sys.exit(0 if success else 1)
+    
+    # =========================================================================
+    # CARREGAR CONFIGURAÇÃO (antes do menu interativo)
+    # =========================================================================
+    
+    # Carregar configuração de arquivos JSON (suporta herança com múltiplos arquivos)
+    if args.config_files:
+        config = load_config_files(args.config_files)
         apply_config_to_args(args, config)
         log_success("Configuração JSON aplicada!")
     
@@ -1610,14 +2152,11 @@ def main():
             log_warning("\nInstalação cancelada pelo usuário")
             sys.exit(130)
     
-    # Modo validação: apenas verificar instalação existente
-    if args.validate:
-        log_info("🔍 Executando validação pós-instalação...")
-        validator = PostInstallValidator(args)
-        success = validator.validate_all()
-        sys.exit(0 if success else 1)
+    # =========================================================================
+    # INSTALAÇÃO PRINCIPAL
+    # =========================================================================
     
-    # Verificar root
+    # Verificar root para instalação
     check_root()
     
     # Executar instalação

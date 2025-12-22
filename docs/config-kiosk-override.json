@@ -1,0 +1,8 @@
+{
+  "$comment": "Override para modo KIOSK. Use: -c config-base.json -c config-kiosk-override.json",
+  
+  "mode": "kiosk",
+  "kiosk": true,
+  "no_monitoring": true,
+  "autologin": true
+}
