@@ -53,12 +53,12 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
     lastSync,
     nextSync,
     pendingFiles,
+    pendingCount,
     syncInterval,
     toggle,
     triggerSync,
     setSyncInterval,
-    removePendingFile,
-    clearPendingFiles,
+    clearSyncedFiles,
     getTimeUntilNextSync
   } = autoSync;
 
@@ -91,6 +91,16 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
     const totalSeconds = syncInterval * 60;
     const elapsed = totalSeconds - countdown;
     return Math.min(100, (elapsed / totalSeconds) * 100);
+  };
+
+  const getCategoryColor = (category: string): string => {
+    switch (category) {
+      case 'critical': return 'text-red-500';
+      case 'important': return 'text-orange-500';
+      case 'docs': return 'text-blue-500';
+      case 'config': return 'text-purple-500';
+      default: return 'text-muted-foreground';
+    }
   };
 
   return (
@@ -154,8 +164,8 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
               <FileCode className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">Pendentes</p>
               <p className="text-sm font-bold">
-                {pendingFiles.length}
-                {pendingFiles.length > 0 && (
+                {pendingCount}
+                {pendingCount > 0 && (
                   <span className="ml-1 inline-block w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
                 )}
               </p>
@@ -198,7 +208,7 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
             <Button
               size="sm"
               onClick={triggerSync}
-              disabled={isSyncing || pendingFiles.length === 0}
+              disabled={isSyncing || pendingCount === 0}
               className="bg-primary hover:bg-primary/90"
             >
               <Zap className={`h-4 w-4 mr-1 ${isSyncing ? 'animate-pulse' : ''}`} />
@@ -207,13 +217,13 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
           </div>
 
           {/* Pending Files List (Collapsible) */}
-          {pendingFiles.length > 0 && (
+          {pendingCount > 0 && (
             <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="w-full justify-between">
                   <span className="flex items-center gap-2">
                     <FileCode className="h-4 w-4" />
-                    {pendingFiles.length} arquivo(s) pendente(s)
+                    {pendingCount} arquivo(s) pendente(s)
                   </span>
                   {isExpanded ? (
                     <ChevronUp className="h-4 w-4" />
@@ -235,21 +245,21 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
                       <div className="space-y-1">
                         {pendingFiles.map((file, idx) => (
                           <motion.div
-                            key={file}
+                            key={file.id}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.03 }}
                             className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted/40 group"
                           >
-                            <code className="text-xs truncate flex-1">{file}</code>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={() => removePendingFile(file)}
-                            >
-                              <Trash2 className="h-3 w-3 text-destructive" />
-                            </Button>
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <Badge 
+                                variant="outline" 
+                                className={`text-[10px] px-1 ${getCategoryColor(file.category)}`}
+                              >
+                                {file.priority}
+                              </Badge>
+                              <code className="text-xs truncate flex-1">{file.file_path}</code>
+                            </div>
                           </motion.div>
                         ))}
                       </div>
@@ -259,10 +269,10 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
                       variant="ghost"
                       size="sm"
                       className="w-full mt-2 text-destructive hover:text-destructive"
-                      onClick={clearPendingFiles}
+                      onClick={clearSyncedFiles}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Limpar lista
+                      Limpar sincronizados
                     </Button>
                   </motion.div>
                 </AnimatePresence>
@@ -271,7 +281,7 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
           )}
 
           {/* Empty State */}
-          {pendingFiles.length === 0 && isEnabled && (
+          {pendingCount === 0 && isEnabled && (
             <div className="text-center py-3 text-sm text-muted-foreground">
               <Check className="h-5 w-5 mx-auto mb-1 text-green-500" />
               Nenhum arquivo pendente

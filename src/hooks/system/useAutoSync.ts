@@ -2,11 +2,22 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+export interface PendingSyncFile {
+  id: string;
+  file_path: string;
+  file_hash: string | null;
+  category: string;
+  priority: number;
+  status: string;
+  detected_at: string;
+  synced_at: string | null;
+  error_message: string | null;
+}
+
 export interface AutoSyncConfig {
   isEnabled: boolean;
   syncInterval: number; // in minutes
   lastSync: string | null;
-  pendingFiles: string[];
 }
 
 export interface AutoSyncStatus {
@@ -14,7 +25,8 @@ export interface AutoSyncStatus {
   isSyncing: boolean;
   lastSync: Date | null;
   nextSync: Date | null;
-  pendingFiles: string[];
+  pendingFiles: PendingSyncFile[];
+  pendingCount: number;
   syncInterval: number;
 }
 
@@ -22,13 +34,12 @@ export interface UseAutoSyncReturn extends AutoSyncStatus {
   enable: () => void;
   disable: () => void;
   toggle: () => void;
-  addPendingFile: (filePath: string) => void;
-  addPendingFiles: (filePaths: string[]) => void;
-  removePendingFile: (filePath: string) => void;
-  clearPendingFiles: () => void;
   triggerSync: () => Promise<void>;
   setSyncInterval: (minutes: number) => void;
   getTimeUntilNextSync: () => number | null;
+  refreshPendingFiles: () => Promise<void>;
+  markFileAsSynced: (fileId: string) => Promise<void>;
+  clearSyncedFiles: () => Promise<void>;
 }
 
 const STORAGE_KEY = 'tsijukebox-auto-sync-config';
@@ -46,8 +57,7 @@ function loadConfig(): AutoSyncConfig {
   return {
     isEnabled: false,
     syncInterval: DEFAULT_INTERVAL,
-    lastSync: null,
-    pendingFiles: []
+    lastSync: null
   };
 }
 
@@ -61,15 +71,63 @@ function saveConfig(config: AutoSyncConfig): void {
 
 export function useAutoSync(): UseAutoSyncReturn {
   const [config, setConfig] = useState<AutoSyncConfig>(loadConfig);
+  const [pendingFiles, setPendingFiles] = useState<PendingSyncFile[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [nextSync, setNextSync] = useState<Date | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const countdownRef = useRef<NodeJS.Timeout | null>(null);
 
   // Persist config changes
   useEffect(() => {
     saveConfig(config);
   }, [config]);
+
+  // Fetch pending files from Supabase
+  const refreshPendingFiles = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pending_sync_files')
+        .select('*')
+        .eq('status', 'pending')
+        .order('priority', { ascending: true })
+        .order('detected_at', { ascending: true });
+
+      if (error) {
+        console.error('[useAutoSync] Error fetching pending files:', error);
+        return;
+      }
+
+      setPendingFiles(data || []);
+    } catch (err) {
+      console.error('[useAutoSync] Fetch error:', err);
+    }
+  }, []);
+
+  // Setup Realtime subscription for pending_sync_files
+  useEffect(() => {
+    // Initial fetch
+    refreshPendingFiles();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('pending-sync-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'pending_sync_files'
+        },
+        (payload) => {
+          console.log('[useAutoSync] Realtime update:', payload);
+          refreshPendingFiles();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refreshPendingFiles]);
 
   // Calculate next sync time
   const updateNextSync = useCallback(() => {
@@ -78,7 +136,6 @@ export function useAutoSync(): UseAutoSyncReturn {
       const next = new Date(lastSyncDate.getTime() + config.syncInterval * 60 * 1000);
       setNextSync(next);
     } else if (config.isEnabled) {
-      // If no last sync, schedule for syncInterval from now
       const next = new Date(Date.now() + config.syncInterval * 60 * 1000);
       setNextSync(next);
     } else {
@@ -90,10 +147,39 @@ export function useAutoSync(): UseAutoSyncReturn {
     updateNextSync();
   }, [updateNextSync]);
 
+  // Mark file as synced in database
+  const markFileAsSynced = useCallback(async (fileId: string) => {
+    try {
+      await supabase
+        .from('pending_sync_files')
+        .update({ 
+          status: 'synced', 
+          synced_at: new Date().toISOString() 
+        })
+        .eq('id', fileId);
+    } catch (err) {
+      console.error('[useAutoSync] Error marking file as synced:', err);
+    }
+  }, []);
+
+  // Clear all synced files from database
+  const clearSyncedFiles = useCallback(async () => {
+    try {
+      await supabase
+        .from('pending_sync_files')
+        .delete()
+        .eq('status', 'synced');
+      
+      toast.success('Arquivos sincronizados removidos');
+    } catch (err) {
+      console.error('[useAutoSync] Error clearing synced files:', err);
+    }
+  }, []);
+
   // Sync function
   const triggerSync = useCallback(async () => {
-    if (isSyncing || config.pendingFiles.length === 0) {
-      if (config.pendingFiles.length === 0) {
+    if (isSyncing || pendingFiles.length === 0) {
+      if (pendingFiles.length === 0) {
         toast.info('Nenhum arquivo pendente para sincronizar');
       }
       return;
@@ -103,30 +189,65 @@ export function useAutoSync(): UseAutoSyncReturn {
     toast.loading('Sincronizando arquivos...', { id: 'auto-sync' });
 
     try {
+      // Mark files as syncing
+      const fileIds = pendingFiles.map(f => f.id);
+      await supabase
+        .from('pending_sync_files')
+        .update({ status: 'syncing' })
+        .in('id', fileIds);
+
+      // Prepare files for sync
+      const filesToSync = pendingFiles.map(f => ({
+        path: f.file_path,
+        content: '' // Content will be fetched by the edge function
+      }));
+
       const { data, error } = await supabase.functions.invoke('auto-sync-repository', {
         body: {
-          files: config.pendingFiles,
-          commitMessage: `[Auto-Sync] ${config.pendingFiles.length} arquivo(s) - ${new Date().toLocaleString('pt-BR')}`
+          files: filesToSync,
+          commitMessage: `[Auto-Sync] ${pendingFiles.length} arquivo(s) - ${new Date().toLocaleString('pt-BR')}`
         }
       });
 
       if (error) throw error;
 
+      // Mark all as synced
+      await supabase
+        .from('pending_sync_files')
+        .update({ 
+          status: 'synced', 
+          synced_at: new Date().toISOString() 
+        })
+        .in('id', fileIds);
+
       const now = new Date().toISOString();
       setConfig(prev => ({
         ...prev,
-        lastSync: now,
-        pendingFiles: []
+        lastSync: now
       }));
 
-      toast.success(`✅ ${config.pendingFiles.length} arquivo(s) sincronizado(s)`, { id: 'auto-sync' });
+      toast.success(`✅ ${pendingFiles.length} arquivo(s) sincronizado(s)`, { id: 'auto-sync' });
+      
+      // Refresh to get updated state
+      refreshPendingFiles();
     } catch (error) {
       console.error('Auto-sync failed:', error);
+      
+      // Mark files as error
+      const fileIds = pendingFiles.map(f => f.id);
+      await supabase
+        .from('pending_sync_files')
+        .update({ 
+          status: 'error',
+          error_message: error instanceof Error ? error.message : 'Unknown error'
+        })
+        .in('id', fileIds);
+
       toast.error('Falha na sincronização automática', { id: 'auto-sync' });
     } finally {
       setIsSyncing(false);
     }
-  }, [isSyncing, config.pendingFiles]);
+  }, [isSyncing, pendingFiles, refreshPendingFiles]);
 
   // Scheduler
   useEffect(() => {
@@ -136,7 +257,7 @@ export function useAutoSync(): UseAutoSyncReturn {
 
     if (config.isEnabled && config.syncInterval > 0) {
       timerRef.current = setInterval(() => {
-        if (config.pendingFiles.length > 0) {
+        if (pendingFiles.length > 0) {
           triggerSync();
         }
         updateNextSync();
@@ -148,7 +269,7 @@ export function useAutoSync(): UseAutoSyncReturn {
         clearInterval(timerRef.current);
       }
     };
-  }, [config.isEnabled, config.syncInterval, config.pendingFiles.length, triggerSync, updateNextSync]);
+  }, [config.isEnabled, config.syncInterval, pendingFiles.length, triggerSync, updateNextSync]);
 
   // Actions
   const enable = useCallback(() => {
@@ -171,32 +292,6 @@ export function useAutoSync(): UseAutoSyncReturn {
     });
   }, []);
 
-  const addPendingFile = useCallback((filePath: string) => {
-    setConfig(prev => {
-      if (prev.pendingFiles.includes(filePath)) return prev;
-      return { ...prev, pendingFiles: [...prev.pendingFiles, filePath] };
-    });
-  }, []);
-
-  const addPendingFiles = useCallback((filePaths: string[]) => {
-    setConfig(prev => {
-      const newFiles = filePaths.filter(f => !prev.pendingFiles.includes(f));
-      if (newFiles.length === 0) return prev;
-      return { ...prev, pendingFiles: [...prev.pendingFiles, ...newFiles] };
-    });
-  }, []);
-
-  const removePendingFile = useCallback((filePath: string) => {
-    setConfig(prev => ({
-      ...prev,
-      pendingFiles: prev.pendingFiles.filter(f => f !== filePath)
-    }));
-  }, []);
-
-  const clearPendingFiles = useCallback(() => {
-    setConfig(prev => ({ ...prev, pendingFiles: [] }));
-  }, []);
-
   const setSyncInterval = useCallback((minutes: number) => {
     if (minutes < 1) minutes = 1;
     if (minutes > 1440) minutes = 1440; // Max 24 hours
@@ -215,17 +310,17 @@ export function useAutoSync(): UseAutoSyncReturn {
     isSyncing,
     lastSync: config.lastSync ? new Date(config.lastSync) : null,
     nextSync,
-    pendingFiles: config.pendingFiles,
+    pendingFiles,
+    pendingCount: pendingFiles.length,
     syncInterval: config.syncInterval,
     enable,
     disable,
     toggle,
-    addPendingFile,
-    addPendingFiles,
-    removePendingFile,
-    clearPendingFiles,
     triggerSync,
     setSyncInterval,
-    getTimeUntilNextSync
+    getTimeUntilNextSync,
+    refreshPendingFiles,
+    markFileAsSynced,
+    clearSyncedFiles
   };
 }

@@ -352,6 +352,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pending_sync_files: {
+        Row: {
+          category: string | null
+          detected_at: string | null
+          error_message: string | null
+          file_hash: string | null
+          file_path: string
+          id: string
+          priority: number | null
+          status: string | null
+          synced_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          detected_at?: string | null
+          error_message?: string | null
+          file_hash?: string | null
+          file_path: string
+          id?: string
+          priority?: number | null
+          status?: string | null
+          synced_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          detected_at?: string | null
+          error_message?: string | null
+          file_hash?: string | null
+          file_path?: string
+          id?: string
+          priority?: number | null
+          status?: string | null
+          synced_at?: string | null
+        }
+        Relationships: []
+      }
       playback_stats: {
         Row: {
           album_art: string | null

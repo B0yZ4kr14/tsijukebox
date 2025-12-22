@@ -72,5 +72,11 @@ export {
   useAutoSync,
   type AutoSyncConfig,
   type AutoSyncStatus,
-  type UseAutoSyncReturn
+  type UseAutoSyncReturn,
+  type PendingSyncFile
 } from './useAutoSync';
+export {
+  useFileChangeDetector,
+  type DetectedFile,
+  type UseFileChangeDetectorReturn
+} from './useFileChangeDetector';
