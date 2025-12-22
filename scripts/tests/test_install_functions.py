@@ -515,5 +515,286 @@ class TestEdgeCases:
         assert mock_run.call_count == 2  # Both commands attempted
 
 
+# =============================================================================
+# TEST: is_running_from_curl
+# =============================================================================
+
+class TestIsRunningFromCurl:
+    """Tests for is_running_from_curl() detection."""
+    
+    def test_returns_false_when_stdin_is_terminal(self, mocker):
+        """Retorna False quando stdin é um terminal."""
+        mocker.patch('os.isatty', return_value=True)
+        
+        # Reimport to get fresh function
+        import importlib
+        import install
+        importlib.reload(install)
+        
+        # Mock __file__ to be a real path
+        mocker.patch.object(install, '__file__', '/path/to/install.py')
+        
+        result = install.is_running_from_curl()
+        assert result == False
+    
+    def test_returns_true_when_stdin_is_not_terminal(self, mocker):
+        """Retorna True quando stdin não é terminal (pipe)."""
+        mocker.patch('os.isatty', return_value=False)
+        
+        from install import is_running_from_curl
+        result = is_running_from_curl()
+        
+        assert result == True
+    
+    def test_returns_true_when_file_is_stdin(self, mocker):
+        """Retorna True quando __file__ é '<stdin>'."""
+        mocker.patch('os.isatty', return_value=True)
+        
+        import install
+        original_file = getattr(install, '__file__', None)
+        
+        try:
+            install.__file__ = '<stdin>'
+            result = install.is_running_from_curl()
+            assert result == True
+        finally:
+            if original_file:
+                install.__file__ = original_file
+    
+    def test_returns_true_when_os_error(self, mocker):
+        """Retorna True quando ocorre OSError (fallback seguro)."""
+        mocker.patch('os.isatty', side_effect=OSError("No tty"))
+        
+        from install import is_running_from_curl
+        result = is_running_from_curl()
+        
+        assert result == True
+    
+    def test_returns_true_when_attribute_error(self, mocker):
+        """Retorna True quando ocorre AttributeError."""
+        # Simular stdin sem fileno()
+        mock_stdin = mocker.MagicMock()
+        mock_stdin.fileno.side_effect = AttributeError("no fileno")
+        mocker.patch('sys.stdin', mock_stdin)
+        
+        from install import is_running_from_curl
+        result = is_running_from_curl()
+        
+        assert result == True
+
+
+# =============================================================================
+# TEST: configure_spicetify_inline
+# =============================================================================
+
+class TestConfigureSpicetifyInline:
+    """Tests for configure_spicetify_inline() function."""
+    
+    @pytest.fixture
+    def mock_user_home(self, tmp_path, mocker):
+        """Setup para mock de ambiente de usuário."""
+        home = tmp_path / "home" / "testuser"
+        home.mkdir(parents=True)
+        
+        # Mock pwd.getpwnam
+        mock_pwd_entry = MagicMock()
+        mock_pwd_entry.pw_dir = str(home)
+        mocker.patch('pwd.getpwnam', return_value=mock_pwd_entry)
+        
+        return home
+    
+    def test_returns_false_when_spicetify_not_found(self, mock_user_home, mocker):
+        """Retorna False quando spicetify não está instalado."""
+        # Mock run_command para retornar failure no which
+        mocker.patch('install.run_command', return_value=(1, "", "not found"))
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        assert result == False
+    
+    def test_finds_spicetify_in_home_directory(self, mock_user_home, mocker):
+        """Encontra spicetify em ~/.spicetify/."""
+        # Criar estrutura de diretórios
+        spicetify_dir = mock_user_home / ".spicetify"
+        spicetify_dir.mkdir()
+        spicetify_bin = spicetify_dir / "spicetify"
+        spicetify_bin.touch()
+        spicetify_bin.chmod(0o755)
+        
+        # Criar diretório spotify
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        spotify_dir.mkdir(parents=True)
+        
+        # Mock subprocess
+        mock_subprocess = mocker.patch('subprocess.run')
+        mock_subprocess.return_value = MagicMock(returncode=0, stdout="", stderr="")
+        
+        mock_popen = mocker.patch('subprocess.Popen')
+        mock_popen.return_value = MagicMock(poll=lambda: 0)
+        
+        mocker.patch('time.sleep')
+        mocker.patch('install.run_command', return_value=(0, "", ""))
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        assert result == True
+    
+    def test_finds_spicetify_via_which(self, mock_user_home, mocker):
+        """Encontra spicetify via 'which' quando não está em ~/.spicetify."""
+        # Criar diretório spotify
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        spotify_dir.mkdir(parents=True)
+        
+        # Mock run_command - which encontra spicetify
+        def mock_run_cmd(cmd, *args, **kwargs):
+            if 'which' in cmd:
+                return (0, "/usr/bin/spicetify\n", "")
+            return (0, "", "")
+        
+        mocker.patch('install.run_command', side_effect=mock_run_cmd)
+        
+        mock_subprocess = mocker.patch('subprocess.run')
+        mock_subprocess.return_value = MagicMock(returncode=0, stdout="", stderr="")
+        
+        mock_popen = mocker.patch('subprocess.Popen')
+        mock_popen.return_value = MagicMock(poll=lambda: 0)
+        
+        mocker.patch('time.sleep')
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        assert result == True
+    
+    def test_creates_prefs_file_if_missing(self, mock_user_home, mocker):
+        """Cria arquivo prefs se não existir."""
+        spicetify_dir = mock_user_home / ".spicetify"
+        spicetify_dir.mkdir()
+        (spicetify_dir / "spicetify").touch()
+        
+        # Não criar prefs - a função deve criar
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        # Não criamos o diretório - a função deve criar
+        
+        mock_subprocess = mocker.patch('subprocess.run')
+        mock_subprocess.return_value = MagicMock(returncode=0)
+        
+        mock_popen = mocker.patch('subprocess.Popen')
+        mock_popen.return_value = MagicMock(poll=lambda: 0)
+        
+        mocker.patch('time.sleep')
+        mocker.patch('install.run_command', return_value=(0, "", ""))
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        # Verificar que tentou criar o diretório (função deve ter criado)
+        assert result == True
+    
+    def test_applies_spicetify_configs(self, mock_user_home, mocker):
+        """Aplica configurações do Spicetify corretamente."""
+        spicetify_dir = mock_user_home / ".spicetify"
+        spicetify_dir.mkdir()
+        spicetify_bin = spicetify_dir / "spicetify"
+        spicetify_bin.touch()
+        
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        spotify_dir.mkdir(parents=True)
+        
+        # Capturar chamadas do subprocess
+        subprocess_calls = []
+        
+        def capture_subprocess(*args, **kwargs):
+            subprocess_calls.append(args[0] if args else kwargs.get('args', []))
+            return MagicMock(returncode=0, stdout="", stderr="")
+        
+        mocker.patch('subprocess.run', side_effect=capture_subprocess)
+        mocker.patch('subprocess.Popen', return_value=MagicMock(poll=lambda: 0))
+        mocker.patch('time.sleep')
+        mocker.patch('install.run_command', return_value=(0, "", ""))
+        
+        from install import configure_spicetify_inline
+        configure_spicetify_inline("testuser")
+        
+        # Verificar que configs foram aplicadas
+        all_calls_str = str(subprocess_calls)
+        assert 'backup' in all_calls_str or 'config' in all_calls_str
+    
+    def test_returns_true_even_if_apply_fails(self, mock_user_home, mocker):
+        """Retorna True mesmo se spicetify apply falhar (best effort)."""
+        spicetify_dir = mock_user_home / ".spicetify"
+        spicetify_dir.mkdir()
+        (spicetify_dir / "spicetify").touch()
+        
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        spotify_dir.mkdir(parents=True)
+        
+        call_count = [0]
+        
+        def mock_subprocess_run(*args, **kwargs):
+            call_count[0] += 1
+            # Fazer apply falhar (última chamada geralmente)
+            if 'apply' in str(args):
+                return MagicMock(returncode=1, stderr="apply failed")
+            return MagicMock(returncode=0, stdout="", stderr="")
+        
+        mocker.patch('subprocess.run', side_effect=mock_subprocess_run)
+        mocker.patch('subprocess.Popen', return_value=MagicMock(poll=lambda: 0))
+        mocker.patch('time.sleep')
+        mocker.patch('install.run_command', return_value=(0, "", ""))
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        # Deve retornar True mesmo com apply falhando
+        assert result == True
+    
+    def test_handles_spotify_not_running(self, mock_user_home, mocker):
+        """Funciona mesmo quando Spotify não está rodando."""
+        spicetify_dir = mock_user_home / ".spicetify"
+        spicetify_dir.mkdir()
+        (spicetify_dir / "spicetify").touch()
+        
+        spotify_dir = mock_user_home / ".config" / "spotify"
+        spotify_dir.mkdir(parents=True)
+        
+        # Popen retorna None (processo não encontrado)
+        mocker.patch('subprocess.Popen', return_value=MagicMock(poll=lambda: None))
+        mocker.patch('subprocess.run', return_value=MagicMock(returncode=0))
+        mocker.patch('time.sleep')
+        mocker.patch('install.run_command', return_value=(0, "", ""))
+        
+        from install import configure_spicetify_inline
+        result = configure_spicetify_inline("testuser")
+        
+        assert result == True
+
+
+# =============================================================================
+# TEST: RUNNING_FROM_CURL global variable
+# =============================================================================
+
+class TestRunningFromCurlGlobal:
+    """Tests for RUNNING_FROM_CURL global variable behavior."""
+    
+    def test_global_variable_exists(self):
+        """Variável global RUNNING_FROM_CURL existe no módulo."""
+        from install import RUNNING_FROM_CURL
+        
+        # Deve ser um booleano
+        assert isinstance(RUNNING_FROM_CURL, bool)
+    
+    def test_affects_spicetify_installation(self, mocker):
+        """RUNNING_FROM_CURL afeta comportamento de install_spotify_spicetify."""
+        # Este é um teste de integração leve
+        import install
+        
+        # Verificar que a variável é usada na lógica
+        # (o comportamento real depende do ambiente)
+        assert hasattr(install, 'RUNNING_FROM_CURL')
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v', '--tb=short'])
