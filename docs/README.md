@@ -1,216 +1,279 @@
 # TSiJUKEBOX Enterprise Documentation
 
-<p align="center">
-  <img src="../public/logo/tsijukebox-logo.svg" alt="TSiJUKEBOX Logo" width="300" />
-</p>
+<div align="center">
 
-<p align="center">
-  <strong>Enterprise Music System for Kiosk and Bar Environments</strong>
-</p>
+<img src="assets/logo.svg" alt="TSiJUKEBOX Logo" width="350">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-4.0.0-blue?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/badge/license-Public_Domain-green?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/WCAG-2.1_AA-green?style=flat-square&logo=accessibility" alt="WCAG">
-  <img src="https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript" alt="TypeScript">
-</p>
+<br><br>
 
-<p align="center">
-  <a href="GETTING-STARTED.md">🚀 Quick Start</a> •
-  <a href="INSTALLATION.md">📦 Installation</a> •
-  <a href="DEVELOPER-GUIDE.md">👨‍💻 Developer Guide</a> •
-  <a href="CONTRIBUTING.md">🤝 Contributing</a> •
-  <a href="API-REFERENCE.md">📖 API Reference</a>
-</p>
+**Enterprise Music System for Kiosk and Bar Environments**
+
+[![Version](https://img.shields.io/badge/version-4.2.0-blue?style=for-the-badge&logo=github)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-Public%20Domain-green?style=for-the-badge&logo=unlicense)](../LICENSE)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-success?style=for-the-badge&logo=accessibility)](ACCESSIBILITY.md)
+[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript)](https://typescriptlang.org)
+
+[🚀 Quick Start](GETTING-STARTED.md) · [📦 Installation](INSTALLATION.md) · [👨‍💻 Developer Guide](DEVELOPER-GUIDE.md) · [🤝 Contributing](CONTRIBUTING.md) · [📖 API Reference](API-REFERENCE.md)
+
+</div>
 
 ---
 
-## 📚 Documentation Index
+## 📚 Índice da Documentação
 
-### 🚀 Getting Started
+### 🚀 Primeiros Passos
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| [**Quick Start Guide**](GETTING-STARTED.md) | Beginners | Get up and running in 5 minutes |
-| [**Installation Guide**](INSTALLATION.md) | All Users | Complete installation instructions |
-| [**Glossary**](GLOSSARY.md) | Beginners | Technical terms explained simply |
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Quick Start Guide**](GETTING-STARTED.md) | Iniciantes | Configure e execute em 5 minutos |
+| [**Quick Install**](QUICK-INSTALL.md) | Todos | Instalação em um comando |
+| [**Installation Guide**](INSTALLATION.md) | Todos | Instruções completas de instalação |
+| [**Glossary**](GLOSSARY.md) | Iniciantes | Termos técnicos explicados |
 
-### 👤 For Users
+### 👤 Para Usuários
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| [**Configuration Guide**](CONFIGURATION.md) | Power Users | All configuration options explained |
-| [**Troubleshooting**](TROUBLESHOOTING.md) | All Users | Common problems and solutions |
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Configuration Guide**](CONFIGURATION.md) | Power Users | Todas as opções de configuração |
+| [**Troubleshooting**](TROUBLESHOOTING.md) | Todos | Problemas comuns e soluções |
+| [**System Deployment**](SYSTEM-DEPLOYMENT.md) | Administradores | Deploy completo do sistema |
+| [**Production Deploy**](PRODUCTION-DEPLOY.md) | DevOps | Deploy em ambiente de produção |
 
-### 🔧 For Enthusiasts
+### 🎨 Para Designers e Entusiastas
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| [**Design System**](DESIGN-SYSTEM.md) | Designers | Colors, typography, components |
-| [**Accessibility**](ACCESSIBILITY.md) | All | WCAG 2.1 AA compliance details |
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Design System**](DESIGN-SYSTEM.md) | Designers | Cores, tipografia, componentes |
+| [**Brand Components**](BRAND-COMPONENTS.md) | Designers | Componentes de marca |
+| [**Accessibility**](ACCESSIBILITY.md) | Todos | Conformidade WCAG 2.1 AA |
 
-### 👨‍💻 For Developers
+### 👨‍💻 Para Desenvolvedores
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| [**Project Map**](PROJECT-MAP.md) | Developers | Complete file map with 95+ components, 52 hooks |
-| [**Developer Guide**](DEVELOPER-GUIDE.md) | Developers | Architecture and contribution guide |
-| [**Contributing Guide**](CONTRIBUTING.md) | Developers | How to contribute to the project |
-| [**Hooks Architecture**](HOOKS-ARCHITECTURE.md) | Developers | React hooks organization |
-| [**API Reference**](API-REFERENCE.md) | Developers | Complete hooks and contexts documentation |
-| [**Architecture Analysis**](ARCHITECTURE-ANALYSIS.md) | Developers | Architecture analysis and refactoring recommendations |
-| [**Backend Endpoints**](BACKEND-ENDPOINTS.md) | Developers | Edge functions documentation |
-| [**Security Guide**](SECURITY.md) | Developers | Security practices and policies |
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Project Map**](PROJECT-MAP.md) | Desenvolvedores | Mapa completo com 95+ componentes, 52 hooks |
+| [**Developer Guide**](DEVELOPER-GUIDE.md) | Desenvolvedores | Arquitetura e guia de contribuição |
+| [**Contributing Guide**](CONTRIBUTING.md) | Desenvolvedores | Como contribuir para o projeto |
+| [**Coding Standards**](CODING-STANDARDS.md) | Desenvolvedores | Padrões de código e estilo |
+| [**Hooks Architecture**](HOOKS-ARCHITECTURE.md) | Desenvolvedores | Organização de React hooks |
+| [**Components**](COMPONENTS.md) | Desenvolvedores | Documentação de componentes |
+| [**Routes**](ROUTES.md) | Desenvolvedores | Sistema de rotas da aplicação |
 
-### 📜 Reference
+### 🔌 APIs e Integrações
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| [**Changelog**](CHANGELOG.md) | All | Version history and updates |
-| [**Credits**](CREDITS.md) | All | Authorship and licensing |
-| [**Code of Conduct**](../CODE_OF_CONDUCT.md) | All | Community guidelines |
-| [**License**](../LICENSE) | All | Public Domain dedication |
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**API Reference**](API-REFERENCE.md) | Desenvolvedores | Documentação completa de hooks e contexts |
+| [**Backend Endpoints**](BACKEND-ENDPOINTS.md) | Desenvolvedores | Documentação de edge functions |
+| [**Backend README**](README-BACKEND.md) | Desenvolvedores | Visão geral do backend |
+
+### 🏗️ Arquitetura e Infraestrutura
+
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Architecture**](ARCHITECTURE.md) | Desenvolvedores | Arquitetura do sistema |
+| [**Architecture Analysis**](ARCHITECTURE-ANALYSIS.md) | Desenvolvedores | Análise e recomendações de refatoração |
+| [**CI/CD**](CI-CD.md) | DevOps | Integração e deploy contínuos |
+| [**Grafana Setup**](GRAFANA-SETUP.md) | DevOps | Configuração de monitoramento |
+| [**Monitoring**](MONITORING.md) | DevOps | Sistema de monitoramento |
+
+### 🔒 Segurança
+
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Security Guide**](SECURITY.md) | Desenvolvedores | Práticas e políticas de segurança |
+| [**GitHub Integration**](GITHUB-INTEGRATION.md) | DevOps | Integração com GitHub Actions |
+
+### 🧪 Testes
+
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Testing Guide**](TESTING.md) | Desenvolvedores | Guia completo de testes |
+| [**Python Testing**](PYTHON_TESTING.md) | Desenvolvedores | Testes do instalador Python |
+
+### 📜 Referência
+
+| Documento | Público | Descrição |
+| --------- | ------- | --------- |
+| [**Changelog**](CHANGELOG.md) | Todos | Histórico de versões e atualizações |
+| [**Credits**](CREDITS.md) | Todos | Autoria e licenciamento |
+| [**Code of Conduct**](../CODE_OF_CONDUCT.md) | Todos | Diretrizes da comunidade |
+| [**License**](../LICENSE) | Todos | Dedicação ao Domínio Público |
 
 ---
 
-## 🎯 What is TSiJUKEBOX?
+## 🎯 O que é o TSiJUKEBOX?
 
-TSiJUKEBOX is an **enterprise-grade digital jukebox system** designed for:
+TSiJUKEBOX é um **sistema de jukebox digital de nível empresarial** projetado para:
 
-- 🎵 **Bars & Restaurants** - Let customers queue songs
-- 🎤 **Karaoke Venues** - Synchronized lyrics display
-- 🏪 **Retail Stores** - Background music management
-- 🏠 **Home Entertainment** - Personal music server
+| Ambiente | Caso de Uso | Recursos Principais |
+| -------- | ----------- | ------------------- |
+| 🎵 **Bares e Restaurantes** | Clientes escolhem músicas | Fila de reprodução, controle de volume |
+| 🎤 **Karaokês** | Letras sincronizadas | Modo fullscreen, pontuação |
+| 🏪 **Lojas** | Música ambiente | Playlists automáticas, agendamento |
+| 🏠 **Uso Doméstico** | Servidor de música pessoal | Multi-room, integração smart home |
 
-### Key Features
+### Recursos Principais
 
-| Feature | Description |
-|---------|-------------|
-| 🎧 **Multi-Provider Support** | Spotify, YouTube Music, Local Files |
-| 📱 **Kiosk Mode** | Touch-optimized interface for public use |
-| 🎤 **Karaoke Mode** | Real-time synchronized lyrics |
-| ☁️ **Cloud Backup** | Storj, Google Drive, Dropbox, etc. |
-| 🔐 **Role-Based Access** | Admin, User, Newbie roles |
-| 📊 **System Monitoring** | CPU, RAM, temperature display |
-| 🌐 **Multi-Language** | English, Spanish, Portuguese |
+| Feature | Descrição | Status |
+| ------- | --------- | ------ |
+| 🎧 **Multi-Provider** | Spotify, YouTube Music, Arquivos Locais | ✅ |
+| 📱 **Kiosk Mode** | Interface touch otimizada para uso público | ✅ |
+| 🎤 **Karaoke Mode** | Letras sincronizadas em tempo real | ✅ |
+| ☁️ **Cloud Backup** | Storj, Google Drive, Dropbox, AWS S3 | ✅ |
+| 🔐 **RBAC** | Roles: Admin, User, Newbie | ✅ |
+| 📊 **System Monitor** | CPU, RAM, temperatura em tempo real | ✅ |
+| 🌐 **i18n** | Português, English, Español | ✅ |
+| ♿ **WCAG 2.1 AA** | Acessibilidade validada | ✅ |
+| 📱 **PWA** | Progressive Web App com suporte offline | ✅ |
 
 ---
 
-## 🖥️ System Requirements
+## 🖥️ Requisitos do Sistema
 
-### Minimum Requirements
+### Requisitos Mínimos
 
-| Component | Requirement |
-|-----------|-------------|
-| **OS** | Arch Linux, CachyOS, or Manjaro |
+| Componente | Requisito |
+| ---------- | --------- |
+| **OS** | Arch Linux, CachyOS, Manjaro, EndeavourOS |
 | **CPU** | x86_64, 2+ cores |
 | **RAM** | 2 GB |
-| **Disk** | 10 GB free |
-| **Display** | 1024x768 minimum |
+| **Disco** | 10 GB livre |
+| **Display** | 1024x768 mínimo |
+| **Node.js** | 18.x ou superior |
 
-### Recommended Specifications
+### Especificações Recomendadas
 
-| Component | Recommendation |
-|-----------|----------------|
-| **OS** | CachyOS (optimized Arch) |
+| Componente | Recomendação |
+| ---------- | ------------ |
+| **OS** | CachyOS (Arch otimizado) com Openbox |
 | **CPU** | 4+ cores |
 | **RAM** | 8 GB |
-| **Disk** | 50+ GB (for music library) |
+| **Disco** | 50+ GB (para biblioteca de música) |
 | **Display** | 1920x1080 touchscreen |
-| **Network** | Ethernet for reliability |
+| **Network** | Ethernet para confiabilidade |
+| **Node.js** | 20.x LTS |
 
 ---
 
-## 🚀 Quick Installation
+## 🚀 Instalação Rápida
+
+### Um Comando (Recomendado)
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/tsijukebox.git
-cd tsijukebox
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+```
 
-# Run the installer (requires root)
+### Manual
+
+```bash
+# Clone o repositório
+git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
+cd TSiJUKEBOX
+
+# Execute o instalador (requer root)
 sudo python3 scripts/installer/main.py
 
-# Or for automatic installation with defaults
+# Ou para instalação automática com padrões
 sudo python3 scripts/installer/main.py --auto
 ```
 
-For detailed installation instructions, see [INSTALLATION.md](INSTALLATION.md).
+Para instruções detalhadas, veja [INSTALLATION.md](INSTALLATION.md) ou [QUICK-INSTALL.md](QUICK-INSTALL.md).
 
 ---
 
-## 📁 Project Structure
+## 📁 Estrutura do Projeto
 
 ```
 tsijukebox/
-├── docs/                    # Documentation
-├── e2e/                     # End-to-end tests (Playwright)
-├── public/                  # Static assets
-│   └── logo/               # Brand assets
+├── docs/                    # Documentação
+│   ├── assets/             # Assets da documentação (logo, imagens)
+│   ├── adr/                # Architecture Decision Records
+│   └── wiki/               # Conteúdo da Wiki
+├── e2e/                     # Testes end-to-end (Playwright)
+├── public/                  # Assets estáticos
+│   ├── logo/               # Assets de marca
+│   └── screenshots/        # Screenshots e demos
 ├── scripts/
-│   └── installer/          # Python installer
+│   ├── installer/          # Instalador Python
+│   └── tests/              # Testes do instalador
 ├── src/
-│   ├── components/         # React components
-│   │   ├── auth/          # Authentication
-│   │   ├── player/        # Music player
-│   │   ├── settings/      # Settings panels
-│   │   ├── spotify/       # Spotify integration
-│   │   ├── ui/            # UI primitives
+│   ├── components/         # Componentes React
+│   │   ├── auth/          # Autenticação
+│   │   ├── player/        # Player de música
+│   │   ├── settings/      # Painéis de configuração
+│   │   ├── spotify/       # Integração Spotify
+│   │   ├── ui/            # Primitivos de UI (shadcn)
 │   │   └── youtube/       # YouTube Music
 │   ├── contexts/          # React contexts
 │   ├── hooks/             # Custom hooks
-│   │   ├── auth/          # Auth hooks
-│   │   ├── player/        # Player hooks
-│   │   ├── spotify/       # Spotify hooks
-│   │   └── youtube/       # YouTube hooks
-│   ├── lib/               # Utilities
-│   ├── pages/             # Route pages
-│   └── i18n/              # Translations
-└── supabase/
-    └── functions/         # Edge functions
+│   │   ├── auth/          # Hooks de autenticação
+│   │   ├── player/        # Hooks do player
+│   │   ├── spotify/       # Hooks do Spotify
+│   │   └── youtube/       # Hooks do YouTube
+│   ├── lib/               # Utilitários
+│   ├── pages/             # Páginas de rotas
+│   └── i18n/              # Traduções
+├── supabase/
+│   └── functions/         # Edge functions
+└── docker/                 # Configurações Docker
 ```
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contribuindo
 
-We welcome contributions! Please read our:
+Contribuições são bem-vindas! Por favor, leia:
 
-- [**Contributing Guide**](CONTRIBUTING.md) - How to contribute
-- [**Code of Conduct**](../CODE_OF_CONDUCT.md) - Community guidelines
-- [**Developer Guide**](DEVELOPER-GUIDE.md) - Architecture and code style
+- [**Contributing Guide**](CONTRIBUTING.md) — Como contribuir
+- [**Code of Conduct**](../CODE_OF_CONDUCT.md) — Diretrizes da comunidade
+- [**Developer Guide**](DEVELOPER-GUIDE.md) — Arquitetura e estilo de código
+- [**Coding Standards**](CODING-STANDARDS.md) — Padrões de código
 
-### Quick Contribution Steps
+### Passos Rápidos para Contribuição
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-TSiJUKEBOX is released under **Public Domain** dedication.
-
-See [LICENSE](../LICENSE) and [CREDITS.md](CREDITS.md) for full authorship and licensing details.
+1. Fork o repositório
+2. Crie uma branch de feature (`git checkout -b feature/amazing-feature`)
+3. Commit suas mudanças usando [Conventional Commits](https://www.conventionalcommits.org/)
+4. Push para a branch (`git push origin feature/amazing-feature`)
+5. Abra um Pull Request
 
 ---
 
-## 🙏 Acknowledgments
+## 📄 Licença
 
-- **shadcn/ui** - UI component library
-- **Lucide Icons** - Icon set
-- **Tailwind CSS** - Styling framework
-- **Supabase** - Backend infrastructure
-- **Framer Motion** - Animations
+TSiJUKEBOX é liberado sob dedicação ao **Domínio Público**.
+
+Veja [LICENSE](../LICENSE) e [CREDITS.md](CREDITS.md) para detalhes completos de autoria e licenciamento.
 
 ---
 
-<p align="center">
-  <strong>TSiJUKEBOX Enterprise</strong> — A música, amplificada.
-  <br>
-  Made with 🎵 by B0.y_Z4kr14
-</p>
+## 🙏 Agradecimentos
+
+| Projeto | Contribuição |
+| ------- | ------------ |
+| **shadcn/ui** | Biblioteca de componentes UI |
+| **Lucide Icons** | Conjunto de ícones |
+| **Tailwind CSS** | Framework de estilização |
+| **Supabase** | Infraestrutura de backend |
+| **Framer Motion** | Animações |
+| **Vite** | Build tool |
+| **Vitest** | Framework de testes |
+| **Playwright** | Testes E2E |
+
+---
+
+<div align="center">
+
+<img src="assets/B0.y_Z4kr14-v3.png" alt="B0.y_Z4kr14" width="80" style="border-radius: 50%;">
+
+**Desenvolvido por [B0.y_Z4kr14](https://github.com/B0yZ4kr14)**
+
+*TSI Telecom*
+
+<br>
+
+**TSiJUKEBOX Enterprise** — *A música, amplificada.*
+
+</div>

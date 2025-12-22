@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1a"/>
+      <stop offset="50%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f0f1a"/>
+    </linearGradient>
+    <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00ff88"/>
+      <stop offset="100%" style="stop-color:#00ffaa"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a3e" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.3"/>
+
+  <!-- Main Content -->
+  <g transform="translate(400, 200)">
+    <!-- Animated Ring -->
+    <circle cx="0" cy="0" r="80" fill="none" stroke="url(#neonGreen)" stroke-width="3" filter="url(#glow)" opacity="0.4">
+      <animate attributeName="r" values="80;90;80" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="65" fill="none" stroke="url(#neonGreen)" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="r" values="65;70;65" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Icon -->
+    <circle cx="0" cy="0" r="50" fill="#00ff8815" stroke="url(#neonGreen)" stroke-width="2"/>
+    <g transform="translate(0, 0)">
+      <rect x="-20" y="-20" width="40" height="40" rx="4" fill="none" stroke="#00ff88" stroke-width="3">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="0" cy="0" r="8" fill="#00ff88"/>
+      <circle cx="0" cy="-28" r="4" fill="#00ff88">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="400" y="320" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="36" font-weight="bold" fill="#00ff88" filter="url(#glow)">
+    Setup Wizard
+  </text>
+  <text x="400" y="355" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#888">
+    Configuração inicial guiada com 9 etapas intuitivas
+  </text>
+
+  <!-- Progress Bar -->
+  <g transform="translate(250, 385)">
+    <rect x="0" y="0" width="300" height="8" rx="4" fill="#1a1a2e"/>
+    <rect x="0" y="0" width="100" height="8" rx="4" fill="url(#neonGreen)" filter="url(#glow)">
+      <animate attributeName="width" values="33;100;166;233;300;300;33" dur="6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Step Indicators -->
+  <g transform="translate(180, 410)">
+    <text x="0" y="0" font-size="12" fill="#00ff88">1. Modo</text>
+    <text x="70" y="0" font-size="12" fill="#666">2. Providers</text>
+    <text x="160" y="0" font-size="12" fill="#666">3. Audio</text>
+    <text x="230" y="0" font-size="12" fill="#666">4. Display</text>
+    <text x="310" y="0" font-size="12" fill="#666">5. Network</text>
+    <text x="400" y="0" font-size="12" fill="#666">...</text>
+  </g>
+
+  <!-- Corner Accents -->
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#00ff88" opacity="0.3" transform="translate(10, 10)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#00ff88" opacity="0.3" transform="translate(790, 10) scale(-1, 1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#00ff88" opacity="0.3" transform="translate(10, 440) scale(1, -1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#00ff88" opacity="0.3" transform="translate(790, 440) scale(-1, -1)"/>
+</svg>

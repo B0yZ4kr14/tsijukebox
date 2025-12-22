@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1a"/>
+      <stop offset="50%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f0f1a"/>
+    </linearGradient>
+    <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00ff88"/>
+      <stop offset="100%" style="stop-color:#00ffaa"/>
+    </linearGradient>
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#00e5ff"/>
+    </linearGradient>
+    <linearGradient id="neonPink" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff00ff"/>
+      <stop offset="100%" style="stop-color:#ff44ff"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="50%" style="stop-color:#FFA500"/>
+      <stop offset="100%" style="stop-color:#FFD700"/>
+    </linearGradient>
+    <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e0e0"/>
+      <stop offset="50%" style="stop-color:#a0a0a0"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a3e" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.3"/>
+
+  <!-- Header -->
+  <text x="400" y="45" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="bold" fill="#fff">
+    Brand Guidelines
+  </text>
+  <text x="400" y="70" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#888">
+    Paleta Neon completa com gradientes e tipografia
+  </text>
+
+  <!-- Logo Display -->
+  <g transform="translate(400, 130)">
+    <text x="0" y="0" text-anchor="middle" font-family="'Arial Black', sans-serif" font-size="48" font-weight="900">
+      <tspan fill="url(#chromeGrad)">TSi</tspan><tspan fill="url(#goldGrad)">JUKE</tspan><tspan fill="url(#neonCyan)">BOX</tspan>
+    </text>
+    <text x="0" y="25" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#666">
+      Enterprise Kiosk Music System
+    </text>
+  </g>
+
+  <!-- Color Palette -->
+  <g transform="translate(60, 180)">
+    <text x="0" y="0" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">Paleta de Cores</text>
+    
+    <!-- Color Swatches -->
+    <g transform="translate(0, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#00ff88"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Neon Green</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#00FF88</text>
+    </g>
+    
+    <g transform="translate(100, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#00d4ff"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Neon Cyan</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#00D4FF</text>
+    </g>
+    
+    <g transform="translate(200, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#ff00ff"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Neon Pink</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#FF00FF</text>
+    </g>
+    
+    <g transform="translate(300, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#FFD700"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Gold</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#FFD700</text>
+    </g>
+    
+    <g transform="translate(400, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#1DB954"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Spotify</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#1DB954</text>
+    </g>
+    
+    <g transform="translate(500, 20)">
+      <rect x="0" y="0" width="80" height="60" rx="8" fill="#1a1a2e" stroke="#333" stroke-width="1"/>
+      <text x="40" y="80" text-anchor="middle" font-size="10" fill="#888">Background</text>
+      <text x="40" y="95" text-anchor="middle" font-size="9" fill="#666">#1A1A2E</text>
+    </g>
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(60, 330)">
+    <text x="0" y="0" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">Tipografia</text>
+    
+    <g transform="translate(0, 25)">
+      <text x="0" y="0" font-family="'Arial Black', sans-serif" font-size="24" font-weight="900" fill="#fff">Heading - Arial Black</text>
+      <text x="0" y="30" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#ccc">Body - Segoe UI / Arial</text>
+      <text x="0" y="55" font-family="'SF Mono', 'Consolas', monospace" font-size="14" fill="#00ff88">Code - SF Mono / Consolas</text>
+    </g>
+  </g>
+
+  <!-- Gradient Examples -->
+  <g transform="translate(450, 330)">
+    <text x="0" y="0" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">Gradientes</text>
+    
+    <g transform="translate(0, 25)">
+      <rect x="0" y="0" width="280" height="20" rx="4">
+        <animate attributeName="fill" values="#00ff88;#00d4ff;#ff00ff;#00ff88" dur="4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="0" y="30" width="280" height="20" rx="4" fill="url(#goldGrad)"/>
+      <rect x="0" y="60" width="280" height="20" rx="4" fill="url(#chromeGrad)"/>
+    </g>
+  </g>
+
+  <!-- Corner Accents -->
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#ff00ff" opacity="0.3" transform="translate(10, 10)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#ff00ff" opacity="0.3" transform="translate(790, 10) scale(-1, 1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#ff00ff" opacity="0.3" transform="translate(10, 440) scale(1, -1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#ff00ff" opacity="0.3" transform="translate(790, 440) scale(-1, -1)"/>
+</svg>

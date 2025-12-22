@@ -1,30 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" width="900" height="560">
   <defs>
-    <!-- Gradients -->
+    <!-- Main Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a2e"/>
-      <stop offset="50%" style="stop-color:#0d0d1a"/>
-      <stop offset="100%" style="stop-color:#1a1a2e"/>
+      <stop offset="0%" style="stop-color:#0f0f1a"/>
+      <stop offset="30%" style="stop-color:#1a1a2e"/>
+      <stop offset="70%" style="stop-color:#0d0d1a"/>
+      <stop offset="100%" style="stop-color:#0f0f1a"/>
     </linearGradient>
     
+    <!-- Neon Gradients -->
     <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#00ff88"/>
-      <stop offset="100%" style="stop-color:#00cc6a"/>
+      <stop offset="50%" style="stop-color:#00ffaa"/>
+      <stop offset="100%" style="stop-color:#00ff88"/>
     </linearGradient>
     
-    <linearGradient id="neonBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#00d4ff"/>
-      <stop offset="100%" style="stop-color:#0099cc"/>
+      <stop offset="50%" style="stop-color:#00e5ff"/>
+      <stop offset="100%" style="stop-color:#00d4ff"/>
     </linearGradient>
     
     <linearGradient id="neonPink" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#ff00ff"/>
-      <stop offset="100%" style="stop-color:#cc00cc"/>
+      <stop offset="50%" style="stop-color:#ff44ff"/>
+      <stop offset="100%" style="stop-color:#ff00ff"/>
+    </linearGradient>
+    
+    <linearGradient id="spotifyGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1ed760"/>
+      <stop offset="100%" style="stop-color:#1DB954"/>
+    </linearGradient>
+    
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="50%" style="stop-color:#FFA500"/>
+      <stop offset="100%" style="stop-color:#FFD700"/>
+    </linearGradient>
+    
+    <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e0e0"/>
+      <stop offset="50%" style="stop-color:#a0a0a0"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
     </linearGradient>
 
     <!-- Glow Filters -->
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feGaussianBlur stdDeviation="2" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -32,232 +54,368 @@
     </filter>
 
     <filter id="glowStrong" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feGaussianBlur stdDeviation="6" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+    
+    <filter id="glowSoft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Animated Grid Pattern -->
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#1a1a3e" stroke-width="0.5"/>
+    </pattern>
+    
+    <!-- Scanline Pattern -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="4" y2="0" stroke="#000" stroke-width="1" opacity="0.1"/>
+    </pattern>
   </defs>
 
   <!-- Background -->
   <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.4"/>
   
-  <!-- Grid Pattern -->
-  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222" stroke-width="0.5"/>
-  </pattern>
-  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.3"/>
+  <!-- Ambient Glow Effects -->
+  <ellipse cx="200" cy="150" rx="200" ry="150" fill="#00ff88" opacity="0.03">
+    <animate attributeName="opacity" values="0.03;0.06;0.03" dur="4s" repeatCount="indefinite"/>
+  </ellipse>
+  <ellipse cx="700" cy="400" rx="200" ry="150" fill="#00d4ff" opacity="0.03">
+    <animate attributeName="opacity" values="0.03;0.06;0.03" dur="5s" repeatCount="indefinite"/>
+  </ellipse>
 
-  <!-- Browser Chrome -->
-  <g transform="translate(50, 30)">
+  <!-- Header Logo Area -->
+  <g transform="translate(450, 35)">
+    <text x="0" y="0" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="bold">
+      <tspan fill="url(#chromeGrad)">TSi</tspan><tspan fill="url(#goldGrad)">JUKE</tspan><tspan fill="url(#neonCyan)">BOX</tspan>
+    </text>
+    <text x="0" y="18" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#666">
+      Enterprise Kiosk Music System v4.2.0
+    </text>
+  </g>
+
+  <!-- Browser Window Frame -->
+  <g transform="translate(75, 60)" filter="url(#shadow)">
     <!-- Window Frame -->
-    <rect x="0" y="0" width="700" height="440" rx="12" fill="#1e1e2e" stroke="#333" stroke-width="2"/>
+    <rect x="0" y="0" width="750" height="470" rx="12" fill="#1e1e2e" stroke="#2a2a4a" stroke-width="1"/>
     
     <!-- Title Bar -->
-    <rect x="0" y="0" width="700" height="40" rx="12" fill="#2a2a3e"/>
-    <rect x="0" y="30" width="700" height="10" fill="#2a2a3e"/>
+    <rect x="0" y="0" width="750" height="44" rx="12" fill="#252538"/>
+    <rect x="0" y="32" width="750" height="12" fill="#252538"/>
     
     <!-- Traffic Lights -->
-    <circle cx="20" cy="20" r="6" fill="#ff5f57">
-      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+    <circle cx="24" cy="22" r="7" fill="#ff5f57">
+      <animate attributeName="opacity" values="1;0.6;1" dur="3s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="40" cy="20" r="6" fill="#febc2e">
-      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+    <circle cx="48" cy="22" r="7" fill="#febc2e">
+      <animate attributeName="opacity" values="1;0.6;1" dur="3s" repeatCount="indefinite" begin="0.5s"/>
     </circle>
-    <circle cx="60" cy="20" r="6" fill="#28c840">
-      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+    <circle cx="72" cy="22" r="7" fill="#28c840">
+      <animate attributeName="opacity" values="1;0.6;1" dur="3s" repeatCount="indefinite" begin="1s"/>
     </circle>
     
     <!-- URL Bar -->
-    <rect x="100" y="10" width="500" height="20" rx="4" fill="#1a1a2e"/>
-    <text x="120" y="24" font-family="monospace" font-size="10" fill="#666">
-      🔒 tsijukebox.local/
-      <animate attributeName="fill" values="#666;#00ff88;#666" dur="4s" repeatCount="indefinite"/>
-    </text>
+    <rect x="110" y="10" width="530" height="24" rx="6" fill="#1a1a2e" stroke="#333" stroke-width="1"/>
+    <g transform="translate(120, 26)">
+      <circle cx="0" cy="-4" r="5" fill="#28c840" opacity="0.8"/>
+      <text x="12" y="0" font-family="'SF Mono', 'Consolas', monospace" font-size="11" fill="#888">
+        tsijukebox.local
+        <animate attributeName="fill" values="#888;#00ff88;#888" dur="6s" repeatCount="indefinite"/>
+      </text>
+    </g>
+    
+    <!-- Refresh Icon -->
+    <g transform="translate(700, 22)">
+      <circle cx="0" cy="0" r="10" fill="none" stroke="#555" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite"/>
+      </circle>
+    </g>
     
     <!-- Content Area -->
-    <rect x="10" y="50" width="680" height="380" rx="8" fill="#0d0d1a"/>
+    <rect x="8" y="52" width="734" height="410" rx="8" fill="#0d0d1a"/>
+    <rect x="8" y="52" width="734" height="410" rx="8" fill="url(#scanlines)" opacity="0.3"/>
   </g>
 
   <!-- Screen 1: Setup Wizard -->
   <g id="screen1" opacity="1">
-    <animateTransform attributeName="transform" type="translate" values="0,0;0,0;0,0;800,0;800,0" dur="15s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="1;1;0;0;0" dur="15s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;1;1;0;0;0;0;0;0;0;0;1" dur="18s" repeatCount="indefinite"/>
     
-    <g transform="translate(400, 280)">
-      <!-- Icon -->
-      <g filter="url(#glowStrong)">
-        <circle cx="0" cy="-60" r="40" fill="none" stroke="url(#neonGreen)" stroke-width="3">
-          <animate attributeName="r" values="40;45;40" dur="2s" repeatCount="indefinite"/>
-        </circle>
-        <text x="-15" y="-50" font-size="30" fill="#00ff88">⚙️</text>
+    <g transform="translate(450, 300)">
+      <!-- Animated Circle Ring -->
+      <circle cx="0" cy="-80" r="55" fill="none" stroke="url(#neonGreen)" stroke-width="3" filter="url(#glowStrong)" opacity="0.3">
+        <animate attributeName="r" values="55;65;55" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-80" r="45" fill="none" stroke="url(#neonGreen)" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="r" values="45;50;45" dur="2s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 -80" to="360 0 -80" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Setup Icon -->
+      <g transform="translate(0, -80)">
+        <circle cx="0" cy="0" r="35" fill="#00ff8815" stroke="url(#neonGreen)" stroke-width="2"/>
+        <path d="M-12,-12 L12,-12 L12,12 L-12,12 Z M-8,-8 L8,-8 L8,8 L-8,8 Z" fill="none" stroke="#00ff88" stroke-width="2">
+          <animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="4s" repeatCount="indefinite"/>
+        </path>
+        <circle cx="0" cy="0" r="4" fill="#00ff88"/>
       </g>
       
       <!-- Title -->
-      <text x="0" y="20" text-anchor="middle" font-family="system-ui" font-size="28" font-weight="bold" fill="#00ff88" filter="url(#glow)">
+      <text x="0" y="10" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="bold" fill="#00ff88" filter="url(#glow)">
         Setup Wizard
       </text>
       
       <!-- Subtitle -->
-      <text x="0" y="50" text-anchor="middle" font-family="system-ui" font-size="14" fill="#888">
-        Configuração em 9 passos simples
+      <text x="0" y="40" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#888">
+        Configuração guiada em 9 etapas
       </text>
       
-      <!-- Features -->
-      <g transform="translate(-120, 80)">
-        <rect x="0" y="0" width="80" height="24" rx="12" fill="none" stroke="#00ff8840" stroke-width="1"/>
-        <text x="40" y="16" text-anchor="middle" font-size="10" fill="#00ff88">Kiosk Mode</text>
+      <!-- Progress Steps -->
+      <g transform="translate(-180, 70)">
+        <rect x="0" y="0" width="360" height="6" rx="3" fill="#1a1a2e"/>
+        <rect x="0" y="0" width="120" height="6" rx="3" fill="url(#neonGreen)" filter="url(#glow)">
+          <animate attributeName="width" values="40;120;200;280;360;360;40" dur="8s" repeatCount="indefinite"/>
+        </rect>
       </g>
-      <g transform="translate(0, 80)">
-        <rect x="0" y="0" width="80" height="24" rx="12" fill="none" stroke="#00ff8840" stroke-width="1"/>
-        <text x="40" y="16" text-anchor="middle" font-size="10" fill="#00ff88">Providers</text>
+      
+      <!-- Feature Tags -->
+      <g transform="translate(-150, 100)">
+        <rect x="0" y="0" width="90" height="28" rx="14" fill="#00ff8810" stroke="#00ff8850" stroke-width="1"/>
+        <text x="45" y="18" text-anchor="middle" font-size="11" fill="#00ff88">Kiosk Mode</text>
       </g>
-      <g transform="translate(120, 80)">
-        <rect x="0" y="0" width="80" height="24" rx="12" fill="none" stroke="#00ff8840" stroke-width="1"/>
-        <text x="40" y="16" text-anchor="middle" font-size="10" fill="#00ff88">Audio</text>
+      <g transform="translate(-45, 100)">
+        <rect x="0" y="0" width="90" height="28" rx="14" fill="#00ff8810" stroke="#00ff8850" stroke-width="1"/>
+        <text x="45" y="18" text-anchor="middle" font-size="11" fill="#00ff88">Providers</text>
+      </g>
+      <g transform="translate(60, 100)">
+        <rect x="0" y="0" width="90" height="28" rx="14" fill="#00ff8810" stroke="#00ff8850" stroke-width="1"/>
+        <text x="45" y="18" text-anchor="middle" font-size="11" fill="#00ff88">Audio</text>
       </g>
     </g>
   </g>
 
   <!-- Screen 2: Dashboard -->
   <g id="screen2" opacity="0">
-    <animate attributeName="opacity" values="0;0;1;1;0" dur="15s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;0;1;1;1;0;0;0;0;0;0" dur="18s" repeatCount="indefinite"/>
     
-    <g transform="translate(400, 280)">
-      <!-- Icon -->
-      <g filter="url(#glowStrong)">
-        <circle cx="0" cy="-60" r="40" fill="none" stroke="url(#neonBlue)" stroke-width="3">
-          <animate attributeName="r" values="40;45;40" dur="2s" repeatCount="indefinite"/>
-        </circle>
-        <text x="-15" y="-50" font-size="30" fill="#00d4ff">📊</text>
+    <g transform="translate(450, 300)">
+      <!-- Animated Circle Ring -->
+      <circle cx="0" cy="-80" r="55" fill="none" stroke="url(#neonCyan)" stroke-width="3" filter="url(#glowStrong)" opacity="0.3">
+        <animate attributeName="r" values="55;65;55" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-80" r="45" fill="none" stroke="url(#neonCyan)" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="r" values="45;50;45" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Dashboard Icon -->
+      <g transform="translate(0, -80)">
+        <circle cx="0" cy="0" r="35" fill="#00d4ff15" stroke="url(#neonCyan)" stroke-width="2"/>
+        <!-- Bar Chart Icon -->
+        <rect x="-18" y="5" width="8" height="15" fill="#00d4ff">
+          <animate attributeName="height" values="15;20;10;15" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="5;0;10;5" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="-6" y="-5" width="8" height="25" fill="#00d4ff">
+          <animate attributeName="height" values="25;15;25;20;25" dur="2.5s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="-5;5;-5;0;-5" dur="2.5s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="6" y="0" width="8" height="20" fill="#00d4ff">
+          <animate attributeName="height" values="20;25;15;20" dur="1.8s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;-5;5;0" dur="1.8s" repeatCount="indefinite"/>
+        </rect>
       </g>
       
       <!-- Title -->
-      <text x="0" y="20" text-anchor="middle" font-family="system-ui" font-size="28" font-weight="bold" fill="#00d4ff" filter="url(#glow)">
+      <text x="0" y="10" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="bold" fill="#00d4ff" filter="url(#glow)">
         Dashboard
       </text>
       
       <!-- Subtitle -->
-      <text x="0" y="50" text-anchor="middle" font-family="system-ui" font-size="14" fill="#888">
+      <text x="0" y="40" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#888">
         Monitoramento em tempo real
       </text>
       
-      <!-- Stats Animation -->
-      <g transform="translate(-150, 80)">
-        <rect x="0" y="0" width="100" height="40" rx="8" fill="#00d4ff10" stroke="#00d4ff40"/>
-        <text x="50" y="18" text-anchor="middle" font-size="10" fill="#00d4ff">CPU</text>
-        <text x="50" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#00d4ff">
-          <animate attributeName="textContent" values="23%;45%;67%;45%;23%" dur="5s" repeatCount="indefinite"/>
+      <!-- Stats Cards -->
+      <g transform="translate(-200, 70)">
+        <rect x="0" y="0" width="120" height="55" rx="8" fill="#00d4ff08" stroke="#00d4ff30" stroke-width="1"/>
+        <text x="60" y="20" text-anchor="middle" font-size="10" fill="#00d4ff" opacity="0.8">CPU</text>
+        <text x="60" y="42" text-anchor="middle" font-size="18" font-weight="bold" fill="#00d4ff">
           45%
+          <animate attributeName="textContent" values="45%;52%;38%;45%" dur="4s" repeatCount="indefinite"/>
         </text>
       </g>
-      <g transform="translate(-40, 80)">
-        <rect x="0" y="0" width="100" height="40" rx="8" fill="#00ff8810" stroke="#00ff8840"/>
-        <text x="50" y="18" text-anchor="middle" font-size="10" fill="#00ff88">RAM</text>
-        <text x="50" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#00ff88">2.4GB</text>
+      <g transform="translate(-60, 70)">
+        <rect x="0" y="0" width="120" height="55" rx="8" fill="#00ff8808" stroke="#00ff8830" stroke-width="1"/>
+        <text x="60" y="20" text-anchor="middle" font-size="10" fill="#00ff88" opacity="0.8">RAM</text>
+        <text x="60" y="42" text-anchor="middle" font-size="18" font-weight="bold" fill="#00ff88">2.4 GB</text>
       </g>
-      <g transform="translate(70, 80)">
-        <rect x="0" y="0" width="100" height="40" rx="8" fill="#ff00ff10" stroke="#ff00ff40"/>
-        <text x="50" y="18" text-anchor="middle" font-size="10" fill="#ff00ff">TEMP</text>
-        <text x="50" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#ff00ff">42°C</text>
+      <g transform="translate(80, 70)">
+        <rect x="0" y="0" width="120" height="55" rx="8" fill="#ff00ff08" stroke="#ff00ff30" stroke-width="1"/>
+        <text x="60" y="20" text-anchor="middle" font-size="10" fill="#ff00ff" opacity="0.8">TEMP</text>
+        <text x="60" y="42" text-anchor="middle" font-size="18" font-weight="bold" fill="#ff00ff">42°C</text>
       </g>
     </g>
   </g>
 
-  <!-- Screen 3: Spotify -->
+  <!-- Screen 3: Spotify Connect -->
   <g id="screen3" opacity="0">
-    <animate attributeName="opacity" values="0;0;0;1;1" dur="15s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;1;0;0;0" dur="18s" repeatCount="indefinite"/>
     
-    <g transform="translate(400, 280)">
+    <g transform="translate(450, 300)">
+      <!-- Spotify Circle -->
+      <circle cx="0" cy="-80" r="55" fill="none" stroke="url(#spotifyGreen)" stroke-width="3" filter="url(#glowStrong)" opacity="0.3">
+        <animate attributeName="r" values="55;65;55" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-80" r="45" fill="url(#spotifyGreen)" filter="url(#glow)">
+        <animate attributeName="r" values="45;48;45" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      
       <!-- Spotify Icon -->
-      <g filter="url(#glowStrong)">
-        <circle cx="0" cy="-60" r="40" fill="#1DB954">
-          <animate attributeName="r" values="40;45;40" dur="2s" repeatCount="indefinite"/>
-        </circle>
-        <text x="-15" y="-50" font-size="30" fill="white">🎵</text>
+      <g transform="translate(0, -80)">
+        <path d="M-15,-8 Q0,-15 15,-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <path d="M-12,0 Q0,-6 12,0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <path d="M-9,8 Q0,3 9,8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
       </g>
       
       <!-- Title -->
-      <text x="0" y="20" text-anchor="middle" font-family="system-ui" font-size="28" font-weight="bold" fill="#1DB954" filter="url(#glow)">
+      <text x="0" y="10" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="bold" fill="#1DB954" filter="url(#glow)">
         Spotify Connect
       </text>
       
-      <!-- Now Playing Animation -->
-      <g transform="translate(-100, 60)">
-        <rect x="0" y="0" width="200" height="60" rx="8" fill="#1DB95420" stroke="#1DB95440"/>
-        <text x="100" y="20" text-anchor="middle" font-size="10" fill="#888">Now Playing</text>
-        <text x="100" y="40" text-anchor="middle" font-size="12" font-weight="bold" fill="#1DB954">
-          Bohemian Rhapsody
-        </text>
-        <text x="100" y="54" text-anchor="middle" font-size="10" fill="#666">Queen</text>
+      <!-- Now Playing Card -->
+      <g transform="translate(-130, 45)">
+        <rect x="0" y="0" width="260" height="70" rx="10" fill="#1DB95415" stroke="#1DB95440" stroke-width="1"/>
+        <text x="130" y="20" text-anchor="middle" font-size="10" fill="#888">Now Playing</text>
+        <text x="130" y="42" text-anchor="middle" font-size="14" font-weight="bold" fill="#1DB954">Bohemian Rhapsody</text>
+        <text x="130" y="58" text-anchor="middle" font-size="11" fill="#666">Queen</text>
       </g>
       
       <!-- Equalizer Bars -->
-      <g transform="translate(-30, 130)">
-        <rect x="0" y="0" width="8" height="20" rx="2" fill="#1DB954">
-          <animate attributeName="height" values="20;35;15;30;20" dur="0.8s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="0;-15;5;-10;0" dur="0.8s" repeatCount="indefinite"/>
+      <g transform="translate(-40, 135)">
+        <rect x="0" y="0" width="10" height="25" rx="2" fill="#1DB954">
+          <animate attributeName="height" values="25;40;15;35;25" dur="0.8s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;-15;10;-10;0" dur="0.8s" repeatCount="indefinite"/>
         </rect>
-        <rect x="12" y="0" width="8" height="25" rx="2" fill="#1DB954">
-          <animate attributeName="height" values="25;15;35;20;25" dur="0.7s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="0;10;-10;5;0" dur="0.7s" repeatCount="indefinite"/>
+        <rect x="14" y="0" width="10" height="30" rx="2" fill="#1DB954">
+          <animate attributeName="height" values="30;18;40;25;30" dur="0.7s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;12;-10;5;0" dur="0.7s" repeatCount="indefinite"/>
         </rect>
-        <rect x="24" y="0" width="8" height="18" rx="2" fill="#1DB954">
-          <animate attributeName="height" values="18;30;22;35;18" dur="0.9s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="0;-12;-4;-17;0" dur="0.9s" repeatCount="indefinite"/>
+        <rect x="28" y="0" width="10" height="20" rx="2" fill="#1DB954">
+          <animate attributeName="height" values="20;35;25;40;20" dur="0.9s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;-15;-5;-20;0" dur="0.9s" repeatCount="indefinite"/>
         </rect>
-        <rect x="36" y="0" width="8" height="28" rx="2" fill="#1DB954">
-          <animate attributeName="height" values="28;20;35;15;28" dur="0.6s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="0;8;-7;13;0" dur="0.6s" repeatCount="indefinite"/>
+        <rect x="42" y="0" width="10" height="35" rx="2" fill="#1DB954">
+          <animate attributeName="height" values="35;22;40;18;35" dur="0.6s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;13;-5;17;0" dur="0.6s" repeatCount="indefinite"/>
         </rect>
-        <rect x="48" y="0" width="8" height="22" rx="2" fill="#1DB954">
-          <animate attributeName="height" values="22;35;18;30;22" dur="0.75s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="0;-13;4;-8;0" dur="0.75s" repeatCount="indefinite"/>
+        <rect x="56" y="0" width="10" height="28" rx="2" fill="#1DB954">
+          <animate attributeName="height" values="28;40;20;35;28" dur="0.75s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="0;-12;8;-7;0" dur="0.75s" repeatCount="indefinite"/>
         </rect>
+      </g>
+    </g>
+  </g>
+
+  <!-- Screen 4: Karaoke Mode -->
+  <g id="screen4" opacity="0">
+    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;0" dur="18s" repeatCount="indefinite"/>
+    
+    <g transform="translate(450, 300)">
+      <!-- Karaoke Circle -->
+      <circle cx="0" cy="-80" r="55" fill="none" stroke="url(#neonPink)" stroke-width="3" filter="url(#glowStrong)" opacity="0.3">
+        <animate attributeName="r" values="55;65;55" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-80" r="45" fill="none" stroke="url(#neonPink)" stroke-width="2" filter="url(#glow)">
+        <animate attributeName="r" values="45;50;45" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Microphone Icon -->
+      <g transform="translate(0, -80)">
+        <circle cx="0" cy="0" r="35" fill="#ff00ff15" stroke="url(#neonPink)" stroke-width="2"/>
+        <rect x="-8" y="-15" width="16" height="22" rx="8" fill="#ff00ff"/>
+        <rect x="-3" y="7" width="6" height="12" fill="#ff00ff"/>
+        <rect x="-10" y="19" width="20" height="3" rx="1" fill="#ff00ff"/>
+        <path d="M-12,-5 Q-12,12 0,12 Q12,12 12,-5" fill="none" stroke="#ff00ff" stroke-width="2"/>
+      </g>
+      
+      <!-- Title -->
+      <text x="0" y="10" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="bold" fill="#ff00ff" filter="url(#glow)">
+        Karaoke Mode
+      </text>
+      
+      <!-- Lyrics Display -->
+      <g transform="translate(-150, 50)">
+        <rect x="0" y="0" width="300" height="80" rx="10" fill="#ff00ff08" stroke="#ff00ff30" stroke-width="1"/>
+        <text x="150" y="30" text-anchor="middle" font-size="12" fill="#666">♪ Is this the real life? ♪</text>
+        <text x="150" y="52" text-anchor="middle" font-size="16" font-weight="bold" fill="#ff00ff">
+          Is this just fantasy?
+          <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite"/>
+        </text>
+        <text x="150" y="72" text-anchor="middle" font-size="12" fill="#666">♪ Caught in a landslide ♪</text>
       </g>
     </g>
   </g>
 
   <!-- Navigation Dots -->
-  <g transform="translate(360, 480)">
-    <circle cx="0" cy="0" r="4" fill="#00ff88">
-      <animate attributeName="r" values="4;6;4;4;4" dur="15s" repeatCount="indefinite"/>
+  <g transform="translate(405, 540)">
+    <circle cx="0" cy="0" r="5" fill="#00ff88">
+      <animate attributeName="fill" values="#00ff88;#00ff88;#00ff88;#444;#444;#444;#444;#444;#444;#444;#444;#00ff88" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="6;6;6;4;4;4;4;4;4;4;4;6" dur="18s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="20" cy="0" r="4" fill="#444">
-      <animate attributeName="fill" values="#444;#444;#00d4ff;#00d4ff;#444" dur="15s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="4;4;6;4;4" dur="15s" repeatCount="indefinite"/>
+    <circle cx="24" cy="0" r="4" fill="#444">
+      <animate attributeName="fill" values="#444;#444;#444;#00d4ff;#00d4ff;#00d4ff;#444;#444;#444;#444;#444;#444" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;4;4;6;6;6;4;4;4;4;4;4" dur="18s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="40" cy="0" r="4" fill="#444">
-      <animate attributeName="fill" values="#444;#444;#444;#1DB954;#1DB954" dur="15s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="4;4;4;6;4" dur="15s" repeatCount="indefinite"/>
+    <circle cx="48" cy="0" r="4" fill="#444">
+      <animate attributeName="fill" values="#444;#444;#444;#444;#444;#444;#1DB954;#1DB954;#1DB954;#444;#444;#444" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;4;4;4;4;4;6;6;6;4;4;4" dur="18s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="60" cy="0" r="4" fill="#444"/>
-    <circle cx="80" cy="0" r="4" fill="#444"/>
+    <circle cx="72" cy="0" r="4" fill="#444">
+      <animate attributeName="fill" values="#444;#444;#444;#444;#444;#444;#444;#444;#444;#ff00ff;#ff00ff;#444" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="4;4;4;4;4;4;4;4;4;6;6;4" dur="18s" repeatCount="indefinite"/>
+    </circle>
   </g>
 
   <!-- Floating Particles -->
-  <g opacity="0.5">
-    <circle cx="100" cy="100" r="2" fill="#00ff88">
-      <animate attributeName="cy" values="100;50;100" dur="4s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite"/>
+  <g opacity="0.6">
+    <circle cx="120" cy="120" r="2" fill="#00ff88">
+      <animate attributeName="cy" values="120;80;120" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="5s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="700" cy="150" r="2" fill="#00d4ff">
-      <animate attributeName="cy" values="150;100;150" dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+    <circle cx="780" cy="150" r="2" fill="#00d4ff">
+      <animate attributeName="cy" values="150;110;150" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="650" cy="400" r="2" fill="#ff00ff">
-      <animate attributeName="cy" values="400;350;400" dur="5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.5;1;0.5" dur="5s" repeatCount="indefinite"/>
+    <circle cx="720" cy="450" r="2" fill="#ff00ff">
+      <animate attributeName="cy" values="450;400;450" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="6s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="150" cy="350" r="2" fill="#1DB954">
-      <animate attributeName="cy" values="350;300;350" dur="3.5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+    <circle cx="180" cy="400" r="2" fill="#1DB954">
+      <animate attributeName="cy" values="400;360;400" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="450" cy="520" r="1.5" fill="#FFD700">
+      <animate attributeName="cy" values="520;490;520" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3.5s" repeatCount="indefinite"/>
     </circle>
   </g>
 
-  <!-- TSiJUKEBOX Logo -->
-  <text x="400" y="25" text-anchor="middle" font-family="monospace" font-size="12" fill="#555">
-    TSiJUKEBOX v4.0.0-rc1
-  </text>
+  <!-- Corner Decorations -->
+  <g opacity="0.3">
+    <path d="M0,0 L40,0 L40,5 L5,5 L5,40 L0,40 Z" fill="#00ff88" transform="translate(10, 10)"/>
+    <path d="M0,0 L40,0 L40,5 L5,5 L5,40 L0,40 Z" fill="#00d4ff" transform="translate(890, 10) scale(-1, 1)"/>
+    <path d="M0,0 L40,0 L40,5 L5,5 L5,40 L0,40 Z" fill="#ff00ff" transform="translate(10, 550) scale(1, -1)"/>
+    <path d="M0,0 L40,0 L40,5 L5,5 L5,40 L0,40 Z" fill="#1DB954" transform="translate(890, 550) scale(-1, -1)"/>
+  </g>
 </svg>

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f1a"/>
+      <stop offset="50%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f0f1a"/>
+    </linearGradient>
+    <linearGradient id="spotifyGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1ed760"/>
+      <stop offset="100%" style="stop-color:#1DB954"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a3e" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#grid)" opacity="0.3"/>
+
+  <!-- Spotify Logo Circle -->
+  <g transform="translate(400, 150)">
+    <circle cx="0" cy="0" r="70" fill="none" stroke="url(#spotifyGreen)" stroke-width="3" filter="url(#glow)" opacity="0.4">
+      <animate attributeName="r" values="70;80;70" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="55" fill="url(#spotifyGreen)" filter="url(#glow)">
+      <animate attributeName="r" values="55;58;55" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Spotify Waves -->
+    <g transform="translate(0, 0)">
+      <path d="M-25,-15 Q0,-25 25,-15" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-20,0 Q0,-8 20,0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-15,15 Q0,8 15,15" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="400" y="260" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="bold" fill="#1DB954" filter="url(#glow)">
+    Spotify Connect
+  </text>
+  <text x="400" y="290" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#888">
+    Conecte sua conta e acesse todas as suas playlists
+  </text>
+
+  <!-- Now Playing Card -->
+  <g transform="translate(200, 320)">
+    <rect x="0" y="0" width="400" height="90" rx="12" fill="#1DB95415" stroke="#1DB95440" stroke-width="1"/>
+    
+    <!-- Album Art Placeholder -->
+    <rect x="15" y="15" width="60" height="60" rx="8" fill="#1DB95430"/>
+    <text x="45" y="52" text-anchor="middle" font-size="24" fill="#1DB954">♫</text>
+    
+    <!-- Song Info -->
+    <text x="95" y="35" font-size="12" fill="#888">Now Playing</text>
+    <text x="95" y="55" font-size="16" font-weight="bold" fill="#fff">Bohemian Rhapsody</text>
+    <text x="95" y="72" font-size="12" fill="#666">Queen • A Night at the Opera</text>
+    
+    <!-- Progress Bar -->
+    <g transform="translate(95, 78)">
+      <rect x="0" y="0" width="200" height="4" rx="2" fill="#333"/>
+      <rect x="0" y="0" width="80" height="4" rx="2" fill="#1DB954">
+        <animate attributeName="width" values="0;200;0" dur="10s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Time -->
+    <text x="300" y="85" font-size="10" fill="#666">2:34 / 5:55</text>
+    
+    <!-- Controls -->
+    <g transform="translate(330, 40)">
+      <circle cx="0" cy="0" r="15" fill="#1DB954"/>
+      <polygon points="-4,-6 -4,6 6,0" fill="#fff"/>
+    </g>
+  </g>
+
+  <!-- Equalizer -->
+  <g transform="translate(350, 420)">
+    <rect x="0" y="0" width="8" height="20" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="20;35;15;30;20" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;-15;5;-10;0" dur="0.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="12" y="0" width="8" height="25" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="25;15;35;20;25" dur="0.7s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;10;-10;5;0" dur="0.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="24" y="0" width="8" height="18" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="18;30;22;35;18" dur="0.9s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;-12;-4;-17;0" dur="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="36" y="0" width="8" height="28" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="28;20;35;15;28" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;8;-7;13;0" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="48" y="0" width="8" height="22" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="22;35;18;30;22" dur="0.75s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;-13;4;-8;0" dur="0.75s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="60" y="0" width="8" height="30" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="30;18;28;22;30" dur="0.65s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;12;2;8;0" dur="0.65s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="72" y="0" width="8" height="24" rx="2" fill="#1DB954">
+      <animate attributeName="height" values="24;32;16;28;24" dur="0.85s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;-8;8;-4;0" dur="0.85s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Corner Accents -->
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#1DB954" opacity="0.3" transform="translate(10, 10)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#1DB954" opacity="0.3" transform="translate(790, 10) scale(-1, 1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#1DB954" opacity="0.3" transform="translate(10, 440) scale(1, -1)"/>
+  <path d="M0,0 L50,0 L50,4 L4,4 L4,50 L0,50 Z" fill="#1DB954" opacity="0.3" transform="translate(790, 440) scale(-1, -1)"/>
+</svg>

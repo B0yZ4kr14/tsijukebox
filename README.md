@@ -1,24 +1,28 @@
 <div align="center">
 
-# 🎵 TSiJUKEBOX
+<img src="docs/assets/logo.svg" alt="TSiJUKEBOX Logo" width="400">
+
+<br><br>
 
 ### Enterprise Digital Jukebox System
 
-[![Version](https://img.shields.io/badge/version-4.2.0-blue?style=for-the-badge)](docs/CHANGELOG.md)
-[![License](https://img.shields.io/badge/license-Public%20Domain-green?style=for-the-badge)](LICENSE)
-[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-success?style=for-the-badge)](docs/ACCESSIBILITY.md)
-[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge)](https://typescriptlang.org)
+[![Version](https://img.shields.io/badge/version-4.2.0-blue?style=for-the-badge&logo=github)](docs/CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-Public%20Domain-green?style=for-the-badge&logo=unlicense)](LICENSE)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-success?style=for-the-badge&logo=accessibility)](docs/ACCESSIBILITY.md)
+[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript)](https://typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 
 **Sistema kiosk musical profissional com integração Spotify, YouTube Music e arquivos locais.**
 
-[📖 Documentação](docs/README.md) • [🎮 Demo](https://tsijukebox.lovable.app) • [🐛 Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) • [✨ Request Feature](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)
+[📖 Documentação](docs/README.md) · [🌐 Wiki](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki) · [🎮 Demo](https://tsijukebox.lovable.app) · [🐛 Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) · [✨ Request Feature](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)
 
 </div>
 
 ---
 
-## ⚡ INSTALAÇÃO EM UM COMANDO
+## ⚡ Instalação em Um Comando
 
 <div align="center">
 
@@ -28,29 +32,30 @@
 curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
 ```
 
-**✅ Compatível com:** Arch Linux • CachyOS • Manjaro • EndeavourOS
+**✅ Compatível com:** Arch Linux · CachyOS · Manjaro · EndeavourOS
 
 </div>
 
-### 🎮 Opções de Instalação
+### 🎮 Modos de Instalação
 
-| Modo            | Comando                                 | Ideal Para               |
-| --------------- | --------------------------------------- | ------------------------ |
-| 🎵 **Completo** | `sudo python3 install.py`               | Uso doméstico com tudo   |
-| 🖥️ **Kiosk**    | `sudo python3 install.py --mode kiosk`  | Bares, eventos, karaokês |
-| 🖧 **Server**   | `sudo python3 install.py --mode server` | Servidor headless        |
+| Modo | Comando | Ideal Para | Recursos |
+| ---- | ------- | ---------- | -------- |
+| 🎵 **Completo** | `sudo python3 install.py` | Uso doméstico com tudo | Spotify + YouTube + Local + Karaoke |
+| 🖥️ **Kiosk** | `sudo python3 install.py --mode kiosk` | Bares, eventos, karaokês | Interface touch + Autostart + Bloqueio |
+| 🖧 **Server** | `sudo python3 install.py --mode server` | Servidor headless | API REST + WebSocket + Monitoramento |
 
-### 📦 O Que é Instalado Automaticamente
+### 📦 Componentes Instalados Automaticamente
 
-| Componente                  | Descrição                     |
-| --------------------------- | ----------------------------- |
-| 🎵 **Spotify + Spicetify**  | Player com temas customizados |
-| 📊 **Grafana + Prometheus** | Monitoramento em tempo real   |
-| 🌐 **Nginx**                | Servidor web e proxy reverso  |
-| 💾 **SQLite**               | Banco de dados local          |
-| ⚙️ **Systemd Services**     | Autostart e gerenciamento     |
+| Componente | Descrição | Versão |
+| ---------- | --------- | ------ |
+| 🎵 **Spotify + Spicetify** | Player com temas customizados e extensões | Latest |
+| 📊 **Grafana + Prometheus** | Monitoramento em tempo real com dashboards | 10.x |
+| 🌐 **Nginx** | Servidor web e proxy reverso otimizado | 1.24+ |
+| 💾 **SQLite** | Banco de dados local com WAL mode | 3.40+ |
+| ⚙️ **Systemd Services** | Autostart e gerenciamento de processos | Native |
+| 🔒 **Fail2ban** | Proteção contra ataques de força bruta | 1.0+ |
 
-[📖 Guia Completo de Instalação](docs/QUICK-INSTALL.md) • [🏭 Deploy em Produção](docs/PRODUCTION-DEPLOY.md)
+[📖 Guia Completo de Instalação](docs/QUICK-INSTALL.md) · [🏭 Deploy em Produção](docs/PRODUCTION-DEPLOY.md) · [🐧 CachyOS Setup](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Install-CachyOS)
 
 ---
 
@@ -60,33 +65,33 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ### 🎯 Setup Wizard
 
-<img src="https://via.placeholder.com/800x450/1a1a2e/00ff88?text=🎯+Setup+Wizard+-+9+Passos+Simples" alt="Setup Wizard" width="800">
+<img src="public/screenshots/preview-setup-wizard.svg" alt="Setup Wizard" width="800">
 
-*Configuração inicial guiada com 9 etapas intuitivas*
+*Configuração inicial guiada com 9 etapas intuitivas para personalizar completamente sua experiência.*
 
 ---
 
 ### 📊 Dashboard de Estatísticas
 
-<img src="https://via.placeholder.com/800x450/1a1a2e/00d4ff?text=📊+Dashboard+-+Monitoramento+Real-Time" alt="Dashboard" width="800">
+<img src="public/screenshots/preview-dashboard.svg" alt="Dashboard" width="800">
 
-*CPU, Memória, Temperatura + Top Músicas em tempo real*
+*Monitoramento em tempo real de CPU, Memória, Temperatura e Top Músicas com gráficos interativos.*
 
 ---
 
 ### 🎵 Integração Spotify
 
-<img src="https://via.placeholder.com/800x450/1a1a2e/1db954?text=🎵+Spotify+Connect+-+Playlists+%26+Player" alt="Spotify Integration" width="800">
+<img src="public/screenshots/preview-spotify.svg" alt="Spotify Integration" width="800">
 
-*Conecte sua conta e acesse todas as suas playlists*
+*Conecte sua conta Spotify e acesse todas as suas playlists com controle total de reprodução.*
 
 ---
 
 ### 🎨 Brand Guidelines
 
-<img src="https://via.placeholder.com/800x450/1a1a2e/ff00ff?text=🎨+Design+System+-+Neon+Palette" alt="Brand Guidelines" width="800">
+<img src="public/screenshots/preview-brand.svg" alt="Brand Guidelines" width="800">
 
-*Paleta Neon completa com gradientes e tipografia*
+*Paleta Neon completa com gradientes, tipografia e componentes do Design System.*
 
 ---
 
@@ -94,7 +99,7 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 <img src="public/screenshots/demo-animated.svg" alt="Demo Animado" width="800">
 
-*Navegação animada pelo sistema*
+*Navegação animada pelo sistema mostrando Setup Wizard, Dashboard, Spotify Connect e Karaoke Mode.*
 
 </div>
 
@@ -109,33 +114,85 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ## ✨ Features
 
-| Feature               | Descrição                                  | Status |
-| --------------------- | ------------------------------------------ | ------ |
-| 🎧 **Multi-Provider** | Spotify, YouTube Music, Arquivos Locais    | ✅      |
-| 📱 **Kiosk Mode**     | Interface touch otimizada para uso público | ✅      |
-| 🎤 **Karaoke Mode**   | Letras sincronizadas em fullscreen         | ✅      |
-| ☁️ **Cloud Backup**   | Storj, Google Drive, AWS S3                | ✅      |
-| 🔐 **RBAC**           | Roles: Admin, User, Newbie                 | ✅      |
-| 📊 **System Monitor** | CPU, RAM, temperatura em tempo real        | ✅      |
-| 🌐 **i18n**           | Português, English, Español                | ✅      |
-| ♿ **WCAG 2.1 AA**     | Acessibilidade validada                    | ✅      |
+### Recursos Principais
+
+| Feature | Descrição | Status |
+| ------- | --------- | ------ |
+| 🎧 **Multi-Provider** | Spotify, YouTube Music, Arquivos Locais | ✅ Completo |
+| 📱 **Kiosk Mode** | Interface touch otimizada para uso público | ✅ Completo |
+| 🎤 **Karaoke Mode** | Letras sincronizadas em fullscreen | ✅ Completo |
+| ☁️ **Cloud Backup** | Storj, Google Drive, AWS S3 | ✅ Completo |
+| 🔐 **RBAC** | Roles: Admin, User, Newbie | ✅ Completo |
+| 📊 **System Monitor** | CPU, RAM, temperatura em tempo real | ✅ Completo |
+| 🌐 **i18n** | Português, English, Español | ✅ Completo |
+| ♿ **WCAG 2.1 AA** | Acessibilidade validada | ✅ Completo |
+| 📱 **PWA** | Progressive Web App com offline support | ✅ Completo |
+| 🔄 **Auto-Update** | Atualizações automáticas em background | ✅ Completo |
+
+### Integrações de Música
+
+| Provider | Recursos | Autenticação |
+| -------- | -------- | ------------ |
+| **Spotify** | Streaming, Playlists, Spotify Connect, Letras | OAuth 2.0 |
+| **YouTube Music** | Streaming, Playlists, Mix Personalizado | OAuth 2.0 |
+| **Arquivos Locais** | MP3, FLAC, AAC, OGG, WAV, OPUS | N/A |
+| **SoundCloud** | Streaming, Playlists (Beta) | OAuth 2.0 |
+
+### Modos de Operação
+
+| Modo | Descrição | Casos de Uso |
+| ---- | --------- | ------------ |
+| **Desktop** | Interface completa com todas as funcionalidades | Uso pessoal, estúdios |
+| **Kiosk** | Interface simplificada e bloqueada | Bares, restaurantes, eventos |
+| **Server** | API REST sem interface gráfica | Integração com sistemas externos |
+| **Karaoke** | Foco em letras e fila de músicas | Karaokês, festas |
 
 ---
 
 ## 🚀 Quick Start
 
+### Desenvolvimento Local
+
 ```bash
 # Clone o repositório
 git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
 
+# Entre no diretório
+cd TSiJUKEBOX
+
 # Instale as dependências
-cd TSiJUKEBOX && npm install
+npm install
+
+# Configure as variáveis de ambiente
+cp .env.example .env
 
 # Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
-Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
+Acesse **http://localhost:5173** · Login padrão: `admin` / `admin`
+
+### Docker (Recomendado para Produção)
+
+```bash
+# Build e start com Docker Compose
+docker-compose up -d
+
+# Ou use o Makefile
+make docker-up
+```
+
+### Requisitos do Sistema
+
+| Componente | Mínimo | Recomendado |
+| ---------- | ------ | ----------- |
+| **OS** | Linux, Windows, macOS | CachyOS / Arch Linux |
+| **CPU** | 2 cores | 4+ cores |
+| **RAM** | 2 GB | 4+ GB |
+| **Disco** | 500 MB | 2+ GB (com cache de mídia) |
+| **Display** | 1280x720 | 1920x1080+ |
+| **Browser** | Chrome 90+ | Chrome 120+ |
+| **Node.js** | 18.x | 20.x LTS |
 
 ---
 
@@ -143,21 +200,21 @@ Acesse **http://localhost:5173** • Login padrão: `admin` / `admin`
 
 ### TypeScript/React
 
-| Tipo               | Comando                    | Descrição                      |
-| ------------------ | -------------------------- | ------------------------------ |
-| 🔬 **Unit**        | `npm run test:unit`        | Testes unitários               |
-| 🔗 **Integration** | `npm run test:integration` | Testes de integração           |
-| 🌐 **E2E**         | `npm run test:e2e`         | Testes end-to-end (Playwright) |
-| 📊 **Coverage**    | `npm run test:coverage`    | Relatório de cobertura         |
-| 🖥️ **UI**          | `npm run test:ui`          | Vitest UI no navegador         |
-| 📋 **All**         | `npm run test:all`         | Executar todos os testes       |
+| Tipo | Comando | Descrição |
+| ---- | ------- | --------- |
+| 🔬 **Unit** | `npm run test:unit` | Testes unitários com Vitest |
+| 🔗 **Integration** | `npm run test:integration` | Testes de integração |
+| 🌐 **E2E** | `npm run test:e2e` | Testes end-to-end (Playwright) |
+| 📊 **Coverage** | `npm run test:coverage` | Relatório de cobertura |
+| 🖥️ **UI** | `npm run test:ui` | Vitest UI no navegador |
+| 📋 **All** | `npm run test:all` | Executar todos os testes |
 
 ### Python (Instalador)
 
-| Tipo            | Comando                     | Descrição               |
-| --------------- | --------------------------- | ----------------------- |
-| 🐍 **Unit**     | `make test-python`          | Testes unitários Python |
-| 📊 **Coverage** | `make test-python-coverage` | Cobertura Python        |
+| Tipo | Comando | Descrição |
+| ---- | ------- | --------- |
+| 🐍 **Unit** | `make test-python` | Testes unitários Python |
+| 📊 **Coverage** | `make test-python-coverage` | Cobertura Python |
 
 ```bash
 # Executar testes Python
@@ -173,14 +230,64 @@ cd scripts && pytest tests/ --cov=. --cov-report=term-missing
 
 ## 🏗️ Stack Tecnológico
 
-| Camada          | Tecnologias                               |
-| --------------- | ----------------------------------------- |
-| **Frontend**    | React 18 + TypeScript + Vite              |
-| **Estilização** | Tailwind CSS + shadcn/ui                  |
-| **Animações**   | Framer Motion + CSS Keyframes             |
-| **Backend**     | Lovable Cloud (Supabase)                  |
-| **Integrações** | Spotify API, YouTube Music, Spicetify CLI |
-| **PWA**         | Vite PWA Plugin + Workbox                 |
+### Frontend
+
+| Tecnologia | Versão | Propósito |
+| ---------- | ------ | --------- |
+| **React** | 18.3 | UI Library |
+| **TypeScript** | 5.0 | Type Safety |
+| **Vite** | 5.0 | Build Tool |
+| **Tailwind CSS** | 3.4 | Styling |
+| **shadcn/ui** | Latest | Component Library |
+| **Framer Motion** | 11.x | Animations |
+| **React Query** | 5.x | Server State |
+| **Zustand** | 4.x | Client State |
+
+### Backend & Infraestrutura
+
+| Tecnologia | Propósito |
+| ---------- | --------- |
+| **Supabase** | Backend as a Service |
+| **Edge Functions** | Serverless Functions |
+| **PostgreSQL** | Database |
+| **Redis** | Caching |
+| **Nginx** | Reverse Proxy |
+
+### Integrações
+
+| Serviço | API |
+| ------- | --- |
+| **Spotify** | Web API + Playback SDK |
+| **YouTube Music** | Data API v3 |
+| **Spicetify** | CLI + Extensions |
+| **Grafana** | Dashboards |
+| **Prometheus** | Metrics |
+
+---
+
+## 📚 Documentação
+
+### Guias Principais
+
+| Documento | Descrição |
+| --------- | --------- |
+| [Quick Install](docs/QUICK-INSTALL.md) | Instalação rápida para iniciantes |
+| [Production Deploy](docs/PRODUCTION-DEPLOY.md) | Deploy em produção |
+| [Developer Guide](docs/DEVELOPER-GUIDE.md) | Guia para desenvolvedores |
+| [API Reference](docs/API-REFERENCE.md) | Referência de APIs |
+| [Routes](docs/ROUTES.md) | Sistema de rotas |
+| [Architecture](docs/ARCHITECTURE.md) | Arquitetura do sistema |
+
+### Wiki
+
+| Seção | Conteúdo |
+| ----- | -------- |
+| [🏠 Home](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki) | Visão geral e navegação |
+| [⚡ Instalação](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Install-OneCommand) | Guias de instalação |
+| [🐧 CachyOS](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Install-CachyOS) | Setup específico para CachyOS |
+| [🎧 Spotify](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Tutorial-Spotify-Integration) | Integração com Spotify |
+| [🎤 Karaoke](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Tutorial-Karaoke-Mode) | Modo Karaoke |
+| [👨‍💻 Desenvolvimento](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Dev-Architecture) | Arquitetura e contribuição |
 
 ---
 
@@ -203,11 +310,11 @@ Na perspectiva anarcocapitalista, a **propriedade intelectual constitui uma aber
 
 Diferente de bens tangíveis, **copiar software não priva o autor original do uso de seu código**. Portanto, inexiste "roubo" no compartilhamento de conhecimento — apenas **multiplicação de valor sem custo marginal**.
 
-| 📜 **Conceito** | 🏛️ **Visão Estatal**                          | ⚔️ **Visão Libertária**                  |
-| --------------- | --------------------------------------------- | ---------------------------------------- |
-| **Software**    | "Obra literária" protegida pela Lei 9.609/98  | Informação livre, não-escassa            |
-| **Cópia**       | "Pirataria" criminosa                         | Aprendizado legítimo, replicação ética   |
-| **Garantia**    | Registro no INPI (órgão estatal)              | Reputação do autor + contratos privados  |
+| 📜 **Conceito** | 🏛️ **Visão Estatal** | ⚔️ **Visão Libertária** |
+| --------------- | -------------------- | ----------------------- |
+| **Software** | "Obra literária" protegida pela Lei 9.609/98 | Informação livre, não-escassa |
+| **Cópia** | "Pirataria" criminosa | Aprendizado legítimo, replicação ética |
+| **Garantia** | Registro no INPI (órgão estatal) | Reputação do autor + contratos privados |
 
 ---
 
@@ -223,9 +330,9 @@ Se o Estado impede você de usar **seu próprio computador** — sua propriedade
 
 Este software é liberado ao **DOMÍNIO PÚBLICO** sem quaisquer restrições:
 
-| 🗡️ **USE**                | 🛡️ **MODIFIQUE**     | ⚔️ **VENDA**       | 🔓 **DISTRIBUA** |
-| ------------------------- | -------------------- | ------------------ | ---------------- |
-| Para qualquer finalidade  | Sem pedir permissão  | Lucre como quiser  | Sem restrições   |
+| 🗡️ **USE** | 🛡️ **MODIFIQUE** | ⚔️ **VENDA** | 🔓 **DISTRIBUA** |
+| ---------- | ---------------- | ------------ | ---------------- |
+| Para qualquer finalidade | Sem pedir permissão | Lucre como quiser | Sem restrições |
 
 ---
 
@@ -246,27 +353,24 @@ Este software é liberado ao **DOMÍNIO PÚBLICO** sem quaisquer restrições:
 
 ---
 
-## 📚 Documentação
+## 👨‍💻 Créditos
 
-| Documento                                      | Descrição                         |
-| ---------------------------------------------- | --------------------------------- |
-| [Quick Install](docs/QUICK-INSTALL.md)         | Instalação rápida para iniciantes |
-| [Production Deploy](docs/PRODUCTION-DEPLOY.md) | Deploy em produção                |
-| [Developer Guide](docs/DEVELOPER-GUIDE.md)     | Guia para desenvolvedores         |
-| [API Reference](docs/API-REFERENCE.md)         | Referência de APIs                |
-| [Routes](docs/ROUTES.md)                       | Sistema de rotas                  |
-| [Architecture](docs/ARCHITECTURE.md)           | Arquitetura do sistema            |
+<div align="center">
+
+<img src="docs/assets/B0.y_Z4kr14-v3.png" alt="B0.y_Z4kr14" width="120" style="border-radius: 50%;">
+
+**Desenvolvido por [B0.y_Z4kr14](https://github.com/B0yZ4kr14)**
+
+*TSI Telecom*
+
+</div>
 
 ---
 
 <div align="center">
 
-<sub>Desenvolvido por <strong>B0.y_Z4kr14</strong></sub>
-
-<br><br>
-
 **TSiJUKEBOX Enterprise** — *A música, amplificada.*
 
-[🐛 Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) · [✨ Request Feature](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)
+[🐛 Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) · [✨ Request Feature](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues) · [🌐 Wiki](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki)
 
 </div>
