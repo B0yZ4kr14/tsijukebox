@@ -815,7 +815,7 @@ def setup_sqlite_database() -> bool:
 # =============================================================================
 
 def install_spotify_spicetify(user: str, system_info: SystemInfo) -> bool:
-    """Instala Spotify e Spicetify."""
+    """Instala Spotify e Spicetify com auto-configuração."""
     log_step("Instalando Spotify + Spicetify")
     
     # Verificar se já está instalado
@@ -856,22 +856,11 @@ def install_spotify_spicetify(user: str, system_info: SystemInfo) -> bool:
         cwd=str(home)
     )
     
+    spicetify_installed = False
+    
     if result.returncode == 0:
-        log_success("Spicetify instalado")
-        
-        # Instalar Marketplace
-        log_info("Instalando Spicetify Marketplace...")
-        marketplace_cmd = "curl -fsSL https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.sh | sh"
-        
-        subprocess.run(
-            ['sudo', '-u', user, 'bash', '-c', marketplace_cmd],
-            capture_output=True,
-            text=True,
-            cwd=str(home)
-        )
-        
-        log_success("Marketplace instalado")
-        return True
+        log_success("Spicetify instalado via curl")
+        spicetify_installed = True
     else:
         # Fallback: instalar via paru
         log_info("Tentando instalar Spicetify via AUR...")
@@ -880,7 +869,69 @@ def install_spotify_spicetify(user: str, system_info: SystemInfo) -> bool:
             capture_output=True,
             text=True
         )
-        return result.returncode == 0
+        spicetify_installed = result.returncode == 0
+    
+    if not spicetify_installed:
+        log_warning("Spicetify não pôde ser instalado")
+        return False
+    
+    # ===== AUTO-CONFIGURAÇÃO DO SPICETIFY =====
+    log_info("Auto-configurando Spicetify...")
+    
+    try:
+        # Importar SpicetifySetup
+        installer_path = Path(__file__).parent / 'installer'
+        if str(installer_path) not in sys.path:
+            sys.path.insert(0, str(installer_path))
+        
+        from spicetify_setup import SpicetifySetup
+        
+        # Criar instância com o usuário alvo
+        spicetify = SpicetifySetup(user=user)
+        
+        # Iniciar Spotify brevemente para garantir criação do prefs
+        log_info("Iniciando Spotify para criar arquivo de configuração...")
+        try:
+            proc = subprocess.Popen(
+                ['sudo', '-u', user, 'spotify', '--no-zygote'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+            import time
+            time.sleep(5)
+            subprocess.run(['pkill', '-f', 'spotify'], capture_output=True)
+            time.sleep(1)
+        except Exception as e:
+            log_warning(f"Não foi possível iniciar Spotify: {e}")
+        
+        # Executar auto-configuração
+        if spicetify.auto_configure(user=user):
+            log_success("Spicetify auto-configurado com sucesso")
+            
+            # Instalar Marketplace
+            log_info("Instalando Spicetify Marketplace...")
+            if spicetify.install_marketplace():
+                log_success("Marketplace instalado")
+            
+            # Setup para TSiJUKEBOX (tema e extensões)
+            log_info("Aplicando configurações TSiJUKEBOX...")
+            spicetify.setup_for_tsijukebox()
+            
+            return True
+        else:
+            log_warning("Auto-configuração do Spicetify falhou")
+            log_info("Execute manualmente: spicetify-auto-setup.sh")
+            return False
+            
+    except ImportError as e:
+        log_warning(f"Não foi possível importar SpicetifySetup: {e}")
+        log_info("Spicetify instalado, mas requer configuração manual")
+        return True
+    except Exception as e:
+        log_warning(f"Erro na auto-configuração: {e}")
+        log_info("Spicetify instalado, mas requer configuração manual")
+        return True
 
 
 # =============================================================================

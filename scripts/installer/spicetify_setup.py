@@ -38,6 +38,25 @@ class SpicetifySetup:
     THEMES_PATH = Path.home() / ".config" / "spicetify" / "Themes"
     EXTENSIONS_PATH = Path.home() / ".config" / "spicetify" / "Extensions"
     
+    # Caminhos conhecidos do Spotify para diferentes instalações
+    SPOTIFY_PATHS = {
+        "spotify-launcher": Path.home() / ".local/share/spotify-launcher/install/usr/share/spotify",
+        "aur-spotify": Path("/opt/spotify"),
+        "aur-spotify-dev": Path("/opt/spotify-dev"),
+        "flatpak": Path.home() / ".var/app/com.spotify.Client/config/spotify",
+        "snap": Path("/snap/spotify/current/usr/share/spotify"),
+        "system": Path("/usr/share/spotify"),
+    }
+    
+    # Caminhos conhecidos do arquivo prefs
+    PREFS_PATHS = {
+        "spotify-launcher": Path.home() / ".config/spotify/prefs",
+        "aur-spotify": Path.home() / ".config/spotify/prefs",
+        "flatpak": Path.home() / ".var/app/com.spotify.Client/config/spotify/prefs",
+        "snap": Path.home() / "snap/spotify/current/.config/spotify/prefs",
+        "legacy": Path.home() / ".spotify/prefs",
+    }
+    
     # Default extensions for TSiJUKEBOX
     DEFAULT_EXTENSIONS = [
         "autoSkipVideo.js",
@@ -59,9 +78,27 @@ class SpicetifySetup:
         "Bloom"
     ]
     
-    def __init__(self, logger: Optional[Logger] = None):
+    def __init__(self, logger: Optional[Logger] = None, user: Optional[str] = None):
         self.logger = logger or Logger()
         self.config = Config()
+        self.user = user or os.environ.get('SUDO_USER') or os.environ.get('USER')
+        self._user_home: Optional[Path] = None
+    
+    def _get_user_home(self) -> Path:
+        """Retorna o diretório home do usuário alvo."""
+        if self._user_home:
+            return self._user_home
+        
+        if self.user:
+            try:
+                import pwd
+                self._user_home = Path(pwd.getpwnam(self.user).pw_dir)
+            except KeyError:
+                self._user_home = Path.home()
+        else:
+            self._user_home = Path.home()
+        
+        return self._user_home
     
     def _run_command(
         self, 
@@ -91,20 +128,267 @@ class SpicetifySetup:
     
     def is_spotify_installed(self) -> bool:
         """Check if Spotify is installed."""
-        # Check common paths
-        spotify_paths = [
-            Path("/opt/spotify"),
-            Path("/usr/share/spotify"),
-            Path.home() / ".local" / "share" / "spotify",
-            Path("/snap/spotify/current"),
-            Path.home() / "snap" / "spotify" / "current"
-        ]
-        
-        for path in spotify_paths:
-            if path.exists():
+        # Verificar caminhos conhecidos
+        for path in self.SPOTIFY_PATHS.values():
+            if path.exists() and (path / "Apps").exists():
                 return True
         
         return shutil.which("spotify") is not None
+    
+    def detect_spotify_path(self) -> Optional[Path]:
+        """
+        Auto-detecta o caminho de instalação do Spotify.
+        
+        Returns:
+            Path para o diretório do Spotify ou None se não encontrado
+        """
+        user_home = self._get_user_home()
+        
+        # Caminhos ajustados para o usuário atual
+        search_paths = {
+            "spotify-launcher": user_home / ".local/share/spotify-launcher/install/usr/share/spotify",
+            "aur-spotify": Path("/opt/spotify"),
+            "aur-spotify-dev": Path("/opt/spotify-dev"),
+            "flatpak": user_home / ".var/app/com.spotify.Client/config/spotify",
+            "snap": Path("/snap/spotify/current/usr/share/spotify"),
+            "system": Path("/usr/share/spotify"),
+        }
+        
+        for name, path in search_paths.items():
+            if path.exists() and (path / "Apps").exists():
+                self.logger.info(f"Spotify detectado: {name} em {path}")
+                return path
+        
+        # Fallback: procurar via which e resolver symlinks
+        spotify_bin = shutil.which("spotify")
+        if spotify_bin:
+            spotify_path = Path(spotify_bin).resolve()
+            # Tentar encontrar o diretório de instalação
+            for parent in spotify_path.parents:
+                apps_dir = parent / "Apps"
+                if apps_dir.exists():
+                    self.logger.info(f"Spotify detectado via which: {parent}")
+                    return parent
+        
+        self.logger.warning("Não foi possível detectar instalação do Spotify")
+        return None
+    
+    def detect_prefs_path(self) -> Optional[Path]:
+        """
+        Auto-detecta o arquivo de preferências do Spotify.
+        
+        Returns:
+            Path para o arquivo prefs ou None se não encontrado
+        """
+        user_home = self._get_user_home()
+        
+        # Caminhos ajustados para o usuário atual
+        search_paths = {
+            "config-spotify": user_home / ".config/spotify/prefs",
+            "flatpak": user_home / ".var/app/com.spotify.Client/config/spotify/prefs",
+            "snap": user_home / "snap/spotify/current/.config/spotify/prefs",
+            "legacy": user_home / ".spotify/prefs",
+        }
+        
+        for name, path in search_paths.items():
+            if path.exists():
+                self.logger.info(f"Prefs detectado: {name} em {path}")
+                return path
+        
+        # Fallback: procurar recursivamente em locais comuns
+        search_dirs = [
+            user_home / ".config",
+            user_home / ".var",
+            user_home / ".local",
+        ]
+        
+        for base in search_dirs:
+            if base.exists():
+                try:
+                    for prefs in base.rglob("prefs"):
+                        if "spotify" in str(prefs).lower():
+                            self.logger.info(f"Prefs encontrado via busca: {prefs}")
+                            return prefs
+                except PermissionError:
+                    continue
+        
+        self.logger.warning("Não foi possível detectar arquivo prefs do Spotify")
+        return None
+    
+    def _fix_spotify_permissions(self, spotify_path: Path) -> bool:
+        """
+        Corrige permissões para permitir modificação pelo Spicetify.
+        
+        Args:
+            spotify_path: Caminho para o diretório do Spotify
+            
+        Returns:
+            True se permissões corrigidas com sucesso
+        """
+        apps_dir = spotify_path / "Apps"
+        
+        if not apps_dir.exists():
+            self.logger.warning(f"Diretório Apps não encontrado: {apps_dir}")
+            return False
+        
+        try:
+            import stat
+            
+            # Dar permissões de escrita ao diretório principal
+            for item in [spotify_path, apps_dir]:
+                current_mode = item.stat().st_mode
+                item.chmod(current_mode | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+            
+            # Dar permissões de escrita aos arquivos dentro de Apps
+            for child in apps_dir.iterdir():
+                if child.is_file():
+                    current_mode = child.stat().st_mode
+                    child.chmod(current_mode | stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+            
+            self.logger.success("Permissões do Spotify corrigidas")
+            return True
+            
+        except PermissionError:
+            self.logger.warning("Necessário sudo para corrigir permissões, tentando...")
+            
+            # Tentar via sudo
+            code1, _, _ = self._run_command(
+                ["sudo", "chmod", "a+wr", str(spotify_path)],
+                capture=True
+            )
+            code2, _, _ = self._run_command(
+                ["sudo", "chmod", "-R", "a+wr", str(apps_dir)],
+                capture=True
+            )
+            
+            if code1 == 0 and code2 == 0:
+                self.logger.success("Permissões corrigidas via sudo")
+                return True
+            else:
+                self.logger.error("Falha ao corrigir permissões")
+                return False
+    
+    def auto_configure(self, user: Optional[str] = None) -> bool:
+        """
+        Configura automaticamente o Spicetify baseado no usuário atual.
+        
+        Este método:
+        1. Detecta o caminho do Spotify instalado
+        2. Detecta o arquivo prefs do Spotify
+        3. Configura spotify_path e prefs_path no Spicetify
+        4. Define permissões corretas nos diretórios
+        5. Faz backup do Spotify
+        6. Aplica customizações básicas
+        
+        Args:
+            user: Nome do usuário (opcional, usa atual se não fornecido)
+            
+        Returns:
+            True se configuração bem-sucedida
+        """
+        if user:
+            self.user = user
+            self._user_home = None  # Reset para recalcular
+        
+        self.logger.info(f"Auto-configurando Spicetify para usuário: {self.user}")
+        
+        # 1. Verificar se Spicetify está instalado
+        if not self.is_spicetify_installed():
+            self.logger.error("Spicetify não está instalado")
+            return False
+        
+        # 2. Detectar spotify_path
+        spotify_path = self.detect_spotify_path()
+        if not spotify_path:
+            self.logger.error("Não foi possível detectar instalação do Spotify")
+            self.logger.info("Verifique se o Spotify está instalado corretamente")
+            return False
+        
+        # 3. Detectar prefs_path
+        prefs_path = self.detect_prefs_path()
+        if not prefs_path:
+            self.logger.warning("Arquivo prefs não encontrado")
+            self.logger.info("Tentando iniciar Spotify para criar arquivo de configuração...")
+            
+            # Tentar iniciar Spotify brevemente
+            if self._start_spotify_briefly():
+                prefs_path = self.detect_prefs_path()
+            
+            if not prefs_path:
+                self.logger.error("Não foi possível detectar arquivo prefs do Spotify")
+                self.logger.info("Inicie o Spotify manualmente uma vez e tente novamente")
+                return False
+        
+        # 4. Configurar spotify_path no Spicetify
+        self.logger.info(f"Configurando spotify_path: {spotify_path}")
+        code, _, err = self._run_command([
+            "spicetify", "config", "spotify_path", str(spotify_path)
+        ])
+        if code != 0:
+            self.logger.error(f"Falha ao configurar spotify_path: {err}")
+            return False
+        
+        # 5. Configurar prefs_path no Spicetify
+        self.logger.info(f"Configurando prefs_path: {prefs_path}")
+        code, _, err = self._run_command([
+            "spicetify", "config", "prefs_path", str(prefs_path)
+        ])
+        if code != 0:
+            self.logger.error(f"Falha ao configurar prefs_path: {err}")
+            return False
+        
+        # 6. Corrigir permissões
+        if not self._fix_spotify_permissions(spotify_path):
+            self.logger.warning("Falha ao corrigir permissões, continuando mesmo assim...")
+        
+        # 7. Criar backup
+        self.logger.info("Criando backup do Spotify...")
+        if not self.backup_spotify():
+            self.logger.warning("Backup falhou, tentando apply mesmo assim...")
+        
+        # 8. Aplicar configurações
+        if self.apply_customizations():
+            self.logger.success("Spicetify configurado automaticamente com sucesso!")
+            return True
+        else:
+            self.logger.error("Falha ao aplicar customizações do Spicetify")
+            return False
+    
+    def _start_spotify_briefly(self) -> bool:
+        """Inicia o Spotify brevemente para criar arquivos de configuração."""
+        try:
+            import time
+            
+            self.logger.info("Iniciando Spotify temporariamente...")
+            
+            # Iniciar Spotify em background
+            if self.user and os.geteuid() == 0:
+                proc = subprocess.Popen(
+                    ['sudo', '-u', self.user, 'spotify', '--no-zygote'],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True
+                )
+            else:
+                proc = subprocess.Popen(
+                    ['spotify', '--no-zygote'],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True
+                )
+            
+            # Aguardar criação do arquivo prefs
+            time.sleep(5)
+            
+            # Encerrar Spotify
+            self._run_command(['pkill', '-f', 'spotify'], capture=True)
+            
+            time.sleep(1)
+            return True
+            
+        except Exception as e:
+            self.logger.warning(f"Falha ao iniciar Spotify: {e}")
+            return False
     
     def is_spicetify_installed(self) -> bool:
         """Check if Spicetify is installed."""
