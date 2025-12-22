@@ -18,7 +18,7 @@ verify_jwt = false
 [functions.github-sync-export]
 verify_jwt = false
 
-[functions.claude-refactor-opus]
+[functions.fullstack-refactor]
 verify_jwt = false
 
 [functions.installer-metrics]
@@ -45,14 +45,11 @@ verify_jwt = false
 [functions.doc-orchestrator]
 verify_jwt = false
 
-[functions.fullstack-refactor]
-verify_jwt = false
-
 [functions.screenshot-service]
 verify_jwt = false
 
 [functions.health-monitor-ws]
 verify_jwt = false
 
-[functions.full-repo-sync]
+[functions.auto-sync-repository]
 verify_jwt = false

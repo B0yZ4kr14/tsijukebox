@@ -48,15 +48,7 @@ export {
   type GitHubSyncStatus as GitHubExportSyncStatus,
   type UseGitHubExportReturn 
 } from './useGitHubExport';
-export {
-  useClaudeOpusRefactor,
-  type RefactorAction,
-  type TargetDistro,
-  type RefactorFile,
-  type RefactoredFile,
-  type RefactorResult as ClaudeRefactorResult,
-  type UseClaudeOpusRefactorReturn
-} from './useClaudeOpusRefactor';
+// useClaudeOpusRefactor removed - use fullstack-refactor edge function directly
 export {
   useScriptRefactor,
   type InstallerScript,

@@ -6,106 +6,34 @@ import {
   Eye, 
   AlertCircle, 
   RefreshCw, 
-  GitBranch, 
-  Tag, 
-  Users, 
-  Code, 
-  Clock,
-  ExternalLink,
   ArrowLeft,
   Github,
-  Upload
+  Upload,
+  ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer
-} from 'recharts';
 
 import { useGitHubStats, GitHubCommit } from '@/hooks/system/useGitHubStats';
 import { useGitHubFullSync, FileToSync } from '@/hooks/system/useGitHubFullSync';
 import { useAutoSync } from '@/hooks/system/useAutoSync';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { CommitFilters } from '@/components/github/CommitFilters';
-import { CacheIndicator } from '@/components/github/CacheIndicator';
-import { GitHubDashboardCharts } from '@/components/github/GitHubDashboardCharts';
-import { AutoSyncPanel } from '@/components/github/AutoSyncPanel';
-import { getCommitTypeInfo } from '@/lib/constants/commitTypes';
 import { ComponentBoundary } from '@/components/errors';
-import { toast } from 'sonner';
-
-const LANGUAGE_COLORS: Record<string, string> = {
-  TypeScript: '#3178c6',
-  JavaScript: '#f7df1e',
-  CSS: '#264de4',
-  HTML: '#e34c26',
-  Python: '#3776ab',
-  Shell: '#89e051',
-  Dockerfile: '#2496ed',
-  JSON: '#000000',
-  Markdown: '#083fa1',
-  YAML: '#cb171e',
-};
-
-const getLanguageColor = (lang: string): string => {
-  return LANGUAGE_COLORS[lang] || `hsl(${Math.random() * 360}, 70%, 50%)`;
-};
-
-function KpiCard({ 
-  title, 
-  value, 
-  icon: Icon, 
-  color,
-  isLoading 
-}: { 
-  title: string; 
-  value: number; 
-  icon: React.ElementType; 
-  color: string;
-  isLoading: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className="border-border/50 bg-card/80 backdrop-blur-sm hover:border-primary/30 transition-colors">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">{title}</p>
-              {isLoading ? (
-                <Skeleton className="h-8 w-16 mt-1" />
-              ) : (
-                <p className="text-3xl font-bold">{value.toLocaleString()}</p>
-              )}
-            </div>
-            <div className={`p-3 rounded-full ${color}`}>
-              <Icon className="h-6 w-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+import { 
+  KpiCard,
+  LanguagesChart,
+  ContributorsChart,
+  CommitsTable,
+  ReleasesSection,
+  BranchesSection,
+  AutoSyncPanel,
+  CacheIndicator,
+  GitHubDashboardCharts
+} from '@/components/github';
 
 export default function GitHubDashboard() {
   const navigate = useNavigate();
@@ -124,7 +52,7 @@ export default function GitHubDashboard() {
     clearAllCache
   } = useGitHubStats();
 
-  const { isSyncing, syncFiles, lastSync } = useGitHubFullSync();
+  const { isSyncing, syncFiles } = useGitHubFullSync();
   const autoSync = useAutoSync();
 
   const [filteredCommits, setFilteredCommits] = useState<GitHubCommit[]>([]);
@@ -133,9 +61,7 @@ export default function GitHubDashboard() {
     setFilteredCommits(filtered);
   }, []);
 
-  // Handler para sincronização completa do repositório
   const handleFullSync = useCallback(async () => {
-    // Arquivos de documentação atualizados para v4.1.0
     const filesToSync: FileToSync[] = [
       {
         path: 'docs/VERSION',
@@ -143,20 +69,7 @@ export default function GitHubDashboard() {
       },
       {
         path: 'docs/SYNC_LOG.md',
-        content: `# Repository Sync Log
-
-## Last Sync
-- **Date**: ${new Date().toISOString()}
-- **Version**: 4.1.0
-- **Status**: ✅ Synced via Lovable
-
-## Changes
-- Updated documentation to v4.1.0
-- Added Plugin System documentation
-- Added Monitoring System documentation
-- Updated API Reference with new hooks
-- Updated Quick Install with advanced commands
-`
+        content: `# Repository Sync Log\n\n## Last Sync\n- **Date**: ${new Date().toISOString()}\n- **Version**: 4.1.0\n- **Status**: ✅ Synced via Lovable\n`
       }
     ];
 
@@ -164,22 +77,6 @@ export default function GitHubDashboard() {
   }, [syncFiles]);
 
   const displayCommits = filteredCommits.length > 0 || commits.length === 0 ? filteredCommits : commits;
-
-  // Preparar dados para gráfico de linguagens
-  const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
-  const languageData = Object.entries(languages).map(([name, bytes]) => ({
-    name,
-    value: bytes,
-    percentage: totalBytes > 0 ? ((bytes / totalBytes) * 100).toFixed(1) : '0',
-    color: getLanguageColor(name)
-  }));
-
-  // Preparar dados para gráfico de contribuidores
-  const contributorData = contributors.slice(0, 8).map(c => ({
-    name: c.login,
-    contributions: c.contributions,
-    avatar: c.avatar_url
-  }));
 
   return (
     <KioskLayout>
@@ -304,110 +201,8 @@ export default function GitHubDashboard() {
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Languages Chart */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="border-border/50 bg-card/80 backdrop-blur-sm h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Code className="h-5 w-5 text-primary" />
-                  Linguagens
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="h-[250px] flex items-center justify-center">
-                    <Skeleton className="h-40 w-40 rounded-full" />
-                  </div>
-                ) : languageData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                      <Pie
-                        data={languageData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={90}
-                        paddingAngle={2}
-                        dataKey="value"
-                        label={({ name, percentage }) => `${name} ${percentage}%`}
-                        labelLine={false}
-                      >
-                        {languageData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        formatter={(value: number) => [`${(value / 1024).toFixed(1)} KB`, 'Tamanho']}
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px'
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <p className="text-muted-foreground text-center py-10">Sem dados de linguagens</p>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Contributors Chart */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="border-border/50 bg-card/80 backdrop-blur-sm h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-primary" />
-                  Top Contribuidores
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Skeleton key={i} className="h-8 w-full" />
-                    ))}
-                  </div>
-                ) : contributorData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={contributorData} layout="vertical">
-                      <XAxis type="number" />
-                      <YAxis 
-                        dataKey="name" 
-                        type="category" 
-                        width={100}
-                        tick={{ fontSize: 12 }}
-                      />
-                      <Tooltip 
-                        formatter={(value: number) => [value, 'Contribuições']}
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px'
-                        }}
-                      />
-                      <Bar 
-                        dataKey="contributions" 
-                        fill="hsl(var(--primary))" 
-                        radius={[0, 4, 4, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <p className="text-muted-foreground text-center py-10">Sem dados de contribuidores</p>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+          <LanguagesChart languages={languages} isLoading={isLoading} />
+          <ContributorsChart contributors={contributors} isLoading={isLoading} />
         </div>
 
         {/* Advanced Charts */}
@@ -419,208 +214,18 @@ export default function GitHubDashboard() {
         />
 
         {/* Commits Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-8"
-        >
-          <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-primary" />
-                Commits Recentes
-                {displayCommits.length !== commits.length && (
-                  <Badge variant="secondary" className="ml-2">
-                    {displayCommits.length} de {commits.length}
-                  </Badge>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {!isLoading && commits.length > 0 && (
-                <CommitFilters
-                  commits={commits}
-                  contributors={contributors}
-                  onFilter={handleFilteredCommits}
-                />
-              )}
-              {isLoading ? (
-                <div className="space-y-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : displayCommits.length > 0 ? (
-                <ScrollArea className="h-[300px]">
-                  <div className="space-y-3">
-                    {displayCommits.map((commit, index) => {
-                      const typeInfo = getCommitTypeInfo(commit.commit.message);
-                      return (
-                        <motion.div
-                          key={commit.sha}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-start gap-4 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
-                          onClick={() => window.open(commit.html_url, '_blank')}
-                        >
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={commit.author?.avatar_url} />
-                            <AvatarFallback>
-                              {commit.commit.author.name.slice(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className={`w-2 h-2 rounded-full ${typeInfo.color}`} />
-                              <Badge variant="outline" className="text-xs">
-                                {typeInfo.label}
-                              </Badge>
-                              <p className="font-medium truncate flex-1">{commit.commit.message.split('\n')[0]}</p>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                              <code className="bg-muted px-1.5 py-0.5 rounded text-xs">
-                                {commit.sha.slice(0, 7)}
-                              </code>
-                              <span>•</span>
-                              <span>{commit.author?.login || commit.commit.author.name}</span>
-                              <span>•</span>
-                              <span>
-                                {formatDistanceToNow(new Date(commit.commit.author.date), { 
-                                  addSuffix: true,
-                                  locale: ptBR 
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                          <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </ScrollArea>
-              ) : commits.length > 0 ? (
-                <p className="text-muted-foreground text-center py-10">Nenhum commit encontrado com os filtros aplicados</p>
-              ) : (
-                <p className="text-muted-foreground text-center py-10">Sem commits recentes</p>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+        <CommitsTable
+          commits={commits}
+          contributors={contributors}
+          displayCommits={displayCommits}
+          isLoading={isLoading}
+          onFilteredCommits={handleFilteredCommits}
+        />
 
         {/* Releases and Branches */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Releases */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Tag className="h-5 w-5 text-primary" />
-                  Releases
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="space-y-3">
-                    {[...Array(3)].map((_, i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : releases.length > 0 ? (
-                  <ScrollArea className="h-[200px]">
-                    <div className="space-y-3">
-                      {releases.slice(0, 10).map((release, index) => (
-                        <motion.div
-                          key={release.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
-                          onClick={() => window.open(release.html_url, '_blank')}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Badge variant={index === 0 ? 'default' : 'secondary'}>
-                              {release.tag_name}
-                            </Badge>
-                            <span className="text-sm truncate max-w-[200px]">
-                              {release.name || release.tag_name}
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(release.published_at), { 
-                              addSuffix: true,
-                              locale: ptBR 
-                            })}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                ) : (
-                  <p className="text-muted-foreground text-center py-10">Sem releases publicadas</p>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Branches */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <GitBranch className="h-5 w-5 text-primary" />
-                  Branches
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="space-y-3">
-                    {[...Array(3)].map((_, i) => (
-                      <Skeleton key={i} className="h-10 w-full" />
-                    ))}
-                  </div>
-                ) : branches.length > 0 ? (
-                  <ScrollArea className="h-[200px]">
-                    <div className="space-y-2">
-                      {branches.map((branch, index) => (
-                        <motion.div
-                          key={branch.name}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-center justify-between p-3 rounded-lg bg-muted/30"
-                        >
-                          <div className="flex items-center gap-3">
-                            <GitBranch className="h-4 w-4 text-muted-foreground" />
-                            <span className="font-mono text-sm">{branch.name}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {branch.name === repoInfo?.default_branch && (
-                              <Badge variant="outline" className="text-xs">default</Badge>
-                            )}
-                            {branch.protected && (
-                              <Badge variant="secondary" className="text-xs">protected</Badge>
-                            )}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                ) : (
-                  <p className="text-muted-foreground text-center py-10">Sem branches encontradas</p>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
+          <ReleasesSection releases={releases} isLoading={isLoading} />
+          <BranchesSection branches={branches} repoInfo={repoInfo} isLoading={isLoading} />
         </div>
 
         {/* Footer Info */}
