@@ -9,20 +9,24 @@ import {
   ArrowLeft,
   Github,
   Upload,
-  ExternalLink
+  ExternalLink,
+  CheckCircle,
+  Loader2,
+  FileCode
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { useGitHubStats, GitHubCommit } from '@/hooks/system/useGitHubStats';
-import { useGitHubFullSync, FileToSync } from '@/hooks/system/useGitHubFullSync';
+import { useGitHubFullSync } from '@/hooks/system/useGitHubFullSync';
 import { useAutoSync } from '@/hooks/system/useAutoSync';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { ComponentBoundary } from '@/components/errors';
+import { Progress } from '@/components/ui/progress';
 import { 
   KpiCard,
   LanguagesChart,
@@ -52,7 +56,7 @@ export default function GitHubDashboard() {
     clearAllCache
   } = useGitHubStats();
 
-  const { isSyncing, syncFiles } = useGitHubFullSync();
+  const { isSyncing, progress, syncFullRepository, lastSync } = useGitHubFullSync();
   const autoSync = useAutoSync();
 
   const [filteredCommits, setFilteredCommits] = useState<GitHubCommit[]>([]);
@@ -62,19 +66,8 @@ export default function GitHubDashboard() {
   }, []);
 
   const handleFullSync = useCallback(async () => {
-    const filesToSync: FileToSync[] = [
-      {
-        path: 'docs/VERSION',
-        content: '4.1.0'
-      },
-      {
-        path: 'docs/SYNC_LOG.md',
-        content: `# Repository Sync Log\n\n## Last Sync\n- **Date**: ${new Date().toISOString()}\n- **Version**: 4.1.0\n- **Status**: ✅ Synced via Lovable\n`
-      }
-    ];
-
-    await syncFiles(filesToSync, `[TSiJUKEBOX v4.1.0] Repository sync - ${new Date().toLocaleDateString('pt-BR')}`);
-  }, [syncFiles]);
+    await syncFullRepository();
+  }, [syncFullRepository]);
 
   const displayCommits = filteredCommits.length > 0 || commits.length === 0 ? filteredCommits : commits;
 
@@ -115,16 +108,53 @@ export default function GitHubDashboard() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button 
-              variant="default" 
-              size="sm"
-              onClick={handleFullSync}
-              disabled={isSyncing}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <Upload className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-pulse' : ''}`} />
-              {isSyncing ? 'Syncing...' : 'Sync Repository'}
-            </Button>
+            {/* Full Sync Button with Progress */}
+            <div className="relative">
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={handleFullSync}
+                disabled={isSyncing}
+                className="bg-green-600 hover:bg-green-700 min-w-[160px]"
+              >
+                {isSyncing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {progress?.phase === 'preparing' && 'Preparing...'}
+                    {progress?.phase === 'uploading' && 'Uploading...'}
+                    {progress?.phase === 'committing' && 'Committing...'}
+                    {!progress?.phase && 'Syncing...'}
+                  </>
+                ) : lastSync?.success ? (
+                  <>
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Sync Complete
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Full Sync
+                  </>
+                )}
+              </Button>
+              {isSyncing && progress && (
+                <div className="absolute -bottom-2 left-0 right-0">
+                  <Progress 
+                    value={progress.total > 0 ? (progress.current / progress.total) * 100 : 0} 
+                    className="h-1 bg-green-900"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Last sync info */}
+            {lastSync?.commit && (
+              <Badge variant="outline" className="text-xs gap-1">
+                <FileCode className="h-3 w-3" />
+                {lastSync.commit.filesChanged} files
+              </Badge>
+            )}
+
             {repoInfo && (
               <Button 
                 variant="outline" 
