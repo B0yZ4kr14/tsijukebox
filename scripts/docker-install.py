@@ -1342,6 +1342,304 @@ datasources:
 # GERENCIADOR DE CONTAINERS
 # ============================================================================
 
+# ============================================================================
+# GERENCIADOR DE BACKUPS
+# ============================================================================
+
+class BackupManager:
+    """Gerencia backups de configurações, dados e volumes Docker."""
+    
+    def __init__(self):
+        self.backup_dir = CONFIG.BACKUP_DIR
+        self.compose_dir = CONFIG.COMPOSE_DIR
+        self.data_dir = CONFIG.DATA_DIR
+        self.max_backups = 10
+    
+    def create_backup(self, include_volumes: bool = True) -> Optional[Path]:
+        """Cria backup completo de configurações e dados."""
+        Logger.info("Criando backup...")
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"tsijukebox_backup_{timestamp}"
+        backup_path = self.backup_dir / backup_name
+        
+        try:
+            backup_path.mkdir(parents=True, exist_ok=True)
+            
+            # Backup de configurações
+            if not self.backup_config_files(backup_path):
+                Logger.warning("Falha parcial no backup de configurações")
+            
+            # Backup de volumes Docker
+            if include_volumes:
+                if not self.backup_docker_volumes(backup_path):
+                    Logger.warning("Falha parcial no backup de volumes")
+            
+            # Cria arquivo de metadados
+            metadata = {
+                "created_at": datetime.now().isoformat(),
+                "version": CONFIG.VERSION,
+                "include_volumes": include_volumes,
+                "hostname": socket.gethostname()
+            }
+            metadata_file = backup_path / "metadata.json"
+            metadata_file.write_text(json.dumps(metadata, indent=2))
+            
+            Logger.success(f"Backup criado: {backup_path}")
+            return backup_path
+            
+        except Exception as e:
+            Logger.error(f"Falha ao criar backup: {e}")
+            return None
+    
+    def restore_backup(self, backup_path: Path) -> bool:
+        """Restaura backup de configurações e dados."""
+        Logger.info(f"Restaurando backup de {backup_path}...")
+        
+        if not backup_path.exists():
+            Logger.error(f"Backup não encontrado: {backup_path}")
+            return False
+        
+        try:
+            # Restaura configurações
+            if not self.restore_config_files(backup_path):
+                Logger.warning("Falha parcial na restauração de configurações")
+            
+            # Restaura volumes Docker
+            if not self.restore_docker_volumes(backup_path):
+                Logger.warning("Falha parcial na restauração de volumes")
+            
+            Logger.success("Backup restaurado com sucesso")
+            return True
+            
+        except Exception as e:
+            Logger.error(f"Falha ao restaurar backup: {e}")
+            return False
+    
+    def list_backups(self) -> List[Dict[str, Any]]:
+        """Lista todos os backups disponíveis."""
+        backups = []
+        
+        if not self.backup_dir.exists():
+            return backups
+        
+        for item in sorted(self.backup_dir.iterdir(), reverse=True):
+            if item.is_dir() and item.name.startswith("tsijukebox_backup_"):
+                info = self.get_backup_info(item)
+                if info:
+                    backups.append(info)
+        
+        return backups
+    
+    def delete_backup(self, backup_path: Path) -> bool:
+        """Remove um backup específico."""
+        Logger.info(f"Removendo backup: {backup_path}")
+        
+        if not backup_path.exists():
+            Logger.error(f"Backup não encontrado: {backup_path}")
+            return False
+        
+        try:
+            shutil.rmtree(backup_path)
+            Logger.success("Backup removido")
+            return True
+        except Exception as e:
+            Logger.error(f"Falha ao remover backup: {e}")
+            return False
+    
+    def backup_config_files(self, backup_path: Path) -> bool:
+        """Faz backup dos arquivos de configuração."""
+        config_backup = backup_path / "config"
+        config_backup.mkdir(exist_ok=True)
+        
+        try:
+            # Copia docker-compose.yml e .env
+            if self.compose_dir.exists():
+                for file in ["docker-compose.yml", ".env"]:
+                    src = self.compose_dir / file
+                    if src.exists():
+                        shutil.copy2(src, config_backup / file)
+            
+            # Copia diretório nginx se existir
+            nginx_dir = self.compose_dir / "nginx"
+            if nginx_dir.exists():
+                shutil.copytree(nginx_dir, config_backup / "nginx", dirs_exist_ok=True)
+            
+            # Copia diretório monitoring se existir
+            monitoring_dir = self.compose_dir / "monitoring"
+            if monitoring_dir.exists():
+                shutil.copytree(monitoring_dir, config_backup / "monitoring", dirs_exist_ok=True)
+            
+            return True
+        except Exception as e:
+            Logger.error(f"Falha no backup de configurações: {e}")
+            return False
+    
+    def backup_docker_volumes(self, backup_path: Path) -> bool:
+        """Faz backup dos volumes Docker."""
+        volumes_backup = backup_path / "volumes"
+        volumes_backup.mkdir(exist_ok=True)
+        
+        volumes = ["tsijukebox-data", "tsijukebox-logs"]
+        success = True
+        
+        for volume in volumes:
+            # Verifica se volume existe
+            code, stdout, _ = CommandRunner.run(
+                ["docker", "volume", "inspect", volume],
+                check=False
+            )
+            
+            if code != 0:
+                Logger.debug(f"Volume {volume} não existe, pulando...")
+                continue
+            
+            # Exporta volume para tar
+            tar_file = volumes_backup / f"{volume}.tar"
+            code, _, stderr = CommandRunner.run([
+                "docker", "run", "--rm",
+                "-v", f"{volume}:/data",
+                "-v", f"{volumes_backup}:/backup",
+                "alpine",
+                "tar", "cvf", f"/backup/{volume}.tar", "-C", "/data", "."
+            ], check=False, timeout=300)
+            
+            if code != 0:
+                Logger.warning(f"Falha ao exportar volume {volume}: {stderr}")
+                success = False
+        
+        return success
+    
+    def restore_config_files(self, backup_path: Path) -> bool:
+        """Restaura arquivos de configuração do backup."""
+        config_backup = backup_path / "config"
+        
+        if not config_backup.exists():
+            Logger.warning("Diretório de configurações não encontrado no backup")
+            return False
+        
+        try:
+            self.compose_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Restaura docker-compose.yml e .env
+            for file in ["docker-compose.yml", ".env"]:
+                src = config_backup / file
+                if src.exists():
+                    shutil.copy2(src, self.compose_dir / file)
+            
+            # Restaura nginx
+            nginx_backup = config_backup / "nginx"
+            if nginx_backup.exists():
+                nginx_dest = self.compose_dir / "nginx"
+                if nginx_dest.exists():
+                    shutil.rmtree(nginx_dest)
+                shutil.copytree(nginx_backup, nginx_dest)
+            
+            # Restaura monitoring
+            monitoring_backup = config_backup / "monitoring"
+            if monitoring_backup.exists():
+                monitoring_dest = self.compose_dir / "monitoring"
+                if monitoring_dest.exists():
+                    shutil.rmtree(monitoring_dest)
+                shutil.copytree(monitoring_backup, monitoring_dest)
+            
+            return True
+        except Exception as e:
+            Logger.error(f"Falha ao restaurar configurações: {e}")
+            return False
+    
+    def restore_docker_volumes(self, backup_path: Path) -> bool:
+        """Restaura volumes Docker do backup."""
+        volumes_backup = backup_path / "volumes"
+        
+        if not volumes_backup.exists():
+            Logger.warning("Diretório de volumes não encontrado no backup")
+            return False
+        
+        success = True
+        
+        for tar_file in volumes_backup.glob("*.tar"):
+            volume_name = tar_file.stem
+            
+            # Cria volume se não existir
+            CommandRunner.run(
+                ["docker", "volume", "create", volume_name],
+                check=False
+            )
+            
+            # Importa dados do tar
+            code, _, stderr = CommandRunner.run([
+                "docker", "run", "--rm",
+                "-v", f"{volume_name}:/data",
+                "-v", f"{volumes_backup}:/backup",
+                "alpine",
+                "tar", "xvf", f"/backup/{volume_name}.tar", "-C", "/data"
+            ], check=False, timeout=300)
+            
+            if code != 0:
+                Logger.warning(f"Falha ao restaurar volume {volume_name}: {stderr}")
+                success = False
+        
+        return success
+    
+    def get_backup_info(self, backup_path: Path) -> Optional[Dict[str, Any]]:
+        """Obtém informações de um backup."""
+        metadata_file = backup_path / "metadata.json"
+        
+        if not metadata_file.exists():
+            return {
+                "path": str(backup_path),
+                "name": backup_path.name,
+                "created_at": None,
+                "version": "unknown",
+                "size_mb": self._get_dir_size_mb(backup_path)
+            }
+        
+        try:
+            metadata = json.loads(metadata_file.read_text())
+            metadata["path"] = str(backup_path)
+            metadata["name"] = backup_path.name
+            metadata["size_mb"] = self._get_dir_size_mb(backup_path)
+            return metadata
+        except Exception:
+            return None
+    
+    def cleanup_old_backups(self, keep_count: int = 5) -> int:
+        """Remove backups antigos, mantendo apenas os mais recentes."""
+        Logger.info(f"Limpando backups antigos (mantendo {keep_count})...")
+        
+        backups = self.list_backups()
+        removed_count = 0
+        
+        if len(backups) <= keep_count:
+            Logger.info("Nenhum backup para remover")
+            return 0
+        
+        # Backups já estão ordenados por data (mais recente primeiro)
+        for backup in backups[keep_count:]:
+            backup_path = Path(backup["path"])
+            if self.delete_backup(backup_path):
+                removed_count += 1
+        
+        Logger.success(f"{removed_count} backup(s) removido(s)")
+        return removed_count
+    
+    def _get_dir_size_mb(self, path: Path) -> float:
+        """Calcula tamanho de um diretório em MB."""
+        total_size = 0
+        try:
+            for item in path.rglob("*"):
+                if item.is_file():
+                    total_size += item.stat().st_size
+        except Exception:
+            pass
+        return round(total_size / 1024 / 1024, 2)
+
+
+# ============================================================================
+# GERENCIADOR DE CONTAINERS
+# ============================================================================
+
 class ContainerManager:
     """Gerencia ciclo de vida dos containers Docker."""
     

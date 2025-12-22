@@ -39,6 +39,9 @@ SystemInfo = docker_install.SystemInfo
 CertbotManager = docker_install.CertbotManager
 CloudflareDNSManager = docker_install.CloudflareDNSManager
 ComposeManager = docker_install.ComposeManager
+ContainerManager = docker_install.ContainerManager
+SystemdManager = docker_install.SystemdManager
+BackupManager = docker_install.BackupManager
 
 
 # =============================================================================
