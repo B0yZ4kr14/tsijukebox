@@ -1,45 +1,32 @@
-export { SettingsSection } from './SettingsSection';
-export { YouTubeMusicSetupWizard } from './YouTubeMusicSetupWizard';
-export { ThemeSection } from './ThemeSection';
-export { AlertConfigSection } from './AlertConfigSection';
-export { CloudConnectionSection } from './CloudConnectionSection';
-export { BackendConnectionSection } from './BackendConnectionSection';
-export { DatabaseSection } from './DatabaseSection';
-export { DatabaseConfigSection } from './DatabaseConfigSection';
-export { UnifiedDatabaseSection } from './UnifiedDatabaseSection';
-export { BackupScheduleSection } from './BackupScheduleSection';
-export { AdvancedDatabaseSection } from './AdvancedDatabaseSection';
-export { ClientsManagementSection } from './ClientsManagementSection';
-export { UserManagementSection } from './UserManagementSection';
-export { AuthProviderSection } from './AuthProviderSection';
-export { SystemUrlsSection } from './SystemUrlsSection';
-export { NtpConfigSection } from './NtpConfigSection';
-export { WeatherConfigSection } from './WeatherConfigSection';
-export { LanguageSection } from './LanguageSection';
-export { AccessibilitySection } from './AccessibilitySection';
-export { KeysManagementSection } from './KeysManagementSection';
-export { VoiceAnalyticsCharts } from './VoiceAnalyticsCharts';
-export { SettingsSectionTour } from './SettingsSectionTour';
-export { SettingsDashboard } from './SettingsDashboard';
-export { SettingsSidebar, type SettingsCategory } from './SettingsSidebar';
-export { SettingsBreadcrumb } from './SettingsBreadcrumb';
-export { SettingsGuideCard } from './SettingsGuideCard';
-export { SettingsGuideModal } from './SettingsGuideModal';
-export { SettingsFAQ } from './SettingsFAQ';
-export { SettingsIllustration } from './SettingsIllustration';
-export { SettingsNotificationBanner, SettingsNotificationBadge } from './SettingsNotificationBanner';
-export { SpicetifySection } from './SpicetifySection';
-export { YouTubeMusicSection } from './YouTubeMusicSection';
-export { MusicIntegrationsSection } from './MusicIntegrationsSection';
-export { LocalMusicSection } from './LocalMusicSection';
-export { StorjSection } from './StorjSection';
-export { GitHubSyncStatus } from './GitHubSyncStatus';
-export { CreateDeployKeyModal } from './CreateDeployKeyModal';
-export { CodeScanSection } from './CodeScanSection';
-export { ScriptRefactorSection } from './ScriptRefactorSection';
-export { ManusAutomationSection } from './ManusAutomationSection';
-export { GitHubExportSection } from './GitHubExportSection';
-export { FullstackRefactorPanel } from './FullstackRefactorPanel';
-export { SpotifySetupWizard } from './SpotifySetupWizard';
+/**
+ * Settings Components Barrel Export
+ * 
+ * Components organized by category for better maintainability
+ */
 
+// Database settings
+export * from './database';
+
+// Integration settings
+export * from './integrations';
+
+// System settings
+export * from './system';
+
+// User management settings
+export * from './users';
+
+// Appearance settings
+export * from './appearance';
+
+// Developer settings
+export * from './developer';
+
+// Voice control settings
+export * from './voice';
+
+// Shared UI components
+export * from './ui';
+
+// Backup components (legacy preserved)
 export * from './backup';
