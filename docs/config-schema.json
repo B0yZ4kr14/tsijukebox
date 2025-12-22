@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+  "title": "TSiJUKEBOX Installation Configuration",
+  "description": "JSON Schema for install.py --config-file configuration files. Supports inheritance via deep merge when multiple files are specified.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this JSON Schema for IDE autocompletion",
+      "format": "uri"
+    },
+    "_comment": {
+      "type": "string",
+      "description": "Optional comment field for documentation purposes"
+    },
+    "_extends": {
+      "type": "string",
+      "description": "Base config file to extend (informational, actual inheritance via CLI -c flags)"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["full", "kiosk", "server"],
+      "default": "full",
+      "description": "Installation mode: full (desktop+web), kiosk (fullscreen dedicated), server (headless)"
+    },
+    "database": {
+      "type": "string",
+      "enum": ["sqlite", "mariadb", "postgresql"],
+      "default": "sqlite",
+      "description": "Database backend. SQLite for single-user, MariaDB/PostgreSQL for multi-user setups"
+    },
+    "user": {
+      "type": ["string", "null"],
+      "default": null,
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z_][a-z0-9_-]*$",
+      "description": "System user to configure (auto-detected if null)"
+    },
+    "music_dir": {
+      "type": "string",
+      "default": "Musics",
+      "minLength": 1,
+      "description": "Music directory path (relative to user home or absolute path)"
+    },
+    "no_spotify": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip Spotify and Spicetify installation"
+    },
+    "no_spotify_cli": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip spotify-cli-linux installation (sp-play, sp-next commands)"
+    },
+    "no_monitoring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip Grafana and Prometheus installation"
+    },
+    "skip_packages": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip package installation (reconfiguration mode only)"
+    },
+    "autologin": {
+      "type": "boolean",
+      "default": true,
+      "description": "Configure automatic login for the specified user"
+    },
+    "kiosk": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable kiosk mode (fullscreen, no desktop environment)"
+    },
+    "chromium_homepage": {
+      "type": "boolean",
+      "default": true,
+      "description": "Set TSiJUKEBOX web interface as Chromium homepage"
+    },
+    "custom_packages": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "Additional packages to install via pacman/paru"
+    },
+    "services": {
+      "type": "object",
+      "description": "Service-specific configurations",
+      "properties": {
+        "grafana": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "port": { "type": "integer", "minimum": 1024, "maximum": 65535, "default": 3000 }
+          }
+        },
+        "prometheus": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "port": { "type": "integer", "minimum": 1024, "maximum": 65535, "default": 9090 }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "spicetify": {
+      "type": "object",
+      "description": "Spicetify customization options",
+      "properties": {
+        "theme": {
+          "type": "string",
+          "default": "Ziro",
+          "description": "Spicetify theme name"
+        },
+        "color_scheme": {
+          "type": "string",
+          "default": "purple-dark",
+          "description": "Color scheme for the theme"
+        },
+        "extensions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Additional Spicetify extensions to install"
+        }
+      },
+      "additionalProperties": false
+    },
+    "network": {
+      "type": "object",
+      "description": "Network configuration",
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "description": "Set system hostname"
+        },
+        "mdns": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable mDNS/Avahi for local network discovery"
+        }
+      },
+      "additionalProperties": false
+    },
+    "advanced": {
+      "type": "object",
+      "description": "Advanced configuration options",
+      "properties": {
+        "dry_run": {
+          "type": "boolean",
+          "default": false,
+          "description": "Simulate installation without making changes"
+        },
+        "verbose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable verbose output"
+        },
+        "backup_before_install": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically create backup before installation"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "$schema": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+      "_comment": "Basic kiosk installation",
+      "mode": "kiosk",
+      "database": "sqlite",
+      "kiosk": true,
+      "autologin": true
+    },
+    {
+      "$schema": "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/docs/config-schema.json",
+      "_comment": "Production server with PostgreSQL",
+      "mode": "server",
+      "database": "postgresql",
+      "no_monitoring": false,
+      "no_spotify": true
+    }
+  ]
+}

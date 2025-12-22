@@ -778,6 +778,63 @@ class DoctorDiagnostic:
             except Exception:
                 pass
     
+    def _collect_system_info(self) -> Dict[str, Any]:
+        """Coleta informações do sistema para relatório."""
+        import platform
+        from datetime import datetime
+        uptime_str = "N/A"
+        try:
+            with open('/proc/uptime', 'r') as f:
+                uptime_seconds = float(f.readline().split()[0])
+                days, remainder = divmod(int(uptime_seconds), 86400)
+                hours, remainder = divmod(remainder, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                uptime_str = f"{days}d {hours}h {minutes}m {seconds}s"
+        except Exception:
+            pass
+        total, used, free = shutil.disk_usage("/")
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "hostname": socket.gethostname(),
+            "platform": platform.system(),
+            "release": platform.release(),
+            "python_version": sys.version,
+            "installer_version": VERSION,
+            "disk": {"total_gb": round(total / (1024**3), 2), "used_gb": round(used / (1024**3), 2), "free_gb": round(free / (1024**3), 2), "percent_used": round((used / total) * 100, 1)},
+            "uptime": uptime_str,
+        }
+    
+    def export_json(self, output_path: str) -> bool:
+        """Exporta relatório do diagnóstico em JSON."""
+        from datetime import datetime
+        report = {"version": VERSION, "generated_at": datetime.now().isoformat(), "hostname": socket.gethostname(), "issues": self.issues, "summary": {"total": len(self.issues), "critical": len([i for i in self.issues if i['severity'] == 'critical']), "warning": len([i for i in self.issues if i['severity'] == 'warning']), "info": len([i for i in self.issues if i['severity'] == 'info']), "healthy": len(self.issues) == 0}, "system_info": self._collect_system_info()}
+        try:
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(report, f, indent=2, ensure_ascii=False)
+            log_success(f"Relatório JSON exportado: {output_path}")
+            return True
+        except Exception as e:
+            log_error(f"Erro ao exportar JSON: {e}")
+            return False
+    
+    def export_html(self, output_path: str) -> bool:
+        """Exporta relatório do diagnóstico em HTML."""
+        from datetime import datetime
+        system_info = self._collect_system_info()
+        critical = len([i for i in self.issues if i['severity'] == 'critical'])
+        warnings = len([i for i in self.issues if i['severity'] == 'warning'])
+        infos = len([i for i in self.issues if i['severity'] == 'info'])
+        issues_html = '<div class="no-issues">✅ Nenhum problema encontrado!</div>' if not self.issues else ''.join([f'<div class="issue {i["severity"]}"><strong>{i["name"]}</strong><p>{i["description"]}</p></div>' for i in self.issues])
+        html = f'''<!DOCTYPE html><html><head><meta charset="UTF-8"><title>TSiJUKEBOX Doctor Report</title><style>body{{font-family:system-ui;max-width:900px;margin:0 auto;padding:2rem;background:#0f172a;color:#f1f5f9}}.header{{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:2rem;border-radius:12px;text-align:center;margin-bottom:2rem}}.summary{{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}}.stat{{background:#1e293b;padding:1.5rem;border-radius:8px;text-align:center}}.stat.critical{{border:1px solid #dc2626}}.stat.warning{{border:1px solid #f59e0b}}.stat.info{{border:1px solid #3b82f6}}.stat.ok{{border:1px solid #22c55e}}.issue{{margin:1rem 0;padding:1rem;border-radius:8px;border-left:4px solid}}.issue.critical{{background:#450a0a;border-color:#dc2626}}.issue.warning{{background:#451a03;border-color:#f59e0b}}.issue.info{{background:#172554;border-color:#3b82f6}}.no-issues{{text-align:center;color:#22c55e;padding:2rem}}</style></head><body><div class="header"><h1>🩺 TSiJUKEBOX Doctor Report</h1><p>Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} | Host: {system_info["hostname"]}</p></div><div class="summary"><div class="stat critical"><strong style="color:#dc2626;font-size:2rem">{critical}</strong><br>Críticos</div><div class="stat warning"><strong style="color:#f59e0b;font-size:2rem">{warnings}</strong><br>Avisos</div><div class="stat info"><strong style="color:#3b82f6;font-size:2rem">{infos}</strong><br>Info</div><div class="stat ok"><strong style="color:#22c55e;font-size:2rem">{"✓" if not self.issues else "—"}</strong><br>Status</div></div><h2>📋 Problemas</h2>{issues_html}<h2>💻 Sistema</h2><p>Disco: {system_info["disk"]["free_gb"]}GB livre | Uptime: {system_info["uptime"]} | Python: {sys.version.split()[0]}</p></body></html>'''
+        try:
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(html)
+            log_success(f"Relatório HTML exportado: {output_path}")
+            return True
+        except Exception as e:
+            log_error(f"Erro ao exportar HTML: {e}")
+            return False
+    
     def run_all_checks(self) -> bool:
         """Executa todas as verificações."""
         print(f"""
@@ -2055,6 +2112,10 @@ def main():
     parser.add_argument('--list-backups', action='store_true',
                        help='Listar backups disponíveis')
     
+    # Export report
+    parser.add_argument('--export-report', type=str, metavar='FILE',
+                       help='Exportar relatório do doctor (suporta .json e .html)')
+    
     # Outros
     parser.add_argument('--uninstall', action='store_true',
                        help='Remover instalação existente')
@@ -2111,6 +2172,19 @@ def main():
     if args.doctor or args.doctor_fix:
         doctor = DoctorDiagnostic(auto_fix=args.doctor_fix)
         success = doctor.run_all_checks()
+        
+        # Exportar relatório se solicitado
+        if hasattr(args, 'export_report') and args.export_report:
+            output = args.export_report
+            if output.endswith('.json'):
+                doctor.export_json(output)
+            elif output.endswith('.html'):
+                doctor.export_html(output)
+            else:
+                # Default: gerar ambos
+                doctor.export_json(f"{output}.json")
+                doctor.export_html(f"{output}.html")
+        
         sys.exit(0 if success else 1)
     
     # --validate: Validar instalação existente
