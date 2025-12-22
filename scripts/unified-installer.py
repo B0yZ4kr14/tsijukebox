@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-TSiJUKEBOX Enterprise - Unified Installer
-==========================================
+TSiJUKEBOX Enterprise - Unified Installer v5.1.0
+=================================================
 Instalador unificado com Docker + todas as integrações.
 
 USO:
@@ -18,6 +18,14 @@ FEATURES:
     ✅ Configura NTP (chrony/systemd-timesyncd)
     ✅ Docker para aplicação principal
     ✅ Rollback automático em caso de falha
+    ✅ Configuração de áudio (PulseAudio/PipeWire)
+    ✅ Instalação de fontes (Noto, DejaVu, Liberation)
+    ✅ Configuração de banco de dados (SQLite/MariaDB/PostgreSQL)
+    ✅ Backup na nuvem (rclone, Storj, AWS S3)
+    ✅ Modo Kiosk (Chromium + Openbox)
+    ✅ Controle por voz (Vosk)
+    ✅ Ferramentas de desenvolvimento (Node.js, Python, Playwright)
+    ✅ Resumo de instalação em JSON
 
 Autor: B0.y_Z4kr14
 Licença: Domínio Público
@@ -43,12 +51,15 @@ from enum import Enum
 # CONSTANTES E CONFIGURAÇÃO
 # =============================================================================
 
-VERSION = "5.0.0"
+VERSION = "5.1.0"
 INSTALL_DIR = Path("/opt/tsijukebox")
 CONFIG_DIR = Path("/etc/tsijukebox")
 LOG_DIR = Path("/var/log/tsijukebox")
 DATA_DIR = Path("/var/lib/tsijukebox")
 BACKUP_DIR = Path("/var/backups/tsijukebox")
+
+# Total de fases de instalação
+TOTAL_PHASES = 20
 
 # Cores ANSI
 class Colors:
@@ -123,29 +134,36 @@ class Logger:
 # =============================================================================
 
 class InstallPhase(Enum):
-    """Fases de instalação."""
-    SYSTEM_CHECK = "system_check"
-    DOCKER = "docker"
-    UFW = "ufw"
-    NTP = "ntp"
-    NGINX = "nginx"
-    MONITORING = "monitoring"
-    SPOTIFY = "spotify"
-    SPICETIFY = "spicetify"
-    SPOTIFY_CLI = "spotify_cli"
-    AUTOLOGIN = "autologin"
-    APP_DEPLOY = "app_deploy"
-    SERVICES = "services"
-    VERIFY = "verify"
+    """Fases de instalação (20 fases totais)."""
+    SYSTEM_CHECK = "system_check"       # 1
+    DOCKER = "docker"                    # 2
+    UFW = "ufw"                          # 3
+    NTP = "ntp"                          # 4
+    FONTS = "fonts"                      # 5 - NOVO
+    AUDIO = "audio"                      # 6 - NOVO
+    DATABASE = "database"                # 7 - NOVO
+    NGINX = "nginx"                      # 8
+    MONITORING = "monitoring"            # 9
+    CLOUD_BACKUP = "cloud_backup"        # 10 - NOVO
+    SPOTIFY = "spotify"                  # 11
+    SPICETIFY = "spicetify"             # 12
+    SPOTIFY_CLI = "spotify_cli"          # 13
+    KIOSK = "kiosk"                      # 14 - NOVO
+    VOICE_CONTROL = "voice_control"      # 15 - NOVO
+    DEV_TOOLS = "dev_tools"              # 16 - NOVO
+    AUTOLOGIN = "autologin"              # 17
+    APP_DEPLOY = "app_deploy"            # 18
+    SERVICES = "services"                # 19
+    VERIFY = "verify"                    # 20
 
 
 @dataclass
 class InstallConfig:
-    """Configuração de instalação."""
+    """Configuração de instalação expandida."""
     mode: str = 'full'
     user: Optional[str] = None
     
-    # Componentes
+    # Componentes existentes
     install_docker: bool = True
     install_ufw: bool = True
     install_ntp: bool = True
@@ -155,6 +173,23 @@ class InstallConfig:
     install_spicetify: bool = True
     install_spotify_cli: bool = True
     configure_autologin: bool = True
+    
+    # NOVOS componentes v5.1.0
+    install_fonts: bool = True
+    install_audio: bool = True
+    audio_backend: str = 'pipewire'  # 'pulseaudio' ou 'pipewire'
+    install_database: bool = True
+    database_type: str = 'sqlite'    # 'sqlite', 'mariadb', 'postgresql'
+    database_name: str = 'tsijukebox'
+    database_user: str = 'tsi'
+    install_cloud_backup: bool = True
+    cloud_providers: List[str] = field(default_factory=lambda: ['rclone'])
+    backup_schedule: str = '0 2 * * *'  # Cron: 02:00 diariamente
+    install_kiosk: bool = False       # Apenas em modo kiosk
+    kiosk_url: str = 'http://localhost:5173'
+    install_voice_control: bool = True
+    voice_language: str = 'pt-BR'
+    install_dev_tools: bool = False   # Opcional para desenvolvedores
     
     # Opções
     dry_run: bool = False
@@ -172,7 +207,7 @@ class SystemInfo:
     distro: str = ""
     distro_id: str = ""
     user: str = ""
-    home: Path = Path.home()
+    home: Path = field(default_factory=Path.home)
     login_manager: str = ""
     has_docker: bool = False
     has_paru: bool = False
@@ -259,7 +294,7 @@ def detect_aur_helper() -> Optional[str]:
 # =============================================================================
 
 class UnifiedInstaller:
-    """Instalador unificado do TSiJUKEBOX."""
+    """Instalador unificado do TSiJUKEBOX v5.1.0."""
     
     def __init__(self, config: InstallConfig):
         self.config = config
@@ -267,9 +302,15 @@ class UnifiedInstaller:
         self.system_info = SystemInfo()
         self.completed_phases: List[InstallPhase] = []
         self.rollback_actions: List[callable] = []
+        self.phase_counter = 0
+    
+    def _next_phase(self) -> int:
+        """Incrementa e retorna o contador de fase."""
+        self.phase_counter += 1
+        return self.phase_counter
     
     def run(self) -> bool:
-        """Executa instalação completa."""
+        """Executa instalação completa com 20 fases."""
         self._print_banner()
         
         try:
@@ -292,47 +333,85 @@ class UnifiedInstaller:
                 if not self._phase_ntp():
                     self.logger.warning("NTP falhou, continuando...")
             
-            # Fase 5: Nginx
+            # Fase 5: Fontes (NOVO v5.1.0)
+            if self.config.install_fonts:
+                if not self._phase_fonts():
+                    self.logger.warning("Fontes falhou, continuando...")
+            
+            # Fase 6: Áudio (NOVO v5.1.0)
+            if self.config.install_audio:
+                if not self._phase_audio():
+                    self.logger.warning("Áudio falhou, continuando...")
+            
+            # Fase 7: Database (NOVO v5.1.0)
+            if self.config.install_database:
+                if not self._phase_database():
+                    self.logger.warning("Database falhou, continuando...")
+            
+            # Fase 8: Nginx
             if self.config.install_nginx:
                 if not self._phase_nginx():
                     self.logger.warning("Nginx falhou, continuando...")
             
-            # Fase 6: Monitoramento (Grafana + Prometheus)
+            # Fase 9: Monitoramento (Grafana + Prometheus)
             if self.config.install_monitoring:
                 if not self._phase_monitoring():
                     self.logger.warning("Monitoramento falhou, continuando...")
             
-            # Fase 7: Spotify
+            # Fase 10: Cloud Backup (NOVO v5.1.0)
+            if self.config.install_cloud_backup:
+                if not self._phase_cloud_backup():
+                    self.logger.warning("Cloud Backup falhou, continuando...")
+            
+            # Fase 11: Spotify
             if self.config.install_spotify:
                 if not self._phase_spotify():
                     self.logger.warning("Spotify falhou, continuando...")
             
-            # Fase 8: Spicetify
+            # Fase 12: Spicetify
             if self.config.install_spicetify and self.config.install_spotify:
                 if not self._phase_spicetify():
                     self.logger.warning("Spicetify falhou, continuando...")
             
-            # Fase 9: spotify-cli-linux
+            # Fase 13: spotify-cli-linux
             if self.config.install_spotify_cli and self.config.install_spotify:
                 if not self._phase_spotify_cli():
                     self.logger.warning("spotify-cli falhou, continuando...")
             
-            # Fase 10: Autologin
+            # Fase 14: Kiosk (NOVO v5.1.0 - apenas modo kiosk)
+            if self.config.install_kiosk or self.config.mode == 'kiosk':
+                if not self._phase_kiosk():
+                    self.logger.warning("Kiosk falhou, continuando...")
+            
+            # Fase 15: Voice Control (NOVO v5.1.0)
+            if self.config.install_voice_control:
+                if not self._phase_voice_control():
+                    self.logger.warning("Voice Control falhou, continuando...")
+            
+            # Fase 16: Dev Tools (NOVO v5.1.0 - opcional)
+            if self.config.install_dev_tools:
+                if not self._phase_dev_tools():
+                    self.logger.warning("Dev Tools falhou, continuando...")
+            
+            # Fase 17: Autologin
             if self.config.configure_autologin:
                 if not self._phase_autologin():
                     self.logger.warning("Autologin falhou, continuando...")
             
-            # Fase 11: Deploy da aplicação
+            # Fase 18: Deploy da aplicação
             if not self._phase_app_deploy():
                 return self._rollback()
             
-            # Fase 12: Serviços systemd
+            # Fase 19: Serviços systemd
             if not self._phase_services():
                 self.logger.warning("Serviços falhou, continuando...")
             
-            # Fase 13: Verificação final
+            # Fase 20: Verificação final
             if not self._phase_verify():
                 self.logger.warning("Verificação incompleta")
+            
+            # Gerar resumo de instalação em JSON
+            self._generate_install_summary()
             
             self._print_success()
             return True
@@ -349,12 +428,14 @@ class UnifiedInstaller:
         print(f"""
 {Colors.CYAN}╔══════════════════════════════════════════════════════════════════════════════╗
 ║  {Colors.BOLD}{Colors.WHITE}🚀 TSiJUKEBOX Enterprise - Unified Installer v{VERSION}{Colors.RESET}{Colors.CYAN}                          ║
-║  {Colors.DIM}Instalador unificado com Docker + todas as integrações{Colors.RESET}{Colors.CYAN}                     ║
+║  {Colors.DIM}Instalador unificado com 20 fases de instalação{Colors.RESET}{Colors.CYAN}                            ║
 ╚══════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
 """)
     
     def _print_success(self):
-        """Exibe mensagem de sucesso."""
+        """Exibe mensagem de sucesso expandida."""
+        components_installed = [p.value for p in self.completed_phases]
+        
         print(f"""
 {Colors.GREEN}╔══════════════════════════════════════════════════════════════════════════════╗
 ║  {Colors.BOLD}🎉 INSTALAÇÃO CONCLUÍDA COM SUCESSO!{Colors.RESET}{Colors.GREEN}                                        ║
@@ -365,10 +446,19 @@ class UnifiedInstaller:
      • Grafana:    http://localhost:3000  (admin/admin)
      • Prometheus: http://localhost:9090
 
+  {Colors.CYAN}📋 Componentes instalados ({len(self.completed_phases)}/{TOTAL_PHASES}):{Colors.RESET}
+     • {', '.join(components_installed[:5])}
+     • {', '.join(components_installed[5:10]) if len(components_installed) > 5 else ''}
+     • {', '.join(components_installed[10:]) if len(components_installed) > 10 else ''}
+
+  {Colors.CYAN}📁 Resumo da instalação:{Colors.RESET}
+     • {CONFIG_DIR}/install-summary.json
+
   {Colors.CYAN}📋 Comandos úteis:{Colors.RESET}
      • systemctl status tsijukebox
      • journalctl -u tsijukebox -f
      • tsijukebox --verify
+     • cat {CONFIG_DIR}/install-summary.json
 
   {Colors.CYAN}📚 Documentação:{Colors.RESET}
      • https://github.com/B0yZ4kr14/TSiJUKEBOX
@@ -388,13 +478,72 @@ class UnifiedInstaller:
         
         return False
     
+    def _generate_install_summary(self):
+        """Gera arquivo JSON com resumo completo da instalação."""
+        summary = {
+            "version": VERSION,
+            "installed_at": datetime.now().isoformat(),
+            "user": self.system_info.user,
+            "mode": self.config.mode,
+            "distro": self.system_info.distro,
+            "distro_id": self.system_info.distro_id,
+            "components": {
+                "docker": InstallPhase.DOCKER in self.completed_phases,
+                "ufw": InstallPhase.UFW in self.completed_phases,
+                "ntp": InstallPhase.NTP in self.completed_phases,
+                "fonts": InstallPhase.FONTS in self.completed_phases,
+                "audio": self.config.audio_backend if InstallPhase.AUDIO in self.completed_phases else None,
+                "database": self.config.database_type if InstallPhase.DATABASE in self.completed_phases else None,
+                "nginx": InstallPhase.NGINX in self.completed_phases,
+                "monitoring": InstallPhase.MONITORING in self.completed_phases,
+                "cloud_backup": self.config.cloud_providers if InstallPhase.CLOUD_BACKUP in self.completed_phases else [],
+                "spotify": InstallPhase.SPOTIFY in self.completed_phases,
+                "spicetify": InstallPhase.SPICETIFY in self.completed_phases,
+                "spotify_cli": InstallPhase.SPOTIFY_CLI in self.completed_phases,
+                "kiosk": InstallPhase.KIOSK in self.completed_phases,
+                "voice_control": InstallPhase.VOICE_CONTROL in self.completed_phases,
+                "dev_tools": InstallPhase.DEV_TOOLS in self.completed_phases,
+                "autologin": InstallPhase.AUTOLOGIN in self.completed_phases,
+            },
+            "paths": {
+                "install_dir": str(INSTALL_DIR),
+                "config_dir": str(CONFIG_DIR),
+                "log_dir": str(LOG_DIR),
+                "data_dir": str(DATA_DIR),
+                "backup_dir": str(BACKUP_DIR),
+            },
+            "access_urls": {
+                "app": "http://localhost:5173",
+                "grafana": "http://localhost:3000",
+                "prometheus": "http://localhost:9090",
+            },
+            "services": ["tsijukebox", "docker", "nginx", "grafana", "prometheus"],
+            "phases_completed": [p.value for p in self.completed_phases],
+            "phases_total": TOTAL_PHASES,
+            "system_info": {
+                "ram_gb": round(self.system_info.ram_gb, 2),
+                "disk_free_gb": round(self.system_info.disk_free_gb, 2),
+                "login_manager": self.system_info.login_manager,
+            }
+        }
+        
+        try:
+            if not self.config.dry_run:
+                CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+                summary_file = CONFIG_DIR / "install-summary.json"
+                summary_file.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+                self.logger.success(f"Resumo salvo em: {summary_file}")
+        except Exception as e:
+            self.logger.warning(f"Falha ao salvar resumo: {e}")
+    
     # =========================================================================
     # FASES DE INSTALAÇÃO
     # =========================================================================
     
     def _phase_system_check(self) -> bool:
         """Fase 1: Verificação do sistema."""
-        self.logger.step(1, 13, "Verificando sistema...")
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Verificando sistema...")
         
         # Verificar root
         if os.geteuid() != 0:
@@ -517,7 +666,8 @@ class UnifiedInstaller:
     
     def _phase_docker(self) -> bool:
         """Fase 2: Instalação do Docker."""
-        self.logger.step(2, 13, "Configurando Docker...")
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando Docker...")
         
         if self.system_info.has_docker:
             self.logger.info("Docker já instalado")
@@ -546,7 +696,8 @@ class UnifiedInstaller:
     
     def _phase_ufw(self) -> bool:
         """Fase 3: Configuração do UFW."""
-        self.logger.step(3, 13, "Configurando firewall UFW...")
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando firewall UFW...")
         
         try:
             # Importar módulo UFW local
@@ -581,7 +732,8 @@ class UnifiedInstaller:
     
     def _phase_ntp(self) -> bool:
         """Fase 4: Configuração do NTP."""
-        self.logger.step(4, 13, "Configurando sincronização de tempo...")
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando sincronização de tempo...")
         
         try:
             sys.path.insert(0, str(Path(__file__).parent / 'installer'))
@@ -606,9 +758,138 @@ class UnifiedInstaller:
             self.logger.success("NTP configurado")
             return True
     
+    def _phase_fonts(self) -> bool:
+        """Fase 5: Instalação de fontes (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Instalando fontes...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from fonts_setup import FontsSetup, FontsConfig
+            
+            config = FontsConfig(
+                install_noto=True,
+                install_dejavu=True,
+                install_liberation=True,
+                install_fontawesome=True,
+                install_emoji=True
+            )
+            
+            fonts = FontsSetup(config=config, logger=self.logger, dry_run=self.config.dry_run)
+            success = fonts.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.FONTS)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo fonts não encontrado, instalação manual...")
+            
+            # Fallback: pacman direto
+            packages = [
+                'noto-fonts', 'noto-fonts-extra', 'noto-fonts-emoji',
+                'ttf-dejavu', 'ttf-liberation', 'ttf-font-awesome'
+            ]
+            run_command(['pacman', '-S', '--noconfirm', '--needed'] + packages, 
+                       dry_run=self.config.dry_run)
+            run_command(['fc-cache', '-fv'], dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.FONTS)
+            self.logger.success("Fontes instaladas")
+            return True
+    
+    def _phase_audio(self) -> bool:
+        """Fase 6: Configuração de áudio (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, f"Configurando áudio ({self.config.audio_backend})...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from audio_setup import AudioSetup, AudioConfig, AudioBackend
+            
+            backend = AudioBackend.PIPEWIRE if self.config.audio_backend == 'pipewire' else AudioBackend.PULSEAUDIO
+            
+            config = AudioConfig(
+                backend=backend,
+                install_bluetooth=True,
+                install_equalizer=True,
+                install_control_gui=True
+            )
+            
+            audio = AudioSetup(
+                config=config, 
+                logger=self.logger, 
+                user=self.system_info.user,
+                dry_run=self.config.dry_run
+            )
+            success = audio.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.AUDIO)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo audio não encontrado, instalação manual...")
+            
+            # Fallback: instalar PipeWire
+            if self.config.audio_backend == 'pipewire':
+                packages = ['pipewire', 'pipewire-pulse', 'pipewire-alsa', 'wireplumber']
+            else:
+                packages = ['pulseaudio', 'pulseaudio-alsa', 'pavucontrol']
+            
+            run_command(['pacman', '-S', '--noconfirm', '--needed'] + packages,
+                       dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.AUDIO)
+            self.logger.success(f"Áudio ({self.config.audio_backend}) configurado")
+            return True
+    
+    def _phase_database(self) -> bool:
+        """Fase 7: Configuração de banco de dados (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, f"Configurando banco de dados ({self.config.database_type})...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from database_setup import DatabaseSetup, DatabaseConfig, DatabaseType
+            
+            db_type_map = {
+                'sqlite': DatabaseType.SQLITE,
+                'mariadb': DatabaseType.MARIADB,
+                'postgresql': DatabaseType.POSTGRESQL
+            }
+            
+            config = DatabaseConfig(
+                db_type=db_type_map.get(self.config.database_type, DatabaseType.SQLITE),
+                database_name=self.config.database_name,
+                username=self.config.database_user
+            )
+            
+            db = DatabaseSetup(config=config, logger=self.logger, dry_run=self.config.dry_run)
+            success = db.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.DATABASE)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo database não encontrado, instalação manual...")
+            
+            # Fallback: SQLite apenas
+            run_command(['pacman', '-S', '--noconfirm', '--needed', 'sqlite'],
+                       dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.DATABASE)
+            self.logger.success("SQLite instalado")
+            return True
+    
     def _phase_nginx(self) -> bool:
-        """Fase 5: Instalação e configuração do Nginx."""
-        self.logger.step(5, 13, "Configurando Nginx...")
+        """Fase 8: Instalação e configuração do Nginx."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando Nginx...")
         
         # Instalar Nginx
         code, _, err = run_command([
@@ -670,8 +951,9 @@ server {
         return True
     
     def _phase_monitoring(self) -> bool:
-        """Fase 6: Instalação do monitoramento."""
-        self.logger.step(6, 13, "Configurando Grafana + Prometheus...")
+        """Fase 9: Instalação do monitoramento."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando Grafana + Prometheus...")
         
         # Instalar pacotes
         packages = ['grafana', 'prometheus', 'prometheus-node-exporter']
@@ -693,9 +975,59 @@ server {
         self.logger.success("Monitoramento configurado")
         return True
     
+    def _phase_cloud_backup(self) -> bool:
+        """Fase 10: Configuração de backup na nuvem (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, f"Configurando backup na nuvem ({', '.join(self.config.cloud_providers)})...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from cloud_backup_setup import CloudBackupSetup, CloudBackupConfig, CloudProvider
+            
+            provider_map = {
+                'rclone': CloudProvider.RCLONE,
+                'storj': CloudProvider.STORJ,
+                'aws': CloudProvider.AWS_S3,
+                's3': CloudProvider.AWS_S3,
+                'mega': CloudProvider.MEGA
+            }
+            
+            providers = [provider_map.get(p.lower(), CloudProvider.RCLONE) 
+                        for p in self.config.cloud_providers]
+            
+            config = CloudBackupConfig(
+                providers=providers,
+                backup_dirs=[str(DATA_DIR), str(CONFIG_DIR)],
+                schedule=self.config.backup_schedule
+            )
+            
+            backup = CloudBackupSetup(
+                config=config, 
+                logger=self.logger, 
+                user=self.system_info.user
+            )
+            success = backup.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.CLOUD_BACKUP)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo cloud_backup não encontrado, instalação manual...")
+            
+            # Fallback: instalar rclone apenas
+            run_command(['pacman', '-S', '--noconfirm', '--needed', 'rclone'],
+                       dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.CLOUD_BACKUP)
+            self.logger.success("rclone instalado")
+            return True
+    
     def _phase_spotify(self) -> bool:
-        """Fase 7: Instalação do Spotify."""
-        self.logger.step(7, 13, "Instalando Spotify...")
+        """Fase 11: Instalação do Spotify."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Instalando Spotify...")
         
         # Verificar se já instalado
         if shutil.which('spotify'):
@@ -723,8 +1055,9 @@ server {
         return True
     
     def _phase_spicetify(self) -> bool:
-        """Fase 8: Instalação do Spicetify."""
-        self.logger.step(8, 13, "Configurando Spicetify...")
+        """Fase 12: Instalação do Spicetify."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando Spicetify...")
         
         try:
             sys.path.insert(0, str(Path(__file__).parent / 'installer'))
@@ -752,8 +1085,9 @@ server {
             return True
     
     def _phase_spotify_cli(self) -> bool:
-        """Fase 9: Instalação do spotify-cli-linux."""
-        self.logger.step(9, 13, "Instalando spotify-cli-linux...")
+        """Fase 13: Instalação do spotify-cli-linux."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Instalando spotify-cli-linux...")
         
         try:
             sys.path.insert(0, str(Path(__file__).parent / 'installer'))
@@ -777,9 +1111,121 @@ server {
             self.completed_phases.append(InstallPhase.SPOTIFY_CLI)
             return True
     
+    def _phase_kiosk(self) -> bool:
+        """Fase 14: Configuração de modo Kiosk (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando modo Kiosk...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from kiosk_chromium_setup import KioskChromiumSetup, KioskConfig
+            
+            config = KioskConfig(
+                url=self.config.kiosk_url,
+                user=self.system_info.user,
+                fullscreen=True,
+                disable_screensaver=True,
+                hide_cursor=True
+            )
+            
+            kiosk = KioskChromiumSetup(
+                config=config, 
+                logger=self.logger, 
+                dry_run=self.config.dry_run
+            )
+            success = kiosk.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.KIOSK)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo kiosk não encontrado, instalação manual...")
+            
+            # Fallback: instalar Chromium + Openbox
+            packages = ['chromium', 'openbox', 'xorg-server', 'xorg-xinit']
+            run_command(['pacman', '-S', '--noconfirm', '--needed'] + packages,
+                       dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.KIOSK)
+            self.logger.success("Kiosk configurado")
+            return True
+    
+    def _phase_voice_control(self) -> bool:
+        """Fase 15: Configuração de controle por voz (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando controle por voz...")
+        
+        try:
+            sys.path.insert(0, str(Path(__file__).parent / 'installer'))
+            from voice_control_setup import VoiceControlSetup, VoiceControlConfig
+            
+            config = VoiceControlConfig(
+                language=self.config.voice_language,
+                install_vosk=True,
+                download_model=True
+            )
+            
+            voice = VoiceControlSetup(
+                config=config, 
+                logger=self.logger, 
+                user=self.system_info.user,
+                dry_run=self.config.dry_run
+            )
+            success = voice.full_setup()
+            
+            if success:
+                self.completed_phases.append(InstallPhase.VOICE_CONTROL)
+            
+            return success
+            
+        except ImportError:
+            self.logger.warning("Módulo voice_control não encontrado, instalação manual...")
+            
+            # Fallback: instalar dependências básicas
+            run_command(['pacman', '-S', '--noconfirm', '--needed', 'portaudio', 'python-pyaudio'],
+                       dry_run=self.config.dry_run)
+            run_as_user(['pip', 'install', '--user', 'vosk', 'SpeechRecognition'],
+                       self.system_info.user, dry_run=self.config.dry_run)
+            
+            self.completed_phases.append(InstallPhase.VOICE_CONTROL)
+            self.logger.success("Controle por voz instalado")
+            return True
+    
+    def _phase_dev_tools(self) -> bool:
+        """Fase 16: Instalação de ferramentas de desenvolvimento (NOVO v5.1.0)."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Instalando ferramentas de desenvolvimento...")
+        
+        # Node.js via pacman (LTS)
+        node_packages = ['nodejs-lts-iron', 'npm']
+        run_command(['pacman', '-S', '--noconfirm', '--needed'] + node_packages,
+                   dry_run=self.config.dry_run)
+        
+        # Python tools
+        python_packages = ['python', 'python-pip', 'python-virtualenv']
+        run_command(['pacman', '-S', '--noconfirm', '--needed'] + python_packages,
+                   dry_run=self.config.dry_run)
+        
+        # Git
+        run_command(['pacman', '-S', '--noconfirm', '--needed', 'git'],
+                   dry_run=self.config.dry_run)
+        
+        # Playwright para testes
+        run_as_user(['npm', 'install', '-g', 'playwright'],
+                   self.system_info.user, dry_run=self.config.dry_run)
+        run_as_user(['npx', 'playwright', 'install', '--with-deps'],
+                   self.system_info.user, dry_run=self.config.dry_run)
+        
+        self.completed_phases.append(InstallPhase.DEV_TOOLS)
+        self.logger.success("Ferramentas de desenvolvimento instaladas")
+        return True
+    
     def _phase_autologin(self) -> bool:
-        """Fase 10: Configuração de autologin."""
-        self.logger.step(10, 13, "Configurando autologin...")
+        """Fase 17: Configuração de autologin."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Configurando autologin...")
         
         try:
             sys.path.insert(0, str(Path(__file__).parent / 'installer'))
@@ -801,8 +1247,9 @@ server {
             return False
     
     def _phase_app_deploy(self) -> bool:
-        """Fase 11: Deploy da aplicação."""
-        self.logger.step(11, 13, "Fazendo deploy da aplicação...")
+        """Fase 18: Deploy da aplicação."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Fazendo deploy da aplicação...")
         
         # Criar diretórios
         for dir_path in [INSTALL_DIR, CONFIG_DIR, LOG_DIR, DATA_DIR]:
@@ -851,8 +1298,9 @@ networks:
         return True
     
     def _phase_services(self) -> bool:
-        """Fase 12: Criação de serviços systemd."""
-        self.logger.step(12, 13, "Criando serviços systemd...")
+        """Fase 19: Criação de serviços systemd."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Criando serviços systemd...")
         
         service_content = f"""[Unit]
 Description=TSiJUKEBOX Music Player
@@ -884,14 +1332,19 @@ WantedBy=multi-user.target
         return True
     
     def _phase_verify(self) -> bool:
-        """Fase 13: Verificação final."""
-        self.logger.step(13, 13, "Verificando instalação...")
+        """Fase 20: Verificação final expandida."""
+        phase_num = self._next_phase()
+        self.logger.step(phase_num, TOTAL_PHASES, "Verificando instalação...")
         
+        # Verificar binários
         checks = [
             ('Docker', shutil.which('docker') is not None),
             ('Nginx', shutil.which('nginx') is not None),
             ('Spotify', shutil.which('spotify') is not None),
             ('Spicetify', shutil.which('spicetify') is not None),
+            ('rclone', shutil.which('rclone') is not None),
+            ('PipeWire/Pulse', shutil.which('pactl') is not None),
+            ('Node.js', shutil.which('node') is not None),
         ]
         
         all_ok = True
@@ -911,6 +1364,14 @@ WantedBy=multi-user.target
             else:
                 self.logger.warning(f"Serviço {service}: inativo")
         
+        # Verificar diretórios
+        dirs_to_check = [INSTALL_DIR, CONFIG_DIR, LOG_DIR, DATA_DIR]
+        for dir_path in dirs_to_check:
+            if dir_path.exists():
+                self.logger.success(f"Diretório {dir_path}: OK")
+            else:
+                self.logger.warning(f"Diretório {dir_path}: não existe")
+        
         self.completed_phases.append(InstallPhase.VERIFY)
         return True
 
@@ -920,9 +1381,9 @@ WantedBy=multi-user.target
 # =============================================================================
 
 def parse_args() -> InstallConfig:
-    """Parse argumentos de linha de comando."""
+    """Parse argumentos de linha de comando expandidos."""
     parser = argparse.ArgumentParser(
-        description='TSiJUKEBOX Enterprise - Unified Installer',
+        description='TSiJUKEBOX Enterprise - Unified Installer v5.1.0 (20 fases)',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemplos:
@@ -930,6 +1391,8 @@ Exemplos:
   sudo python3 unified-installer.py --mode kiosk       # Modo kiosk
   sudo python3 unified-installer.py --no-monitoring    # Sem Grafana/Prometheus
   sudo python3 unified-installer.py --dry-run          # Simular instalação
+  sudo python3 unified-installer.py --database-type postgresql  # Com PostgreSQL
+  sudo python3 unified-installer.py --dev-tools        # Com ferramentas de dev
         """
     )
     
@@ -940,7 +1403,7 @@ Exemplos:
     parser.add_argument('--timezone', default='America/Sao_Paulo',
                        help='Timezone do sistema')
     
-    # Componentes
+    # Componentes existentes
     parser.add_argument('--no-docker', action='store_true',
                        help='Não instalar Docker')
     parser.add_argument('--no-ufw', action='store_true',
@@ -960,6 +1423,38 @@ Exemplos:
     parser.add_argument('--no-autologin', action='store_true',
                        help='Não configurar autologin')
     
+    # NOVOS componentes v5.1.0
+    parser.add_argument('--no-fonts', action='store_true',
+                       help='Não instalar fontes')
+    parser.add_argument('--no-audio', action='store_true',
+                       help='Não configurar áudio')
+    parser.add_argument('--audio-backend', choices=['pipewire', 'pulseaudio'],
+                       default='pipewire', help='Backend de áudio')
+    parser.add_argument('--no-database', action='store_true',
+                       help='Não configurar database')
+    parser.add_argument('--database-type', choices=['sqlite', 'mariadb', 'postgresql'],
+                       default='sqlite', help='Tipo de banco de dados')
+    parser.add_argument('--database-name', default='tsijukebox',
+                       help='Nome do banco de dados')
+    parser.add_argument('--database-user', default='tsi',
+                       help='Usuário do banco de dados')
+    parser.add_argument('--no-cloud-backup', action='store_true',
+                       help='Não configurar backup na nuvem')
+    parser.add_argument('--cloud-providers', nargs='+',
+                       default=['rclone'], help='Provedores de cloud (rclone, storj, aws, mega)')
+    parser.add_argument('--backup-schedule', default='0 2 * * *',
+                       help='Agendamento de backup (cron)')
+    parser.add_argument('--kiosk', action='store_true',
+                       help='Instalar modo kiosk (Chromium + Openbox)')
+    parser.add_argument('--kiosk-url', default='http://localhost:5173',
+                       help='URL para modo kiosk')
+    parser.add_argument('--no-voice-control', action='store_true',
+                       help='Não instalar controle por voz')
+    parser.add_argument('--voice-language', default='pt-BR',
+                       help='Idioma para controle por voz')
+    parser.add_argument('--dev-tools', action='store_true',
+                       help='Instalar ferramentas de desenvolvimento')
+    
     # Opções
     parser.add_argument('--dry-run', action='store_true',
                        help='Simular sem executar')
@@ -971,6 +1466,9 @@ Exemplos:
                        help='Instalação automática sem confirmações')
     
     args = parser.parse_args()
+    
+    # Determinar se kiosk deve ser instalado
+    install_kiosk = args.kiosk or args.mode == 'kiosk'
     
     return InstallConfig(
         mode=args.mode,
@@ -984,6 +1482,23 @@ Exemplos:
         install_spicetify=not args.no_spicetify,
         install_spotify_cli=not args.no_spotify_cli,
         configure_autologin=not args.no_autologin,
+        # Novos v5.1.0
+        install_fonts=not args.no_fonts,
+        install_audio=not args.no_audio,
+        audio_backend=args.audio_backend,
+        install_database=not args.no_database,
+        database_type=args.database_type,
+        database_name=args.database_name,
+        database_user=args.database_user,
+        install_cloud_backup=not args.no_cloud_backup,
+        cloud_providers=args.cloud_providers,
+        backup_schedule=args.backup_schedule,
+        install_kiosk=install_kiosk,
+        kiosk_url=args.kiosk_url,
+        install_voice_control=not args.no_voice_control,
+        voice_language=args.voice_language,
+        install_dev_tools=args.dev_tools,
+        # Opções
         dry_run=args.dry_run,
         verbose=args.verbose,
         quiet=args.quiet,
