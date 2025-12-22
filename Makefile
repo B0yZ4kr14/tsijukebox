@@ -136,7 +136,31 @@ ci-coverage: ## Coverage para CI (com JSON summary)
 # Atalhos
 # ============================================================================
 
+# ============================================================================
+# Testes Python (Instalador)
+# ============================================================================
+
+test-python: ## Testes do instalador Python
+	@echo "$(CYAN)▶ Executando testes Python do instalador...$(NC)"
+	@cd scripts && \
+		python3 -m pytest tests/ -v
+
+test-python-coverage: ## Testes Python com cobertura
+	@echo "$(CYAN)▶ Gerando cobertura Python...$(NC)"
+	@cd scripts && \
+		python3 -m pytest tests/ --cov=. --cov-report=html:../coverage-python --cov-report=term-missing
+
+clean-python-coverage: ## Limpar cobertura Python
+	@echo "$(YELLOW)▶ Limpando cobertura Python...$(NC)"
+	rm -rf coverage-python/
+	@echo "$(GREEN)✓ Cobertura Python removida$(NC)"
+
+# ============================================================================
+# Atalhos
+# ============================================================================
+
 t: test ## Atalho para test
 tw: test-watch ## Atalho para test-watch
 tc: test-coverage ## Atalho para test-coverage
 tu: test-ui ## Atalho para test-ui
+tp: test-python ## Atalho para test-python
