@@ -1,31 +1,45 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface FullstackRefactorRequest {
-  action: 
-    | 'refactor-hooks'
-    | 'refactor-components'
-    | 'refactor-pages'
-    | 'refactor-edge-functions'
-    | 'refactor-all'
-    | 'analyze-architecture'
-    | 'generate-tests';
-  files: Array<{
-    path: string;
-    content: string;
-  }>;
-  context?: string;
-  options?: {
-    includeTests?: boolean;
-    strictTypeScript?: boolean;
-    addErrorBoundaries?: boolean;
-    optimizePerformance?: boolean;
-  };
-}
+// =============================================================================
+// ZOD VALIDATION SCHEMAS
+// =============================================================================
+
+const fileSchema = z.object({
+  path: z.string().min(1, "File path is required").max(500),
+  content: z.string().min(1, "File content is required"),
+});
+
+const optionsSchema = z.object({
+  includeTests: z.boolean().optional().default(false),
+  strictTypeScript: z.boolean().optional().default(true),
+  addErrorBoundaries: z.boolean().optional().default(true),
+  optimizePerformance: z.boolean().optional().default(true),
+  targetCoverage: z.number().min(50).max(100).optional().default(80),
+}).optional().default({});
+
+const requestSchema = z.object({
+  action: z.enum([
+    'refactor-hooks',
+    'refactor-components',
+    'refactor-pages',
+    'refactor-edge-functions',
+    'refactor-all',
+    'analyze-architecture',
+    'generate-tests',
+    'validate-config',  // NEW: validate configuration files
+  ]),
+  files: z.array(fileSchema).min(1, "At least one file is required").max(20, "Maximum 20 files per request"),
+  context: z.string().max(5000).optional(),
+  options: optionsSchema,
+});
+
+type FullstackRefactorRequest = z.infer<typeof requestSchema>;
 
 interface RefactorResult {
   files: Array<{
@@ -89,7 +103,7 @@ FASE 6 - TESTES E VERIFICAÇÃO:
 - Confirme comportamento preservado
 `;
 
-function buildSystemPrompt(action: string, options: FullstackRefactorRequest['options'] = {}): string {
+function buildSystemPrompt(action: string, options: FullstackRefactorRequest['options']): string {
   const basePrompt = `Você é um arquiteto de software sênior especializado em refatoração para o projeto TSiJUKEBOX.
 Você está usando o modelo ${AI_MODEL} via Lovable AI Gateway.
 
@@ -229,15 +243,28 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { action, files, context, options = {} } = await req.json() as FullstackRefactorRequest;
-    console.log(`[${requestId}] Fullstack refactor action: ${action}, files: ${files.length}`);
-
-    if (!files || files.length === 0) {
+    // Parse and validate request with Zod
+    const rawBody = await req.json();
+    const validationResult = requestSchema.safeParse(rawBody);
+    
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => ({
+        field: e.path.join('.'),
+        message: e.message,
+      }));
+      console.error(`[${requestId}] Validation failed:`, errors);
       return new Response(
-        JSON.stringify({ error: 'files array is required' }),
+        JSON.stringify({ 
+          error: 'Validation failed', 
+          details: errors,
+          requestId,
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { action, files, context, options } = validationResult.data;
+    console.log(`[${requestId}] Fullstack refactor action: ${action}, files: ${files.length}, options:`, options);
 
     const systemPrompt = buildSystemPrompt(action, options);
     
