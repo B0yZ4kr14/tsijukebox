@@ -697,11 +697,48 @@ class DiagnosticEngine:
         
         return repairs_done
     
+    def check_service_logs(self) -> List[CheckResult]:
+        """Analisa logs do serviço para erros."""
+        results = []
+        
+        code, stdout, _ = self.run_command([
+            'journalctl', '-u', 'tsijukebox', '-n', '20', '--no-pager', '-p', 'err'
+        ])
+        
+        if code == 0 and stdout.strip() and '-- No entries --' not in stdout:
+            error_patterns = [
+                ('npm ERR!', 'Erro de npm detectado nos logs'),
+                ('EADDRINUSE', 'Porta em uso detectada nos logs'),
+                ('Cannot find module', 'Módulo não encontrado nos logs'),
+                ('ENOENT', 'Arquivo não encontrado nos logs'),
+            ]
+            
+            for pattern, description in error_patterns:
+                if pattern in stdout:
+                    results.append(CheckResult(
+                        name=f"Log: {description[:30]}",
+                        status=CheckStatus.ERROR,
+                        message=description,
+                        details=stdout[:300],
+                        repair_function="repair_services"
+                    ))
+                    self.print_status(CheckStatus.ERROR, "Logs", description)
+        
+        if not results:
+            results.append(CheckResult(
+                name="Logs do serviço",
+                status=CheckStatus.OK,
+                message="Sem erros recentes"
+            ))
+            self.print_status(CheckStatus.OK, "Logs", "Sem erros recentes")
+        
+        return results
+    
     # =========================================================================
     # MAIN RUN
     # =========================================================================
     
-    def run_all_checks(self):
+    def run_all_checks(self, include_logs: bool = False):
         """Run all diagnostic checks."""
         if not self.json_output:
             print(f"""
@@ -721,6 +758,9 @@ class DiagnosticEngine:
             ("DISCO", self.check_disk_space),
             ("REDE", self.check_network),
         ]
+        
+        if include_logs:
+            sections.append(("LOGS DO SERVIÇO", self.check_service_logs))
         
         for section_name, check_func in sections:
             if not self.json_output:
@@ -775,6 +815,8 @@ def main():
                        help='Corrigir problema específico (npm, repo, services, permissions)')
     parser.add_argument('--output', '-o', type=str, metavar='FILE',
                        help='Salvar relatório em arquivo')
+    parser.add_argument('--service-logs', '-s', action='store_true',
+                       help='Incluir análise de logs do serviço')
     
     args = parser.parse_args()
     
@@ -817,7 +859,7 @@ def main():
             sys.exit(1)
     
     # Run all checks
-    engine.run_all_checks()
+    engine.run_all_checks(include_logs=args.service_logs)
     
     # Auto-repair if requested
     if args.repair:

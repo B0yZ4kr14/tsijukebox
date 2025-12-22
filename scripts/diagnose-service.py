@@ -154,6 +154,59 @@ WARNING_PATTERNS = [
     },
 ]
 
+# Mapeamento de erros para correções automáticas
+AUTO_FIX_MAP = {
+    "npm ERR! Missing script": {
+        "description": "Script npm não encontrado",
+        "fix_commands": [
+            (["systemctl", "stop", "tsijukebox"], None),
+            (["npm", "run", "build"], INSTALL_DIR),
+            (["systemctl", "start", "tsijukebox"], None),
+        ],
+        "requires_root": True,
+    },
+    "EADDRINUSE": {
+        "description": "Porta já em uso",
+        "fix_function": "fix_port_in_use",
+        "requires_root": True,
+    },
+    "Cannot find module": {
+        "description": "Módulo não encontrado",
+        "fix_commands": [
+            (["npm", "install"], INSTALL_DIR),
+        ],
+        "requires_root": False,
+    },
+    "ENOENT": {
+        "description": "Arquivo não encontrado",
+        "fix_commands": [
+            (["npm", "install"], INSTALL_DIR),
+        ],
+        "requires_root": False,
+    },
+    "vite.*not found": {
+        "description": "Vite não instalado",
+        "fix_commands": [
+            (["npm", "install"], INSTALL_DIR),
+        ],
+        "requires_root": False,
+    },
+    "dist_exists": {
+        "description": "Build não existe",
+        "fix_commands": [
+            (["npm", "run", "build"], INSTALL_DIR),
+        ],
+        "requires_root": False,
+    },
+    "node_modules_exists": {
+        "description": "Dependências não instaladas",
+        "fix_commands": [
+            (["npm", "install"], INSTALL_DIR),
+        ],
+        "requires_root": False,
+    },
+}
+
 
 # =============================================================================
 # FUNÇÕES UTILITÁRIAS
@@ -413,6 +466,131 @@ def diagnose(lines: int = 20, errors_only: bool = False) -> DiagnosticResult:
 
 
 # =============================================================================
+# AUTO-FIX
+# =============================================================================
+
+def fix_port_in_use(port: int = DEFAULT_PORT) -> Tuple[bool, str]:
+    """Libera uma porta em uso."""
+    import time
+    
+    code, stdout, _ = run_command(['fuser', f'{port}/tcp'])
+    if code != 0:
+        return False, f"Nenhum processo encontrado na porta {port}"
+    
+    code, _, stderr = run_command(['fuser', '-k', f'{port}/tcp'])
+    if code == 0:
+        time.sleep(1)
+        return True, f"Porta {port} liberada"
+    else:
+        return False, f"Falha ao liberar porta: {stderr}"
+
+
+def apply_single_fix(fix_info: Dict[str, Any], dry_run: bool = False) -> Tuple[bool, str]:
+    """Aplica uma única correção."""
+    if "fix_function" in fix_info:
+        func_name = fix_info["fix_function"]
+        if func_name == "fix_port_in_use":
+            if dry_run:
+                return True, f"[DRY-RUN] fuser -k {DEFAULT_PORT}/tcp"
+            return fix_port_in_use()
+        return False, f"Função desconhecida: {func_name}"
+    
+    if "fix_commands" in fix_info:
+        results = []
+        for cmd, cwd in fix_info["fix_commands"]:
+            cmd_str = " ".join(cmd)
+            if cwd:
+                cmd_str = f"(cd {cwd}) {cmd_str}"
+            
+            if dry_run:
+                results.append(f"[DRY-RUN] {cmd_str}")
+                continue
+            
+            try:
+                kwargs = {"capture_output": True, "text": True, "timeout": 300}
+                if cwd:
+                    kwargs["cwd"] = str(cwd)
+                
+                result = subprocess.run(cmd, **kwargs)
+                if result.returncode != 0:
+                    return False, f"Falhou: {cmd_str}\n{result.stderr[:200]}"
+                results.append(f"OK: {cmd_str}")
+            except Exception as e:
+                return False, f"Erro: {cmd_str} - {e}"
+        
+        return True, "; ".join(results)
+    
+    return False, "Nenhuma ação definida"
+
+
+def auto_fix(result: DiagnosticResult, dry_run: bool = False) -> Tuple[int, int, List[str]]:
+    """Aplica correções automáticas baseado nos erros detectados."""
+    fixes_attempted = 0
+    fixes_successful = 0
+    fix_log = []
+    
+    print(f"\n{Colors.CYAN}━━━ AUTO-FIX {'(DRY-RUN)' if dry_run else ''} ━━━{Colors.RESET}")
+    
+    # Corrigir baseado em checks falhos
+    for check_name, passed in result.checks.items():
+        if not passed and check_name in AUTO_FIX_MAP:
+            fixes_attempted += 1
+            fix_info = AUTO_FIX_MAP[check_name]
+            
+            print(f"\n  {Colors.BLUE}→{Colors.RESET} Corrigindo: {fix_info['description']}")
+            
+            success, msg = apply_single_fix(fix_info, dry_run)
+            
+            if success:
+                fixes_successful += 1
+                print(f"    {Colors.GREEN}✓ {msg}{Colors.RESET}")
+                fix_log.append(f"[OK] {check_name}: {msg}")
+            else:
+                print(f"    {Colors.RED}✗ {msg}{Colors.RESET}")
+                fix_log.append(f"[FAIL] {check_name}: {msg}")
+    
+    # Corrigir baseado em erros de log
+    fixed_patterns = set()
+    for error in result.errors:
+        match_str = error.get('match', '')
+        description = error.get('description', '')
+        
+        for pattern, fix_info in AUTO_FIX_MAP.items():
+            if pattern in fixed_patterns:
+                continue
+            if pattern in match_str or pattern in description:
+                fixes_attempted += 1
+                fixed_patterns.add(pattern)
+                
+                print(f"\n  {Colors.BLUE}→{Colors.RESET} Corrigindo: {fix_info['description']}")
+                
+                success, msg = apply_single_fix(fix_info, dry_run)
+                
+                if success:
+                    fixes_successful += 1
+                    print(f"    {Colors.GREEN}✓ {msg}{Colors.RESET}")
+                    fix_log.append(f"[OK] {pattern}: {msg}")
+                else:
+                    print(f"    {Colors.RED}✗ {msg}{Colors.RESET}")
+                    fix_log.append(f"[FAIL] {pattern}: {msg}")
+                break
+    
+    # Resumo
+    print(f"\n{Colors.CYAN}━━━ RESUMO AUTO-FIX ━━━{Colors.RESET}")
+    if fixes_attempted == 0:
+        print(f"  {Colors.GRAY}Nenhuma correção automática disponível{Colors.RESET}")
+    else:
+        print(f"  Tentativas: {fixes_attempted}")
+        print(f"  Sucessos: {Colors.GREEN}{fixes_successful}{Colors.RESET}")
+        print(f"  Falhas: {Colors.RED}{fixes_attempted - fixes_successful}{Colors.RESET}")
+    
+    if not dry_run and fixes_successful > 0:
+        print(f"\n{Colors.YELLOW}💡 Execute novamente o diagnóstico para verificar{Colors.RESET}")
+    
+    return fixes_attempted, fixes_successful, fix_log
+
+
+# =============================================================================
 # OUTPUT
 # =============================================================================
 
@@ -603,13 +781,23 @@ def main() -> int:
         action='store_true',
         help="Não mostrar logs"
     )
+    parser.add_argument(
+        '--auto-fix', '-a',
+        action='store_true',
+        help="Aplicar correções automaticamente baseado nos erros"
+    )
+    parser.add_argument(
+        '--fix-dry-run',
+        action='store_true',
+        help="Simular correções sem executar"
+    )
     
     args = parser.parse_args()
     
     # Verificar permissões para alguns comandos
-    if args.rebuild and os.geteuid() != 0:
-        print(f"{Colors.RED}Erro: --rebuild requer privilégios de root{Colors.RESET}")
-        print(f"Execute: sudo python3 {__file__} --rebuild")
+    if (args.rebuild or args.auto_fix) and os.geteuid() != 0:
+        print(f"{Colors.RED}Erro: --rebuild/--auto-fix requer privilégios de root{Colors.RESET}")
+        print(f"Execute: sudo python3 {__file__} --auto-fix")
         return 1
     
     if args.follow:
@@ -625,6 +813,14 @@ def main() -> int:
     
     if args.json:
         print_json(result)
+    else:
+        print_diagnostic(result, show_logs=not args.no_logs)
+    
+    # Auto-fix
+    if args.auto_fix or args.fix_dry_run:
+        attempted, successful, log = auto_fix(result, dry_run=args.fix_dry_run)
+        if attempted > 0 and not args.fix_dry_run:
+            return 0 if successful == attempted else 1
     else:
         print_diagnostic(result, show_logs=not args.no_logs)
     
