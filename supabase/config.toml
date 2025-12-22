@@ -59,3 +59,9 @@ verify_jwt = false
 
 [functions.kiosk-webhook]
 verify_jwt = false
+
+[functions.full-repo-sync]
+verify_jwt = false
+
+[functions.auto-sync-trigger]
+verify_jwt = false

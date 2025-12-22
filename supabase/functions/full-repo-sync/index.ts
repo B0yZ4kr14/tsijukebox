@@ -228,11 +228,13 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { files, commitMessage, branch = 'main', skipUnchanged = true } = await req.json() as {
+    const startTime = Date.now();
+    const { files, commitMessage, branch = 'main', skipUnchanged = true, syncType = 'manual' } = await req.json() as {
       files: FileToSync[];
       commitMessage?: string;
       branch?: string;
       skipUnchanged?: boolean;
+      syncType?: 'manual' | 'auto' | 'webhook';
     };
 
     if (!files || !Array.isArray(files) || files.length === 0) {
@@ -302,8 +304,25 @@ Deno.serve(async (req) => {
           skippedFiles: skippedFiles.length,
         },
       });
+      
+      // Save sync history
+      await supabase.from('sync_history').insert({
+        commit_sha: commitResult.sha,
+        commit_url: commitResult.url,
+        commit_message: message,
+        branch,
+        files_synced: commitResult.filesChanged,
+        files_skipped: skippedFiles.length,
+        synced_files: filesToSync.map(f => f.path),
+        skipped_files: skippedFiles,
+        sync_type: syncType,
+        duration_ms: Date.now() - startTime,
+        status: 'success',
+      });
+      
+      console.log('[full-repo-sync] Sync history saved');
     } catch (notifError) {
-      console.error('[full-repo-sync] Failed to create notification:', notifError);
+      console.error('[full-repo-sync] Failed to create notification/history:', notifError);
     }
 
     const result: SyncResult = {

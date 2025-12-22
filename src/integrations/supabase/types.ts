@@ -603,6 +603,60 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_history: {
+        Row: {
+          branch: string | null
+          commit_message: string | null
+          commit_sha: string
+          commit_url: string | null
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          files_skipped: number | null
+          files_synced: number | null
+          id: string
+          skipped_files: Json | null
+          status: string | null
+          sync_source: string | null
+          sync_type: string | null
+          synced_files: Json | null
+        }
+        Insert: {
+          branch?: string | null
+          commit_message?: string | null
+          commit_sha: string
+          commit_url?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          files_skipped?: number | null
+          files_synced?: number | null
+          id?: string
+          skipped_files?: Json | null
+          status?: string | null
+          sync_source?: string | null
+          sync_type?: string | null
+          synced_files?: Json | null
+        }
+        Update: {
+          branch?: string | null
+          commit_message?: string | null
+          commit_sha?: string
+          commit_url?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          files_skipped?: number | null
+          files_synced?: number | null
+          id?: string
+          skipped_files?: Json | null
+          status?: string | null
+          sync_source?: string | null
+          sync_type?: string | null
+          synced_files?: Json | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null

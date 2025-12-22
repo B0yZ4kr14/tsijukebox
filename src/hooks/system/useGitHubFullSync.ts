@@ -1,114 +1,16 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { 
+  FileToSync, 
+  SyncResult, 
+  SyncProgress, 
+  UseGitHubFullSyncReturn,
+  SAFE_SYNC_FILES 
+} from './github/types';
+import { generateFileContent } from './github/fileContentGenerator';
 
-export interface FileToSync {
-  path: string;
-  content: string;
-}
-
-export interface SyncResult {
-  success: boolean;
-  commit?: {
-    sha: string;
-    url: string;
-    message: string;
-    filesChanged: number;
-  };
-  error?: string;
-  skippedFiles?: string[];
-  syncedFiles?: string[];
-}
-
-export interface SyncProgress {
-  phase: 'preparing' | 'uploading' | 'committing' | 'done' | 'error';
-  current: number;
-  total: number;
-  currentFile?: string;
-}
-
-export interface UseGitHubFullSyncReturn {
-  isSyncing: boolean;
-  progress: SyncProgress | null;
-  error: string | null;
-  lastSync: SyncResult | null;
-  syncFiles: (files: FileToSync[], commitMessage?: string) => Promise<SyncResult>;
-  syncFullRepository: (commitMessage?: string) => Promise<SyncResult>;
-  clearError: () => void;
-}
-
-// Project files to sync - all critical files
-const CRITICAL_FILES = [
-  // Documentation
-  'docs/VERSION',
-  'docs/SYNC_LOG.md',
-  'docs/CHANGELOG.md',
-  'docs/README.md',
-  'docs/GITHUB-INTEGRATION.md',
-  // Scripts
-  'scripts/install.py',
-  'scripts/diagnose-service.py',
-  'scripts/tsi-status',
-  'scripts/systemd-notify-wrapper.py',
-  'scripts/tsijukebox-doctor',
-  // Config
-  'package.json',
-  'vite.config.ts',
-  'tailwind.config.ts',
-  'tsconfig.json',
-];
-
-// Generate content for known files
-function generateFileContent(path: string): string {
-  const now = new Date().toISOString();
-  const version = '4.1.0';
-  
-  switch (path) {
-    case 'docs/VERSION':
-      return version;
-    
-    case 'docs/SYNC_LOG.md':
-      return `# Repository Sync Log
-
-## Last Sync
-- **Date**: ${now}
-- **Version**: ${version}
-- **Status**: ✅ Synced via Lovable
-- **Type**: Full Repository Sync
-
-## Sync History
-| Date | Version | Files | Status |
-|------|---------|-------|--------|
-| ${now.split('T')[0]} | ${version} | Full Sync | ✅ Success |
-`;
-
-    case 'docs/CHANGELOG.md':
-      return `# Changelog
-
-All notable changes to TSiJUKEBOX will be documented in this file.
-
-## [${version}] - ${now.split('T')[0]}
-
-### Added
-- Full repository sync system
-- Real-time GitHub synchronization
-- Auto-fix functionality in diagnose-service.py
-- E2E tests for service diagnostics
-- systemd-notify integration
-- tsi-status command
-
-### Changed
-- Improved GitHub dashboard with sync progress
-- Enhanced tsijukebox-doctor with service log analysis
-
-### Fixed
-- Various bug fixes and performance improvements
-`;
-    
-    default:
-      return `// Auto-synced: ${now}\n// File: ${path}\n`;
-  }
-}
+export * from './github/types';
 
 export function useGitHubFullSync(): UseGitHubFullSyncReturn {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -118,14 +20,17 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
 
   const syncFiles = useCallback(async (
     files: FileToSync[], 
-    commitMessage?: string
+    commitMessage?: string,
+    syncType: 'manual' | 'auto' | 'webhook' = 'manual'
   ): Promise<SyncResult> => {
     setIsSyncing(true);
     setError(null);
     setProgress({ phase: 'preparing', current: 0, total: files.length });
 
+    const startTime = Date.now();
+
     try {
-      const message = commitMessage || `[TSiJUKEBOX v4.1.0] Full repository sync - ${new Date().toISOString()}`;
+      const message = commitMessage || `[TSiJUKEBOX v4.1.0] Sync ${files.length} files - ${new Date().toISOString()}`;
 
       console.log(`[useGitHubFullSync] Syncing ${files.length} files...`);
       setProgress({ phase: 'uploading', current: 0, total: files.length });
@@ -135,7 +40,8 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
           files,
           commitMessage: message,
           branch: 'main',
-          skipUnchanged: true
+          skipUnchanged: true,
+          syncType
         }
       });
 
@@ -149,6 +55,7 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
 
       setProgress({ phase: 'done', current: files.length, total: files.length });
 
+      const duration = Date.now() - startTime;
       const result: SyncResult = {
         success: true,
         commit: data.commit,
@@ -160,7 +67,7 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
       
       if (data.commit) {
         toast.success('Repository synced!', {
-          description: `${data.commit.filesChanged} files pushed to GitHub`,
+          description: `${data.commit.filesChanged} files pushed to GitHub in ${(duration / 1000).toFixed(1)}s`,
           action: {
             label: 'View Commit',
             onClick: () => window.open(data.commit.url, '_blank')
@@ -195,15 +102,64 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
   }, []);
 
   const syncFullRepository = useCallback(async (commitMessage?: string): Promise<SyncResult> => {
-    // Generate files to sync
-    const files: FileToSync[] = CRITICAL_FILES.map(path => ({
-      path,
-      content: generateFileContent(path)
-    }));
+    // Generate files to sync - only safe files with generated content
+    const files: FileToSync[] = [];
+    const skippedUnknown: string[] = [];
 
-    const message = commitMessage || `[TSiJUKEBOX v4.1.0] Full repository sync - ${new Date().toLocaleDateString('pt-BR')}`;
+    for (const path of SAFE_SYNC_FILES) {
+      const content = generateFileContent(path);
+      if (content !== null) {
+        files.push({ path, content });
+      } else {
+        skippedUnknown.push(path);
+      }
+    }
+
+    if (skippedUnknown.length > 0) {
+      console.warn(`[syncFullRepository] Skipped ${skippedUnknown.length} unknown files to prevent overwrite`);
+    }
+
+    if (files.length === 0) {
+      toast.error('No files to sync', { description: 'No valid files found for synchronization' });
+      return { success: false, error: 'No files to sync' };
+    }
+
+    const message = commitMessage || `[TSiJUKEBOX v4.1.0] Full sync ${files.length} files - ${new Date().toLocaleDateString('pt-BR')}`;
     
-    return syncFiles(files, message);
+    return syncFiles(files, message, 'manual');
+  }, [syncFiles]);
+
+  const syncSelectedFiles = useCallback(async (
+    selectedPaths: string[],
+    commitMessage?: string
+  ): Promise<SyncResult> => {
+    // Generate files only for selected paths
+    const files: FileToSync[] = [];
+    const skippedUnknown: string[] = [];
+
+    for (const path of selectedPaths) {
+      const content = generateFileContent(path);
+      if (content !== null) {
+        files.push({ path, content });
+      } else {
+        skippedUnknown.push(path);
+      }
+    }
+
+    if (skippedUnknown.length > 0) {
+      toast.warning('Some files skipped', {
+        description: `${skippedUnknown.length} files were not recognized and skipped`
+      });
+    }
+
+    if (files.length === 0) {
+      toast.error('No files to sync', { description: 'No valid files selected' });
+      return { success: false, error: 'No valid files selected' };
+    }
+
+    const message = commitMessage || `[TSiJUKEBOX v4.1.0] Sync ${files.length} selected files - ${new Date().toLocaleDateString('pt-BR')}`;
+    
+    return syncFiles(files, message, 'manual');
   }, [syncFiles]);
 
   const clearError = useCallback(() => {
@@ -218,6 +174,7 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
     lastSync,
     syncFiles,
     syncFullRepository,
+    syncSelectedFiles,
     clearError
   };
 }
