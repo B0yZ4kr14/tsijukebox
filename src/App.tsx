@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { useConnectionMonitor } from "@/hooks/system";
+import { useConnectionMonitor, useFileChangeDetector } from "@/hooks/system";
 import { ContrastDebugPanel } from "@/components/debug/ContrastDebugPanel";
 import { ErrorBoundary, SuspenseBoundary, PageBoundary } from "@/components/errors";
 import { Music } from "lucide-react";
@@ -54,6 +54,26 @@ const LogoGitHubPreview = lazy(() => import("./pages/LogoGitHubPreview"));
 const HealthDashboard = lazy(() => import("./pages/HealthDashboard"));
 const SpicetifyThemeGallery = lazy(() => import("./pages/SpicetifyThemeGallery"));
 const JamSession = lazy(() => import("./pages/JamSession"));
+
+// DEV-only file change monitor component
+function DevFileChangeMonitor() {
+  const { isDetecting, startDetection, detectedFiles, lastDetection } = useFileChangeDetector();
+
+  // Auto-start detection in DEV mode
+  useEffect(() => {
+    startDetection();
+    console.log('[DevFileChangeMonitor] Auto-started file change detection');
+  }, [startDetection]);
+
+  // Log detected files for debugging
+  useEffect(() => {
+    if (detectedFiles.length > 0) {
+      console.log('[DevFileChangeMonitor] Detected files:', detectedFiles.map(f => f.path));
+    }
+  }, [detectedFiles]);
+
+  return null; // No visual indicator, just background detection
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -196,7 +216,8 @@ const App = () => (
             <BrowserRouter>
               <AppRoutes />
             </BrowserRouter>
-            {/* Contrast Debug Panel - Only in DEV mode */}
+            {/* DEV-only components */}
+            {import.meta.env.DEV && <DevFileChangeMonitor />}
             {import.meta.env.DEV && <ContrastDebugPanel />}
           </TooltipProvider>
         </UserProvider>

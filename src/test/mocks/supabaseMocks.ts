@@ -169,3 +169,85 @@ export function mockPaginatedResponse<T>(items: T[], page: number, pageSize: num
     count: items.length,
   };
 }
+
+/**
+ * Cria um mock de chain encadeado com dados específicos
+ * Útil para mockar queries que retornam dados específicos
+ */
+export function createQueryChainWithData<T>(resolvedData: T) {
+  const chainMock = {
+    select: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    delete: vi.fn().mockReturnThis(),
+    upsert: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    neq: vi.fn().mockReturnThis(),
+    gt: vi.fn().mockReturnThis(),
+    gte: vi.fn().mockReturnThis(),
+    lt: vi.fn().mockReturnThis(),
+    lte: vi.fn().mockReturnThis(),
+    like: vi.fn().mockReturnThis(),
+    ilike: vi.fn().mockReturnThis(),
+    is: vi.fn().mockReturnThis(),
+    in: vi.fn().mockReturnThis(),
+    contains: vi.fn().mockReturnThis(),
+    containedBy: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
+    range: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({ data: resolvedData, error: null }),
+    maybeSingle: vi.fn().mockResolvedValue({ data: resolvedData, error: null }),
+    then: vi.fn((resolve) => resolve({ data: resolvedData, error: null })),
+  };
+  
+  // Make all chain methods return the chain for chaining
+  Object.keys(chainMock).forEach(key => {
+    if (key !== 'then' && key !== 'single' && key !== 'maybeSingle') {
+      (chainMock as Record<string, ReturnType<typeof vi.fn>>)[key].mockReturnValue(chainMock);
+    }
+  });
+  
+  return chainMock;
+}
+
+/**
+ * Cria mock do hook useAutoSync com estado customizável
+ */
+export function createAutoSyncMock(overrides = {}) {
+  return {
+    isEnabled: false,
+    isSyncing: false,
+    lastSync: null,
+    nextSync: null,
+    pendingFiles: [],
+    pendingCount: 0,
+    syncInterval: 30,
+    enable: vi.fn(),
+    disable: vi.fn(),
+    toggle: vi.fn(),
+    triggerSync: vi.fn().mockResolvedValue(undefined),
+    setSyncInterval: vi.fn(),
+    getTimeUntilNextSync: vi.fn().mockReturnValue(null),
+    refreshPendingFiles: vi.fn().mockResolvedValue(undefined),
+    markFileAsSynced: vi.fn().mockResolvedValue(undefined),
+    clearSyncedFiles: vi.fn().mockResolvedValue(undefined),
+    ...overrides,
+  };
+}
+
+/**
+ * Cria mock do hook useFileChangeDetector com estado customizável
+ */
+export function createFileChangeDetectorMock(overrides = {}) {
+  return {
+    detectedFiles: [],
+    isDetecting: false,
+    lastDetection: null,
+    submitFilesForSync: vi.fn().mockResolvedValue(true),
+    clearDetected: vi.fn(),
+    startDetection: vi.fn(),
+    stopDetection: vi.fn(),
+    ...overrides,
+  };
+}
