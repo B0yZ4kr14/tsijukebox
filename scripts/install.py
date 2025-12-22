@@ -71,6 +71,7 @@ REPO_URL = "https://github.com/B0yZ4kr14/TSiJUKEBOX.git"
 # Modos globais
 DRY_RUN = False
 QUIET_MODE = False
+ROLLBACK_DRY_RUN = False
 
 # Cores ANSI
 class Colors:
@@ -319,8 +320,12 @@ class RollbackManager:
         log_info(f"↩️  Revertendo: {checkpoint.name}")
         
         for cmd in checkpoint.rollback_commands:
+            # Modo dry-run ou rollback-dry-run: apenas logar
             if DRY_RUN:
                 log_info(f"  [DRY-RUN] {cmd}")
+                continue
+            if ROLLBACK_DRY_RUN:
+                log_info(f"  [ROLLBACK-DRY-RUN] {cmd}")
                 continue
             
             try:
@@ -3657,6 +3662,8 @@ def main():
                        help='Pular instalação de pacotes (útil para re-configuração)')
     parser.add_argument('--dry-run', action='store_true',
                        help='Simular instalação sem executar comandos')
+    parser.add_argument('--rollback-dry-run', action='store_true',
+                       help='Simular rollback sem executar comandos de reversão')
     parser.add_argument('--interactive', '-i', action='store_true',
                        help='Modo interativo: escolher componentes via menu')
     
@@ -3735,6 +3742,12 @@ def main():
     if args.dry_run:
         DRY_RUN = True
         log_warning("🧪 MODO DRY-RUN: Nenhum comando será executado de fato")
+    
+    # Ativar modo rollback-dry-run
+    global ROLLBACK_DRY_RUN
+    if getattr(args, 'rollback_dry_run', False):
+        ROLLBACK_DRY_RUN = True
+        log_info("🔄 MODO ROLLBACK-DRY-RUN: Comandos de reversão serão apenas exibidos")
     
     # =========================================================================
     # COMANDOS STANDALONE (não requerem root, executam e saem)

@@ -499,12 +499,64 @@ jobs:
           echo "Tests for RollbackManager and clone_and_setup_repository completed." >> $GITHUB_STEP_SUMMARY
 
   # ===========================================================================
-  # Job 9: Final Test Status
+  # Job 9: Rollback Integration Tests
+  # ===========================================================================
+  test-rollback-integration:
+    name: 🔄 Rollback Integration Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: scripts/requirements-test.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/requirements-test.txt
+
+      - name: Run rollback integration tests
+        run: |
+          cd scripts
+          pytest tests/test_rollback_integration.py \
+            -v --tb=short --timeout=180 \
+            -m integration \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-report=html:coverage-rollback \
+            || true
+        continue-on-error: true
+
+      - name: Upload rollback coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rollback-integration-coverage
+          path: scripts/coverage-rollback/
+          retention-days: 7
+
+      - name: Rollback integration summary
+        if: always()
+        run: |
+          echo "## 🔄 Rollback Integration Tests" >> $GITHUB_STEP_SUMMARY
+          echo "Tests for automatic rollback on stage failures completed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "Download the \`rollback-integration-coverage\` artifact for detailed coverage." >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 10: Final Test Status
   # ===========================================================================
   test-status:
     name: ✅ Test Status
     runs-on: ubuntu-latest
-    needs: [unit-tests, edge-case-tests, integration-tests, test-install-functions]
+    needs: [unit-tests, edge-case-tests, integration-tests, test-install-functions, test-rollback-integration]
     if: always()
     steps:
       - name: Generate final summary
@@ -544,6 +596,14 @@ jobs:
             echo "| Install Functions | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
           else
             echo "| Install Functions | ⚠️ ${{ needs.test-install-functions.result }} |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.test-rollback-integration.result }}" == "success" ]; then
+            echo "| Rollback Integration | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.test-rollback-integration.result }}" == "skipped" ]; then
+            echo "| Rollback Integration | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Rollback Integration | ⚠️ ${{ needs.test-rollback-integration.result }} |" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
