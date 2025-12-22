@@ -44,12 +44,16 @@ class Config:
     IMAGE_MONITORING: str = "prom/prometheus:latest"
     IMAGE_GRAFANA: str = "grafana/grafana:latest"
     IMAGE_NGINX: str = "nginx:alpine"
+    IMAGE_CERTBOT: str = "certbot/certbot:latest"
+    IMAGE_REDIS: str = "redis:alpine"
     
     INSTALL_DIR: Path = field(default_factory=lambda: Path("/opt/tsijukebox"))
     COMPOSE_DIR: Path = field(default_factory=lambda: Path("/opt/tsijukebox/docker"))
     DATA_DIR: Path = field(default_factory=lambda: Path("/var/lib/tsijukebox"))
     LOG_DIR: Path = field(default_factory=lambda: Path("/var/log/tsijukebox"))
     BACKUP_DIR: Path = field(default_factory=lambda: Path("/var/backups/tsijukebox"))
+    CERTS_DIR: Path = field(default_factory=lambda: Path("/etc/letsencrypt"))
+    WEBROOT_DIR: Path = field(default_factory=lambda: Path("/var/www/certbot"))
     
     SERVICE_NAME: str = "tsijukebox"
     CONTAINER_NAME: str = "tsijukebox-app"
@@ -58,8 +62,14 @@ class Config:
     MIN_RAM_GB: float = 2.0
     MIN_DISK_GB: float = 10.0
     DEFAULT_PORT: int = 80
+    HTTPS_PORT: int = 443
     HEALTH_CHECK_TIMEOUT: int = 120
     HEALTH_CHECK_INTERVAL: int = 5
+    
+    # Certbot settings
+    CERTBOT_RENEWAL_INTERVAL_HOURS: int = 12
+    CERTBOT_STAGING_URL: str = "https://acme-staging-v02.api.letsencrypt.org/directory"
+    CERTBOT_PRODUCTION_URL: str = "https://acme-v02.api.letsencrypt.org/directory"
     
     SUPPORTED_DISTROS: Tuple[str, ...] = (
         "arch", "cachyos", "manjaro", "endeavouros", "garuda", "artix"
@@ -562,6 +572,162 @@ class DockerInstaller:
 
 
 # ============================================================================
+# GERENCIADOR DE CERTIFICADOS SSL (CERTBOT)
+# ============================================================================
+
+class CertbotManager:
+    """Gerencia certificados SSL com Let's Encrypt/Certbot."""
+    
+    def __init__(self, domain: str, email: str, staging: bool = False):
+        self.domain = domain
+        self.email = email
+        self.staging = staging
+        self.certs_dir = CONFIG.CERTS_DIR
+        self.webroot_dir = CONFIG.WEBROOT_DIR
+    
+    def setup_directories(self) -> bool:
+        """Cria diretórios necessários para Certbot."""
+        Logger.info("Preparando diretórios para certificados SSL...")
+        
+        try:
+            self.certs_dir.mkdir(parents=True, exist_ok=True)
+            self.webroot_dir.mkdir(parents=True, exist_ok=True)
+            Logger.success("Diretórios SSL criados")
+            return True
+        except Exception as e:
+            Logger.error(f"Falha ao criar diretórios SSL: {e}")
+            return False
+    
+    def request_certificate(self) -> bool:
+        """Solicita certificado via HTTP-01 challenge."""
+        Logger.info(f"Solicitando certificado SSL para {self.domain}...")
+        
+        cmd = [
+            "docker", "run", "--rm",
+            "-v", f"{self.certs_dir}:/etc/letsencrypt",
+            "-v", f"{self.webroot_dir}:/var/www/certbot",
+            CONFIG.IMAGE_CERTBOT,
+            "certonly", "--webroot",
+            "-w", "/var/www/certbot",
+            "-d", self.domain,
+            "--email", self.email,
+            "--agree-tos",
+            "--non-interactive",
+            "--keep-until-expiring"
+        ]
+        
+        if self.staging:
+            cmd.append("--staging")
+            Logger.warning("Usando ambiente STAGING do Let's Encrypt (apenas para testes)")
+        
+        code, stdout, stderr = CommandRunner.run(cmd, check=False, timeout=300)
+        
+        if code == 0:
+            Logger.success(f"Certificado SSL obtido para {self.domain}")
+            return True
+        else:
+            Logger.error(f"Falha ao obter certificado: {stderr}")
+            return False
+    
+    def renew_certificate(self) -> bool:
+        """Renova certificados existentes."""
+        Logger.info("Renovando certificados SSL...")
+        
+        cmd = [
+            "docker", "run", "--rm",
+            "-v", f"{self.certs_dir}:/etc/letsencrypt",
+            "-v", f"{self.webroot_dir}:/var/www/certbot",
+            CONFIG.IMAGE_CERTBOT,
+            "renew", "--quiet"
+        ]
+        
+        code, stdout, stderr = CommandRunner.run(cmd, check=False, timeout=300)
+        
+        if code == 0:
+            Logger.success("Certificados renovados com sucesso")
+            return True
+        else:
+            Logger.warning(f"Renovação retornou: {stderr}")
+            return code == 0
+    
+    def generate_self_signed(self) -> bool:
+        """Gera certificado auto-assinado para desenvolvimento."""
+        Logger.info(f"Gerando certificado auto-assinado para {self.domain}...")
+        
+        ssl_dir = CONFIG.COMPOSE_DIR / "nginx" / "ssl"
+        ssl_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Gera chave privada e certificado auto-assinado
+        cmd = [
+            "openssl", "req", "-x509", "-nodes",
+            "-days", "365",
+            "-newkey", "rsa:2048",
+            "-keyout", str(ssl_dir / "privkey.pem"),
+            "-out", str(ssl_dir / "fullchain.pem"),
+            "-subj", f"/CN={self.domain}/O=TSiJUKEBOX/C=BR"
+        ]
+        
+        code, _, stderr = CommandRunner.run(cmd, check=False)
+        
+        if code == 0:
+            Logger.success("Certificado auto-assinado gerado")
+            return True
+        else:
+            Logger.error(f"Falha ao gerar certificado: {stderr}")
+            return False
+    
+    def check_certificate_exists(self) -> bool:
+        """Verifica se já existe certificado para o domínio."""
+        cert_path = self.certs_dir / "live" / self.domain / "fullchain.pem"
+        return cert_path.exists()
+    
+    def get_certificate_expiry(self) -> Optional[str]:
+        """Retorna data de expiração do certificado."""
+        cert_path = self.certs_dir / "live" / self.domain / "fullchain.pem"
+        
+        if not cert_path.exists():
+            return None
+        
+        cmd = [
+            "openssl", "x509", "-enddate", "-noout",
+            "-in", str(cert_path)
+        ]
+        
+        code, stdout, _ = CommandRunner.run(cmd, check=False)
+        
+        if code == 0 and stdout:
+            # Output: notAfter=Dec 31 23:59:59 2024 GMT
+            return stdout.replace("notAfter=", "").strip()
+        
+        return None
+    
+    def create_dhparam(self) -> bool:
+        """Cria arquivo DH parameters para SSL."""
+        ssl_dir = CONFIG.COMPOSE_DIR / "nginx" / "ssl"
+        dhparam_file = ssl_dir / "ssl-dhparams.pem"
+        
+        if dhparam_file.exists():
+            Logger.debug("DH parameters já existe")
+            return True
+        
+        Logger.info("Gerando DH parameters (pode demorar alguns minutos)...")
+        ssl_dir.mkdir(parents=True, exist_ok=True)
+        
+        cmd = [
+            "openssl", "dhparam", "-out", str(dhparam_file), "2048"
+        ]
+        
+        code, _, stderr = CommandRunner.run(cmd, check=False, timeout=600)
+        
+        if code == 0:
+            Logger.success("DH parameters gerado")
+            return True
+        else:
+            Logger.warning(f"Falha ao gerar DH params: {stderr}")
+            return False
+
+
+# ============================================================================
 # GERENCIADOR DE DOCKER COMPOSE
 # ============================================================================
 
@@ -573,10 +739,13 @@ class ComposeManager:
         self.compose_dir = CONFIG.COMPOSE_DIR
     
     def generate_compose(self) -> str:
-        """Gera o arquivo docker-compose.yml."""
+        """Gera o arquivo docker-compose.yml com profiles."""
         port = getattr(self.options, "port", CONFIG.DEFAULT_PORT)
         monitoring = getattr(self.options, "monitoring", False)
         ssl = getattr(self.options, "ssl", False)
+        ssl_letsencrypt = getattr(self.options, "ssl_letsencrypt", False)
+        cache = getattr(self.options, "cache", False)
+        domain = getattr(self.options, "domain", "localhost")
         
         compose = {
             "version": "3.9",
@@ -585,7 +754,7 @@ class ComposeManager:
                     "image": CONFIG.IMAGE,
                     "container_name": CONFIG.CONTAINER_NAME,
                     "restart": "unless-stopped",
-                    "ports": [f"{port}:80"] if not ssl else [],
+                    "ports": [f"{port}:80"] if not (ssl or ssl_letsencrypt) else [],
                     "environment": [
                         "TZ=America/Sao_Paulo",
                         "VITE_SUPABASE_URL=${SUPABASE_URL:-}",
@@ -620,23 +789,73 @@ class ComposeManager:
             }
         }
         
-        # Adiciona Nginx Proxy se SSL habilitado
-        if ssl:
+        # Adiciona Nginx Proxy para SSL (com ou sem Let's Encrypt)
+        if ssl or ssl_letsencrypt:
+            nginx_volumes = [
+                "./nginx/nginx.conf:/etc/nginx/nginx.conf:ro",
+                "tsijukebox-logs:/var/log/nginx"
+            ]
+            
+            if ssl_letsencrypt:
+                # Let's Encrypt usa certs do host
+                nginx_volumes.extend([
+                    f"{CONFIG.CERTS_DIR}:/etc/letsencrypt:ro",
+                    "certbot-webroot:/var/www/certbot:ro"
+                ])
+            else:
+                # SSL auto-assinado usa certs locais
+                nginx_volumes.append("./nginx/ssl:/etc/nginx/ssl:ro")
+            
             compose["services"]["nginx"] = {
                 "image": CONFIG.IMAGE_NGINX,
                 "container_name": "tsijukebox-nginx",
                 "restart": "unless-stopped",
                 "ports": ["80:80", "443:443"],
-                "volumes": [
-                    "./nginx/nginx.conf:/etc/nginx/nginx.conf:ro",
-                    "./nginx/ssl:/etc/nginx/ssl:ro",
-                    "tsijukebox-logs:/var/log/nginx"
-                ],
+                "volumes": nginx_volumes,
                 "depends_on": ["app"],
-                "networks": [CONFIG.NETWORK_NAME]
+                "networks": [CONFIG.NETWORK_NAME],
+                "profiles": ["ssl", "ssl-letsencrypt"]
+            }
+            
+            # Adiciona webroot volume para Let's Encrypt
+            if ssl_letsencrypt:
+                compose["volumes"]["certbot-webroot"] = {}
+        
+        # Adiciona container Certbot para renovação automática
+        if ssl_letsencrypt:
+            compose["services"]["certbot"] = {
+                "image": CONFIG.IMAGE_CERTBOT,
+                "container_name": "tsijukebox-certbot",
+                "volumes": [
+                    f"{CONFIG.CERTS_DIR}:/etc/letsencrypt",
+                    "certbot-webroot:/var/www/certbot"
+                ],
+                "entrypoint": "/bin/sh -c 'trap exit TERM; while :; do certbot renew --quiet; sleep 12h & wait $${!}; done;'",
+                "depends_on": ["nginx"],
+                "networks": [CONFIG.NETWORK_NAME],
+                "profiles": ["ssl-letsencrypt"]
             }
         
-        # Adiciona monitoring stack se habilitado
+        # Adiciona Redis cache
+        if cache:
+            compose["services"]["redis"] = {
+                "image": CONFIG.IMAGE_REDIS,
+                "container_name": "tsijukebox-redis",
+                "restart": "unless-stopped",
+                "command": ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"],
+                "volumes": ["redis-data:/data"],
+                "healthcheck": {
+                    "test": ["CMD", "redis-cli", "ping"],
+                    "interval": "10s",
+                    "timeout": "5s",
+                    "retries": 3
+                },
+                "networks": [CONFIG.NETWORK_NAME],
+                "profiles": ["cache"]
+            }
+            compose["volumes"]["redis-data"] = {}
+        
+        # Adiciona monitoring stack
         if monitoring:
             compose["services"]["prometheus"] = {
                 "image": CONFIG.IMAGE_MONITORING,
@@ -652,7 +871,8 @@ class ComposeManager:
                     "--storage.tsdb.path=/prometheus",
                     "--web.enable-lifecycle"
                 ],
-                "networks": [CONFIG.NETWORK_NAME]
+                "networks": [CONFIG.NETWORK_NAME],
+                "profiles": ["monitoring"]
             }
             
             compose["services"]["grafana"] = {
@@ -670,7 +890,8 @@ class ComposeManager:
                     "./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro"
                 ],
                 "depends_on": ["prometheus"],
-                "networks": [CONFIG.NETWORK_NAME]
+                "networks": [CONFIG.NETWORK_NAME],
+                "profiles": ["monitoring"]
             }
             
             compose["volumes"]["prometheus-data"] = {}
@@ -769,8 +990,51 @@ scrape_configs:
       - targets: ['host.docker.internal:9323']
 """
     
-    def generate_nginx_config(self, domain: str = "localhost") -> str:
-        """Gera configuração Nginx para SSL."""
+    def generate_nginx_config_http_only(self, domain: str = "localhost") -> str:
+        """Gera configuração Nginx apenas HTTP (para ACME challenge inicial)."""
+        return f"""# Nginx Configuration for TSiJUKEBOX - HTTP Only (ACME Challenge)
+events {{
+    worker_connections 1024;
+}}
+
+http {{
+    upstream app {{
+        server app:80;
+    }}
+
+    server {{
+        listen 80;
+        server_name {domain};
+
+        # ACME challenge location for Let's Encrypt
+        location /.well-known/acme-challenge/ {{
+            root /var/www/certbot;
+        }}
+
+        location / {{
+            proxy_pass http://app;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_cache_bypass $http_upgrade;
+        }}
+
+        location /health {{
+            proxy_pass http://app/health;
+            access_log off;
+        }}
+    }}
+}}
+"""
+    
+    def generate_nginx_config(self, domain: str = "localhost", use_letsencrypt: bool = False) -> str:
+        """Gera configuração Nginx para SSL completo."""
+        ssl_cert_path = "/etc/letsencrypt/live/" + domain if use_letsencrypt else "/etc/nginx/ssl"
+        
         return f"""# Nginx Configuration for TSiJUKEBOX SSL
 events {{
     worker_connections 1024;
@@ -781,11 +1045,28 @@ http {{
         server app:80;
     }}
 
+    # SSL settings
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+
     # Redirect HTTP to HTTPS
     server {{
         listen 80;
         server_name {domain};
-        return 301 https://$server_name$request_uri;
+
+        # ACME challenge location for Let's Encrypt renewal
+        location /.well-known/acme-challenge/ {{
+            root /var/www/certbot;
+        }}
+
+        # Redirect all other traffic to HTTPS
+        location / {{
+            return 301 https://$server_name$request_uri;
+        }}
     }}
 
     # HTTPS Server
@@ -793,18 +1074,17 @@ http {{
         listen 443 ssl http2;
         server_name {domain};
 
-        ssl_certificate /etc/nginx/ssl/fullchain.pem;
-        ssl_certificate_key /etc/nginx/ssl/privkey.pem;
-        ssl_session_timeout 1d;
-        ssl_session_cache shared:SSL:50m;
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;
-        ssl_prefer_server_ciphers off;
+        ssl_certificate {ssl_cert_path}/fullchain.pem;
+        ssl_certificate_key {ssl_cert_path}/privkey.pem;
+
+        # HSTS (optional, uncomment if you want strict HTTPS)
+        # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
         # Security headers
         add_header X-Frame-Options "SAMEORIGIN" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
         location / {{
             proxy_pass http://app;
@@ -933,6 +1213,24 @@ class ContainerManager:
             return False
         
         Logger.success("Containers iniciados")
+        return True
+    
+    def start_with_profiles(self, profiles: List[str]) -> bool:
+        """Inicia containers com profiles específicos."""
+        Logger.info(f"Iniciando containers com profiles: {', '.join(profiles)}...")
+        
+        cmd = ["docker", "compose", "-f", str(self.compose_dir / "docker-compose.yml")]
+        for profile in profiles:
+            cmd.extend(["--profile", profile])
+        cmd.extend(["up", "-d", "--wait"])
+        
+        code, _, stderr = CommandRunner.run(cmd, check=False, timeout=300)
+        
+        if code != 0:
+            Logger.error(f"Falha ao iniciar containers: {stderr}")
+            return False
+        
+        Logger.success("Containers iniciados com profiles")
         return True
     
     def stop(self) -> bool:
@@ -1088,9 +1386,22 @@ class SystemdManager:
     """Gerencia serviço systemd para TSiJUKEBOX."""
     
     SERVICE_PATH = Path("/etc/systemd/system/tsijukebox.service")
+    CERTBOT_TIMER_PATH = Path("/etc/systemd/system/tsijukebox-certbot.timer")
+    CERTBOT_SERVICE_PATH = Path("/etc/systemd/system/tsijukebox-certbot.service")
     
-    def generate_service(self) -> str:
+    def generate_service(self, profiles: List[str] = None) -> str:
         """Gera arquivo de serviço systemd."""
+        profile_args = ""
+        if profiles:
+            profile_args = " ".join([f"--profile {p}" for p in profiles])
+            compose_up = f"/usr/bin/docker compose {profile_args} up -d --wait"
+            compose_down = f"/usr/bin/docker compose {profile_args} down"
+            compose_restart = f"/usr/bin/docker compose {profile_args} restart"
+        else:
+            compose_up = "/usr/bin/docker compose up -d --wait"
+            compose_down = "/usr/bin/docker compose down"
+            compose_restart = "/usr/bin/docker compose restart"
+        
         return f"""[Unit]
 Description=TSiJUKEBOX Enterprise (Docker)
 Documentation=https://github.com/B0yZ4kr14/TSiJUKEBOX
@@ -1102,9 +1413,9 @@ Wants=network-online.target
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory={CONFIG.COMPOSE_DIR}
-ExecStart=/usr/bin/docker compose up -d --wait
-ExecStop=/usr/bin/docker compose down
-ExecReload=/usr/bin/docker compose restart
+ExecStart={compose_up}
+ExecStop={compose_down}
+ExecReload={compose_restart}
 TimeoutStartSec=300
 TimeoutStopSec=120
 
@@ -1121,12 +1432,52 @@ SyslogIdentifier=tsijukebox
 WantedBy=multi-user.target
 """
     
-    def create_service(self) -> bool:
+    def generate_certbot_timer(self) -> str:
+        """Gera systemd timer para renovação automática de certificados."""
+        return f"""[Unit]
+Description=TSiJUKEBOX Let's Encrypt Certificate Renewal Timer
+Documentation=https://certbot.eff.org/
+
+[Timer]
+# Executa duas vezes por dia (12h de intervalo)
+OnCalendar=*-*-* 00,12:00:00
+# Adiciona até 1 hora de delay aleatório para evitar sobrecarga no Let's Encrypt
+RandomizedDelaySec=3600
+# Persiste timer mesmo se sistema estava desligado
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+"""
+    
+    def generate_certbot_service(self) -> str:
+        """Gera systemd service para renovação de certificados."""
+        return f"""[Unit]
+Description=TSiJUKEBOX Let's Encrypt Certificate Renewal
+Documentation=https://certbot.eff.org/
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory={CONFIG.COMPOSE_DIR}
+# Renova certificados
+ExecStart=/usr/bin/docker compose --profile ssl-letsencrypt run --rm certbot renew --quiet
+# Recarrega Nginx após renovação
+ExecStartPost=/usr/bin/docker compose --profile ssl-letsencrypt exec -T nginx nginx -s reload
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tsijukebox-certbot
+"""
+    
+    def create_service(self, profiles: List[str] = None) -> bool:
         """Cria o arquivo de serviço."""
         Logger.info("Criando serviço systemd...")
         
         try:
-            self.SERVICE_PATH.write_text(self.generate_service())
+            self.SERVICE_PATH.write_text(self.generate_service(profiles))
             Logger.debug(f"Criado: {self.SERVICE_PATH}")
             
             # Recarrega daemon
@@ -1137,6 +1488,33 @@ WantedBy=multi-user.target
             
         except Exception as e:
             Logger.error(f"Falha ao criar serviço: {e}")
+            return False
+    
+    def create_certbot_renewal(self) -> bool:
+        """Cria timer e service para renovação automática do Certbot."""
+        Logger.info("Configurando renovação automática de certificados...")
+        
+        try:
+            # Cria timer
+            self.CERTBOT_TIMER_PATH.write_text(self.generate_certbot_timer())
+            Logger.debug(f"Criado: {self.CERTBOT_TIMER_PATH}")
+            
+            # Cria service
+            self.CERTBOT_SERVICE_PATH.write_text(self.generate_certbot_service())
+            Logger.debug(f"Criado: {self.CERTBOT_SERVICE_PATH}")
+            
+            # Recarrega daemon
+            CommandRunner.run(["systemctl", "daemon-reload"], check=False)
+            
+            # Habilita e inicia timer
+            CommandRunner.run(["systemctl", "enable", "tsijukebox-certbot.timer"], check=False)
+            CommandRunner.run(["systemctl", "start", "tsijukebox-certbot.timer"], check=False)
+            
+            Logger.success("Renovação automática de certificados configurada")
+            return True
+            
+        except Exception as e:
+            Logger.error(f"Falha ao configurar renovação: {e}")
             return False
     
     def enable(self) -> bool:
@@ -1182,13 +1560,26 @@ WantedBy=multi-user.target
         )
         return stdout if code == 0 else "inactive"
     
+    def certbot_timer_status(self) -> str:
+        """Retorna status do timer de renovação."""
+        code, stdout, _ = CommandRunner.run(
+            ["systemctl", "is-active", "tsijukebox-certbot.timer"],
+            check=False
+        )
+        return stdout if code == 0 else "inactive"
+    
     def remove(self) -> bool:
-        """Remove o serviço."""
+        """Remove o serviço e timer."""
         self.stop()
         self.disable()
         
-        if self.SERVICE_PATH.exists():
-            self.SERVICE_PATH.unlink()
+        # Remove timer do certbot
+        CommandRunner.run(["systemctl", "stop", "tsijukebox-certbot.timer"], check=False)
+        CommandRunner.run(["systemctl", "disable", "tsijukebox-certbot.timer"], check=False)
+        
+        for path in [self.SERVICE_PATH, self.CERTBOT_TIMER_PATH, self.CERTBOT_SERVICE_PATH]:
+            if path.exists():
+                path.unlink()
         
         CommandRunner.run(["systemctl", "daemon-reload"], check=False)
         return True
@@ -1560,15 +1951,42 @@ Exemplos:
         help="Incluir stack de monitoramento (Grafana + Prometheus)"
     )
     parser.add_argument(
+        "--cache",
+        action="store_true",
+        help="Incluir Redis cache"
+    )
+    
+    # SSL Options
+    ssl_group = parser.add_argument_group("SSL/HTTPS Options")
+    ssl_group.add_argument(
         "--ssl",
         action="store_true",
-        help="Habilitar HTTPS com Nginx"
+        help="Habilitar HTTPS com certificado auto-assinado (desenvolvimento)"
     )
-    parser.add_argument(
+    ssl_group.add_argument(
+        "--ssl-letsencrypt",
+        action="store_true",
+        dest="ssl_letsencrypt",
+        help="Habilitar HTTPS com Let's Encrypt (produção - requer domínio público)"
+    )
+    ssl_group.add_argument(
         "--domain",
         type=str,
         default="localhost",
         help="Domínio para SSL (padrão: localhost)"
+    )
+    ssl_group.add_argument(
+        "--ssl-email",
+        type=str,
+        dest="ssl_email",
+        default="",
+        help="Email para notificações do Let's Encrypt (obrigatório com --ssl-letsencrypt)"
+    )
+    ssl_group.add_argument(
+        "--ssl-staging",
+        action="store_true",
+        dest="ssl_staging",
+        help="Usar ambiente de staging do Let's Encrypt (para testes)"
     )
     
     # Supabase
