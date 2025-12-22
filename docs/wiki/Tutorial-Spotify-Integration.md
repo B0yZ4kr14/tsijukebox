@@ -12,7 +12,23 @@ Guia completo para configurar e usar a integração do Spotify com o TSiJUKEBOX.
 
 ---
 
-## 🔗 Conectando sua Conta
+## 🧙 Configuração Guiada (Recomendado)
+
+O TSiJUKEBOX oferece um **assistente guiado** para configurar o Spotify:
+
+1. Acesse **Configurações > Integrações de Música > Spotify**
+2. Clique em **"Configurar com Assistente Guiado"**
+3. Siga os 5 passos do wizard:
+   - Introdução
+   - Acessar Developer Dashboard
+   - Criar Aplicativo
+   - Configurar Redirect URI
+   - Copiar Credenciais
+4. Ao finalizar, clique em **"Conectar com Spotify"**
+
+---
+
+## 🔗 Conectando sua Conta (Manual)
 
 ### Passo 1: Acessar Configurações
 
@@ -27,6 +43,13 @@ Guia completo para configurar e usar a integração do Spotify com o TSiJUKEBOX.
 3. Faça login na sua conta Spotify
 4. Clique em **Concordo** para autorizar o TSiJUKEBOX
 5. A janela fechará automaticamente
+
+### Passo 3: Verificar Conexão
+
+Após autorização:
+- Seu nome de usuário aparecerá na seção Spotify
+- O ícone de status ficará verde
+- Você pode desconectar a qualquer momento
 
 ### Passo 3: Verificar Conexão
 
