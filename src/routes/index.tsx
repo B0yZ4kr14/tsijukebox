@@ -26,100 +26,56 @@
  * MANUTENÇÃO - COMO ADICIONAR NOVAS ROTAS
  * ============================================================================
  * 
- * PASSO 1: Criar o componente de página
- *   - Criar arquivo em src/pages/ ou na subpasta apropriada
- *   - Seguir padrão de nomenclatura PascalCase
+ * PASSO 1: Criar o componente de página na subpasta apropriada
+ *   - src/pages/public/ para páginas públicas
+ *   - src/pages/admin/ para páginas administrativas
+ *   - src/pages/dashboards/ para dashboards
+ *   - src/pages/spotify/ para Spotify
+ *   - src/pages/youtube/ para YouTube Music
+ *   - src/pages/settings/ para configurações
+ *   - src/pages/brand/ para identidade visual
+ *   - src/pages/tools/ para ferramentas
+ *   - src/pages/social/ para funcionalidades sociais
  * 
- * PASSO 2: Adicionar import lazy (se não for crítico)
- *   const NovaPage = lazy(() => import('@/pages/NovaPage'));
+ * PASSO 2: Exportar no barrel export da subpasta (index.ts)
  * 
- * PASSO 3: Adicionar à categoria apropriada
- *   - publicRoutes: rotas acessíveis a todos
- *   - protectedRoutes: rotas que requerem login
- *   - dashboardRoutes: dashboards e monitores
- *   - spotifyRoutes: funcionalidades Spotify
- *   - youtubeRoutes: funcionalidades YouTube Music
- *   - adminRoutes: funções de administração
+ * PASSO 3: Adicionar import lazy neste arquivo (se não for crítico)
+ *   const NovaPage = lazy(() => import('@/pages/categoria/NovaPage'));
  * 
- * PASSO 4: Definir permissão (se protegida)
- *   - canAccessSettings: acesso a configurações
- *   - canManageUsers: gerenciamento de usuários
- *   - canAccessSystemControls: controles do sistema
+ * PASSO 4: Adicionar à categoria apropriada de rotas
  * 
- * PASSO 5: Atualizar documentação
- *   - Atualizar docs/ROUTES.md
- *   - Atualizar e2e/specs/routes-validation.spec.ts
+ * PASSO 5: Definir permissão (se protegida)
+ * 
+ * PASSO 6: Atualizar docs/ROUTES.md e testes E2E
  * 
  * ============================================================================
- * TODO: MIGRAÇÃO DE ARQUIVOS PARA SUBPASTAS
+ * ESTRUTURA DE ARQUIVOS (v4.2.0 - MIGRAÇÃO CONCLUÍDA)
  * ============================================================================
  * 
- * Quando os arquivos forem movidos fisicamente para subpastas, atualize os
- * imports conforme o mapeamento abaixo:
- * 
- * ARQUIVOS ATUAIS             →  DESTINO FINAL
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/Index.tsx         →  src/pages/public/Index.tsx
- * src/pages/Auth.tsx          →  src/pages/public/Auth.tsx
- * src/pages/Help.tsx          →  src/pages/public/Help.tsx
- * src/pages/Wiki.tsx          →  src/pages/public/Wiki.tsx
- * src/pages/Install.tsx       →  src/pages/public/Install.tsx
- * src/pages/LandingPage.tsx   →  src/pages/public/LandingPage.tsx
- * src/pages/SetupWizard.tsx   →  src/pages/public/SetupWizard.tsx
- * src/pages/NotFound.tsx      →  src/pages/public/NotFound.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/Settings.tsx      →  src/pages/settings/Settings.tsx
- * src/pages/ThemePreview.tsx  →  src/pages/settings/ThemePreview.tsx
- * src/pages/SystemDiagnostics.tsx → src/pages/settings/SystemDiagnostics.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/Dashboard.tsx     →  src/pages/dashboards/Dashboard.tsx
- * src/pages/GitHubDashboard.tsx → src/pages/dashboards/GitHubDashboard.tsx
- * src/pages/HealthDashboard.tsx → src/pages/dashboards/HealthDashboard.tsx
- * src/pages/JukeboxStatsDashboard.tsx → src/pages/dashboards/JukeboxStatsDashboard.tsx
- * src/pages/ClientsMonitorDashboard.tsx → src/pages/dashboards/ClientsMonitorDashboard.tsx
- * src/pages/KioskMonitorDashboard.tsx → src/pages/dashboards/KioskMonitorDashboard.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/SpotifyBrowser.tsx → src/pages/spotify/SpotifyBrowser.tsx
- * src/pages/SpotifyPlaylist.tsx → src/pages/spotify/SpotifyPlaylist.tsx
- * src/pages/SpotifySearch.tsx → src/pages/spotify/SpotifySearch.tsx
- * src/pages/SpotifyLibrary.tsx → src/pages/spotify/SpotifyLibrary.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/YouTubeMusicBrowser.tsx → src/pages/youtube/YouTubeMusicBrowser.tsx
- * src/pages/YouTubeMusicLibrary.tsx → src/pages/youtube/YouTubeMusicLibrary.tsx
- * src/pages/YouTubeMusicSearch.tsx → src/pages/youtube/YouTubeMusicSearch.tsx
- * src/pages/YouTubeMusicPlaylist.tsx → src/pages/youtube/YouTubeMusicPlaylist.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/Admin.tsx         →  src/pages/admin/Admin.tsx
- * src/pages/AdminLibrary.tsx  →  src/pages/admin/AdminLibrary.tsx
- * src/pages/AdminLogs.tsx     →  src/pages/admin/AdminLogs.tsx
- * src/pages/AdminFeedback.tsx →  src/pages/admin/AdminFeedback.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/BrandGuidelines.tsx → src/pages/brand/BrandGuidelines.tsx
- * src/pages/LogoGitHubPreview.tsx → src/pages/brand/LogoGitHubPreview.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/ChangelogTimeline.tsx → src/pages/tools/ChangelogTimeline.tsx
- * src/pages/ComponentsShowcase.tsx → src/pages/tools/ComponentsShowcase.tsx
- * src/pages/VersionComparison.tsx → src/pages/tools/VersionComparison.tsx
- * src/pages/InstallerMetrics.tsx → src/pages/tools/InstallerMetrics.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/JamSession.tsx    →  src/pages/social/JamSession.tsx
- * ─────────────────────────────────────────────────────────────────────────
- * src/pages/A11yDashboard.tsx →  src/pages/accessibility/A11yDashboard.tsx
- * src/pages/WcagExceptions.tsx → src/pages/accessibility/WcagExceptions.tsx
- * src/pages/LyricsTest.tsx    →  src/pages/accessibility/LyricsTest.tsx
+ * src/pages/
+ * ├── public/           → Index, Auth, Help, Wiki, Install, LandingPage, etc.
+ * ├── admin/            → Admin, AdminFeedback, AdminLibrary, AdminLogs
+ * ├── dashboards/       → Dashboard, HealthDashboard, GitHubDashboard, etc.
+ * ├── spotify/          → SpotifyBrowser, SpotifyLibrary, SpotifyPlaylist, etc.
+ * ├── youtube/          → YouTubeMusicBrowser, YouTubeMusicLibrary, etc.
+ * ├── settings/         → Settings, ThemePreview, SystemDiagnostics, etc.
+ * ├── brand/            → BrandGuidelines, LogoGitHubPreview
+ * ├── tools/            → ChangelogTimeline, ComponentsShowcase, etc.
+ * ├── social/           → JamSession
+ * └── index.ts          → Barrel export principal
  * 
  * ============================================================================
  * CHECKLIST DE MANUTENÇÃO
  * ============================================================================
  * 
- * [ ] Verificar se novo componente existe em src/pages/
+ * [ ] Verificar se novo componente existe na subpasta correta
+ * [ ] Adicionar export no barrel da subpasta
  * [ ] Adicionar import (eager ou lazy conforme necessidade)
  * [ ] Adicionar rota na categoria correta
  * [ ] Definir permissão se rota protegida
  * [ ] Atualizar docs/ROUTES.md
  * [ ] Adicionar teste em e2e/specs/routes-validation.spec.ts
  * [ ] Testar navegação manualmente
- * [ ] Verificar redirecionamentos funcionam
  * 
  * ============================================================================
  */
@@ -133,10 +89,10 @@ import { Navigate } from 'react-router-dom';
 // Estas páginas são carregadas imediatamente pois fazem parte do critical path
 // da aplicação (primeira renderização, autenticação, etc.)
 
-import Index from '@/pages/Index';
-import Auth from '@/pages/Auth';
-import SetupWizard from '@/pages/SetupWizard';
-import NotFound from '@/pages/NotFound';
+import Index from '@/pages/public/Index';
+import Auth from '@/pages/public/Auth';
+import SetupWizard from '@/pages/public/SetupWizard';
+import NotFound from '@/pages/public/NotFound';
 
 // ============================================================================
 // IMPORTS - PÁGINAS COM LAZY LOADING
@@ -145,60 +101,59 @@ import NotFound from '@/pages/NotFound';
 // carregamento inicial da aplicação
 
 // --- Páginas Públicas ---
-const Install = lazy(() => import('@/pages/Install'));
-const Help = lazy(() => import('@/pages/Help'));
-const Wiki = lazy(() => import('@/pages/Wiki'));
-const LandingPage = lazy(() => import('@/pages/LandingPage'));
+const Install = lazy(() => import('@/pages/public/Install'));
+const Help = lazy(() => import('@/pages/public/Help'));
+const Wiki = lazy(() => import('@/pages/public/Wiki'));
+const LandingPage = lazy(() => import('@/pages/public/LandingPage'));
 
 // --- Páginas de Settings ---
-const Settings = lazy(() => import('@/pages/Settings'));
-const ThemePreview = lazy(() => import('@/pages/ThemePreview'));
-const SystemDiagnostics = lazy(() => import('@/pages/SystemDiagnostics'));
+const Settings = lazy(() => import('@/pages/settings/Settings'));
+const ThemePreview = lazy(() => import('@/pages/settings/ThemePreview'));
+const SystemDiagnostics = lazy(() => import('@/pages/settings/SystemDiagnostics'));
 
 // --- Dashboards ---
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
-const GitHubDashboard = lazy(() => import('@/pages/GitHubDashboard'));
-const HealthDashboard = lazy(() => import('@/pages/HealthDashboard'));
-const JukeboxStatsDashboard = lazy(() => import('@/pages/JukeboxStatsDashboard'));
-const ClientsMonitorDashboard = lazy(() => import('@/pages/ClientsMonitorDashboard'));
-const KioskMonitorDashboard = lazy(() => import('@/pages/KioskMonitorDashboard'));
+const Dashboard = lazy(() => import('@/pages/dashboards/Dashboard'));
+const GitHubDashboard = lazy(() => import('@/pages/dashboards/GitHubDashboard'));
+const HealthDashboard = lazy(() => import('@/pages/dashboards/HealthDashboard'));
+const JukeboxStatsDashboard = lazy(() => import('@/pages/dashboards/JukeboxStatsDashboard'));
+const ClientsMonitorDashboard = lazy(() => import('@/pages/dashboards/ClientsMonitorDashboard'));
+const KioskMonitorDashboard = lazy(() => import('@/pages/dashboards/KioskMonitorDashboard'));
 
 // --- Spotify ---
-const SpotifyBrowser = lazy(() => import('@/pages/SpotifyBrowser'));
-const SpotifyPlaylistPage = lazy(() => import('@/pages/SpotifyPlaylist'));
-const SpotifySearchPage = lazy(() => import('@/pages/SpotifySearch'));
-const SpotifyLibraryPage = lazy(() => import('@/pages/SpotifyLibrary'));
+const SpotifyBrowser = lazy(() => import('@/pages/spotify/SpotifyBrowser'));
+const SpotifyPlaylistPage = lazy(() => import('@/pages/spotify/SpotifyPlaylist'));
+const SpotifySearchPage = lazy(() => import('@/pages/spotify/SpotifySearch'));
+const SpotifyLibraryPage = lazy(() => import('@/pages/spotify/SpotifyLibrary'));
 
 // --- YouTube Music ---
-const YouTubeMusicBrowser = lazy(() => import('@/pages/YouTubeMusicBrowser'));
-const YouTubeMusicLibraryPage = lazy(() => import('@/pages/YouTubeMusicLibrary'));
-const YouTubeMusicSearchPage = lazy(() => import('@/pages/YouTubeMusicSearch'));
-const YouTubeMusicPlaylistPage = lazy(() => import('@/pages/YouTubeMusicPlaylist'));
+const YouTubeMusicBrowser = lazy(() => import('@/pages/youtube/YouTubeMusicBrowser'));
+const YouTubeMusicLibraryPage = lazy(() => import('@/pages/youtube/YouTubeMusicLibrary'));
+const YouTubeMusicSearchPage = lazy(() => import('@/pages/youtube/YouTubeMusicSearch'));
+const YouTubeMusicPlaylistPage = lazy(() => import('@/pages/youtube/YouTubeMusicPlaylist'));
 
 // --- Admin ---
-const Admin = lazy(() => import('@/pages/Admin'));
-const AdminLibrary = lazy(() => import('@/pages/AdminLibrary'));
-const AdminLogs = lazy(() => import('@/pages/AdminLogs'));
-const AdminFeedback = lazy(() => import('@/pages/AdminFeedback'));
+const Admin = lazy(() => import('@/pages/admin/Admin'));
+const AdminLibrary = lazy(() => import('@/pages/admin/AdminLibrary'));
+const AdminLogs = lazy(() => import('@/pages/admin/AdminLogs'));
+const AdminFeedback = lazy(() => import('@/pages/admin/AdminFeedback'));
 
 // --- Brand & Tools ---
-const BrandGuidelines = lazy(() => import('@/pages/BrandGuidelines'));
-const LogoGitHubPreview = lazy(() => import('@/pages/LogoGitHubPreview'));
-const ChangelogTimeline = lazy(() => import('@/pages/ChangelogTimeline'));
-const ComponentsShowcase = lazy(() => import('@/pages/ComponentsShowcase'));
-const VersionComparison = lazy(() => import('@/pages/VersionComparison'));
-const InstallerMetrics = lazy(() => import('@/pages/InstallerMetrics'));
-
-// --- Accessibility ---
-const A11yDashboard = lazy(() => import('@/pages/A11yDashboard'));
-const WcagExceptions = lazy(() => import('@/pages/WcagExceptions'));
-const LyricsTest = lazy(() => import('@/pages/LyricsTest'));
+const BrandGuidelines = lazy(() => import('@/pages/brand/BrandGuidelines'));
+const LogoGitHubPreview = lazy(() => import('@/pages/brand/LogoGitHubPreview'));
+const ChangelogTimeline = lazy(() => import('@/pages/tools/ChangelogTimeline'));
+const ComponentsShowcase = lazy(() => import('@/pages/tools/ComponentsShowcase'));
+const VersionComparison = lazy(() => import('@/pages/tools/VersionComparison'));
+const InstallerMetrics = lazy(() => import('@/pages/dashboards/InstallerMetrics'));
+const ScreenshotService = lazy(() => import('@/pages/tools/ScreenshotService'));
+const A11yDashboard = lazy(() => import('@/pages/dashboards/A11yDashboard'));
+const WcagExceptions = lazy(() => import('@/pages/tools/WcagExceptions'));
+const LyricsTest = lazy(() => import('@/pages/tools/LyricsTest'));
 
 // --- Social ---
-const JamSession = lazy(() => import('@/pages/JamSession'));
+const JamSession = lazy(() => import('@/pages/social/JamSession'));
 
 // --- Themes ---
-const SpicetifyThemeGallery = lazy(() => import('@/pages/SpicetifyThemeGallery'));
+const SpicetifyThemeGallery = lazy(() => import('@/pages/settings/SpicetifyThemeGallery'));
 
 // ============================================================================
 // TYPES
@@ -251,6 +206,7 @@ export const publicRoutes: RouteConfig[] = [
   { path: '/installer-metrics', element: <InstallerMetrics /> },
   { path: '/version-comparison', element: <VersionComparison /> },
   { path: '/logo-github', element: <LogoGitHubPreview /> },
+  { path: '/screenshot-service', element: <ScreenshotService /> },
   
   // --- Social ---
   { path: '/jam/:code', element: <JamSession /> },
@@ -355,38 +311,54 @@ export const allRoutes: RouteConfig[] = [
   catchAllRoute,
 ];
 
+/**
+ * Rotas públicas (sem autenticação)
+ */
+export const unauthenticatedRoutes = [
+  ...publicRoutes,
+  ...spotifyRoutes,
+  ...youtubeRoutes,
+];
+
+/**
+ * Rotas que requerem autenticação
+ */
+export const authenticatedRoutes = [
+  ...protectedRoutes,
+  ...dashboardRoutes,
+  ...adminRoutes,
+];
+
 // ============================================================================
-// FUNÇÕES UTILITÁRIAS
+// HELPERS
 // ============================================================================
 
 /**
- * Retorna apenas rotas que requerem proteção/permissão
+ * Verifica se uma rota requer autenticação
  */
-export const getProtectedRoutes = (): RouteConfig[] => {
-  return allRoutes.filter(route => route.requiredPermission);
+export const requiresAuth = (path: string): boolean => {
+  return authenticatedRoutes.some(route => route.path === path);
 };
 
 /**
- * Retorna rotas organizadas por categoria
+ * Obtém a permissão necessária para uma rota
  */
-export const getRoutesByCategory = () => ({
-  public: publicRoutes,
-  protected: protectedRoutes,
-  dashboards: dashboardRoutes,
-  spotify: spotifyRoutes,
-  youtube: youtubeRoutes,
-  admin: adminRoutes,
-});
+export const getRequiredPermission = (path: string): RouteConfig['requiredPermission'] | undefined => {
+  const route = allRoutes.find(r => r.path === path);
+  return route?.requiredPermission;
+};
 
 /**
- * Retorna total de rotas por categoria
+ * Obtém todas as rotas de uma categoria
  */
-export const getRouteStats = () => ({
-  public: publicRoutes.length,
-  protected: protectedRoutes.length,
-  dashboards: dashboardRoutes.length,
-  spotify: spotifyRoutes.length,
-  youtube: youtubeRoutes.length,
-  admin: adminRoutes.length,
-  total: allRoutes.length,
-});
+export const getRoutesByCategory = (category: 'public' | 'protected' | 'dashboard' | 'spotify' | 'youtube' | 'admin'): RouteConfig[] => {
+  switch (category) {
+    case 'public': return publicRoutes;
+    case 'protected': return protectedRoutes;
+    case 'dashboard': return dashboardRoutes;
+    case 'spotify': return spotifyRoutes;
+    case 'youtube': return youtubeRoutes;
+    case 'admin': return adminRoutes;
+    default: return [];
+  }
+};
