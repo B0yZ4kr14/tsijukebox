@@ -1,6 +1,6 @@
 // Main content generator - orchestrates all template generators
 // Critical config files like package.json are NEVER generated here
-// Supports 318 files across 37 categories
+// Supports 397 files across 45 categories
 
 import { generateE2EFixtureContent } from './templates/e2eFixtureTemplates';
 import { generateE2ESpecContent } from './templates/e2eSpecTemplates';
@@ -37,6 +37,10 @@ import { generateSettingsComponentsContent } from './templates/settingsComponent
 import { generateHooksCommonContent } from './templates/hooksCommonTemplates';
 import { generateHooksSystemContent } from './templates/hooksSystemTemplates';
 import { generateLibApiContent } from './templates/libApiTemplates';
+import { generateComponentsWikiContent } from './templates/componentsWikiTemplates';
+import { generateComponentsUIExtendedContent } from './templates/componentsUIExtendedTemplates';
+import { generatePagesExtendedContent } from './templates/pagesTemplates';
+import { generateComponentsMiscContent } from './templates/componentsMiscTemplates';
 
 const VERSION = '4.2.0';
 
@@ -459,6 +463,37 @@ export function generateFileContent(path: string): string | null {
   if (path.startsWith('src/lib/api/')) {
     const libApiContent = generateLibApiContent(path);
     if (libApiContent !== null) return libApiContent;
+  }
+  
+  // === COMPONENTS WIKI (4 files) ===
+  if (path.startsWith('src/components/wiki/')) {
+    const wikiContent = generateComponentsWikiContent(path);
+    if (wikiContent !== null) return wikiContent;
+  }
+  
+  // === COMPONENTS MISC (5 files) ===
+  if (path.startsWith('src/components/tour/') ||
+      path.startsWith('src/components/debug/') ||
+      path.startsWith('src/components/help/') ||
+      path.startsWith('src/components/system/') ||
+      path.startsWith('src/components/upload/')) {
+    const miscContent = generateComponentsMiscContent(path);
+    if (miscContent !== null) return miscContent;
+  }
+  
+  // === PAGES EXTENDED (29 files) ===
+  if (path.startsWith('src/pages/tools/') ||
+      path.startsWith('src/pages/admin/') ||
+      path.startsWith('src/pages/public/') ||
+      path.startsWith('src/pages/brand/')) {
+    const pagesExtContent = generatePagesExtendedContent(path);
+    if (pagesExtContent !== null) return pagesExtContent;
+  }
+  
+  // === COMPONENTS UI EXTENDED (40 files) ===
+  if (path.startsWith('src/components/ui/')) {
+    const uiExtContent = generateComponentsUIExtendedContent(path);
+    if (uiExtContent !== null) return uiExtContent;
   }
   
   // === COMPONENTS UI (15 files) ===

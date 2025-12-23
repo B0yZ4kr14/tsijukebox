@@ -513,6 +513,117 @@ export const FILE_CATEGORIES = {
     'src/lib/api/spotify/types.ts',
     'src/lib/api/spotify/mappers.ts',
   ],
+
+  // === COMPONENTS WIKI (4 arquivos) ===
+  'Components Wiki': [
+    'src/components/wiki/WikiArticle.tsx',
+    'src/components/wiki/WikiNavigation.tsx',
+    'src/components/wiki/WikiSearch.tsx',
+    'src/components/wiki/wikiData.ts',
+  ],
+
+  // === COMPONENTS UI EXTENDED (40 arquivos) ===
+  'Components UI Extended': [
+    'src/components/ui/accordion.tsx',
+    'src/components/ui/alert.tsx',
+    'src/components/ui/alert-dialog.tsx',
+    'src/components/ui/aspect-ratio.tsx',
+    'src/components/ui/avatar.tsx',
+    'src/components/ui/breadcrumb.tsx',
+    'src/components/ui/calendar.tsx',
+    'src/components/ui/carousel.tsx',
+    'src/components/ui/chart.tsx',
+    'src/components/ui/checkbox.tsx',
+    'src/components/ui/collapsible.tsx',
+    'src/components/ui/command.tsx',
+    'src/components/ui/context-menu.tsx',
+    'src/components/ui/drawer.tsx',
+    'src/components/ui/hover-card.tsx',
+    'src/components/ui/input-otp.tsx',
+    'src/components/ui/label.tsx',
+    'src/components/ui/menubar.tsx',
+    'src/components/ui/navigation-menu.tsx',
+    'src/components/ui/pagination.tsx',
+    'src/components/ui/popover.tsx',
+    'src/components/ui/radio-group.tsx',
+    'src/components/ui/resizable.tsx',
+    'src/components/ui/scroll-area.tsx',
+    'src/components/ui/separator.tsx',
+    'src/components/ui/sheet.tsx',
+    'src/components/ui/sidebar.tsx',
+    'src/components/ui/slider.tsx',
+    'src/components/ui/sonner.tsx',
+    'src/components/ui/table.tsx',
+    'src/components/ui/textarea.tsx',
+    'src/components/ui/toaster.tsx',
+    'src/components/ui/toggle.tsx',
+    'src/components/ui/toggle-group.tsx',
+    'src/components/ui/use-toast.ts',
+    'src/components/ui/BackButton.tsx',
+    'src/components/ui/BrandLogo.tsx',
+    'src/components/ui/InfoTooltip.tsx',
+    'src/components/ui/SkipLink.tsx',
+    'src/components/ui/SplashScreen.tsx',
+  ],
+
+  // === PAGES TOOLS (7 arquivos) ===
+  'Pages Tools': [
+    'src/pages/tools/index.ts',
+    'src/pages/tools/ChangelogTimeline.tsx',
+    'src/pages/tools/ComponentsShowcase.tsx',
+    'src/pages/tools/LyricsTest.tsx',
+    'src/pages/tools/ScreenshotService.tsx',
+    'src/pages/tools/VersionComparison.tsx',
+    'src/pages/tools/WcagExceptions.tsx',
+  ],
+
+  // === PAGES ADMIN (5 arquivos) ===
+  'Pages Admin': [
+    'src/pages/admin/index.ts',
+    'src/pages/admin/Admin.tsx',
+    'src/pages/admin/AdminFeedback.tsx',
+    'src/pages/admin/AdminLibrary.tsx',
+    'src/pages/admin/AdminLogs.tsx',
+  ],
+
+  // === PAGES PUBLIC (10 arquivos) ===
+  'Pages Public': [
+    'src/pages/public/index.ts',
+    'src/pages/public/Auth.tsx',
+    'src/pages/public/Help.tsx',
+    'src/pages/public/Index.tsx',
+    'src/pages/public/Install.tsx',
+    'src/pages/public/LandingPage.tsx',
+    'src/pages/public/Login.tsx',
+    'src/pages/public/NotFound.tsx',
+    'src/pages/public/SetupWizard.tsx',
+    'src/pages/public/Wiki.tsx',
+  ],
+
+  // === PAGES DASHBOARDS (5 arquivos) ===
+  'Pages Dashboards': [
+    'src/pages/dashboards/index.ts',
+    'src/pages/dashboards/Dashboard.tsx',
+    'src/pages/dashboards/ClientsMonitorDashboard.tsx',
+    'src/pages/dashboards/InstallerMetrics.tsx',
+    'src/pages/dashboards/JukeboxStatsDashboard.tsx',
+  ],
+
+  // === PAGES BRAND (3 arquivos) ===
+  'Pages Brand': [
+    'src/pages/brand/index.ts',
+    'src/pages/brand/BrandGuidelines.tsx',
+    'src/pages/brand/LogoGitHubPreview.tsx',
+  ],
+
+  // === COMPONENTS MISC (5 arquivos) ===
+  'Components Misc': [
+    'src/components/tour/GuidedTour.tsx',
+    'src/components/debug/ContrastDebugPanel.tsx',
+    'src/components/help/InteractiveTestMode.tsx',
+    'src/components/system/TraceViewer.tsx',
+    'src/components/upload/AudioWaveformPreview.tsx',
+  ],
 } as const;
 
 // Files that should have generated content (timestamps, version info)
@@ -529,7 +640,7 @@ export function isGeneratedFile(path: string): boolean {
   return GENERATED_FILES.includes(path);
 }
 
-// Only these files should be synced - prevents accidental overwrites (318 arquivos)
+// Only these files should be synced - prevents accidental overwrites (397 arquivos)
 export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Documentação'],
   ...FILE_CATEGORIES['Scripts'],
@@ -568,4 +679,12 @@ export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Hooks Common'],
   ...FILE_CATEGORIES['Hooks System'],
   ...FILE_CATEGORIES['Lib API'],
+  ...FILE_CATEGORIES['Components Wiki'],
+  ...FILE_CATEGORIES['Components UI Extended'],
+  ...FILE_CATEGORIES['Pages Tools'],
+  ...FILE_CATEGORIES['Pages Admin'],
+  ...FILE_CATEGORIES['Pages Public'],
+  ...FILE_CATEGORIES['Pages Dashboards'],
+  ...FILE_CATEGORIES['Pages Brand'],
+  ...FILE_CATEGORIES['Components Misc'],
 ];
