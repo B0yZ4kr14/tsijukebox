@@ -51,13 +51,22 @@ export function ProgressBar({ position, duration, genre, onSeek, className }: Pr
     return (x / rect.width) * duration;
   }, [duration]);
 
-  const handleClick = (e: React.MouseEvent) => {
+  // Debounce para prevenir race condition em cliques rápidos
+  const lastSeekRef = useRef<number>(0);
+  const SEEK_DEBOUNCE_MS = 100;
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
     if (!onSeek) return;
+    
+    const now = Date.now();
+    if (now - lastSeekRef.current < SEEK_DEBOUNCE_MS) return;
+    lastSeekRef.current = now;
+    
     const newPosition = calculatePosition(e.clientX);
     if (newPosition !== null) {
       onSeek(newPosition);
     }
-  };
+  }, [onSeek, calculatePosition]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!onSeek) return;

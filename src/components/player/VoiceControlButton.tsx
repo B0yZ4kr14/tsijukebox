@@ -84,7 +84,37 @@ export function VoiceControlButton({
     prevErrorRef.current = error;
   }, [error, playSound]);
 
-  if (!isSupported || !settings.enabled) {
+  // Fallback visual quando não suportado
+  if (!isSupported) {
+    return (
+      <div className={cn('relative', className)} data-testid="voice-control-container">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                data-testid="voice-control-button"
+                variant="ghost"
+                size="icon"
+                disabled
+                aria-label="Controle por voz não suportado"
+                className={cn(
+                  sizeClasses[size],
+                  'rounded-full opacity-50 cursor-not-allowed bg-kiosk-surface/30 text-kiosk-text/50'
+                )}
+              >
+                <MicOff className={iconSizes[size]} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p className="text-sm">Controle por voz não suportado neste navegador</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    );
+  }
+
+  if (!settings.enabled) {
     return null;
   }
 
