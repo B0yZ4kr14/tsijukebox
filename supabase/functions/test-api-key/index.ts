@@ -9,7 +9,7 @@ interface TestKeyRequest {
   keyName: string;
 }
 
-async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; message: string }> {
+async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; message: string; needsCredits?: boolean }> {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -26,37 +26,67 @@ async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; messa
     });
 
     if (response.ok) {
-      return { valid: true, message: 'Claude API key is valid and working' };
+      return { valid: true, message: 'Claude API key válida e funcionando' };
     }
     
     const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData.error?.message || '';
+    
+    // Check for credit/billing issues - key is valid but no credits
+    if (response.status === 402 || 
+        errorMessage.toLowerCase().includes('credit') || 
+        errorMessage.toLowerCase().includes('balance') ||
+        errorMessage.toLowerCase().includes('billing') ||
+        errorMessage.toLowerCase().includes('payment')) {
+      return { 
+        valid: true, 
+        message: 'Chave válida, mas conta sem créditos suficientes',
+        needsCredits: true 
+      };
+    }
     
     if (response.status === 401) {
-      return { valid: false, message: 'Invalid API key - authentication failed' };
+      return { valid: false, message: 'Chave inválida - autenticação falhou' };
     }
     if (response.status === 403) {
-      return { valid: false, message: 'API key lacks required permissions' };
+      return { valid: false, message: 'Chave sem permissões necessárias' };
     }
     if (response.status === 429) {
-      return { valid: true, message: 'API key is valid (rate limited, but authenticated)' };
+      return { valid: true, message: 'Chave válida (rate limited, mas autenticada)' };
     }
     
     return { 
       valid: false, 
-      message: `API error: ${errorData.error?.message || response.statusText}` 
+      message: `Erro da API: ${errorMessage || response.statusText}` 
     };
   } catch (error) {
     return { 
       valid: false, 
-      message: `Connection error: ${error instanceof Error ? error.message : 'Unknown'}` 
+      message: `Erro de conexão: ${error instanceof Error ? error.message : 'Desconhecido'}` 
     };
   }
 }
 
 async function testManusKey(apiKey: string): Promise<{ valid: boolean; message: string }> {
+  // Validate key format first
+  if (!apiKey || apiKey.length < 20) {
+    return { valid: false, message: 'Formato de chave inválido - muito curta' };
+  }
+  
+  // Check for common Manus.im key prefixes
+  const validPrefixes = ['manus_', 'mk_', 'manus-'];
+  const hasValidPrefix = validPrefixes.some(prefix => apiKey.toLowerCase().startsWith(prefix));
+  
+  if (!hasValidPrefix) {
+    return { 
+      valid: false, 
+      message: 'Formato de chave inválido - deve começar com "manus_", "mk_" ou "manus-"' 
+    };
+  }
+
   try {
-    // Manus.im API health check
-    const response = await fetch('https://api.manus.im/v1/health', {
+    // Try to validate with Manus.im API - use a lightweight endpoint
+    const response = await fetch('https://api.manus.im/v1/user/info', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -65,32 +95,31 @@ async function testManusKey(apiKey: string): Promise<{ valid: boolean; message: 
     });
 
     if (response.ok) {
-      return { valid: true, message: 'Manus.im API key is valid and working' };
+      return { valid: true, message: 'Manus.im API key válida e funcionando' };
     }
     
     if (response.status === 401 || response.status === 403) {
-      return { valid: false, message: 'Invalid Manus.im API key' };
+      return { valid: false, message: 'Chave Manus.im inválida ou expirada' };
     }
     
-    // Try alternative endpoint if health check not available
-    const altResponse = await fetch('https://api.manus.im/v1/agents', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (altResponse.ok || altResponse.status === 200) {
-      return { valid: true, message: 'Manus.im API key is valid' };
+    // If endpoint doesn't exist or returns 404, validate format only
+    if (response.status === 404) {
+      return { 
+        valid: true, 
+        message: 'Formato da chave Manus.im válido (endpoint de verificação indisponível)' 
+      };
     }
     
-    return { valid: false, message: `Manus.im API returned status ${altResponse.status}` };
-  } catch (error) {
-    // If we can't connect, assume key format is valid but service unreachable
     return { 
       valid: false, 
-      message: `Could not connect to Manus.im: ${error instanceof Error ? error.message : 'Unknown'}` 
+      message: `Manus.im retornou status ${response.status}` 
+    };
+  } catch (error) {
+    // If we can't connect, accept valid format
+    console.log('[test-api-key] Manus.im connection error, accepting valid format:', error);
+    return { 
+      valid: true, 
+      message: 'Formato da chave válido (verificação de conexão falhou)' 
     };
   }
 }

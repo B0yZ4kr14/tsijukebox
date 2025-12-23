@@ -47,10 +47,16 @@ const API_CONFIGS: APIKeyConfig[] = [
   }
 ];
 
+interface KeyStatus {
+  configured: boolean;
+  needsCredits?: boolean;
+  lastMessage?: string;
+}
+
 export function AIConfigSection() {
   const [apiKeys, setApiKeys] = useState<Record<string, string>>({});
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
-  const [configuredKeys, setConfiguredKeys] = useState<Record<string, boolean>>({});
+  const [keyStatus, setKeyStatus] = useState<Record<string, KeyStatus>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [testingKey, setTestingKey] = useState<string | null>(null);
 
@@ -61,23 +67,23 @@ export function AIConfigSection() {
 
   const checkConfiguredKeys = async () => {
     try {
-      // Test if keys work by calling a simple validation
-      const configured: Record<string, boolean> = {};
+      const status: Record<string, KeyStatus> = {};
       
       for (const config of API_CONFIGS) {
         try {
-          // Check if the secret exists by trying to use it
           const { data, error } = await supabase.functions.invoke('check-api-key', {
             body: { keyName: config.secretName }
           });
           
-          configured[config.secretName] = !error && data?.exists === true;
+          status[config.secretName] = {
+            configured: !error && data?.exists === true
+          };
         } catch {
-          configured[config.secretName] = false;
+          status[config.secretName] = { configured: false };
         }
       }
       
-      setConfiguredKeys(configured);
+      setKeyStatus(status);
     } catch (error) {
       console.error('[AIConfigSection] Error checking configured keys:', error);
     }
@@ -112,7 +118,10 @@ export function AIConfigSection() {
 
       if (data?.success) {
         toast.success(`API Key da ${config.name} salva com sucesso!`);
-        setConfiguredKeys(prev => ({ ...prev, [config.secretName]: true }));
+        setKeyStatus(prev => ({ 
+          ...prev, 
+          [config.secretName]: { configured: true, needsCredits: false } 
+        }));
         setApiKeys(prev => ({ ...prev, [config.secretName]: '' }));
       } else {
         throw new Error(data?.error || 'Falha ao salvar a chave');
@@ -136,10 +145,26 @@ export function AIConfigSection() {
 
       if (error) throw error;
 
+      // Update status with detailed info
+      setKeyStatus(prev => ({
+        ...prev,
+        [config.secretName]: {
+          configured: true,
+          needsCredits: data?.needsCredits || false,
+          lastMessage: data?.message
+        }
+      }));
+
       if (data?.valid) {
-        toast.success(`API Key da ${config.name} está funcionando!`);
+        if (data?.needsCredits) {
+          toast.warning(data.message || `${config.name}: Chave válida, mas adicione créditos à sua conta`, {
+            duration: 5000
+          });
+        } else {
+          toast.success(data.message || `API Key da ${config.name} está funcionando!`);
+        }
       } else {
-        toast.error(`API Key da ${config.name} inválida ou expirada`);
+        toast.error(data?.message || `API Key da ${config.name} inválida ou expirada`);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao testar a API Key';
@@ -184,11 +209,20 @@ export function AIConfigSection() {
                 <div className="flex items-center gap-2">
                   <span className={config.color}>{config.icon}</span>
                   <span className="font-medium text-kiosk-text">{config.name}</span>
-                  {configuredKeys[config.secretName] && (
-                    <Badge variant="outline" className="border-green-500/50 text-green-500">
-                      <Check className="w-3 h-3 mr-1" />
-                      Configurado
-                    </Badge>
+                  {keyStatus[config.secretName]?.configured && (
+                    <>
+                      {keyStatus[config.secretName]?.needsCredits ? (
+                        <Badge variant="outline" className="border-yellow-500/50 text-yellow-500">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          Sem Créditos
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-green-500/50 text-green-500">
+                          <Check className="w-3 h-3 mr-1" />
+                          Configurado
+                        </Badge>
+                      )}
+                    </>
                   )}
                 </div>
                 <a
@@ -245,15 +279,20 @@ export function AIConfigSection() {
                 </div>
               </div>
 
-              {/* Test Button (only if configured) */}
-              {configuredKeys[config.secretName] && (
-                <div className="flex justify-end">
+              {/* Test Button and Status Message (only if configured) */}
+              {keyStatus[config.secretName]?.configured && (
+                <div className="flex items-center justify-between">
+                  {keyStatus[config.secretName]?.lastMessage && (
+                    <span className={`text-xs ${keyStatus[config.secretName]?.needsCredits ? 'text-yellow-400' : 'text-green-400'}`}>
+                      {keyStatus[config.secretName].lastMessage}
+                    </span>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleTestKey(config)}
                     disabled={testingKey === config.secretName}
-                    className="button-outline-neon"
+                    className="button-outline-neon ml-auto"
                   >
                     {testingKey === config.secretName ? (
                       <>
