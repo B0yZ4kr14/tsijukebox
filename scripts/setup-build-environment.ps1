@@ -25,7 +25,7 @@
     .\scripts\setup-build-environment.ps1 -SkipBuild
 
 .VERSION
-    1.0.0
+    1.1.0
 
 .AUTHOR
     TSiJUKEBOX DevOps Team
@@ -52,7 +52,7 @@ $colors = @{
 # Counters
 $stepsCompleted = 0
 $totalSteps = 8
-$scriptVersion = "1.0.0"
+$scriptVersion = "1.1.0"
 $startTime = Get-Date
 
 ################################################################################
@@ -112,9 +112,9 @@ function Step-ValidateEnvironment {
     # Validate Node.js
     Write-LogStep "Checking Node.js installation..."
     try {
-        $nodeVersion = (node --version 2>$null)
-        if ($nodeVersion) {
-            Write-LogSuccess "Node.js found: $nodeVersion"
+        $script:nodeVersion = (node --version 2>$null)
+        if ($script:nodeVersion) {
+            Write-LogSuccess "Node.js found: $($script:nodeVersion)"
         } else {
             Write-LogError "Node.js is not installed!"
             Write-LogInfo "Please install Node.js from https://nodejs.org/ (v16+)"
@@ -128,9 +128,9 @@ function Step-ValidateEnvironment {
     # Validate npm
     Write-LogStep "Checking npm installation..."
     try {
-        $npmVersion = (npm --version 2>$null)
-        if ($npmVersion) {
-            Write-LogSuccess "npm found: v$npmVersion"
+        $script:npmVersion = (npm --version 2>$null)
+        if ($script:npmVersion) {
+            Write-LogSuccess "npm found: v$($script:npmVersion)"
         } else {
             Write-LogError "npm is not installed!"
             exit 1
@@ -148,6 +148,10 @@ function Step-ValidateEnvironment {
     }
     
     Write-LogSuccess "package.json found"
+    
+    # Store OS type
+    $script:osType = $osType
+    
     Write-Host "`n"
     $script:stepsCompleted++
 }
@@ -217,11 +221,11 @@ function Step-CleanNpm {
 }
 
 ################################################################################
-# STEP 4: Detect Missing Dependencies
+# STEP 4: Detect and Install Missing Dependencies
 ################################################################################
 
-function Step-DetectMissingDeps {
-    Write-LogHeader "STEP 4/$totalSteps: Detecting Missing Dependencies"
+function Step-DetectAndInstallMissingDeps {
+    Write-LogHeader "STEP 4/$totalSteps: Detecting & Installing Missing Dependencies"
     
     $radixPackages = @(
         "@radix-ui/react-alert-dialog",
@@ -266,19 +270,32 @@ function Step-DetectMissingDeps {
     Write-LogStep "Checking for missing @radix-ui packages in package.json..."
     
     $packageJson = Get-Content "package.json" -Raw
-    $missingCount = 0
+    $missingPackages = @()
     
     foreach ($package in $radixPackages) {
         if ($packageJson -notmatch [regex]::Escape($package)) {
-            Write-Host "  - $package" -ForegroundColor $colors.Warning
-            $missingCount++
+            $missingPackages += $package
         }
     }
     
-    if ($missingCount -eq 0) {
+    if ($missingPackages.Count -eq 0) {
         Write-LogSuccess "All @radix-ui packages are declared"
     } else {
-        Write-LogWarning "Found $missingCount missing @radix-ui packages"
+        Write-LogWarning "Found $($missingPackages.Count) missing @radix-ui packages"
+        foreach ($package in $missingPackages) {
+            Write-Host "  - $package" -ForegroundColor $colors.Warning
+        }
+        Write-Host ""
+        
+        Write-LogStep "Installing missing @radix-ui packages..."
+        $packageList = $missingPackages -join " "
+        npm install $packageList --save --legacy-peer-deps
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-LogSuccess "Missing @radix-ui packages installed!"
+        } else {
+            Write-LogWarning "Some packages may have failed to install"
+        }
     }
     
     Write-Host "`n"
@@ -429,9 +446,9 @@ function Generate-Report {
     
     Write-Host "`n"
     Write-LogHeader "SYSTEM INFORMATION"
-    Write-Host "Node.js: $nodeVersion" -ForegroundColor $colors.Step
-    Write-Host "npm: v$npmVersion" -ForegroundColor $colors.Step
-    Write-Host "OS: $osType" -ForegroundColor $colors.Step
+    Write-Host "Node.js: $($script:nodeVersion)" -ForegroundColor $colors.Step
+    Write-Host "npm: v$($script:npmVersion)" -ForegroundColor $colors.Step
+    Write-Host "OS: $($script:osType)" -ForegroundColor $colors.Step
     Write-Host "PowerShell: $($PSVersionTable.PSVersion)" -ForegroundColor $colors.Step
     Write-Host "`n"
 }
@@ -458,7 +475,7 @@ function Main {
     Step-ValidateEnvironment
     Step-BackupState
     Step-CleanNpm
-    Step-DetectMissingDeps
+    Step-DetectAndInstallMissingDeps
     Step-InstallDependencies
     Step-FixVulnerabilities
     Step-VerifyBuildConfig
