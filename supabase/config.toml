@@ -80,3 +80,6 @@ verify_jwt = false
 
 [functions.ai-gateway]
 verify_jwt = false
+
+[functions.read-project-files]
+verify_jwt = false
