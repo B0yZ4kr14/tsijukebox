@@ -4,7 +4,7 @@
 # TSiJUKEBOX - Build Environment Setup & Fix Script
 # 
 # Purpose: Automatically fix all dependency issues and prepare build environment
-# Version: 1.0.0
+# Version: 1.1.0
 # Author: TSiJUKEBOX DevOps Team
 # Date: December 23, 2025
 # 
@@ -63,7 +63,7 @@ log_info() {
 }
 
 # Script metadata
-SCRIPT_VERSION="1.0.0"
+SCRIPT_VERSION="1.1.0"
 START_TIME=$(date +%s)
 REPORT_FILE="setup-build-report-$(date +%Y%m%d-%H%M%S).log"
 
@@ -187,11 +187,11 @@ step_clean_npm() {
 }
 
 ################################################################################
-# STEP 4: Detect Missing @radix-ui Dependencies
+# STEP 4: Detect and Install Missing @radix-ui Dependencies
 ################################################################################
-step_detect_missing_deps() {
+step_detect_and_install_missing_deps() {
     local step_num=4
-    log_header "STEP $step_num/$TOTAL_STEPS: Detecting Missing Dependencies"
+    log_header "STEP $step_num/$TOTAL_STEPS: Detecting & Installing Missing Dependencies"
     
     # Array of common @radix-ui packages needed by shadcn/ui
     declare -a RADIX_PACKAGES=(
@@ -250,6 +250,11 @@ step_detect_missing_deps() {
         for package in "${MISSING_PACKAGES[@]}"; do
             echo "  - $package"
         done
+        echo ""
+        
+        log_step "Installing missing @radix-ui packages..."
+        npm install "${MISSING_PACKAGES[@]}" --save --legacy-peer-deps
+        log_success "Missing @radix-ui packages installed!"
     fi
     
     echo ""
@@ -282,7 +287,7 @@ step_fix_vulnerabilities() {
     AUDIT_OUTPUT=$(npm audit 2>&1 || true)
     VULN_COUNT=$(echo "$AUDIT_OUTPUT" | grep -oP '\d+(?= vulnerabilities)' || echo "0")
     
-    if [ "$VULN_COUNT" -gt 0 ]; then
+    if [ "$VULN_COUNT" != "0" ] && [ -n "$VULN_COUNT" ]; then
         log_warning "Found $VULN_COUNT vulnerabilities"
         log_step "Attempting to fix vulnerabilities..."
         npm audit fix --force 2>&1 || true
@@ -428,7 +433,7 @@ main() {
     step_validate_environment
     step_backup_state
     step_clean_npm
-    step_detect_missing_deps
+    step_detect_and_install_missing_deps
     step_install_dependencies
     step_fix_vulnerabilities
     step_verify_build_config
