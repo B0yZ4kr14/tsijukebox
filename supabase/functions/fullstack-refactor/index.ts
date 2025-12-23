@@ -64,9 +64,27 @@ interface RefactorResult {
   };
 }
 
-// Lovable AI Gateway model
-const AI_MODEL = 'google/gemini-2.5-pro';
+// =============================================================================
+// AI MODEL CONFIGURATION (Dual Support: Claude Opus + Lovable AI)
+// =============================================================================
+
+// Claude Opus 4.5 (Primary when available)
+const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_OPUS_MODEL = 'claude-opus-4-1-20250805';
+const CLAUDE_MAX_TOKENS = 8192;
+
+// Lovable AI Gateway (Fallback)
 const LOVABLE_AI_GATEWAY = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+const LOVABLE_MODEL = 'google/gemini-2.5-pro';
+
+// Determine which model to use based on available keys
+function getActiveModel(): { model: string; provider: 'anthropic' | 'lovable' } {
+  const anthropicKey = Deno.env.get('ANTHROPIC_CLAUDE_OPUS') || Deno.env.get('ANTHROPIC_API_KEY');
+  if (anthropicKey) {
+    return { model: CLAUDE_OPUS_MODEL, provider: 'anthropic' };
+  }
+  return { model: LOVABLE_MODEL, provider: 'lovable' };
+}
 
 const KERNEL_REFACTOR_PROTOCOL = `
 ## KERNEL DE REFATORAÇÃO EM 6 FASES (OBRIGATÓRIO)
@@ -104,8 +122,9 @@ FASE 6 - TESTES E VERIFICAÇÃO:
 `;
 
 function buildSystemPrompt(action: string, options: FullstackRefactorRequest['options']): string {
+  const { model, provider } = getActiveModel();
   const basePrompt = `Você é um arquiteto de software sênior especializado em refatoração para o projeto TSiJUKEBOX.
-Você está usando o modelo ${AI_MODEL} via Lovable AI Gateway.
+${provider === 'anthropic' ? `Você é o Claude Opus 4.5 da Anthropic, o modelo mais poderoso disponível.` : `Você está usando o modelo ${model} via Lovable AI Gateway.`}
 
 PROJETO TSiJUKEBOX:
 - Sistema de jukebox kiosk-mode para música
@@ -233,15 +252,19 @@ Deno.serve(async (req) => {
   const requestId = crypto.randomUUID();
 
   try {
+    // Check for API keys (Claude Opus preferred, Lovable AI as fallback)
+    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_CLAUDE_OPUS') || Deno.env.get('ANTHROPIC_API_KEY');
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
-    if (!LOVABLE_API_KEY) {
-      console.error(`[${requestId}] LOVABLE_API_KEY not configured`);
+    if (!ANTHROPIC_API_KEY && !LOVABLE_API_KEY) {
+      console.error(`[${requestId}] No API keys configured (ANTHROPIC_CLAUDE_OPUS or LOVABLE_API_KEY required)`);
       return new Response(
-        JSON.stringify({ error: 'LOVABLE_API_KEY not configured' }),
+        JSON.stringify({ error: 'No API keys configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    
+    const { model: activeModel, provider } = getActiveModel();
 
     // Parse and validate request with Zod
     const rawBody = await req.json();
@@ -312,22 +335,41 @@ FORMATO DE RESPOSTA (JSON VÁLIDO):
   }
 }`;
 
-    console.log(`[${requestId}] Calling Lovable AI Gateway (${AI_MODEL})...`);
+    console.log(`[${requestId}] Calling ${provider === 'anthropic' ? 'Claude Opus' : 'Lovable AI Gateway'} (${activeModel})...`);
     
-    const response = await fetch(LOVABLE_AI_GATEWAY, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: AI_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-      }),
-    });
+    let response: Response;
+    
+    if (provider === 'anthropic') {
+      response = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+          'x-api-key': ANTHROPIC_API_KEY!,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: activeModel,
+          max_tokens: CLAUDE_MAX_TOKENS,
+          messages: [{ role: 'user', content: userPrompt }],
+          system: systemPrompt,
+        }),
+      });
+    } else {
+      response = await fetch(LOVABLE_AI_GATEWAY, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: activeModel,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+        }),
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -442,7 +484,7 @@ FORMATO DE RESPOSTA (JSON VÁLIDO):
         requestId,
         action, 
         filesCount: result.files.length,
-        model: AI_MODEL,
+        model: activeModel,
         usage: aiResponse.usage,
         duration,
       },
@@ -455,7 +497,7 @@ FORMATO DE RESPOSTA (JSON VÁLIDO):
         success: true, 
         result,
         usage: aiResponse.usage,
-        model: AI_MODEL,
+        model: activeModel,
         duration,
         requestId,
       }),

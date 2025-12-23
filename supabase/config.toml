@@ -21,6 +21,9 @@ verify_jwt = false
 [functions.fullstack-refactor]
 verify_jwt = false
 
+[functions.claude-refactor-opus]
+verify_jwt = false
+
 [functions.installer-metrics]
 verify_jwt = false
 
