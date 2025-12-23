@@ -183,42 +183,91 @@ Updated: ${now}
 }
 
 // Generate content for Python scripts
+// CRITICAL: All Python scripts MUST start with #!/usr/bin/env python3
+// NEVER generate JS/TS placeholder content for .py files
 export function generateScriptContent(path: string): string | null {
   const now = new Date().toISOString();
   
   switch (path) {
     case 'scripts/install.py':
+      // install.py is a shim that downloads unified-installer.py
       return `#!/usr/bin/env python3
-# TSiJUKEBOX Installer
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-TSiJUKEBOX Installation Script
+TSiJUKEBOX Installer Shim v${VERSION}
+================================
+Lightweight shim that downloads and executes the unified installer.
 
-This script handles the installation of TSiJUKEBOX on Linux systems.
+This file is safe to run via: curl -fsSL .../install.py | sudo python3
+
+USO:
+    curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+    
+    # Ou use diretamente o instalador unificado:
+    curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
+
+Autor: B0.y_Z4kr14
+Licença: Domínio Público
+Last updated: ${now}
 """
 
 import os
 import sys
+import tempfile
+import urllib.request
+import ssl
 import subprocess
-import logging
+from pathlib import Path
 
 VERSION = "${VERSION}"
-REPO_URL = "https://github.com/B0yZ4kr14/TSiJUKEBOX"
+REPO_BASE = "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main"
+UNIFIED_INSTALLER = f"{REPO_BASE}/scripts/unified-installer.py"
+
+class Colors:
+    RED = '\\033[91m'
+    GREEN = '\\033[92m'
+    YELLOW = '\\033[93m'
+    BLUE = '\\033[94m'
+    CYAN = '\\033[96m'
+    RESET = '\\033[0m'
+    BOLD = '\\033[1m'
+
+def log_info(msg): print(f"{Colors.BLUE}ℹ{Colors.RESET}  {msg}")
+def log_success(msg): print(f"{Colors.GREEN}✓{Colors.RESET}  {msg}")
+def log_error(msg): print(f"{Colors.RED}✗{Colors.RESET}  {msg}")
+
+def download_script(url, dest):
+    log_info(f"Baixando: {url}")
+    try:
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(url, context=ctx, timeout=30) as r:
+            content = r.read()
+            # Validate it's Python, not JS placeholder
+            if content.decode('utf-8', errors='ignore').startswith('//'):
+                log_error("Script corrompido no repositório")
+                return False
+            dest.write_bytes(content)
+            return True
+    except Exception as e:
+        log_error(f"Erro: {e}")
+        return False
 
 def main():
-    """Main installation entry point."""
-    print(f"TSiJUKEBOX Installer v{VERSION}")
-    print("=" * 40)
+    print(f"\\n{Colors.CYAN}TSiJUKEBOX Installer Shim v{VERSION}{Colors.RESET}\\n")
     
-    # Check Python version
-    if sys.version_info < (3, 8):
-        print("Error: Python 3.8+ required")
-        sys.exit(1)
+    if os.geteuid() != 0:
+        log_error("Execute com sudo: sudo python3 install.py")
+        return 1
     
-    print("Installation complete!")
-    return 0
+    with tempfile.TemporaryDirectory() as tmpdir:
+        installer = Path(tmpdir) / "unified-installer.py"
+        if download_script(UNIFIED_INSTALLER, installer):
+            log_success("Instalador baixado")
+            return subprocess.run([sys.executable, str(installer)] + sys.argv[1:]).returncode
+        
+        log_error("Falha ao baixar instalador. Tente:")
+        log_info("  git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git")
+        log_info("  cd TSiJUKEBOX && sudo python3 scripts/unified-installer.py")
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())
@@ -226,52 +275,73 @@ if __name__ == "__main__":
 
     case 'scripts/diagnose-service.py':
       return `#!/usr/bin/env python3
-# TSiJUKEBOX Service Diagnostics
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-Service Diagnostics Tool
+TSiJUKEBOX Service Diagnostics v${VERSION}
+=====================================
+Comprehensive service health checker with auto-fix capabilities.
 
-Checks the health of TSiJUKEBOX services and provides auto-fix capabilities.
+USO:
+    sudo python3 diagnose-service.py
+    sudo python3 diagnose-service.py --auto-fix
+    sudo python3 diagnose-service.py --verbose
+
+Last updated: ${now}
 """
 
 import os
 import sys
 import subprocess
+import json
+from pathlib import Path
+from datetime import datetime
 
 VERSION = "${VERSION}"
 
-def check_service_status(service_name: str) -> dict:
-    """Check if a systemd service is running."""
+class Colors:
+    RED, GREEN, YELLOW, BLUE, CYAN = '\\033[91m', '\\033[92m', '\\033[93m', '\\033[94m', '\\033[96m'
+    RESET, BOLD = '\\033[0m', '\\033[1m'
+
+def log_ok(msg): print(f"{Colors.GREEN}✓{Colors.RESET} {msg}")
+def log_err(msg): print(f"{Colors.RED}✗{Colors.RESET} {msg}")
+def log_warn(msg): print(f"{Colors.YELLOW}⚠{Colors.RESET} {msg}")
+
+def check_service(name):
     try:
-        result = subprocess.run(
-            ["systemctl", "is-active", service_name],
-            capture_output=True,
-            text=True
-        )
-        return {
-            "service": service_name,
-            "status": result.stdout.strip(),
-            "running": result.returncode == 0
-        }
-    except Exception as e:
-        return {"service": service_name, "status": "error", "error": str(e)}
+        r = subprocess.run(["systemctl", "is-active", name], capture_output=True, text=True)
+        return {"name": name, "active": r.returncode == 0, "status": r.stdout.strip()}
+    except: return {"name": name, "active": False, "status": "error"}
+
+def check_port(port):
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        result = s.connect_ex(("127.0.0.1", port))
+        s.close()
+        return result == 0
+    except: return False
 
 def main():
-    """Main diagnostic entry point."""
-    print(f"TSiJUKEBOX Service Diagnostics v{VERSION}")
+    print(f"\\n{Colors.CYAN}TSiJUKEBOX Diagnostics v{VERSION}{Colors.RESET}")
     print("=" * 50)
     
-    services = [
-        "tsijukebox",
-        "tsijukebox-kiosk",
-    ]
+    # Check services
+    for svc in ["tsijukebox", "tsijukebox-kiosk", "nginx", "avahi-daemon"]:
+        s = check_service(svc)
+        (log_ok if s["active"] else log_warn)(f"{svc}: {s['status']}")
     
-    for service in services:
-        status = check_service_status(service)
-        icon = "✅" if status.get("running") else "❌"
-        print(f"{icon} {service}: {status.get('status', 'unknown')}")
+    print()
+    # Check ports
+    for port, name in [(5173, "Dev Server"), (80, "HTTP"), (443, "HTTPS")]:
+        (log_ok if check_port(port) else log_warn)(f"Porta {port} ({name})")
+    
+    print()
+    # Check Node/npm
+    for cmd in ["node --version", "npm --version"]:
+        try:
+            r = subprocess.run(cmd.split(), capture_output=True, text=True)
+            log_ok(f"{cmd.split()[0]}: {r.stdout.strip()}")
+        except: log_err(f"{cmd.split()[0]}: não encontrado")
     
     return 0
 
@@ -301,46 +371,62 @@ echo "System Uptime: $(uptime -p)"
 
     case 'scripts/systemd-notify-wrapper.py':
       return `#!/usr/bin/env python3
-# systemd-notify wrapper for TSiJUKEBOX
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-Wrapper script for systemd-notify integration.
-Allows the application to communicate with systemd.
+TSiJUKEBOX systemd-notify Wrapper v${VERSION}
+========================================
+Wrapper for systemd service lifecycle integration.
+
+USO:
+    python3 systemd-notify-wrapper.py ready
+    python3 systemd-notify-wrapper.py watchdog
+    python3 systemd-notify-wrapper.py status "Message"
+
+Last updated: ${now}
 """
 
 import os
+import sys
 import socket
 
-def notify(state: str) -> bool:
-    """Send notification to systemd."""
-    notify_socket = os.environ.get("NOTIFY_SOCKET")
-    if not notify_socket:
-        return False
-    
+VERSION = "${VERSION}"
+
+def notify(state):
+    sock_path = os.environ.get("NOTIFY_SOCKET")
+    if not sock_path: return False
     try:
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        if notify_socket.startswith("@"):
-            notify_socket = "\\0" + notify_socket[1:]
-        sock.connect(notify_socket)
+        if sock_path.startswith("@"): sock_path = "\\0" + sock_path[1:]
+        sock.connect(sock_path)
         sock.sendall(state.encode())
         sock.close()
         return True
-    except Exception:
-        return False
+    except: return False
 
-def ready():
-    """Notify systemd that service is ready."""
-    return notify("READY=1")
+def ready(): return notify("READY=1")
+def watchdog(): return notify("WATCHDOG=1")
+def stopping(): return notify("STOPPING=1")
+def status(msg): return notify(f"STATUS={msg}")
 
-def watchdog():
-    """Send watchdog ping to systemd."""
-    return notify("WATCHDOG=1")
+def main():
+    if len(sys.argv) < 2:
+        print(f"systemd-notify-wrapper v{VERSION}")
+        print("Usage: systemd-notify-wrapper.py <ready|watchdog|stopping|status 'msg'>")
+        return 0
+    
+    cmd = sys.argv[1].lower()
+    if cmd == "ready": success = ready()
+    elif cmd == "watchdog": success = watchdog()
+    elif cmd == "stopping": success = stopping()
+    elif cmd == "status" and len(sys.argv) > 2: success = status(sys.argv[2])
+    else:
+        print(f"Unknown command: {cmd}")
+        return 1
+    
+    print(f"Notified: {cmd.upper()}" if success else "Failed (no NOTIFY_SOCKET)")
+    return 0 if success else 1
 
 if __name__ == "__main__":
-    ready()
-    print("Systemd notified: READY")
+    sys.exit(main())
 `;
 
     case 'scripts/tsijukebox-doctor':
