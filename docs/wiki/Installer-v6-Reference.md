@@ -192,6 +192,244 @@ flowchart TD
     Manus -->|Erro| Error(["Erro: Nenhum provider disponível"])
 ```
 
+---
+
+## Diagramas de Fluxo Adicionais
+
+### Fluxo de Sincronização GitHub
+
+```mermaid
+flowchart TD
+    subgraph LOCAL["💻 AMBIENTE LOCAL"]
+        Code["Código do Projeto<br/>/opt/tsijukebox/"]
+        Git["Git Repository<br/>main branch"]
+        Watcher["File Watcher<br/>inotify-tools"]
+    end
+    
+    subgraph GITHUB["🐙 GITHUB"]
+        Remote["TSiJUKEBOX Repository<br/>github.com/B0yZ4kr14/TSiJUKEBOX"]
+        Actions["GitHub Actions<br/>CI/CD Pipeline"]
+        Releases["Releases<br/>Versões Tagged"]
+        Webhook["GitHub Webhooks"]
+    end
+    
+    subgraph SYNC["🔄 OPERAÇÕES DE SINCRONIZAÇÃO"]
+        Push["git push origin main"]
+        Pull["git pull origin main"]
+        Clone["git clone --depth 1"]
+        Fetch["git fetch --all"]
+        GHAuth["gh auth login<br/>Token OAuth"]
+    end
+    
+    subgraph SUPABASE["☁️ SUPABASE SYNC"]
+        SyncHistory[("sync_history<br/>Histórico de Commits")]
+        PendingFiles[("pending_sync_files<br/>Arquivos Pendentes")]
+    end
+    
+    Code --> Git
+    Watcher --> PendingFiles
+    Git --> Push
+    Push --> Remote
+    Remote --> Actions
+    Actions --> Releases
+    
+    Webhook --> Pull
+    Remote --> Fetch
+    Fetch --> Pull
+    Pull --> Git
+    Git --> Code
+    
+    Push --> SyncHistory
+    Pull --> SyncHistory
+    
+    GHAuth -.->|"Autenticação"| Remote
+    Clone -.->|"Primeira instalação"| Code
+```
+
+### Sistema de Backup Storj
+
+```mermaid
+flowchart TD
+    subgraph DATA["📁 DADOS LOCAIS"]
+        DB[("jukebox.db<br/>SQLite")]
+        Config["config.json<br/>Configurações"]
+        Logs["Logs<br/>/var/log/tsijukebox/"]
+        Media["Media Files<br/>(opcional)"]
+        Creds["Credenciais<br/>.env.local"]
+    end
+    
+    subgraph COMPRESS["🗜️ COMPRESSÃO"]
+        Tar["tar -czf backup.tar.gz"]
+        Encrypt["gpg --symmetric<br/>(opcional)"]
+    end
+    
+    subgraph STORJ["☁️ STORJ DCS"]
+        Bucket["sj://tsijukebox-backup/"]
+        Daily["daily/<br/>Últimos 7 dias"]
+        Weekly["weekly/<br/>Últimas 4 semanas"]
+        Monthly["monthly/<br/>Últimos 12 meses"]
+        LatestLink["latest.tar.gz<br/>Link simbólico"]
+    end
+    
+    subgraph TOOLS["🔧 FERRAMENTAS"]
+        Uplink["uplink CLI<br/>Upload nativo"]
+        Rclone["rclone<br/>(fallback)"]
+        Cron["systemd timer<br/>02:00 daily"]
+        Verify["uplink ls<br/>Verificação"]
+    end
+    
+    subgraph RESTORE["🔄 RESTAURAÇÃO"]
+        Download["uplink cp<br/>Download"]
+        Decompress["tar -xzf"]
+        Validate["Checksum MD5"]
+    end
+    
+    DB --> Tar
+    Config --> Tar
+    Logs --> Tar
+    Creds --> Tar
+    Media -.->|"Se habilitado"| Tar
+    
+    Tar --> Encrypt
+    Encrypt --> Uplink
+    
+    Uplink --> Bucket
+    Bucket --> Daily
+    Daily -->|"Rotação 7d"| Weekly
+    Weekly -->|"Rotação 4w"| Monthly
+    Bucket --> LatestLink
+    
+    Cron -->|"Trigger"| Tar
+    Rclone -.->|"Fallback"| Bucket
+    Verify --> Bucket
+    
+    Bucket --> Download
+    Download --> Decompress
+    Decompress --> Validate
+    Validate -->|"Sucesso"| DATA
+```
+
+### SSL Setup (Fase 20)
+
+```mermaid
+flowchart TD
+    Start(["🔒 Iniciar Fase 20<br/>SSL/HTTPS Setup"]) --> ReadConfig["Ler --ssl-mode<br/>do installer"]
+    
+    ReadConfig --> CheckMode{"ssl-mode?"}
+    
+    CheckMode -->|"self-signed"| SelfSigned["Modo Self-Signed"]
+    CheckMode -->|"letsencrypt"| LetsEncrypt["Modo Let's Encrypt"]
+    CheckMode -->|"custom"| Custom["Certificado Custom"]
+    CheckMode -->|"no-ssl"| Skip(["⏭️ Pular SSL<br/>HTTP only"])
+    
+    subgraph SELF["🔐 SELF-SIGNED CERTIFICATE"]
+        SelfSigned --> CreateDir["mkdir -p /etc/ssl/tsijukebox"]
+        CreateDir --> GenKey["openssl genrsa -out server.key 4096"]
+        GenKey --> GenCSR["openssl req -new<br/>-subj '/CN=midiaserver.local'"]
+        GenCSR --> GenCert["openssl x509 -req -days 3650<br/>Certificado 10 anos"]
+        GenCert --> GenDH["openssl dhparam -out dhparam.pem 2048"]
+        GenDH --> SetPerms["chmod 600 server.key<br/>chown nginx:nginx"]
+    end
+    
+    subgraph LE["🌐 LET'S ENCRYPT"]
+        LetsEncrypt --> InstallCertbot["pacman -S certbot<br/>certbot-nginx"]
+        InstallCertbot --> CheckDomain{"Domínio público<br/>acessível?"}
+        CheckDomain -->|"Sim"| StopNginx["systemctl stop nginx"]
+        StopNginx --> ObtainCert["certbot certonly --standalone<br/>-d seu.dominio.com"]
+        ObtainCert --> SetupRenewal["Criar systemd timer<br/>Renovação automática 60d"]
+        CheckDomain -->|"Não"| FallbackSelf["⚠️ Fallback para Self-Signed"]
+        FallbackSelf --> SelfSigned
+    end
+    
+    subgraph CUSTOM["📜 CERTIFICADO CUSTOM"]
+        Custom --> CheckFiles{"cert.pem e key.pem<br/>existem?"}
+        CheckFiles -->|"Sim"| ValidateCert["openssl verify cert.pem"]
+        ValidateCert -->|"Válido"| CopyCustom["Copiar para /etc/ssl/tsijukebox/"]
+        ValidateCert -->|"Inválido"| ErrorCert(["❌ Erro: Certificado inválido"])
+        CheckFiles -->|"Não"| ErrorMissing(["❌ Erro: Arquivos não encontrados"])
+    end
+    
+    SetPerms --> ConfigNginx
+    SetupRenewal --> StartNginx["systemctl start nginx"]
+    StartNginx --> ConfigNginx
+    CopyCustom --> ConfigNginx
+    
+    ConfigNginx["Configurar Nginx SSL<br/>/etc/nginx/conf.d/ssl.conf"]
+    ConfigNginx --> NginxConfig["ssl_certificate /etc/ssl/.../cert.pem<br/>ssl_certificate_key /etc/ssl/.../key.pem<br/>ssl_protocols TLSv1.2 TLSv1.3<br/>ssl_ciphers 'ECDHE-ECDSA-AES128-GCM...'"]
+    
+    NginxConfig --> TestConfig["nginx -t"]
+    TestConfig -->|"OK"| RestartNginx["systemctl restart nginx"]
+    TestConfig -->|"Erro"| DebugNginx["journalctl -u nginx<br/>Verificar logs"]
+    
+    RestartNginx --> VerifyHTTPS["curl -k https://localhost"]
+    VerifyHTTPS -->|"200 OK"| Done(["✅ SSL Configurado<br/>HTTPS ativo"])
+    VerifyHTTPS -->|"Erro"| DebugNginx
+```
+
+### Avahi/mDNS Configuration (Fase 21)
+
+```mermaid
+flowchart TD
+    Start(["📡 Iniciar Fase 21<br/>Avahi/mDNS Setup"]) --> InstallPkgs["pacman -S avahi nss-mdns"]
+    
+    InstallPkgs --> ConfigHostname["Configurar hostname"]
+    
+    subgraph HOSTNAME["🏷️ CONFIGURAÇÃO DO HOSTNAME"]
+        ConfigHostname --> SetHostname["hostnamectl set-hostname midiaserver"]
+        SetHostname --> EditHosts["Editar /etc/hosts<br/>127.0.0.1 midiaserver midiaserver.local"]
+        EditHosts --> EditHostsFile["/etc/hostname<br/>midiaserver"]
+    end
+    
+    EditHostsFile --> ConfigNSS["Configurar NSSwitch"]
+    
+    subgraph NSS["🔧 NSSwitch CONFIG"]
+        ConfigNSS --> BackupNSS["cp /etc/nsswitch.conf /etc/nsswitch.conf.bak"]
+        BackupNSS --> EditNSS["Editar /etc/nsswitch.conf"]
+        EditNSS --> NSSLine["hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns"]
+    end
+    
+    NSSLine --> CreateServices["Criar serviços Avahi"]
+    
+    subgraph SERVICES["📋 SERVIÇOS mDNS"]
+        CreateServices --> SvcDir["mkdir -p /etc/avahi/services"]
+        
+        SvcDir --> SvcHTTPS["tsijukebox-https.service<br/>_https._tcp port 443"]
+        SvcDir --> SvcHTTP["tsijukebox-http.service<br/>_http._tcp port 80"]
+        SvcDir --> SvcGrafana["grafana.service<br/>_http._tcp port 3000"]
+        SvcDir --> SvcPrometheus["prometheus.service<br/>_http._tcp port 9090"]
+        SvcDir --> SvcSSH["ssh.service<br/>_ssh._tcp port 22"]
+        SvcDir --> SvcAPI["api.service<br/>_http._tcp port 8080"]
+    end
+    
+    SvcHTTPS --> EnableAvahi
+    SvcHTTP --> EnableAvahi
+    SvcGrafana --> EnableAvahi
+    SvcPrometheus --> EnableAvahi
+    SvcSSH --> EnableAvahi
+    SvcAPI --> EnableAvahi
+    
+    EnableAvahi["systemctl enable --now avahi-daemon"]
+    EnableAvahi --> WaitStart["sleep 3<br/>Aguardar inicialização"]
+    
+    WaitStart --> TestLocal["Testar resolução local"]
+    
+    subgraph TEST["🧪 VERIFICAÇÃO"]
+        TestLocal --> Ping["ping -c 1 midiaserver.local"]
+        Ping -->|"Sucesso"| Browse["avahi-browse -a -t"]
+        Ping -->|"Falha"| Debug["Verificar logs"]
+        
+        Browse --> ListServices["Listar serviços descobertos"]
+        ListServices --> Resolve["avahi-resolve -n midiaserver.local"]
+        
+        Debug --> CheckDaemon["systemctl status avahi-daemon"]
+        CheckDaemon --> CheckLogs["journalctl -u avahi-daemon -n 50"]
+        CheckLogs --> CheckFirewall["Verificar portas 5353/udp"]
+    end
+    
+    Resolve -->|"IP retornado"| Done(["✅ mDNS Configurado<br/>midiaserver.local ativo"])
+    CheckFirewall --> FixFirewall["ufw allow 5353/udp"]
+    FixFirewall --> EnableAvahi
+
 ### Detalhamento das Fases
 
 #### FASE 0: Análise de Hardware

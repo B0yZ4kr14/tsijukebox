@@ -48,11 +48,16 @@ interface AutomationCardProps {
   icon: React.ReactNode;
   action: () => void;
   isLoading: boolean;
+  testId: string;
 }
 
-function AutomationCard({ title, description, icon, action, isLoading }: AutomationCardProps) {
+function AutomationCard({ title, description, icon, action, isLoading, testId }: AutomationCardProps) {
   return (
-    <Card className="border-border/50 hover:border-primary/30 transition-colors cursor-pointer" onClick={action}>
+    <Card 
+      data-testid={testId}
+      className="border-border/50 hover:border-primary/30 transition-colors cursor-pointer" 
+      onClick={action}
+    >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-lg bg-primary/10 text-primary">
@@ -71,6 +76,7 @@ function AutomationCard({ title, description, icon, action, isLoading }: Automat
               e.stopPropagation();
               action();
             }}
+            aria-label={`Executar ${title}`}
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -160,13 +166,15 @@ export function ManusAutomationSection() {
       title="Automação Manus.im"
       description="Use IA autônoma para gerar documentação, tutoriais e otimizar configurações"
     >
-      <div className="space-y-4">
+      <div data-testid="manus-section" className="space-y-4">
         {/* Error Display */}
         {error && (
           <motion.div
+            data-testid="manus-error-display"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive"
+            role="alert"
           >
             <AlertCircle className="h-4 w-4" />
             <span className="text-sm flex-1">{error}</span>
@@ -179,6 +187,7 @@ export function ManusAutomationSection() {
         {/* Quick Actions */}
         <div className="grid gap-3 md:grid-cols-2">
           <AutomationCard
+            testId="manus-generate-docs-card"
             title="Gerar Documentação"
             description="Cria docs completos do projeto"
             icon={<FileText className="h-5 w-5" />}
@@ -186,6 +195,7 @@ export function ManusAutomationSection() {
             isLoading={isLoading}
           />
           <AutomationCard
+            testId="manus-optimize-docker-card"
             title="Otimizar Docker"
             description="Melhora Dockerfile e compose"
             icon={<Container className="h-5 w-5" />}
@@ -195,7 +205,7 @@ export function ManusAutomationSection() {
         </div>
 
         {/* Tutorial Generator */}
-        <Card className="border-border/50">
+        <Card data-testid="manus-tutorial-section" className="border-border/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-primary" />
@@ -208,14 +218,18 @@ export function ManusAutomationSection() {
           <CardContent className="pt-0">
             <div className="flex gap-2">
               <Input
+                data-testid="manus-tutorial-input"
                 placeholder="Ex: instalação no Raspberry Pi, configuração do Spotify..."
                 value={tutorialTopic}
                 onChange={(e) => setTutorialTopic(e.target.value)}
                 className="flex-1"
+                aria-label="Tópico do tutorial"
               />
               <Button
+                data-testid="manus-tutorial-submit"
                 onClick={handleGenerateTutorial}
                 disabled={isLoading || !tutorialTopic.trim()}
+                aria-label="Gerar tutorial"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -230,6 +244,7 @@ export function ManusAutomationSection() {
         {/* Custom Task */}
         <div className="space-y-2">
           <Button
+            data-testid="manus-custom-task-toggle"
             variant="outline"
             className="w-full"
             onClick={() => setShowCustom(!showCustom)}
@@ -247,12 +262,15 @@ export function ManusAutomationSection() {
                 className="space-y-2"
               >
                 <Textarea
+                  data-testid="manus-custom-task-input"
                   placeholder="Descreva a tarefa que a IA deve executar..."
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   className="min-h-[100px]"
+                  aria-label="Descrição da tarefa personalizada"
                 />
                 <Button
+                  data-testid="manus-custom-task-submit"
                   onClick={handleCustomTask}
                   disabled={isLoading || !customPrompt.trim()}
                   className="w-full"
@@ -276,7 +294,7 @@ export function ManusAutomationSection() {
 
         {/* Tasks History */}
         {tasks.length > 0 && (
-          <div className="space-y-2">
+          <div data-testid="manus-task-history" className="space-y-2">
             <h4 className="text-sm font-medium flex items-center gap-2">
               <Clock className="h-4 w-4" />
               Tarefas Recentes
@@ -286,6 +304,7 @@ export function ManusAutomationSection() {
                 {tasks.map((task) => (
                   <motion.div
                     key={task.taskId}
+                    data-testid={`manus-task-${task.taskId}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="p-3 rounded-lg border bg-card"
@@ -306,6 +325,7 @@ export function ManusAutomationSection() {
                         className="h-7 text-xs"
                         onClick={() => getTaskStatus(task.taskId)}
                         disabled={isLoading}
+                        aria-label="Atualizar status da tarefa"
                       >
                         <RefreshCw className={`h-3 w-3 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
                         Atualizar
@@ -317,6 +337,7 @@ export function ManusAutomationSection() {
                             size="sm"
                             className="h-7 text-xs"
                             onClick={() => window.open(task.taskUrl, '_blank')}
+                            aria-label="Abrir tarefa em nova aba"
                           >
                             <ExternalLink className="h-3 w-3 mr-1" />
                             Abrir
@@ -326,6 +347,7 @@ export function ManusAutomationSection() {
                             size="sm"
                             className="h-7 text-xs"
                             onClick={() => copyTaskUrl(task.taskUrl)}
+                            aria-label="Copiar URL da tarefa"
                           >
                             <Copy className="h-3 w-3" />
                           </Button>
@@ -346,7 +368,7 @@ export function ManusAutomationSection() {
 
         {/* Instructions */}
         {tasks.length === 0 && (
-          <div className="text-sm text-muted-foreground space-y-2 p-4 rounded-lg bg-muted/30">
+          <div data-testid="manus-instructions" className="text-sm text-muted-foreground space-y-2 p-4 rounded-lg bg-muted/30">
             <p className="font-medium">Sobre o Manus.im:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
               <li>IA autônoma que executa tarefas complexas de forma independente</li>
