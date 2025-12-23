@@ -1,6 +1,8 @@
-# TSiJUKEBOX Installation Guide
+# TSiJUKEBOX Installation Guide v6.0.0
 
 Complete installation instructions for all deployment scenarios.
+
+![Version](https://img.shields.io/badge/version-6.0.0-blue?style=flat-square)
 
 ---
 
@@ -8,14 +10,18 @@ Complete installation instructions for all deployment scenarios.
 
 1. [System Requirements](#system-requirements)
 2. [Installation Methods](#installation-methods)
-   - [Wizard Installation](#wizard-installation-recommended)
+   - [One-Command Installation](#one-command-installation-recommended)
+   - [Wizard Installation](#wizard-installation)
    - [Automatic Installation](#automatic-installation)
    - [Docker Installation](#docker-installation)
    - [Manual Installation](#manual-installation)
-3. [Database Configuration](#database-configuration)
-4. [Cloud Backup Setup](#cloud-backup-setup)
-5. [Post-Installation](#post-installation)
-6. [Uninstallation](#uninstallation)
+3. [26 Installation Phases](#26-installation-phases)
+4. [Database Configuration](#database-configuration)
+5. [SSL Configuration](#ssl-configuration)
+6. [Avahi/mDNS Configuration](#avahimdns-configuration)
+7. [Cloud Backup Setup](#cloud-backup-setup)
+8. [Post-Installation](#post-installation)
+9. [Uninstallation](#uninstallation)
 
 ---
 
