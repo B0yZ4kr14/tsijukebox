@@ -10,6 +10,12 @@ export class CodeScanFixture {
   readonly fileNameInput: Locator;
   readonly codeInput: Locator;
   
+  // Form Structure
+  readonly inputSection: Locator;
+  readonly fileNameLabel: Locator;
+  readonly codeLabel: Locator;
+  readonly actionsContainer: Locator;
+  
   // Buttons
   readonly submitButton: Locator;
   readonly exportButton: Locator;
@@ -18,6 +24,9 @@ export class CodeScanFixture {
   // Progress & Status
   readonly progressBar: Locator;
   readonly errorDisplay: Locator;
+  readonly loadingSpinner: Locator;
+  readonly progressValue: Locator;
+  readonly progressBarElement: Locator;
   
   // Summary
   readonly summaryCard: Locator;
@@ -35,11 +44,17 @@ export class CodeScanFixture {
     // Main section
     this.codeScanSection = page.getByTestId('codescan-section');
     
-    // Input fields - corrected testids
+    // Input fields
     this.fileNameInput = page.getByTestId('codescan-filename-input');
     this.codeInput = page.getByTestId('codescan-code-input');
     
-    // Buttons - corrected testids
+    // Form Structure
+    this.inputSection = page.getByTestId('codescan-input-section');
+    this.fileNameLabel = page.getByTestId('codescan-filename-label');
+    this.codeLabel = page.getByTestId('codescan-code-label');
+    this.actionsContainer = page.getByTestId('codescan-actions');
+    
+    // Buttons
     this.submitButton = page.getByTestId('codescan-submit-button');
     this.exportButton = page.getByTestId('codescan-export-button');
     this.clearButton = page.getByTestId('codescan-clear-button');
@@ -47,18 +62,22 @@ export class CodeScanFixture {
     // Progress & Status
     this.progressBar = page.getByTestId('codescan-progress');
     this.errorDisplay = page.getByTestId('codescan-error');
+    this.loadingSpinner = page.getByTestId('codescan-loading-spinner');
+    this.progressValue = page.getByTestId('codescan-progress-value');
+    this.progressBarElement = page.getByTestId('codescan-progress-bar');
     
-    // Summary - corrected testids
+    // Summary
     this.summaryCard = page.getByTestId('codescan-summary');
     this.filesCount = page.getByTestId('codescan-files-count');
     this.issuesCount = page.getByTestId('codescan-issues-count');
     this.criticalCount = page.getByTestId('codescan-critical-count');
     this.scoreDisplay = page.getByTestId('codescan-score-display');
     
-    // Results - corrected testid
+    // Results
     this.resultsContainer = page.getByTestId('codescan-results');
   }
 
+  // Navigation
   async navigateToSettings() {
     await this.page.goto('/settings');
     await this.page.waitForLoadState('networkidle');
@@ -68,6 +87,7 @@ export class CodeScanFixture {
     await this.codeScanSection.scrollIntoViewIfNeeded();
   }
 
+  // Input methods
   async fillCodeInput(code: string) {
     await this.codeInput.fill(code);
   }
@@ -82,17 +102,34 @@ export class CodeScanFixture {
     await this.submitButton.click();
   }
 
+  // Wait methods
   async waitForScanComplete(timeout = 30000) {
-    // Wait for progress bar to appear (optional, may be too fast)
     await this.progressBar.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
-    
-    // Wait for results or error to appear
     await Promise.race([
       this.resultsContainer.waitFor({ state: 'visible', timeout }),
       this.errorDisplay.waitFor({ state: 'visible', timeout })
     ]).catch(() => {});
   }
 
+  async waitForLoading(timeout = 5000) {
+    await this.loadingSpinner.waitFor({ state: 'visible', timeout });
+  }
+
+  async waitForLoadingComplete(timeout = 30000) {
+    await this.loadingSpinner.waitFor({ state: 'hidden', timeout });
+  }
+
+  // Loading state helpers
+  async isLoading(): Promise<boolean> {
+    return this.loadingSpinner.isVisible();
+  }
+
+  async getProgressPercentage(): Promise<number> {
+    const text = await this.progressValue.textContent();
+    return parseInt(text?.replace(/[^0-9]/g, '') || '0', 10);
+  }
+
+  // Summary data getters
   async getScanScore(): Promise<number> {
     const scoreText = await this.scoreDisplay.textContent();
     return parseInt(scoreText?.replace(/[^0-9]/g, '') || '0', 10);
@@ -113,14 +150,68 @@ export class CodeScanFixture {
     return parseInt(text?.replace(/[^0-9]/g, '') || '0', 10);
   }
 
-  async getFileResults(): Promise<Locator> {
+  // Dynamic locators for file results
+  getFileResults(): Locator {
     return this.page.locator('[data-testid^="codescan-file-"]');
   }
 
-  async getIssueItems(): Promise<Locator> {
+  getIssueItems(): Locator {
     return this.page.locator('[data-testid^="codescan-issue-"]');
   }
 
+  getFileIssuesBadge(fileName: string): Locator {
+    return this.page.getByTestId(`codescan-issues-badge-${fileName}`);
+  }
+
+  getFileSummary(fileName: string): Locator {
+    return this.page.getByTestId(`codescan-file-summary-${fileName}`);
+  }
+
+  getFileScore(fileName: string): Locator {
+    return this.page.getByTestId(`codescan-score-${fileName}`);
+  }
+
+  // Dynamic locators for issue details
+  getIssueSeverity(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-severity-${fileName}-${idx}`);
+  }
+
+  getIssueCategory(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-category-${fileName}-${idx}`);
+  }
+
+  getIssueLine(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-line-${fileName}-${idx}`);
+  }
+
+  getIssueTitle(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-issue-title-${fileName}-${idx}`);
+  }
+
+  getIssueMessage(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-issue-message-${fileName}-${idx}`);
+  }
+
+  getIssueSuggestion(fileName: string, idx: number): Locator {
+    return this.page.getByTestId(`codescan-suggestion-${fileName}-${idx}`);
+  }
+
+  // Helper to get all issue details at once
+  async getIssueDetails(fileName: string, idx: number) {
+    const suggestionLocator = this.getIssueSuggestion(fileName, idx);
+    const hasSuggestion = await suggestionLocator.isVisible();
+    
+    return {
+      severity: await this.getIssueSeverity(fileName, idx).textContent(),
+      category: await this.getIssueCategory(fileName, idx).textContent(),
+      line: await this.getIssueLine(fileName, idx).textContent(),
+      title: await this.getIssueTitle(fileName, idx).textContent(),
+      message: await this.getIssueMessage(fileName, idx).textContent(),
+      suggestion: hasSuggestion ? await suggestionLocator.textContent() : null,
+    };
+  }
+
+  // File actions
   async expandFile(fileName: string) {
     const fileCollapsible = this.page.getByTestId(`codescan-file-${fileName}`);
     await fileCollapsible.click();
@@ -134,6 +225,7 @@ export class CodeScanFixture {
     await this.clearButton.click();
   }
 
+  // State checks
   async isSubmitButtonDisabled(): Promise<boolean> {
     return this.submitButton.isDisabled();
   }
