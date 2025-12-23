@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bot, Key, ExternalLink, Check, AlertCircle, Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
+import { Bot, Key, ExternalLink, Check, AlertCircle, Eye, EyeOff, Loader2, Sparkles, Zap, Brain, Cpu, RefreshCw } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ interface APIKeyConfig {
   icon: React.ReactNode;
   color: string;
   prefix?: string;
+  priority: number;
 }
 
 const API_CONFIGS: APIKeyConfig[] = [
@@ -32,7 +33,44 @@ const API_CONFIGS: APIKeyConfig[] = [
     consoleName: 'Anthropic Console',
     icon: <Sparkles className="w-5 h-5" />,
     color: 'text-orange-500',
-    prefix: 'sk-ant-'
+    prefix: 'sk-ant-',
+    priority: 1
+  },
+  {
+    name: 'OpenAI GPT-5',
+    secretName: 'OPENAI_API_KEY',
+    description: 'Modelo GPT-5 da OpenAI para tarefas gerais de IA',
+    placeholder: 'sk-proj-...',
+    consoleUrl: 'https://platform.openai.com/api-keys',
+    consoleName: 'OpenAI Platform',
+    icon: <Brain className="w-5 h-5" />,
+    color: 'text-green-500',
+    prefix: 'sk-',
+    priority: 2
+  },
+  {
+    name: 'Google Gemini',
+    secretName: 'GEMINI_API_KEY',
+    description: 'Modelo Gemini 2.5 do Google para análise multimodal',
+    placeholder: 'AIza...',
+    consoleUrl: 'https://aistudio.google.com/app/apikey',
+    consoleName: 'Google AI Studio',
+    icon: <Zap className="w-5 h-5" />,
+    color: 'text-blue-500',
+    prefix: 'AIza',
+    priority: 3
+  },
+  {
+    name: 'Groq',
+    secretName: 'GROQ_API_KEY',
+    description: 'Inferência ultra-rápida com LLama 3.3 70B',
+    placeholder: 'gsk_...',
+    consoleUrl: 'https://console.groq.com/keys',
+    consoleName: 'Groq Console',
+    icon: <Cpu className="w-5 h-5" />,
+    color: 'text-cyan-500',
+    prefix: 'gsk_',
+    priority: 4
   },
   {
     name: 'Manus.im',
@@ -43,7 +81,8 @@ const API_CONFIGS: APIKeyConfig[] = [
     consoleName: 'Manus Dashboard',
     icon: <Bot className="w-5 h-5" />,
     color: 'text-purple-500',
-    prefix: 'manus_'
+    prefix: 'manus_',
+    priority: 5
   }
 ];
 
@@ -51,6 +90,7 @@ interface KeyStatus {
   configured: boolean;
   needsCredits?: boolean;
   lastMessage?: string;
+  available?: boolean;
 }
 
 export function AIConfigSection() {
@@ -59,6 +99,7 @@ export function AIConfigSection() {
   const [keyStatus, setKeyStatus] = useState<Record<string, KeyStatus>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [testingKey, setTestingKey] = useState<string | null>(null);
+  const [testingFallback, setTestingFallback] = useState(false);
 
   // Check if keys are already configured on mount
   useEffect(() => {
@@ -76,10 +117,11 @@ export function AIConfigSection() {
           });
           
           status[config.secretName] = {
-            configured: !error && data?.exists === true
+            configured: !error && data?.exists === true,
+            available: !error && data?.exists === true
           };
         } catch {
-          status[config.secretName] = { configured: false };
+          status[config.secretName] = { configured: false, available: false };
         }
       }
       
@@ -120,7 +162,7 @@ export function AIConfigSection() {
         toast.success(`API Key da ${config.name} salva com sucesso!`);
         setKeyStatus(prev => ({ 
           ...prev, 
-          [config.secretName]: { configured: true, needsCredits: false } 
+          [config.secretName]: { configured: true, needsCredits: false, available: true } 
         }));
         setApiKeys(prev => ({ ...prev, [config.secretName]: '' }));
       } else {
@@ -151,7 +193,8 @@ export function AIConfigSection() {
         [config.secretName]: {
           configured: true,
           needsCredits: data?.needsCredits || false,
-          lastMessage: data?.message
+          lastMessage: data?.message,
+          available: data?.valid && !data?.needsCredits
         }
       }));
 
@@ -175,15 +218,68 @@ export function AIConfigSection() {
     }
   };
 
+  const handleTestFallback = async () => {
+    setTestingFallback(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-gateway', {
+        body: { 
+          action: 'status'
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.providers) {
+        const available = data.providers.filter((p: { available: boolean }) => p.available);
+        const unavailable = data.providers.filter((p: { available: boolean }) => !p.available);
+
+        if (available.length > 0) {
+          toast.success(`${available.length} providers disponíveis para fallback`, {
+            description: `Ativos: ${available.map((p: { name: string }) => p.name).join(', ')}`,
+            duration: 5000
+          });
+        } else {
+          toast.error('Nenhum provider de IA disponível', {
+            description: 'Configure pelo menos uma API Key'
+          });
+        }
+
+        // Update status for all providers
+        const newStatus = { ...keyStatus };
+        for (const provider of data.providers) {
+          const config = API_CONFIGS.find(c => c.name.toLowerCase().includes(provider.name.toLowerCase()));
+          if (config) {
+            newStatus[config.secretName] = {
+              ...newStatus[config.secretName],
+              available: provider.available,
+              needsCredits: provider.needsCredits
+            };
+          }
+        }
+        setKeyStatus(newStatus);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao testar fallback';
+      toast.error(message);
+    } finally {
+      setTestingFallback(false);
+    }
+  };
+
   const toggleShowKey = (secretName: string) => {
     setShowKeys(prev => ({ ...prev, [secretName]: !prev[secretName] }));
   };
+
+  // Count available providers
+  const availableCount = Object.values(keyStatus).filter(s => s.available).length;
+  const configuredCount = Object.values(keyStatus).filter(s => s.configured).length;
 
   return (
     <SettingsSection
       icon={<Bot className="w-5 h-5 text-kiosk-primary" />}
       title="Configuração de APIs de IA"
-      description="Configure as chaves de API para integrações com Claude Opus e Manus.im"
+      description="Configure as chaves de API para integrações com múltiplos providers de IA com fallback automático"
       instructions={{
         title: 'Como obter as API Keys',
         steps: [
@@ -194,13 +290,66 @@ export function AIConfigSection() {
         ],
         tips: [
           'As chaves são armazenadas de forma segura no Supabase Vault',
-          'Nunca compartilhe suas API Keys com terceiros',
-          'Você pode testar a conexão após salvar'
+          'O sistema usa fallback automático entre providers',
+          'Configure múltiplos providers para maior disponibilidade'
         ],
-        warning: 'Chaves inválidas podem causar falhas nas integrações de IA'
+        warning: 'Se um provider falhar ou ficar sem créditos, o sistema tentará o próximo automaticamente'
       }}
     >
       <div className="space-y-4">
+        {/* Fallback Status Card */}
+        <Card className="p-4 bg-gradient-to-r from-kiosk-primary/10 to-kiosk-secondary/10 border-kiosk-primary/30">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <RefreshCw className="w-5 h-5 text-kiosk-primary" />
+              <div>
+                <h4 className="font-medium text-kiosk-text">Sistema de Fallback</h4>
+                <p className="text-xs text-description-visible">
+                  {configuredCount} providers configurados, {availableCount} disponíveis
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTestFallback}
+              disabled={testingFallback}
+              className="button-outline-neon"
+            >
+              {testingFallback ? (
+                <>
+                  <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                  Verificando...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  Testar Fallback
+                </>
+              )}
+            </Button>
+          </div>
+          
+          {/* Provider priority order */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {API_CONFIGS.sort((a, b) => a.priority - b.priority).map((config, index) => (
+              <Badge 
+                key={config.secretName}
+                variant="outline"
+                className={`text-xs ${
+                  keyStatus[config.secretName]?.available 
+                    ? 'border-green-500/50 text-green-500' 
+                    : keyStatus[config.secretName]?.configured 
+                      ? 'border-yellow-500/50 text-yellow-500'
+                      : 'border-muted text-muted-foreground'
+                }`}
+              >
+                {index + 1}. {config.name}
+              </Badge>
+            ))}
+          </div>
+        </Card>
+
         {API_CONFIGS.map((config, index) => (
           <Card key={config.secretName} className="p-4 bg-kiosk-surface border-kiosk-border">
             <div className="space-y-3">
@@ -209,6 +358,9 @@ export function AIConfigSection() {
                 <div className="flex items-center gap-2">
                   <span className={config.color}>{config.icon}</span>
                   <span className="font-medium text-kiosk-text">{config.name}</span>
+                  <Badge variant="outline" className="text-xs border-muted text-muted-foreground">
+                    #{config.priority}
+                  </Badge>
                   {keyStatus[config.secretName]?.configured && (
                     <>
                       {keyStatus[config.secretName]?.needsCredits ? (
@@ -216,8 +368,13 @@ export function AIConfigSection() {
                           <AlertCircle className="w-3 h-3 mr-1" />
                           Sem Créditos
                         </Badge>
-                      ) : (
+                      ) : keyStatus[config.secretName]?.available ? (
                         <Badge variant="outline" className="border-green-500/50 text-green-500">
+                          <Check className="w-3 h-3 mr-1" />
+                          Disponível
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-blue-500/50 text-blue-500">
                           <Check className="w-3 h-3 mr-1" />
                           Configurado
                         </Badge>
@@ -283,7 +440,13 @@ export function AIConfigSection() {
               {keyStatus[config.secretName]?.configured && (
                 <div className="flex items-center justify-between">
                   {keyStatus[config.secretName]?.lastMessage && (
-                    <span className={`text-xs ${keyStatus[config.secretName]?.needsCredits ? 'text-yellow-400' : 'text-green-400'}`}>
+                    <span className={`text-xs ${
+                      keyStatus[config.secretName]?.needsCredits 
+                        ? 'text-yellow-400' 
+                        : keyStatus[config.secretName]?.available 
+                          ? 'text-green-400' 
+                          : 'text-blue-400'
+                    }`}>
                       {keyStatus[config.secretName].lastMessage}
                     </span>
                   )}
@@ -318,11 +481,10 @@ export function AIConfigSection() {
         <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-start gap-2">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="font-medium">Sobre as integrações de IA</p>
+            <p className="font-medium">Sistema de Fallback Inteligente</p>
             <p className="text-xs opacity-80 mt-1">
-              O <strong>Claude Opus</strong> é usado para refatoração avançada de código via{' '}
-              <code className="bg-blue-500/20 px-1 rounded">ScriptRefactorSection</code>.
-              O <strong>Manus.im</strong> permite automação de tarefas complexas via agentes de IA.
+              Quando um provider falha ou fica sem créditos, o sistema automaticamente tenta o próximo 
+              na ordem de prioridade. Configure múltiplos providers para garantir alta disponibilidade.
             </p>
           </div>
         </div>

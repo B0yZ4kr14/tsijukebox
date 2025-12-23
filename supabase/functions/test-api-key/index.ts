@@ -9,7 +9,13 @@ interface TestKeyRequest {
   keyName: string;
 }
 
-async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; message: string; needsCredits?: boolean }> {
+interface TestResult {
+  valid: boolean;
+  message: string;
+  needsCredits?: boolean;
+}
+
+async function testAnthropicKey(apiKey: string): Promise<TestResult> {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -32,7 +38,7 @@ async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; messa
     const errorData = await response.json().catch(() => ({}));
     const errorMessage = errorData.error?.message || '';
     
-    // Check for credit/billing issues - key is valid but no credits
+    // Check for credit/billing issues
     if (response.status === 402 || 
         errorMessage.toLowerCase().includes('credit') || 
         errorMessage.toLowerCase().includes('balance') ||
@@ -67,7 +73,136 @@ async function testAnthropicKey(apiKey: string): Promise<{ valid: boolean; messa
   }
 }
 
-async function testManusKey(apiKey: string): Promise<{ valid: boolean; message: string }> {
+async function testOpenAIKey(apiKey: string): Promise<TestResult> {
+  try {
+    const response = await fetch('https://api.openai.com/v1/models', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      return { valid: true, message: 'OpenAI API key válida e funcionando' };
+    }
+    
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData.error?.message || '';
+    
+    // Check for billing issues
+    if (response.status === 402 || 
+        response.status === 429 && errorMessage.toLowerCase().includes('quota') ||
+        errorMessage.toLowerCase().includes('billing') ||
+        errorMessage.toLowerCase().includes('exceeded')) {
+      return { 
+        valid: true, 
+        message: 'Chave válida, mas limite de uso excedido',
+        needsCredits: true 
+      };
+    }
+    
+    if (response.status === 401) {
+      return { valid: false, message: 'Chave OpenAI inválida' };
+    }
+    
+    return { 
+      valid: false, 
+      message: `Erro da API: ${errorMessage || response.statusText}` 
+    };
+  } catch (error) {
+    return { 
+      valid: false, 
+      message: `Erro de conexão: ${error instanceof Error ? error.message : 'Desconhecido'}` 
+    };
+  }
+}
+
+async function testGeminiKey(apiKey: string): Promise<TestResult> {
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      return { valid: true, message: 'Google Gemini API key válida e funcionando' };
+    }
+    
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData.error?.message || '';
+    
+    // Check for quota issues
+    if (response.status === 429 || 
+        errorMessage.toLowerCase().includes('quota') ||
+        errorMessage.toLowerCase().includes('limit')) {
+      return { 
+        valid: true, 
+        message: 'Chave válida, mas limite de requisições atingido',
+        needsCredits: true 
+      };
+    }
+    
+    if (response.status === 400 || response.status === 403) {
+      return { valid: false, message: 'Chave Gemini inválida ou sem permissões' };
+    }
+    
+    return { 
+      valid: false, 
+      message: `Erro da API: ${errorMessage || response.statusText}` 
+    };
+  } catch (error) {
+    return { 
+      valid: false, 
+      message: `Erro de conexão: ${error instanceof Error ? error.message : 'Desconhecido'}` 
+    };
+  }
+}
+
+async function testGroqKey(apiKey: string): Promise<TestResult> {
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/models', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      return { valid: true, message: 'Groq API key válida e funcionando' };
+    }
+    
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData.error?.message || '';
+    
+    // Check for rate limit
+    if (response.status === 429) {
+      return { 
+        valid: true, 
+        message: 'Chave válida (rate limited temporariamente)' 
+      };
+    }
+    
+    if (response.status === 401) {
+      return { valid: false, message: 'Chave Groq inválida' };
+    }
+    
+    return { 
+      valid: false, 
+      message: `Erro da API: ${errorMessage || response.statusText}` 
+    };
+  } catch (error) {
+    return { 
+      valid: false, 
+      message: `Erro de conexão: ${error instanceof Error ? error.message : 'Desconhecido'}` 
+    };
+  }
+}
+
+async function testManusKey(apiKey: string): Promise<TestResult> {
   // Validate key format first
   if (!apiKey || apiKey.length < 20) {
     return { valid: false, message: 'Formato de chave inválido - muito curta' };
@@ -85,7 +220,7 @@ async function testManusKey(apiKey: string): Promise<{ valid: boolean; message: 
   }
 
   try {
-    // Try to validate with Manus.im API - use a lightweight endpoint
+    // Try to validate with Manus.im API
     const response = await fetch('https://api.manus.im/v1/user/info', {
       method: 'GET',
       headers: {
@@ -139,14 +274,14 @@ serve(async (req) => {
       );
     }
 
-    let result: { valid: boolean; message: string };
+    let result: TestResult;
 
     switch (keyName) {
       case 'ANTHROPIC_CLAUDE_OPUS':
       case 'ANTHROPIC_API_KEY': {
         const apiKey = Deno.env.get(keyName);
         if (!apiKey) {
-          result = { valid: false, message: `${keyName} is not configured` };
+          result = { valid: false, message: `${keyName} não está configurada` };
         } else {
           console.log(`[test-api-key] Testing ${keyName}...`);
           result = await testAnthropicKey(apiKey);
@@ -154,10 +289,44 @@ serve(async (req) => {
         break;
       }
 
+      case 'OPENAI_API_KEY': {
+        const apiKey = Deno.env.get('OPENAI_API_KEY');
+        if (!apiKey) {
+          result = { valid: false, message: 'OPENAI_API_KEY não está configurada' };
+        } else {
+          console.log('[test-api-key] Testing OPENAI_API_KEY...');
+          result = await testOpenAIKey(apiKey);
+        }
+        break;
+      }
+
+      case 'GEMINI_API_KEY':
+      case 'GEMINI_GOOGLE_API_KEY': {
+        const apiKey = Deno.env.get(keyName) || Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GEMINI_GOOGLE_API_KEY');
+        if (!apiKey) {
+          result = { valid: false, message: 'GEMINI_API_KEY não está configurada' };
+        } else {
+          console.log('[test-api-key] Testing GEMINI_API_KEY...');
+          result = await testGeminiKey(apiKey);
+        }
+        break;
+      }
+
+      case 'GROQ_API_KEY': {
+        const apiKey = Deno.env.get('GROQ_API_KEY');
+        if (!apiKey) {
+          result = { valid: false, message: 'GROQ_API_KEY não está configurada' };
+        } else {
+          console.log('[test-api-key] Testing GROQ_API_KEY...');
+          result = await testGroqKey(apiKey);
+        }
+        break;
+      }
+
       case 'MANUS_API_KEY': {
         const apiKey = Deno.env.get('MANUS_API_KEY');
         if (!apiKey) {
-          result = { valid: false, message: 'MANUS_API_KEY is not configured' };
+          result = { valid: false, message: 'MANUS_API_KEY não está configurada' };
         } else {
           console.log('[test-api-key] Testing MANUS_API_KEY...');
           result = await testManusKey(apiKey);
@@ -166,7 +335,7 @@ serve(async (req) => {
       }
 
       default:
-        result = { valid: false, message: `Unknown key type: ${keyName}` };
+        result = { valid: false, message: `Tipo de chave desconhecido: ${keyName}` };
     }
 
     console.log(`[test-api-key] Result for ${keyName}:`, result);

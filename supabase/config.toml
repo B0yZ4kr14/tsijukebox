@@ -77,3 +77,6 @@ verify_jwt = false
 
 [functions.test-api-key]
 verify_jwt = false
+
+[functions.ai-gateway]
+verify_jwt = false
