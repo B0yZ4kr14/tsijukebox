@@ -11,6 +11,12 @@ import { generateApiContent } from './templates/apiTemplates';
 import { generateAuthContent } from './templates/authTemplates';
 import { generateContextContent } from './templates/contextTemplates';
 import { generateTypesContent } from './templates/typesTemplates';
+import { generateStorageContent } from './templates/storageTemplates';
+import { generateValidationsContent } from './templates/validationsTemplates';
+import { generateConstantsContent } from './templates/constantsTemplates';
+import { generateI18nContent } from './templates/i18nTemplates';
+import { generateRoutesContent } from './templates/routesTemplates';
+import { generateLibIndexContent } from './templates/libIndexTemplate';
 
 const VERSION = '4.1.0';
 
@@ -359,7 +365,7 @@ echo "Doctor check complete!"
 }
 
 // Main content generator - returns null for unknown files to prevent overwrites
-// Supports 95 files: 5 docs + 5 scripts + 9 fixtures + 29 specs + 10 hooks + 8 components + 5 pages + 12 utils + 9 api + 3 auth
+// Supports 127 files across 18 categories
 export function generateFileContent(path: string): string | null {
   // === DOCS (5 files) ===
   const docContent = generateDocContent(path);
@@ -399,7 +405,30 @@ export function generateFileContent(path: string): string | null {
     if (pageContent !== null) return pageContent;
   }
   
-  // === UTILS (12 files) ===
+  // === STORAGE (2 files) ===
+  if (path.startsWith('src/lib/storage/')) {
+    const storageContent = generateStorageContent(path);
+    if (storageContent !== null) return storageContent;
+  }
+  
+  // === VALIDATIONS (2 files) ===
+  if (path.startsWith('src/lib/validations/')) {
+    const validationsContent = generateValidationsContent(path);
+    if (validationsContent !== null) return validationsContent;
+  }
+  
+  // === CONSTANTS (4 files) ===
+  if (path.startsWith('src/lib/constants/')) {
+    const constantsContent = generateConstantsContent(path);
+    if (constantsContent !== null) return constantsContent;
+  }
+  
+  // === LIB INDEX (1 file) ===
+  if (path === 'src/lib/index.ts') {
+    return generateLibIndexContent();
+  }
+  
+  // === UTILS (12 files) - after storage/validations/constants ===
   if (path.startsWith('src/lib/') && !path.startsWith('src/lib/api/') && !path.startsWith('src/lib/auth/')) {
     const utilsContent = generateUtilsContent(path);
     if (utilsContent !== null) return utilsContent;
@@ -427,6 +456,18 @@ export function generateFileContent(path: string): string | null {
   if (path.startsWith('src/types/')) {
     const typesContent = generateTypesContent(path);
     if (typesContent !== null) return typesContent;
+  }
+  
+  // === I18N (4 files) ===
+  if (path.startsWith('src/i18n/')) {
+    const i18nContent = generateI18nContent(path);
+    if (i18nContent !== null) return i18nContent;
+  }
+  
+  // === ROUTES (1 file) ===
+  if (path.startsWith('src/routes/')) {
+    const routesContent = generateRoutesContent(path);
+    if (routesContent !== null) return routesContent;
   }
   
   // Unknown file - return null to prevent overwrite

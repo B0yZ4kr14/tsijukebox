@@ -195,7 +195,7 @@ export const FILE_CATEGORIES = {
     'src/lib/auth/index.ts',
   ],
   
-  // === CONTEXTS (8 arquivos) === NOVA CATEGORIA
+  // === CONTEXTS (8 arquivos) ===
   'Contexts': [
     'src/contexts/AppSettingsContext.tsx',
     'src/contexts/JamContext.tsx',
@@ -207,7 +207,7 @@ export const FILE_CATEGORIES = {
     'src/contexts/index.ts',
   ],
   
-  // === TYPES (10 arquivos) === NOVA CATEGORIA
+  // === TYPES (10 arquivos) ===
   'Types': [
     'src/types/audit.ts',
     'src/types/index.ts',
@@ -219,6 +219,44 @@ export const FILE_CATEGORIES = {
     'src/types/track.ts',
     'src/types/user.ts',
     'src/types/weather.ts',
+  ],
+  
+  // === STORAGE (2 arquivos) ===
+  'Storage': [
+    'src/lib/storage/index.ts',
+    'src/lib/storage/mediaProviderStorage.ts',
+  ],
+  
+  // === VALIDATIONS (2 arquivos) ===
+  'Validations': [
+    'src/lib/validations/authSchemas.ts',
+    'src/lib/validations/index.ts',
+  ],
+  
+  // === CONSTANTS (4 arquivos) ===
+  'Constants': [
+    'src/lib/constants/commitTypes.ts',
+    'src/lib/constants/connectionTypes.ts',
+    'src/lib/constants/defaultPlaylists.ts',
+    'src/lib/constants/index.ts',
+  ],
+  
+  // === I18N (4 arquivos) ===
+  'i18n': [
+    'src/i18n/index.ts',
+    'src/i18n/locales/en.json',
+    'src/i18n/locales/es.json',
+    'src/i18n/locales/pt-BR.json',
+  ],
+  
+  // === ROUTES (1 arquivo) ===
+  'Routes': [
+    'src/routes/index.tsx',
+  ],
+  
+  // === LIB INDEX (1 arquivo) ===
+  'Lib': [
+    'src/lib/index.ts',
   ],
 } as const;
 
@@ -236,7 +274,7 @@ export function isGeneratedFile(path: string): boolean {
   return GENERATED_FILES.includes(path);
 }
 
-// Only these files should be synced - prevents accidental overwrites (113 arquivos)
+// Only these files should be synced - prevents accidental overwrites (127 arquivos)
 export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Documentação'],
   ...FILE_CATEGORIES['Scripts'],
@@ -250,4 +288,10 @@ export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Auth'],
   ...FILE_CATEGORIES['Contexts'],
   ...FILE_CATEGORIES['Types'],
+  ...FILE_CATEGORIES['Storage'],
+  ...FILE_CATEGORIES['Validations'],
+  ...FILE_CATEGORIES['Constants'],
+  ...FILE_CATEGORIES['i18n'],
+  ...FILE_CATEGORIES['Routes'],
+  ...FILE_CATEGORIES['Lib'],
 ];
