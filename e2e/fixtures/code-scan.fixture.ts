@@ -2,31 +2,61 @@ import { Locator, Page, expect } from '@playwright/test';
 
 export class CodeScanFixture {
   readonly page: Page;
-  readonly settingsLink: Locator;
+  
+  // Main section
   readonly codeScanSection: Locator;
-  readonly codeInput: Locator;
+  
+  // Input fields
   readonly fileNameInput: Locator;
-  readonly scanButton: Locator;
+  readonly codeInput: Locator;
+  
+  // Buttons
+  readonly submitButton: Locator;
+  readonly exportButton: Locator;
+  readonly clearButton: Locator;
+  
+  // Progress & Status
   readonly progressBar: Locator;
-  readonly resultsContainer: Locator;
-  readonly issuesList: Locator;
-  readonly scoreDisplay: Locator;
+  readonly errorDisplay: Locator;
+  
+  // Summary
   readonly summaryCard: Locator;
-  readonly historySection: Locator;
+  readonly filesCount: Locator;
+  readonly issuesCount: Locator;
+  readonly criticalCount: Locator;
+  readonly scoreDisplay: Locator;
+  
+  // Results
+  readonly resultsContainer: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.settingsLink = page.getByRole('link', { name: /settings/i });
-    this.codeScanSection = page.getByTestId('code-scan-section');
-    this.codeInput = page.getByTestId('code-input');
-    this.fileNameInput = page.getByTestId('file-name-input');
-    this.scanButton = page.getByTestId('scan-button');
-    this.progressBar = page.getByTestId('scan-progress');
-    this.resultsContainer = page.getByTestId('scan-results');
-    this.issuesList = page.getByTestId('issues-list');
-    this.scoreDisplay = page.getByTestId('scan-score');
-    this.summaryCard = page.getByTestId('scan-summary');
-    this.historySection = page.getByTestId('scan-history');
+    
+    // Main section
+    this.codeScanSection = page.getByTestId('codescan-section');
+    
+    // Input fields - corrected testids
+    this.fileNameInput = page.getByTestId('codescan-filename-input');
+    this.codeInput = page.getByTestId('codescan-code-input');
+    
+    // Buttons - corrected testids
+    this.submitButton = page.getByTestId('codescan-submit-button');
+    this.exportButton = page.getByTestId('codescan-export-button');
+    this.clearButton = page.getByTestId('codescan-clear-button');
+    
+    // Progress & Status
+    this.progressBar = page.getByTestId('codescan-progress');
+    this.errorDisplay = page.getByTestId('codescan-error');
+    
+    // Summary - corrected testids
+    this.summaryCard = page.getByTestId('codescan-summary');
+    this.filesCount = page.getByTestId('codescan-files-count');
+    this.issuesCount = page.getByTestId('codescan-issues-count');
+    this.criticalCount = page.getByTestId('codescan-critical-count');
+    this.scoreDisplay = page.getByTestId('codescan-score-display');
+    
+    // Results - corrected testid
+    this.resultsContainer = page.getByTestId('codescan-results');
   }
 
   async navigateToSettings() {
@@ -34,39 +64,33 @@ export class CodeScanFixture {
     await this.page.waitForLoadState('networkidle');
   }
 
-  async navigateToCodeScanSection() {
-    await this.navigateToSettings();
-    // Navigate to code scan section - may need to click on security category
-    const securityTab = this.page.getByText('Segurança');
-    if (await securityTab.isVisible()) {
-      await securityTab.click();
-    }
+  async scrollToCodeScanSection() {
+    await this.codeScanSection.scrollIntoViewIfNeeded();
   }
 
-  async submitCodeForScan(code: string, fileName: string) {
-    if (await this.codeInput.isVisible()) {
-      await this.codeInput.fill(code);
-    }
-    if (await this.fileNameInput.isVisible()) {
-      await this.fileNameInput.fill(fileName);
-    }
-    await this.scanButton.click();
+  async fillCodeInput(code: string) {
+    await this.codeInput.fill(code);
+  }
+
+  async fillFileName(fileName: string) {
+    await this.fileNameInput.fill(fileName);
+  }
+
+  async submitCodeForScan(code: string, fileName: string = 'test.ts') {
+    await this.fillFileName(fileName);
+    await this.fillCodeInput(code);
+    await this.submitButton.click();
   }
 
   async waitForScanComplete(timeout = 30000) {
-    // Wait for progress bar to appear and then disappear
-    await this.page.waitForSelector('[data-testid="scan-progress"]', { 
-      state: 'visible',
-      timeout: 5000 
-    }).catch(() => {
-      // Progress may be too fast to catch
-    });
+    // Wait for progress bar to appear (optional, may be too fast)
+    await this.progressBar.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
     
-    // Wait for results to appear
-    await this.page.waitForSelector('[data-testid="scan-results"]', { 
-      state: 'visible',
-      timeout 
-    });
+    // Wait for results or error to appear
+    await Promise.race([
+      this.resultsContainer.waitFor({ state: 'visible', timeout }),
+      this.errorDisplay.waitFor({ state: 'visible', timeout })
+    ]).catch(() => {});
   }
 
   async getScanScore(): Promise<number> {
@@ -74,30 +98,66 @@ export class CodeScanFixture {
     return parseInt(scoreText?.replace(/[^0-9]/g, '') || '0', 10);
   }
 
-  async getIssuesBySeverity(severity: 'critical' | 'high' | 'medium' | 'low'): Promise<number> {
-    const severityBadge = this.page.getByTestId(`issues-${severity}`);
-    if (!(await severityBadge.isVisible())) return 0;
-    
-    const text = await severityBadge.textContent();
+  async getFilesCount(): Promise<number> {
+    const text = await this.filesCount.textContent();
     return parseInt(text?.replace(/[^0-9]/g, '') || '0', 10);
   }
 
-  async getTotalIssues(): Promise<number> {
-    const items = this.page.locator('[data-testid^="issue-item-"]');
-    return items.count();
+  async getIssuesCount(): Promise<number> {
+    const text = await this.issuesCount.textContent();
+    return parseInt(text?.replace(/[^0-9]/g, '') || '0', 10);
   }
 
-  async getScanHistoryCount(): Promise<number> {
-    const historyItems = this.page.locator('[data-testid^="history-item-"]');
-    return historyItems.count();
+  async getCriticalCount(): Promise<number> {
+    const text = await this.criticalCount.textContent();
+    return parseInt(text?.replace(/[^0-9]/g, '') || '0', 10);
   }
 
-  async clickHistoryItem(index: number) {
-    const historyItems = this.page.locator('[data-testid^="history-item-"]');
-    await historyItems.nth(index).click();
+  async getFileResults(): Promise<Locator> {
+    return this.page.locator('[data-testid^="codescan-file-"]');
   }
 
-  async waitForToast(message: string, timeout = 5000) {
-    await this.page.waitForSelector(`text="${message}"`, { timeout });
+  async getIssueItems(): Promise<Locator> {
+    return this.page.locator('[data-testid^="codescan-issue-"]');
   }
+
+  async expandFile(fileName: string) {
+    const fileCollapsible = this.page.getByTestId(`codescan-file-${fileName}`);
+    await fileCollapsible.click();
+  }
+
+  async exportResults() {
+    await this.exportButton.click();
+  }
+
+  async clearResults() {
+    await this.clearButton.click();
+  }
+
+  async isSubmitButtonDisabled(): Promise<boolean> {
+    return this.submitButton.isDisabled();
+  }
+
+  async isSubmitButtonEnabled(): Promise<boolean> {
+    return !(await this.submitButton.isDisabled());
+  }
+
+  async hasError(): Promise<boolean> {
+    return this.errorDisplay.isVisible();
+  }
+
+  async hasResults(): Promise<boolean> {
+    return this.resultsContainer.isVisible();
+  }
+
+  async hasSummary(): Promise<boolean> {
+    return this.summaryCard.isVisible();
+  }
+}
+
+export async function createCodeScanPage(page: Page): Promise<CodeScanFixture> {
+  const codeScanPage = new CodeScanFixture(page);
+  await codeScanPage.navigateToSettings();
+  await codeScanPage.scrollToCodeScanSection();
+  return codeScanPage;
 }
