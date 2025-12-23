@@ -112,9 +112,9 @@ export function CodeScanSection() {
     >
       <div data-testid="codescan-section" className="space-y-4">
         {/* Input Section */}
-        <div className="space-y-3">
+        <div data-testid="codescan-input-section" className="space-y-3">
           <div className="space-y-2">
-            <Label htmlFor="file-name">Nome do Arquivo (opcional)</Label>
+            <Label data-testid="codescan-filename-label" htmlFor="file-name">Nome do Arquivo (opcional)</Label>
             <Input
               id="file-name"
               data-testid="codescan-filename-input"
@@ -126,7 +126,7 @@ export function CodeScanSection() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="code-input">Código para Análise</Label>
+            <Label data-testid="codescan-code-label" htmlFor="code-input">Código para Análise</Label>
             <Textarea
               id="code-input"
               data-testid="codescan-code-input"
@@ -137,7 +137,7 @@ export function CodeScanSection() {
             />
           </div>
 
-          <div className="flex gap-2">
+          <div data-testid="codescan-actions" className="flex gap-2">
             <Button
               data-testid="codescan-submit-button"
               onClick={handleScan}
@@ -146,7 +146,7 @@ export function CodeScanSection() {
             >
               {isScanning ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 data-testid="codescan-loading-spinner" className="w-4 h-4 mr-2 animate-spin" />
                   Analisando...
                 </>
               ) : (
@@ -186,9 +186,9 @@ export function CodeScanSection() {
           <div data-testid="codescan-progress" className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Analisando...</span>
-              <span className="text-kiosk-primary">{progress}%</span>
+              <span data-testid="codescan-progress-value" className="text-kiosk-primary">{progress}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress data-testid="codescan-progress-bar" value={progress} className="h-2" />
           </div>
         )}
 
@@ -241,7 +241,7 @@ export function CodeScanSection() {
                     <div className="flex items-center gap-2">
                       <FileCode className="w-4 h-4 text-kiosk-primary" />
                       <span className="font-mono text-sm">{result.fileName}</span>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge data-testid={`codescan-issues-badge-${result.fileName}`} variant="outline" className="text-xs">
                         {result.issues.length} issues
                       </Badge>
                     </div>
@@ -259,7 +259,7 @@ export function CodeScanSection() {
                     </Badge>
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-2 space-y-2">
-                    <p className="text-sm text-muted-foreground px-3">{result.summary}</p>
+                    <p data-testid={`codescan-file-summary-${result.fileName}`} className="text-sm text-muted-foreground px-3">{result.summary}</p>
                     {result.issues.map((issue, idx) => (
                       <div
                         key={idx}
@@ -267,23 +267,23 @@ export function CodeScanSection() {
                         className="p-3 rounded-lg bg-kiosk-background/30 border border-kiosk-border space-y-2"
                       >
                         <div className="flex items-center gap-2">
-                          <Badge className={`text-xs ${getSeverityColor(issue.severity)}`}>
+                          <Badge data-testid={`codescan-severity-${result.fileName}-${idx}`} className={`text-xs ${getSeverityColor(issue.severity)}`}>
                             {getSeverityIcon(issue.severity)}
                             <span className="ml-1 uppercase">{issue.severity}</span>
                           </Badge>
-                          <Badge variant="outline" className="text-xs capitalize">
+                          <Badge data-testid={`codescan-category-${result.fileName}-${idx}`} variant="outline" className="text-xs capitalize">
                             {issue.category}
                           </Badge>
                           {issue.line && (
-                            <span className="text-xs text-muted-foreground">
+                            <span data-testid={`codescan-line-${result.fileName}-${idx}`} className="text-xs text-muted-foreground">
                               Linha {issue.line}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm font-medium">{issue.title}</p>
-                        <p className="text-sm text-muted-foreground">{issue.message}</p>
+                        <p data-testid={`codescan-issue-title-${result.fileName}-${idx}`} className="text-sm font-medium">{issue.title}</p>
+                        <p data-testid={`codescan-issue-message-${result.fileName}-${idx}`} className="text-sm text-muted-foreground">{issue.message}</p>
                         {issue.suggestion && (
-                          <div className="p-2 rounded bg-kiosk-surface/50 text-xs font-mono">
+                          <div data-testid={`codescan-suggestion-${result.fileName}-${idx}`} className="p-2 rounded bg-kiosk-surface/50 text-xs font-mono">
                             💡 {issue.suggestion}
                           </div>
                         )}
