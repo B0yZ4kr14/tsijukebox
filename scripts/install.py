@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # TSiJUKEBOX Installer
 # Version: 4.1.0
-# Last updated: 2025-12-23T02:37:08.156Z
+# Last updated: 2025-12-23T02:37:23.260Z
 
 """
 TSiJUKEBOX Installation Script
