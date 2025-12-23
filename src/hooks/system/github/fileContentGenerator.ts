@@ -486,14 +486,48 @@ echo "Doctor check complete!"
 
 // Main content generator - returns null for unknown files to prevent overwrites
 // Supports 256 files across 34 categories
+// CRITICAL: Never generate content for these protected files
+const NEVER_SYNC_FILES = [
+  'package.json',
+  'package-lock.json',
+  'bun.lockb',
+  'vite.config.ts',
+  'vite.config.js',
+  'tsconfig.json',
+  'tsconfig.node.json',
+  'tsconfig.e2e.json',
+  '.env',
+  '.env.local',
+  '.gitignore',
+  'components.json',
+  'postcss.config.js',
+  'tailwind.config.ts',
+  'tailwind.config.js',
+  'src/integrations/supabase/client.ts',
+  'src/integrations/supabase/types.ts',
+];
+
 export function generateFileContent(path: string): string | null {
+  // === GUARDRAIL: Block protected files ===
+  if (NEVER_SYNC_FILES.includes(path)) {
+    console.warn(`[generateFileContent] ⚠️ Protected file blocked: ${path}`);
+    return null;
+  }
+
   // === DOCS (5 files) ===
   const docContent = generateDocContent(path);
   if (docContent !== null) return docContent;
   
   // === SCRIPTS (5 files) ===
   const scriptContent = generateScriptContent(path);
-  if (scriptContent !== null) return scriptContent;
+  if (scriptContent !== null) {
+    // Validate Python content - NEVER return JS placeholder
+    if (path.endsWith('.py') && scriptContent.trimStart().startsWith('//')) {
+      console.error(`[generateFileContent] ❌ Invalid Python content for: ${path} (starts with //)`);
+      return null;
+    }
+    return scriptContent;
+  }
   
   // === E2E FIXTURES (9 files) ===
   if (path.startsWith('e2e/fixtures/')) {
