@@ -70,10 +70,39 @@ export const FILE_CATEGORIES = {
     'scripts/systemd-notify-wrapper.py',
     'scripts/tsijukebox-doctor',
   ],
+  'Testes E2E': [
+    'e2e/fixtures/code-scan.fixture.ts',
+    'e2e/fixtures/settings.fixture.ts',
+    'e2e/fixtures/a11y.fixture.ts',
+    'e2e/specs/code-scan.spec.ts',
+    'e2e/specs/code-scan-a11y.spec.ts',
+    'e2e/specs/github-sync.spec.ts',
+    'e2e/specs/ai-providers-a11y.spec.ts',
+  ],
+  'Componentes': [
+    'src/components/settings/CodeScanSection.tsx',
+    'src/components/settings/GitHubExportSection.tsx',
+  ],
 } as const;
+
+// Files that should have generated content (timestamps, version info)
+export const GENERATED_FILES = [
+  'docs/VERSION',
+  'docs/SYNC_LOG.md',
+  'docs/CHANGELOG.md',
+  'docs/README.md',
+  'docs/GITHUB-INTEGRATION.md',
+];
+
+// Helper to check if a file needs generated content
+export function isGeneratedFile(path: string): boolean {
+  return GENERATED_FILES.includes(path);
+}
 
 // Only these files should be synced - prevents accidental overwrites
 export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Documentação'],
   ...FILE_CATEGORIES['Scripts'],
+  ...FILE_CATEGORIES['Testes E2E'],
+  ...FILE_CATEGORIES['Componentes'],
 ];

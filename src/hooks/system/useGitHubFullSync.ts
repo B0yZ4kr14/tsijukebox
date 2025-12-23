@@ -6,11 +6,18 @@ import {
   SyncResult, 
   SyncProgress, 
   UseGitHubFullSyncReturn,
-  SAFE_SYNC_FILES 
+  SAFE_SYNC_FILES,
+  isGeneratedFile
 } from './github/types';
 import { generateFileContent } from './github/fileContentGenerator';
 
 export * from './github/types';
+
+interface ReadProjectFilesResult {
+  files: Array<{ path: string; content: string }>;
+  errors: string[];
+  notFound: string[];
+}
 
 export function useGitHubFullSync(): UseGitHubFullSyncReturn {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -102,11 +109,55 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
   }, []);
 
   const syncFullRepository = useCallback(async (commitMessage?: string): Promise<SyncResult> => {
-    // Generate files to sync - only safe files with generated content
+    // Separate files into dynamic (read from repo) and generated (timestamps, etc.)
+    const dynamicPaths = SAFE_SYNC_FILES.filter(path => !isGeneratedFile(path));
+    const generatedPaths = SAFE_SYNC_FILES.filter(path => isGeneratedFile(path));
+
+    console.log(`[syncFullRepository] Dynamic: ${dynamicPaths.length}, Generated: ${generatedPaths.length}`);
+
     const files: FileToSync[] = [];
     const skippedUnknown: string[] = [];
 
-    for (const path of SAFE_SYNC_FILES) {
+    // 1. Try to read dynamic files from repository
+    if (dynamicPaths.length > 0) {
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke<ReadProjectFilesResult>('read-project-files', {
+          body: { paths: dynamicPaths, branch: 'main' }
+        });
+
+        if (fnError) {
+          console.warn('[syncFullRepository] Error reading dynamic files:', fnError.message);
+          // Fall back to generated content for all
+        } else if (data) {
+          // Add successfully read files
+          files.push(...data.files);
+          
+          // Log any errors or not found
+          if (data.notFound.length > 0) {
+            console.log(`[syncFullRepository] ${data.notFound.length} files not found in repo (will use generated content if available)`);
+          }
+          if (data.errors.length > 0) {
+            console.warn('[syncFullRepository] Errors reading files:', data.errors);
+          }
+
+          // For files not found, try to generate content
+          for (const path of data.notFound) {
+            const content = generateFileContent(path);
+            if (content !== null) {
+              files.push({ path, content });
+            } else {
+              skippedUnknown.push(path);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('[syncFullRepository] Failed to read dynamic files:', err);
+        // Fall through to generated content
+      }
+    }
+
+    // 2. Generate content for files that need timestamps/version info
+    for (const path of generatedPaths) {
       const content = generateFileContent(path);
       if (content !== null) {
         files.push({ path, content });
@@ -124,7 +175,7 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
       return { success: false, error: 'No files to sync' };
     }
 
-    const message = commitMessage || `[TSiJUKEBOX v4.1.0] Full sync ${files.length} files - ${new Date().toLocaleDateString('pt-BR')}`;
+    const message = commitMessage || `[TSiJUKEBOX v4.1.0] Full sync ${files.length} files (${dynamicPaths.length} dynamic + ${generatedPaths.length} generated) - ${new Date().toLocaleDateString('pt-BR')}`;
     
     return syncFiles(files, message, 'manual');
   }, [syncFiles]);
@@ -133,11 +184,40 @@ export function useGitHubFullSync(): UseGitHubFullSyncReturn {
     selectedPaths: string[],
     commitMessage?: string
   ): Promise<SyncResult> => {
-    // Generate files only for selected paths
+    // Separate selected files into dynamic and generated
+    const dynamicPaths = selectedPaths.filter(path => !isGeneratedFile(path));
+    const generatedPaths = selectedPaths.filter(path => isGeneratedFile(path));
+
     const files: FileToSync[] = [];
     const skippedUnknown: string[] = [];
 
-    for (const path of selectedPaths) {
+    // 1. Read dynamic files from repository
+    if (dynamicPaths.length > 0) {
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke<ReadProjectFilesResult>('read-project-files', {
+          body: { paths: dynamicPaths, branch: 'main' }
+        });
+
+        if (!fnError && data) {
+          files.push(...data.files);
+          
+          // For files not found, try to generate content
+          for (const path of data.notFound) {
+            const content = generateFileContent(path);
+            if (content !== null) {
+              files.push({ path, content });
+            } else {
+              skippedUnknown.push(path);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('[syncSelectedFiles] Failed to read dynamic files:', err);
+      }
+    }
+
+    // 2. Generate content for files that need timestamps
+    for (const path of generatedPaths) {
       const content = generateFileContent(path);
       if (content !== null) {
         files.push({ path, content });
