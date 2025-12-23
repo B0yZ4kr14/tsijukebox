@@ -1,0 +1,88 @@
+graph TD
+    subgraph "App Root"
+        A[App.tsx]
+        A --> B[Router]
+    end
+
+    subgraph "Context Providers"
+        C1[AuthProvider]
+        C2[PlayerProvider]
+        C3[ThemeProvider]
+        C4[SettingsProvider]
+    end
+
+    subgraph "Pages"
+        P1[Landing Page]
+        P2[Setup Wizard]
+        P3[Dashboard]
+        P4[Spotify Integration]
+        P5[YouTube Music]
+        P6[Local Files]
+        P7[Settings]
+        P8[Admin Panel]
+    end
+
+    subgraph "Components - Player"
+        CP1[PlayerControls]
+        CP2[PlaybackBar]
+        CP3[VolumeControl]
+        CP4[QueueManager]
+        CP5[LyricsDisplay]
+    end
+
+    subgraph "Components - UI"
+        CU1[Header]
+        CU2[Sidebar]
+        CU3[Card]
+        CU4[Button]
+        CU5[Modal]
+        CU6[Toast]
+    end
+
+    subgraph "Hooks"
+        H1[usePlayer]
+        H2[useSpotify]
+        H3[useYouTube]
+        H4[useAuth]
+        H5[useSettings]
+    end
+
+    A --> C1
+    A --> C2
+    A --> C3
+    A --> C4
+
+    B --> P1
+    B --> P2
+    B --> P3
+    B --> P4
+    B --> P5
+    B --> P6
+    B --> P7
+    B --> P8
+
+    P3 --> CP1
+    P3 --> CP2
+    P3 --> CU1
+    P3 --> CU2
+
+    CP1 --> CP3
+    CP1 --> CP4
+    CP1 --> CP5
+
+    CP1 --> H1
+    P4 --> H2
+    P5 --> H3
+    P7 --> H5
+
+    H1 --> C2
+    H2 --> C1
+    H4 --> C1
+    H5 --> C4
+
+    style A fill:#ffd400,stroke:#cc9900,stroke-width:3px,color:#000
+    style C1 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff
+    style C2 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff
+    style C3 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff
+    style C4 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff
+    style P3 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000

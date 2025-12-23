@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant User
+    participant TSI as TSiJukebox
+    participant Supa as Supabase Auth
+    participant DB as PostgreSQL
+
+    User->>TSI: 1. Acessa /login
+    TSI->>User: 2. Exibe opções de login<br/>(Email, Google, GitHub)
+    
+    alt Email/Password
+        User->>TSI: 3a. Insere email + senha
+        TSI->>Supa: 4a. signInWithPassword()
+        Supa->>DB: 5a. Verifica credenciais
+        DB->>Supa: 6a. Retorna usuário
+    else OAuth (Google/GitHub)
+        User->>TSI: 3b. Clica em "Login com Google"
+        TSI->>Supa: 4b. signInWithOAuth({provider: 'google'})
+        Supa->>User: 5b. Redireciona para Google
+        User->>Supa: 6b. Autoriza
+        Supa->>DB: 7b. Cria/atualiza usuário
+    end
+
+    Supa->>TSI: 7. Retorna session<br/>{access_token, refresh_token, user}
+    TSI->>TSI: 8. Armazena session<br/>em localStorage
+    TSI->>User: 9. Redireciona para /dashboard
+    
+    Note over User,DB: Renovação Automática de Session
+    
+    TSI->>Supa: 10. onAuthStateChange listener
+    Supa->>TSI: 11. Token expirando em 5min
+    TSI->>Supa: 12. refreshSession()
+    Supa->>DB: 13. Valida refresh_token
+    DB->>Supa: 14. Retorna novo access_token
+    Supa->>TSI: 15. Atualiza session

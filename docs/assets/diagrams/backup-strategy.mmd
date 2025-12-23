@@ -1,0 +1,47 @@
+graph LR
+    subgraph "Data Sources"
+        D1[PostgreSQL Database]
+        D2[User Files<br/>Local Storage]
+        D3[Configuration Files]
+    end
+
+    subgraph "Backup Types"
+        B1[Full Backup<br/>Weekly]
+        B2[Incremental Backup<br/>Daily]
+        B3[Transaction Log<br/>Continuous]
+    end
+
+    subgraph "Storage Locations"
+        S1[Supabase Storage]
+        S2[AWS S3]
+        S3[Local NAS]
+    end
+
+    subgraph "Retention Policy"
+        R1[7 Daily Backups]
+        R2[4 Weekly Backups]
+        R3[12 Monthly Backups]
+    end
+
+    D1 --> B1
+    D2 --> B1
+    D3 --> B1
+
+    D1 --> B2
+    D2 --> B2
+
+    D1 --> B3
+
+    B1 --> S1
+    B1 --> S2
+    B1 --> S3
+
+    B2 --> S1
+    B3 --> S1
+
+    S1 --> R1
+    S2 --> R2
+    S3 --> R3
+
+    style B1 fill:#00ff88,stroke:#00cc66,stroke-width:2px,color:#000
+    style S1 fill:#d400ff,stroke:#9900cc,stroke-width:2px,color:#fff

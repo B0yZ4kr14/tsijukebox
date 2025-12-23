@@ -1,0 +1,45 @@
+graph LR
+    subgraph "Configuration"
+        C1[Feature Flags Config]
+        C2[Environment Variables]
+        C3[Supabase Remote Config]
+    end
+
+    subgraph "Evaluation"
+        E1[Feature Flag Service]
+        E2[User Context]
+        E3[A/B Testing Rules]
+    end
+
+    subgraph "Features"
+        F1[🎤 Karaoke Mode]
+        F2[🔊 Spatial Audio]
+        F3[🤖 AI Recommendations]
+        F4[🎨 Custom Themes]
+    end
+
+    subgraph "Monitoring"
+        M1[Usage Analytics]
+        M2[Performance Metrics]
+        M3[User Feedback]
+    end
+
+    C1 --> E1
+    C2 --> E1
+    C3 --> E1
+
+    E1 --> E2
+    E2 --> E3
+
+    E3 --> F1
+    E3 --> F2
+    E3 --> F3
+    E3 --> F4
+
+    F1 --> M1
+    F2 --> M2
+    F3 --> M3
+
+    style C3 fill:#d400ff,stroke:#9900cc,stroke-width:2px,color:#fff
+    style E1 fill:#ffd400,stroke:#cc9900,stroke-width:2px,color:#000
+    style F1 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff

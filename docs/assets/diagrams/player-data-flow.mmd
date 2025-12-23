@@ -1,0 +1,88 @@
+graph TB
+    subgraph "User Actions"
+        U1[▶️ Play]
+        U2[⏸️ Pause]
+        U3[⏭️ Next]
+        U4[⏮️ Previous]
+        U5[🔀 Shuffle]
+        U6[🔁 Repeat]
+        U7[🔊 Volume]
+    end
+
+    subgraph "Player State Management"
+        PS1[PlayerContext]
+        PS2[usePlayer Hook]
+        PS3[Player Reducer]
+        PS4{Current Source?}
+    end
+
+    subgraph "Audio Sources"
+        AS1[Spotify SDK]
+        AS2[YouTube IFrame API]
+        AS3[HTML5 Audio<br/>Local Files]
+    end
+
+    subgraph "State Updates"
+        ST1[Current Track]
+        ST2[Playback Position]
+        ST3[Queue]
+        ST4[Volume Level]
+        ST5[Shuffle State]
+        ST6[Repeat Mode]
+    end
+
+    subgraph "Side Effects"
+        SE1[Update UI]
+        SE2[Sync to Supabase]
+        SE3[Update Media Session API]
+        SE4[Save to Local Storage]
+        SE5[Emit Analytics Event]
+    end
+
+    subgraph "External Sync"
+        EX1[Spotify Connect<br/>Multi-Device Sync]
+        EX2[YouTube History<br/>Watch Later]
+        EX3[Last.fm Scrobble]
+    end
+
+    U1 --> PS2
+    U2 --> PS2
+    U3 --> PS2
+    U4 --> PS2
+    U5 --> PS2
+    U6 --> PS2
+    U7 --> PS2
+
+    PS2 --> PS3
+    PS3 --> PS1
+    PS1 --> PS4
+
+    PS4 -->|Spotify| AS1
+    PS4 -->|YouTube| AS2
+    PS4 -->|Local| AS3
+
+    AS1 --> ST1
+    AS2 --> ST1
+    AS3 --> ST1
+
+    ST1 --> ST2
+    ST2 --> ST3
+    ST3 --> ST4
+    ST4 --> ST5
+    ST5 --> ST6
+
+    ST6 --> SE1
+    ST6 --> SE2
+    ST6 --> SE3
+    ST6 --> SE4
+    ST6 --> SE5
+
+    SE2 --> EX1
+    SE2 --> EX2
+    SE2 --> EX3
+
+    style PS1 fill:#ff00d4,stroke:#cc0099,stroke-width:3px,color:#fff
+    style PS3 fill:#ffd400,stroke:#cc9900,stroke-width:2px,color:#000
+    style AS1 fill:#1DB954,stroke:#1ed760,stroke-width:2px,color:#fff
+    style AS2 fill:#FF0000,stroke:#cc0000,stroke-width:2px,color:#fff
+    style AS3 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000

@@ -1,0 +1,20 @@
+graph TD
+    Start[🚀 Início] --> Step1[1️⃣ Modo de Operação]
+    Step1 --> Choice1{Escolha}
+    Choice1 -->|Standalone| Step2A[2️⃣ Provedores de Música]
+    Choice1 -->|Kiosk| Step2B[2️⃣ Configuração Kiosk]
+    
+    Step2A --> Step3[3️⃣ Configuração de Áudio]
+    Step2B --> Step3
+    
+    Step3 --> Step4[4️⃣ Display]
+    Step4 --> Step5[5️⃣ Rede]
+    Step5 --> Step6[6️⃣ Backup na Nuvem]
+    Step6 --> Step7[7️⃣ Acessibilidade]
+    Step7 --> Step8[8️⃣ Segurança]
+    Step8 --> Step9[9️⃣ Revisão e Confirmação]
+    Step9 --> Finish[✅ Concluído]
+
+    style Start fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style Finish fill:#00ff44,stroke:#00cc33,stroke-width:3px,color:#000
+    style Choice1 fill:#ffd400,stroke:#cc9900,stroke-width:2px,color:#000

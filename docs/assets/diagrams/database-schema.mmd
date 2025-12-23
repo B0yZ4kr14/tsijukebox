@@ -1,0 +1,64 @@
+erDiagram
+    users ||--o{ spotify_tokens : has
+    users ||--o{ youtube_tokens : has
+    users ||--o{ playlists : creates
+    users ||--o{ playback_history : has
+    users ||--o{ settings : has
+
+    users {
+        uuid id PK
+        string email UK
+        string name
+        timestamp created_at
+        timestamp last_login
+        string role
+    }
+
+    spotify_tokens {
+        uuid id PK
+        uuid user_id FK
+        string access_token
+        string refresh_token
+        timestamp expires_at
+        timestamp created_at
+    }
+
+    youtube_tokens {
+        uuid id PK
+        uuid user_id FK
+        string access_token
+        string refresh_token
+        timestamp expires_at
+        timestamp created_at
+    }
+
+    playlists {
+        uuid id PK
+        uuid user_id FK
+        string name
+        string description
+        string source
+        jsonb tracks
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    playback_history {
+        uuid id PK
+        uuid user_id FK
+        string track_id
+        string track_name
+        string artist
+        string source
+        int duration_ms
+        timestamp played_at
+    }
+
+    settings {
+        uuid id PK
+        uuid user_id FK
+        jsonb audio_settings
+        jsonb display_settings
+        jsonb accessibility_settings
+        timestamp updated_at
+    }

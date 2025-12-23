@@ -1,0 +1,55 @@
+graph TB
+    subgraph "Unit Tests"
+        U1[Vitest]
+        U2[Components]
+        U3[Hooks]
+        U4[Utils]
+        U5[Coverage: 80%+]
+    end
+
+    subgraph "Integration Tests"
+        I1[API Tests]
+        I2[Database Tests]
+        I3[Auth Flow Tests]
+    end
+
+    subgraph "E2E Tests"
+        E1[Playwright]
+        E2[User Journeys]
+        E3[Cross-Browser]
+        E4[Visual Regression]
+    end
+
+    subgraph "Performance Tests"
+        P1[Lighthouse CI]
+        P2[Load Testing]
+        P3[Memory Profiling]
+    end
+
+    subgraph "Security Tests"
+        S1[OWASP ZAP]
+        S2[Dependency Audit]
+        S3[Penetration Testing]
+    end
+
+    U1 --> U2
+    U1 --> U3
+    U1 --> U4
+    U4 --> U5
+
+    I1 --> I2
+    I2 --> I3
+
+    E1 --> E2
+    E2 --> E3
+    E3 --> E4
+
+    P1 --> P2
+    P2 --> P3
+
+    S1 --> S2
+    S2 --> S3
+
+    style U1 fill:#4400ff,stroke:#3300cc,stroke-width:2px,color:#fff
+    style E1 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000
+    style S1 fill:#ff4400,stroke:#cc3300,stroke-width:2px,color:#fff

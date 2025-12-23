@@ -1,0 +1,70 @@
+graph TB
+    subgraph "Cliente"
+        A[Navegador Web]
+        A1[Interface React]
+        A2[Estado Global<br/>React Query + Context]
+        A3[Local Storage]
+        A4[IndexedDB]
+    end
+
+    subgraph "Frontend - Vite Dev Server"
+        B[Vite 5.4.1]
+        B1[React 18.3.1]
+        B2[TypeScript 5.5.3]
+        B3[Tailwind CSS]
+        B4[Framer Motion]
+    end
+
+    subgraph "Backend - Supabase"
+        C[Supabase Client]
+        C1[Auth Service]
+        C2[Database<br/>PostgreSQL]
+        C3[Storage Service]
+        C4[Edge Functions]
+        C5[Realtime Service]
+    end
+
+    subgraph "APIs Externas"
+        D1[Spotify API<br/>OAuth 2.0]
+        D2[YouTube Music API<br/>OAuth 2.0]
+        D3[GitHub API<br/>REST]
+    end
+
+    subgraph "Infraestrutura"
+        E1[GitHub Actions<br/>CI/CD]
+        E2[Grafana<br/>Monitoring]
+        E3[Docker<br/>Containers]
+    end
+
+    A --> A1
+    A1 --> A2
+    A2 --> A3
+    A2 --> A4
+    
+    A1 --> B
+    B --> B1
+    B1 --> B2
+    B2 --> B3
+    B1 --> B4
+
+    B1 --> C
+    C --> C1
+    C --> C2
+    C --> C3
+    C --> C4
+    C --> C5
+
+    C4 -->|OAuth Flow| D1
+    C4 -->|OAuth Flow| D2
+    C4 -->|REST API| D3
+
+    E1 -->|Deploy| B
+    E2 -->|Monitor| C
+    E3 -->|Container| B
+
+    style A fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style B fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style C fill:#ff00d4,stroke:#cc0099,stroke-width:3px,color:#000
+    style D1 fill:#1DB954,stroke:#1ed760,stroke-width:2px,color:#fff
+    style D2 fill:#FF0000,stroke:#cc0000,stroke-width:2px,color:#fff
+    style D3 fill:#333,stroke:#666,stroke-width:2px,color:#fff

@@ -1,0 +1,83 @@
+graph LR
+    subgraph "Trigger Events"
+        T1[Push to main]
+        T2[Pull Request]
+        T3[Manual Dispatch]
+        T4[Schedule<br/>Daily 00:00 UTC]
+    end
+
+    subgraph "CI - Continuous Integration"
+        CI1[Checkout Code]
+        CI2[Setup Node.js 22]
+        CI3[Install Dependencies<br/>npm ci]
+        CI4[Lint Code<br/>ESLint]
+        CI5[Type Check<br/>TypeScript]
+        CI6[Run Unit Tests<br/>Vitest]
+        CI7[Run E2E Tests<br/>Playwright]
+        CI8[Build Project<br/>Vite Build]
+        CI9[Generate Coverage<br/>Report]
+    end
+
+    subgraph "Security Checks"
+        S1[Dependency Audit<br/>npm audit]
+        S2[Secret Scanning<br/>Gitleaks]
+        S3[SAST Analysis<br/>CodeQL]
+        S4[License Check]
+    end
+
+    subgraph "CD - Continuous Deployment"
+        CD1[Build Docker Image]
+        CD2[Tag Image<br/>latest + version]
+        CD3[Push to Registry<br/>GitHub Packages]
+        CD4[Deploy to Staging]
+        CD5[Smoke Tests]
+        CD6{Tests Pass?}
+        CD7[Deploy to Production]
+        CD8[Rollback]
+    end
+
+    subgraph "Post-Deployment"
+        P1[Update Grafana<br/>Dashboards]
+        P2[Send Notifications<br/>Slack/Discord]
+        P3[Create GitHub Release]
+        P4[Update Changelog]
+    end
+
+    T1 --> CI1
+    T2 --> CI1
+    T3 --> CI1
+    T4 --> CI1
+
+    CI1 --> CI2
+    CI2 --> CI3
+    CI3 --> CI4
+    CI4 --> CI5
+    CI5 --> CI6
+    CI6 --> CI7
+    CI7 --> CI8
+    CI8 --> CI9
+
+    CI3 --> S1
+    CI1 --> S2
+    CI1 --> S3
+    CI3 --> S4
+
+    CI8 --> CD1
+    CD1 --> CD2
+    CD2 --> CD3
+    CD3 --> CD4
+    CD4 --> CD5
+    CD5 --> CD6
+    CD6 -->|✅ Success| CD7
+    CD6 -->|❌ Failure| CD8
+
+    CD7 --> P1
+    CD7 --> P2
+    CD7 --> P3
+    CD7 --> P4
+
+    style T1 fill:#00ff88,stroke:#00cc66,stroke-width:2px,color:#000
+    style CI8 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000
+    style S2 fill:#ff4400,stroke:#cc3300,stroke-width:2px,color:#fff
+    style CD7 fill:#00ff44,stroke:#00cc33,stroke-width:3px,color:#000
+    style CD8 fill:#ff0000,stroke:#cc0000,stroke-width:3px,color:#fff
