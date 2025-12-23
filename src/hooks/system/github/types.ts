@@ -87,8 +87,9 @@ export const FILE_CATEGORIES = {
     'e2e/fixtures/settings.fixture.ts',
   ],
   
-  // === E2E SPECS (15 arquivos principais) ===
+  // === E2E SPECS (29 arquivos - cobertura completa) ===
   'E2E Specs': [
+    // Core specs
     'e2e/specs/code-scan.spec.ts',
     'e2e/specs/code-scan-a11y.spec.ts',
     'e2e/specs/github-sync.spec.ts',
@@ -96,14 +97,31 @@ export const FILE_CATEGORIES = {
     'e2e/specs/ai-providers.spec.ts',
     'e2e/specs/auth-local.spec.ts',
     'e2e/specs/auth-supabase.spec.ts',
+    'e2e/specs/auth-permissions.spec.ts',
     'e2e/specs/backup-management.spec.ts',
+    // Player specs
     'e2e/specs/player-controls.spec.ts',
     'e2e/specs/player-accessibility.spec.ts',
+    'e2e/specs/player-responsive.spec.ts',
+    'e2e/specs/player-progress.spec.ts',
+    'e2e/specs/playback-controls.spec.ts',
+    'e2e/specs/volume-controls.spec.ts',
+    'e2e/specs/queue-panel.spec.ts',
+    'e2e/specs/now-playing.spec.ts',
+    // UI/UX specs
     'e2e/specs/wcag-compliance.spec.ts',
     'e2e/specs/routes-validation.spec.ts',
     'e2e/specs/keyboard-shortcuts.spec.ts',
+    'e2e/specs/touch-gestures.spec.ts',
     'e2e/specs/notifications-realtime.spec.ts',
     'e2e/specs/landing-page.spec.ts',
+    // Integration specs
+    'e2e/specs/brand-guidelines.spec.ts',
+    'e2e/specs/deploy-key.spec.ts',
+    'e2e/specs/manus-automation.spec.ts',
+    'e2e/specs/spotify-wizard.spec.ts',
+    'e2e/specs/voice-control.spec.ts',
+    'e2e/specs/youtube-music-wizard.spec.ts',
   ],
   
   // === HOOKS DO SISTEMA (10 arquivos) ===
@@ -156,7 +174,7 @@ export function isGeneratedFile(path: string): boolean {
   return GENERATED_FILES.includes(path);
 }
 
-// Only these files should be synced - prevents accidental overwrites (57 arquivos)
+// Only these files should be synced - prevents accidental overwrites (71 arquivos)
 export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Documentação'],
   ...FILE_CATEGORIES['Scripts'],
