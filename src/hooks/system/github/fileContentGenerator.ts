@@ -1,6 +1,6 @@
 // Main content generator - orchestrates all template generators
 // Critical config files like package.json are NEVER generated here
-// Supports 206 files across 29 categories
+// Supports 256 files across 34 categories
 
 import { generateE2EFixtureContent } from './templates/e2eFixtureTemplates';
 import { generateE2ESpecContent } from './templates/e2eSpecTemplates';
@@ -29,6 +29,11 @@ import { generateJamComponentsContent } from './templates/jamComponentsTemplates
 import { generateLandingComponentsContent } from './templates/landingComponentsTemplates';
 import { generateErrorsComponentsContent } from './templates/errorsComponentsTemplates';
 import { generateRootComponentsContent } from './templates/rootComponentsTemplates';
+import { generateHooksPlayerContent } from './templates/hooksPlayerTemplates';
+import { generateHooksSpotifyContent } from './templates/hooksSpotifyTemplates';
+import { generateHooksYouTubeContent } from './templates/hooksYouTubeTemplates';
+import { generateHooksJamContent } from './templates/hooksJamTemplates';
+import { generateSettingsComponentsContent } from './templates/settingsComponentsTemplates';
 
 const VERSION = '4.2.0';
 
@@ -377,7 +382,7 @@ echo "Doctor check complete!"
 }
 
 // Main content generator - returns null for unknown files to prevent overwrites
-// Supports 206 files across 29 categories
+// Supports 256 files across 34 categories
 export function generateFileContent(path: string): string | null {
   // === DOCS (5 files) ===
   const docContent = generateDocContent(path);

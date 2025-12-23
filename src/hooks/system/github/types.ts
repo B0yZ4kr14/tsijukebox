@@ -381,6 +381,76 @@ export const FILE_CATEGORIES = {
     'src/components/NavLink.tsx',
     'src/components/kiosk/KioskRemoteControl.tsx',
   ],
+
+  // === HOOKS PLAYER (13 arquivos) ===
+  'Hooks Player': [
+    'src/hooks/player/index.ts',
+    'src/hooks/player/useLibrary.ts',
+    'src/hooks/player/useLocalMusic.ts',
+    'src/hooks/player/useLyrics.ts',
+    'src/hooks/player/usePlaybackControls.ts',
+    'src/hooks/player/usePlayer.ts',
+    'src/hooks/player/useSpicetifyIntegration.ts',
+    'src/hooks/player/useVoiceCommandHistory.ts',
+    'src/hooks/player/useVoiceControl.ts',
+    'src/hooks/player/useVoiceSearch.ts',
+    'src/hooks/player/useVoiceTraining.ts',
+    'src/hooks/player/useVolume.ts',
+    'src/hooks/player/useVolumeNormalization.ts',
+  ],
+
+  // === HOOKS SPOTIFY (7 arquivos) ===
+  'Hooks Spotify': [
+    'src/hooks/spotify/index.ts',
+    'src/hooks/spotify/useSpotifyBrowse.ts',
+    'src/hooks/spotify/useSpotifyLibrary.ts',
+    'src/hooks/spotify/useSpotifyPlayer.ts',
+    'src/hooks/spotify/useSpotifyPlaylists.ts',
+    'src/hooks/spotify/useSpotifyRecommendations.ts',
+    'src/hooks/spotify/useSpotifySearch.ts',
+  ],
+
+  // === HOOKS YOUTUBE (7 arquivos) ===
+  'Hooks YouTube': [
+    'src/hooks/youtube/index.ts',
+    'src/hooks/youtube/useYouTubeMusicBrowse.ts',
+    'src/hooks/youtube/useYouTubeMusicLibrary.ts',
+    'src/hooks/youtube/useYouTubeMusicPlayer.ts',
+    'src/hooks/youtube/useYouTubeMusicPlaylists.ts',
+    'src/hooks/youtube/useYouTubeMusicRecommendations.ts',
+    'src/hooks/youtube/useYouTubeMusicSearch.ts',
+  ],
+
+  // === HOOKS JAM (6 arquivos) ===
+  'Hooks Jam': [
+    'src/hooks/jam/index.ts',
+    'src/hooks/jam/useJamMusicSearch.ts',
+    'src/hooks/jam/useJamParticipants.ts',
+    'src/hooks/jam/useJamQueue.ts',
+    'src/hooks/jam/useJamReactions.ts',
+    'src/hooks/jam/useJamSession.ts',
+  ],
+
+  // === COMPONENTS SETTINGS (17 arquivos) ===
+  'Components Settings': [
+    'src/components/settings/AccessibilitySection.tsx',
+    'src/components/settings/AIConfigSection.tsx',
+    'src/components/settings/AddCustomCommandModal.tsx',
+    'src/components/settings/BackendConnectionSection.tsx',
+    'src/components/settings/CloudConnectionSection.tsx',
+    'src/components/settings/DatabaseSection.tsx',
+    'src/components/settings/LanguageSection.tsx',
+    'src/components/settings/LocalMusicSection.tsx',
+    'src/components/settings/MusicIntegrationsSection.tsx',
+    'src/components/settings/SettingsGuideModal.tsx',
+    'src/components/settings/SpotifySetupWizard.tsx',
+    'src/components/settings/ThemeSection.tsx',
+    'src/components/settings/VoiceControlSection.tsx',
+    'src/components/settings/VolumeNormalizationSection.tsx',
+    'src/components/settings/WeatherConfigSection.tsx',
+    'src/components/settings/YouTubeMusicSection.tsx',
+    'src/components/settings/index.ts',
+  ],
 } as const;
 
 // Files that should have generated content (timestamps, version info)
@@ -397,7 +467,7 @@ export function isGeneratedFile(path: string): boolean {
   return GENERATED_FILES.includes(path);
 }
 
-// Only these files should be synced - prevents accidental overwrites (206 arquivos)
+// Only these files should be synced - prevents accidental overwrites (256 arquivos)
 export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Documentação'],
   ...FILE_CATEGORIES['Scripts'],
@@ -428,4 +498,9 @@ export const SAFE_SYNC_FILES = [
   ...FILE_CATEGORIES['Components Landing'],
   ...FILE_CATEGORIES['Components Errors'],
   ...FILE_CATEGORIES['Components Root'],
+  ...FILE_CATEGORIES['Hooks Player'],
+  ...FILE_CATEGORIES['Hooks Spotify'],
+  ...FILE_CATEGORIES['Hooks YouTube'],
+  ...FILE_CATEGORIES['Hooks Jam'],
+  ...FILE_CATEGORIES['Components Settings'],
 ];
