@@ -68,3 +68,12 @@ verify_jwt = false
 
 [functions.auto-sync-trigger]
 verify_jwt = false
+
+[functions.save-api-key]
+verify_jwt = false
+
+[functions.check-api-key]
+verify_jwt = false
+
+[functions.test-api-key]
+verify_jwt = false
