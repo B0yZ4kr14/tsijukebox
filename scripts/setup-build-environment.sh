@@ -4,7 +4,7 @@
 # TSiJUKEBOX - Build Environment Setup & Fix Script
 # 
 # Purpose: Automatically fix all dependency issues and prepare build environment
-# Version: 1.1.0
+# Version: 1.1.1
 # Author: TSiJUKEBOX DevOps Team
 # Date: December 23, 2025
 # 
@@ -63,7 +63,7 @@ log_info() {
 }
 
 # Script metadata
-SCRIPT_VERSION="1.1.0"
+SCRIPT_VERSION="1.1.1"
 START_TIME=$(date +%s)
 REPORT_FILE="setup-build-report-$(date +%Y%m%d-%H%M%S).log"
 
@@ -194,23 +194,21 @@ step_detect_and_install_missing_deps() {
     log_header "STEP $step_num/$TOTAL_STEPS: Detecting & Installing Missing Dependencies"
     
     # Array of common @radix-ui packages needed by shadcn/ui
+    # Note: Some packages are internal utilities automatically installed as dependencies
     declare -a RADIX_PACKAGES=(
         "@radix-ui/react-alert-dialog"
-        "@radix-ui/react-arrow"
         "@radix-ui/react-aspect-ratio"
+        "@radix-ui/react-avatar"
         "@radix-ui/react-checkbox"
         "@radix-ui/react-collapsible"
         "@radix-ui/react-context-menu"
-        "@radix-ui/react-context"
         "@radix-ui/react-dialog"
-        "@radix-ui/react-direction"
         "@radix-ui/react-dropdown-menu"
         "@radix-ui/react-hover-card"
         "@radix-ui/react-label"
         "@radix-ui/react-menubar"
         "@radix-ui/react-navigation-menu"
         "@radix-ui/react-popover"
-        "@radix-ui/react-primitive"
         "@radix-ui/react-progress"
         "@radix-ui/react-radio-group"
         "@radix-ui/react-scroll-area"
@@ -225,13 +223,6 @@ step_detect_and_install_missing_deps() {
         "@radix-ui/react-toggle-group"
         "@radix-ui/react-tooltip"
         "@radix-ui/react-accordion"
-        "@radix-ui/react-avatar"
-        "@radix-ui/react-use-callback-ref"
-        "@radix-ui/react-use-controllable-state"
-        "@radix-ui/react-use-escape-keydown"
-        "@radix-ui/react-use-layout-effect"
-        "@radix-ui/react-use-prev"
-        "@radix-ui/react-use-size"
     )
     
     log_step "Checking for missing @radix-ui packages in package.json..."
