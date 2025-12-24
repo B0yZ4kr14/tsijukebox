@@ -121,6 +121,63 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ---
 
+## 🎨 Seções da Documentação
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/installation.png" width="80" alt="Installation"/>
+      <br/><strong>Instalação</strong>
+      <br/><sub>Verde Neon</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/configuration.png" width="80" alt="Configuration"/>
+      <br/><strong>Configuração</strong>
+      <br/><sub>Cyan</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/tutorials.png" width="80" alt="Tutorials"/>
+      <br/><strong>Tutoriais</strong>
+      <br/><sub>Magenta</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/development.png" width="80" alt="Development"/>
+      <br/><strong>Desenvolvimento</strong>
+      <br/><sub>Amarelo Ouro</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/api.png" width="80" alt="API"/>
+      <br/><strong>API</strong>
+      <br/><sub>Roxo</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/security.png" width="80" alt="Security"/>
+      <br/><strong>Segurança</strong>
+      <br/><sub>Laranja</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/monitoring.png" width="80" alt="Monitoring"/>
+      <br/><strong>Monitoramento</strong>
+      <br/><sub>Verde Lima</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="docs/assets/icons/testing.png" width="80" alt="Testing"/>
+      <br/><strong>Testes</strong>
+      <br/><sub>Azul Elétrico</sub>
+    </td>
+  </tr>
+</table>
+
+[📖 Ver Documentação Completa dos Ícones](docs/assets/icons/README.md)
+
+</div>
+
+---
+
 ## ✨ Features
 
 ### 🎯 Recursos Principais
