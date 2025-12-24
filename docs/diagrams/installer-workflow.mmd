@@ -1,0 +1,118 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#fbbf24', 'primaryTextColor': '#fff', 'primaryBorderColor': '#00d4ff', 'lineColor': '#00d4ff', 'secondaryColor': '#1a1a2e', 'tertiaryColor': '#16213e'}}}%%
+flowchart TD
+    subgraph INICIO["🚀 INÍCIO"]
+        START([🎵 TSiJUKEBOX Installer v7.0.0])
+        MODE{{"🎮 Modo de Instalação"}}
+        START --> MODE
+        MODE -->|full| FULL[🎵 Full - Completo]
+        MODE -->|kiosk| KIOSK[🖥️ Kiosk - Touch]
+        MODE -->|server| SERVER[🖧 Server - Headless]
+        MODE -->|minimal| MINIMAL[⚡ Minimal - Essencial]
+    end
+
+    subgraph FASE1["📊 FASE 1-2: ANÁLISE"]
+        F1[/"1️⃣ Análise de Hardware"/]
+        F1_DETAIL["CPU • RAM • GPU • Disco"]
+        F2[/"2️⃣ Verificação do Sistema"/]
+        F2_DETAIL["pacman • AUR helper • Dependências"]
+        F1 --> F1_DETAIL --> F2 --> F2_DETAIL
+    end
+
+    subgraph FASE2["🔧 FASE 3-7: CORE"]
+        F3[/"3️⃣ Node.js & npm"/]
+        F4[/"4️⃣ Firewall (UFW)"/]
+        F5[/"5️⃣ NTP Sync"/]
+        F6[/"6️⃣ Fontes"/]
+        F7[/"7️⃣ Áudio (PipeWire)"/]
+        F3 --> F4 --> F5 --> F6 --> F7
+    end
+
+    subgraph FASE3["💾 FASE 8-11: INFRAESTRUTURA"]
+        F8[/"8️⃣ Supabase DB"/]
+        F9[/"9️⃣ Nginx Proxy"/]
+        F10[/"🔟 Monitoring"/]
+        F10_DETAIL["Grafana • Prometheus"]
+        F11[/"1️⃣1️⃣ Cloud Backup"/]
+        F11_DETAIL["rclone"]
+        F8 --> F9 --> F10 --> F10_DETAIL --> F11 --> F11_DETAIL
+    end
+
+    subgraph FASE4["🎵 FASE 12-14: SPOTIFY STACK"]
+        F12[/"1️⃣2️⃣ Spotify Client"/]
+        F13[/"1️⃣3️⃣ Spicetify"/]
+        F13_DETAIL["Temas • Extensões"]
+        F14[/"1️⃣4️⃣ Spotify CLI"/]
+        F14_DETAIL["spotify-tui • spotifyd"]
+        F12 --> F13 --> F13_DETAIL --> F14 --> F14_DETAIL
+    end
+
+    subgraph FASE5["🖥️ FASE 15-18: AMBIENTE"]
+        F15[/"1️⃣5️⃣ Kiosk Mode"/]
+        F15_DETAIL["Openbox • Chromium"]
+        F16[/"1️⃣6️⃣ Voice Control"/]
+        F17[/"1️⃣7️⃣ Dev Tools"/]
+        F18[/"1️⃣8️⃣ Autologin"/]
+        F15 --> F15_DETAIL --> F16 --> F17 --> F18
+    end
+
+    subgraph FASE6["📦 FASE 19-21: APLICAÇÃO"]
+        F19[/"1️⃣9️⃣ Git Clone"/]
+        F19_DETAIL["github.com/B0yZ4kr14/TSiJUKEBOX"]
+        F20[/"2️⃣0️⃣ Frontend Build"/]
+        F20_DETAIL["npm install • npm run build"]
+        F21[/"2️⃣1️⃣ Systemd Services"/]
+        F19 --> F19_DETAIL --> F20 --> F20_DETAIL --> F21
+    end
+
+    subgraph FASE7["🔒 FASE 22-26: FINALIZAÇÃO"]
+        F22[/"2️⃣2️⃣ SSL Setup"/]
+        F22_DETAIL{{"SSL Mode"}}
+        F22_SELF["Self-Signed"]
+        F22_LE["Let's Encrypt"]
+        F23[/"2️⃣3️⃣ Avahi/mDNS"/]
+        F24[/"2️⃣4️⃣ Fish Shell"/]
+        F25[/"2️⃣5️⃣ GitHub CLI"/]
+        F26[/"2️⃣6️⃣ Verificação Final"/]
+        F22 --> F22_DETAIL
+        F22_DETAIL -->|self-signed| F22_SELF --> F23
+        F22_DETAIL -->|letsencrypt| F22_LE --> F23
+        F23 --> F24 --> F25 --> F26
+    end
+
+    subgraph FIM["✅ CONCLUSÃO"]
+        VERIFY{{"Verificação OK?"}}
+        SUCCESS([🎉 Instalação Completa!])
+        ROLLBACK[🔄 Rollback]
+        VERIFY -->|✅ Sim| SUCCESS
+        VERIFY -->|❌ Não| ROLLBACK
+        ROLLBACK --> F1
+    end
+
+    %% Conexões entre subgraphs
+    FULL --> F1
+    KIOSK --> F1
+    SERVER --> F1
+    MINIMAL --> F1
+    
+    F2_DETAIL --> F3
+    F7 --> F8
+    F11_DETAIL --> F12
+    F14_DETAIL --> F15
+    F18 --> F19
+    F21 --> F22
+    F26 --> VERIFY
+
+    %% Estilos
+    classDef inicio fill:#1a1a2e,stroke:#fbbf24,stroke-width:2px,color:#fff
+    classDef fase fill:#16213e,stroke:#00d4ff,stroke-width:2px,color:#fff
+    classDef detail fill:#0f3460,stroke:#00d4ff,stroke-width:1px,color:#ccc
+    classDef decision fill:#e94560,stroke:#fff,stroke-width:2px,color:#fff
+    classDef success fill:#22c55e,stroke:#fff,stroke-width:2px,color:#fff
+    classDef rollback fill:#ef4444,stroke:#fff,stroke-width:2px,color:#fff
+
+    class START,MODE,FULL,KIOSK,SERVER,MINIMAL inicio
+    class F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26 fase
+    class F1_DETAIL,F2_DETAIL,F10_DETAIL,F11_DETAIL,F13_DETAIL,F14_DETAIL,F15_DETAIL,F19_DETAIL,F20_DETAIL,F22_SELF,F22_LE detail
+    class VERIFY,F22_DETAIL decision
+    class SUCCESS success
+    class ROLLBACK rollback

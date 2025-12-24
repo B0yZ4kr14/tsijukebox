@@ -1,45 +1,86 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+/**
+ * TSiJUKEBOX Theme Context v2.0
+ * 
+ * Sistema de temas refatorado com 5 temas oficiais:
+ * 1. Cosmic Player - Visual aurora cósmico
+ * 2. Karaoke Stage - Visual de palco
+ * 3. Dashboard Home - Visual moderno com cards
+ * 4. Spotify Integration - Visual verde Spotify
+ * 5. Settings Dark - Visual escuro minimalista
+ */
+
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { Language } from '@/i18n';
 import { setHighContrast as applyHighContrast, setReducedMotion as applyReducedMotion } from '@/lib/theme-utils';
+import { 
+  type ThemeName, 
+  type Theme, 
+  themes, 
+  defaultTheme, 
+  getTheme,
+  generateCSSVariables 
+} from '@/lib/themes';
 
-export type ThemeColor = 'blue' | 'green' | 'purple' | 'orange' | 'pink' | 'custom';
+// ============================================================================
+// TIPOS
+// ============================================================================
+
 export type ThemeMode = 'dark' | 'light' | 'system';
 
+// Re-export ThemeName para compatibilidade
+export type { ThemeName };
+
+// Manter compatibilidade com código antigo
+export type ThemeColor = ThemeName;
+
 interface ThemeContextType {
-  theme: ThemeColor;
-  setTheme: (theme: ThemeColor) => void;
+  // Novo sistema de temas
+  themeName: ThemeName;
+  setThemeName: (name: ThemeName) => void;
+  currentTheme: Theme;
+  availableThemes: Theme[];
+  
+  // Compatibilidade com código antigo
+  theme: ThemeName;
+  setTheme: (theme: ThemeName) => void;
+  
+  // Modo claro/escuro
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => void;
+  isDarkMode: boolean;
+  
+  // Idioma
   language: Language;
   setLanguage: (lang: Language) => void;
+  
+  // Feedback
   soundEnabled: boolean;
   setSoundEnabled: (value: boolean) => void;
   animationsEnabled: boolean;
   setAnimationsEnabled: (value: boolean) => void;
+  
+  // Acessibilidade
   highContrast: boolean;
   setHighContrast: (value: boolean) => void;
   reducedMotion: boolean;
   setReducedMotion: (value: boolean) => void;
-  isDarkMode: boolean;
 }
 
-const LANGUAGE_STORAGE_KEY = 'tsi_jukebox_language';
-const THEME_STORAGE_KEY = 'tsi_jukebox_theme';
-const THEME_MODE_STORAGE_KEY = 'tsi_jukebox_theme_mode';
-const FEEDBACK_STORAGE_KEY = 'tsi_jukebox_feedback';
-const ACCESSIBILITY_STORAGE_KEY = 'tsi_jukebox_accessibility';
+// ============================================================================
+// CONSTANTES
+// ============================================================================
 
-interface FeedbackSettings {
-  soundEnabled: boolean;
-  animationsEnabled: boolean;
-}
+const STORAGE_KEYS = {
+  THEME: 'tsi_jukebox_theme_v2',
+  THEME_MODE: 'tsi_jukebox_theme_mode',
+  LANGUAGE: 'tsi_jukebox_language',
+  FEEDBACK: 'tsi_jukebox_feedback',
+  ACCESSIBILITY: 'tsi_jukebox_accessibility',
+} as const;
 
-interface AccessibilitySettings {
-  highContrast: boolean;
-  reducedMotion: boolean;
-}
-
-const ThemeContext = createContext<ThemeContextType | null>(null);
+// ============================================================================
+// HELPERS
+// ============================================================================
 
 function loadFromStorage<T>(key: string, defaultValue: T): T {
   try {
@@ -73,19 +114,59 @@ function getSystemPrefersHighContrast(): boolean {
   return window.matchMedia?.('(prefers-contrast: more)').matches ?? false;
 }
 
+function migrateOldTheme(oldTheme: string): ThemeName {
+  // Migrar temas antigos para novos
+  const migrationMap: Record<string, ThemeName> = {
+    'blue': 'cosmic-player',
+    'green': 'spotify-integration',
+    'purple': 'karaoke-stage',
+    'orange': 'dashboard-home',
+    'pink': 'karaoke-stage',
+    'custom': 'settings-dark',
+  };
+  
+  return migrationMap[oldTheme] || defaultTheme;
+}
+
+// ============================================================================
+// CONTEXT
+// ============================================================================
+
+const ThemeContext = createContext<ThemeContextType | null>(null);
+
+// ============================================================================
+// PROVIDER
+// ============================================================================
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeColor>(() => {
+  // Estado do tema
+  const [themeName, setThemeNameState] = useState<ThemeName>(() => {
     try {
-      const stored = localStorage.getItem(THEME_STORAGE_KEY);
-      return (stored as ThemeColor) || 'blue';
+      // Tentar carregar tema novo
+      const storedNew = localStorage.getItem(STORAGE_KEYS.THEME);
+      if (storedNew) {
+        const parsed = JSON.parse(storedNew);
+        if (themes[parsed as ThemeName]) {
+          return parsed as ThemeName;
+        }
+      }
+      
+      // Migrar tema antigo se existir
+      const storedOld = localStorage.getItem('tsi_jukebox_theme');
+      if (storedOld) {
+        const migrated = migrateOldTheme(storedOld);
+        saveToStorage(STORAGE_KEYS.THEME, migrated);
+        return migrated;
+      }
     } catch {
-      return 'blue';
+      // Ignore errors
     }
+    return defaultTheme;
   });
 
   const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
     try {
-      const stored = localStorage.getItem(THEME_MODE_STORAGE_KEY);
+      const stored = localStorage.getItem(STORAGE_KEYS.THEME_MODE);
       return (stored as ThemeMode) || 'dark';
     } catch {
       return 'dark';
@@ -94,49 +175,68 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const [language, setLanguageState] = useState<Language>(() => {
     try {
-      const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      const stored = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
       return (stored as Language) || 'pt-BR';
     } catch {
       return 'pt-BR';
     }
   });
 
-  const [feedbackSettings, setFeedbackSettings] = useState<FeedbackSettings>(() => 
-    loadFromStorage(FEEDBACK_STORAGE_KEY, { soundEnabled: true, animationsEnabled: true })
+  const [feedbackSettings, setFeedbackSettings] = useState(() => 
+    loadFromStorage(STORAGE_KEYS.FEEDBACK, { soundEnabled: true, animationsEnabled: true })
   );
 
-  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>(() => {
-    const saved = loadFromStorage<AccessibilitySettings | null>(ACCESSIBILITY_STORAGE_KEY, null);
+  const [accessibilitySettings, setAccessibilitySettings] = useState(() => {
+    const saved = loadFromStorage<{ highContrast: boolean; reducedMotion: boolean } | null>(
+      STORAGE_KEYS.ACCESSIBILITY, 
+      null
+    );
     if (saved) return saved;
-    // Use system preferences as defaults
     return {
       highContrast: getSystemPrefersHighContrast(),
       reducedMotion: getSystemPrefersReducedMotion(),
     };
   });
 
-  // Compute actual dark mode based on themeMode
+  // Computed values
+  const currentTheme = useMemo(() => getTheme(themeName), [themeName]);
+  const availableThemes = useMemo(() => Object.values(themes), []);
   const isDarkMode = themeMode === 'dark' || (themeMode === 'system' && getSystemPrefersDark());
 
-  // Apply theme to document
+  // Aplicar CSS variables do tema
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    const cssVars = generateCSSVariables(currentTheme);
+    const style = document.createElement('style');
+    style.id = 'tsi-theme-vars';
+    style.textContent = `:root { ${cssVars} }`;
+    
+    // Remover estilo anterior se existir
+    const existing = document.getElementById('tsi-theme-vars');
+    if (existing) {
+      existing.remove();
+    }
+    
+    document.head.appendChild(style);
+    
+    // Aplicar atributos ao documento
+    document.documentElement.setAttribute('data-theme', themeName);
+    document.documentElement.setAttribute('data-theme-name', currentTheme.displayName);
+  }, [themeName, currentTheme]);
 
-  // Apply dark/light mode
+  // Aplicar modo claro/escuro
   useEffect(() => {
     const dark = themeMode === 'dark' || (themeMode === 'system' && getSystemPrefersDark());
     document.documentElement.classList.toggle('dark', dark);
     document.documentElement.setAttribute('data-light-mode', String(!dark));
   }, [themeMode]);
 
-  // Apply accessibility settings
+  // Aplicar configurações de acessibilidade
   useEffect(() => {
     applyHighContrast(accessibilitySettings.highContrast);
     applyReducedMotion(accessibilitySettings.reducedMotion);
   }, [accessibilitySettings]);
 
-  // Listen for system preference changes
+  // Listener para mudanças de preferência do sistema
   useEffect(() => {
     if (themeMode !== 'system') return;
 
@@ -151,19 +251,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [themeMode]);
 
-  const setTheme = useCallback((newTheme: ThemeColor) => {
-    setThemeState(newTheme);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, newTheme);
-    } catch (e) {
-      console.error('Failed to save theme:', e);
+  // Callbacks
+  const setThemeName = useCallback((name: ThemeName) => {
+    if (!themes[name]) {
+      console.warn(`Theme "${name}" not found, using default`);
+      name = defaultTheme;
     }
+    setThemeNameState(name);
+    saveToStorage(STORAGE_KEYS.THEME, name);
   }, []);
 
   const setThemeMode = useCallback((mode: ThemeMode) => {
     setThemeModeState(mode);
     try {
-      localStorage.setItem(THEME_MODE_STORAGE_KEY, mode);
+      localStorage.setItem(STORAGE_KEYS.THEME_MODE, mode);
     } catch (e) {
       console.error('Failed to save theme mode:', e);
     }
@@ -172,7 +273,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     try {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+      localStorage.setItem(STORAGE_KEYS.LANGUAGE, lang);
     } catch (e) {
       console.error('Failed to save language:', e);
     }
@@ -181,7 +282,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setSoundEnabled = useCallback((value: boolean) => {
     setFeedbackSettings((prev) => {
       const updated = { ...prev, soundEnabled: value };
-      saveToStorage(FEEDBACK_STORAGE_KEY, updated);
+      saveToStorage(STORAGE_KEYS.FEEDBACK, updated);
       return updated;
     });
   }, []);
@@ -189,7 +290,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setAnimationsEnabled = useCallback((value: boolean) => {
     setFeedbackSettings((prev) => {
       const updated = { ...prev, animationsEnabled: value };
-      saveToStorage(FEEDBACK_STORAGE_KEY, updated);
+      saveToStorage(STORAGE_KEYS.FEEDBACK, updated);
       return updated;
     });
   }, []);
@@ -197,7 +298,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setHighContrast = useCallback((value: boolean) => {
     setAccessibilitySettings((prev) => {
       const updated = { ...prev, highContrast: value };
-      saveToStorage(ACCESSIBILITY_STORAGE_KEY, updated);
+      saveToStorage(STORAGE_KEYS.ACCESSIBILITY, updated);
       return updated;
     });
   }, []);
@@ -205,33 +306,71 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setReducedMotion = useCallback((value: boolean) => {
     setAccessibilitySettings((prev) => {
       const updated = { ...prev, reducedMotion: value };
-      saveToStorage(ACCESSIBILITY_STORAGE_KEY, updated);
+      saveToStorage(STORAGE_KEYS.ACCESSIBILITY, updated);
       return updated;
     });
   }, []);
 
+  // Context value
+  const value = useMemo<ThemeContextType>(() => ({
+    // Novo sistema
+    themeName,
+    setThemeName,
+    currentTheme,
+    availableThemes,
+    
+    // Compatibilidade
+    theme: themeName,
+    setTheme: setThemeName,
+    
+    // Modo
+    themeMode,
+    setThemeMode,
+    isDarkMode,
+    
+    // Idioma
+    language,
+    setLanguage,
+    
+    // Feedback
+    soundEnabled: feedbackSettings.soundEnabled,
+    setSoundEnabled,
+    animationsEnabled: feedbackSettings.animationsEnabled,
+    setAnimationsEnabled,
+    
+    // Acessibilidade
+    highContrast: accessibilitySettings.highContrast,
+    setHighContrast,
+    reducedMotion: accessibilitySettings.reducedMotion,
+    setReducedMotion,
+  }), [
+    themeName,
+    setThemeName,
+    currentTheme,
+    availableThemes,
+    themeMode,
+    setThemeMode,
+    isDarkMode,
+    language,
+    setLanguage,
+    feedbackSettings,
+    setSoundEnabled,
+    setAnimationsEnabled,
+    accessibilitySettings,
+    setHighContrast,
+    setReducedMotion,
+  ]);
+
   return (
-    <ThemeContext.Provider value={{
-      theme,
-      setTheme,
-      themeMode,
-      setThemeMode,
-      language,
-      setLanguage,
-      soundEnabled: feedbackSettings.soundEnabled,
-      setSoundEnabled,
-      animationsEnabled: feedbackSettings.animationsEnabled,
-      setAnimationsEnabled,
-      highContrast: accessibilitySettings.highContrast,
-      setHighContrast,
-      reducedMotion: accessibilitySettings.reducedMotion,
-      setReducedMotion,
-      isDarkMode,
-    }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
 }
+
+// ============================================================================
+// HOOKS
+// ============================================================================
 
 export function useTheme() {
   const context = useContext(ThemeContext);
@@ -239,4 +378,14 @@ export function useTheme() {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
+}
+
+export function useCurrentTheme() {
+  const { currentTheme } = useTheme();
+  return currentTheme;
+}
+
+export function useThemeColors() {
+  const { currentTheme } = useTheme();
+  return currentTheme.colors;
 }

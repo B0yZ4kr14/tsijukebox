@@ -9,8 +9,6 @@
 
 [![Version](https://img.shields.io/badge/version-4.2.0-00d4ff?style=for-the-badge&logo=github&logoColor=white)](docs/CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-Public%20Domain-fbbf24?style=for-the-badge&logo=unlicense&logoColor=white)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/B0yZ4kr14/TSiJUKEBOX/ci.yml?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/B0yZ4kr14/TSiJUKEBOX/actions)
-[![Coverage](https://img.shields.io/badge/coverage-70%25-22c55e?style=for-the-badge&logo=codecov&logoColor=white)](docs/testing/TEST_COVERAGE_90_ACTION_PLAN.md)
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-22c55e?style=for-the-badge&logo=accessibility&logoColor=white)](docs/ACCESSIBILITY.md)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -25,144 +23,38 @@
 
 ---
 
-## ⚡ Instalação
+## ⚡ Instalação em Um Comando
 
-### 🚀 Instalação Remota (Um Comando)
+<div align="center">
+
+### 🚀 Copie e Cole no Terminal:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
 ```
 
-> **Nota:** O comando acima baixa um shim que executa o instalador principal (`unified-installer.py`).
-
 **✅ Compatível com:** Arch Linux · CachyOS · Manjaro · EndeavourOS
 
-### 🖥️ Instalação Local
-
-```bash
-git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
-cd TSiJUKEBOX
-sudo python3 scripts/unified-installer.py
-```
+</div>
 
 ### 🎮 Modos de Instalação
 
 | Modo | Comando | Ideal Para | Recursos |
-|------|---------|------------|----------|
-| 🎵 **Full** | `--mode full` | Uso doméstico completo | Spotify + YouTube + Local + Karaoke + Dev Tools |
-| 🖥️ **Kiosk** | `--mode kiosk` | Bares, eventos, karaokês | Interface touch + Autostart + Bloqueio |
-| 🖧 **Server** | `--mode server` | Servidor headless | API REST + WebSocket + Monitoramento |
-| ⚡ **Minimal** | `--mode minimal` | Sistemas com recursos limitados | Apenas componentes essenciais |
-
-### 📋 26 Fases Automatizadas
-
-O instalador executa **26 fases** estruturadas:
-
-<details>
-<summary>Ver todas as fases</summary>
-
-| # | Fase | Descrição |
-|---|------|-----------|
-| 1 | Hardware | Análise de CPU, RAM, GPU, disco |
-| 2 | Sistema | Verificação de pacman e AUR helper |
-| 3 | Node.js | Instalação do Node.js 20.x LTS |
-| 4 | Firewall | Configuração do UFW |
-| 5 | NTP | Sincronização de tempo |
-| 6 | Fontes | Instalação de fontes do sistema |
-| 7 | Áudio | Configuração PipeWire/PulseAudio |
-| 8 | Database | Configuração Supabase |
-| 9 | Nginx | Proxy reverso |
-| 10 | Monitoring | Grafana + Prometheus |
-| 11 | Backup | rclone para nuvem |
-| 12 | Spotify | Cliente oficial |
-| 13 | Spicetify | Temas e extensões |
-| 14 | Spotify CLI | spotify-tui + spotifyd |
-| 15 | Kiosk | Openbox + Chromium |
-| 16 | Voice | Controle por voz |
-| 17 | Dev Tools | Ferramentas de desenvolvimento |
-| 18 | Autologin | Login automático |
-| 19 | Clone | Repositório GitHub |
-| 20 | Build | npm install && build |
-| 21 | Services | Systemd autostart |
-| 22 | SSL | Certificados HTTPS |
-| 23 | mDNS | Avahi |
-| 24 | Shell | Fish shell |
-| 25 | GitHub | gh CLI |
-| 26 | Verify | Verificação final |
-
-</details>
-
-### 🔧 Opções Avançadas
-
-```bash
-# Simular instalação (dry-run)
-sudo python3 unified-installer.py --dry-run
-
-# Modo kiosk para usuário específico
-sudo python3 unified-installer.py --mode kiosk --user pi
-
-# Sem Spotify e monitoramento
-sudo python3 unified-installer.py --no-spotify --no-monitoring
-
-# Com Let's Encrypt SSL
-sudo python3 unified-installer.py --ssl-mode letsencrypt --ssl-domain meudominio.com --ssl-email admin@meudominio.com
-
-# Instalação não-interativa
-sudo python3 unified-installer.py --mode full --auto -y
-```
-
-<details>
-<summary>Ver todas as opções</summary>
-
-#### Opções Gerais
-
-| Opção | Descrição |
-|-------|-----------|
-| `--mode {full,server,kiosk,minimal}` | Modo de instalação |
-| `--user USER` | Usuário do sistema (auto-detectado) |
-| `--dry-run` | Simular sem fazer alterações |
-| `--verbose, -v` | Saída detalhada |
-| `--quiet, -q` | Saída mínima |
-| `--auto, -y` | Modo não-interativo |
-
-#### Opções de Skip
-
-| Opção | Descrição |
-|-------|-----------|
-| `--no-nodejs` | Não instalar Node.js |
-| `--no-ufw` | Não configurar firewall |
-| `--no-nginx` | Não instalar Nginx |
-| `--no-monitoring` | Não instalar Grafana/Prometheus |
-| `--no-spotify` | Não instalar Spotify |
-| `--no-ssl` | Não configurar SSL |
-
-#### Opções de SSL
-
-| Opção | Descrição |
-|-------|-----------|
-| `--ssl-mode {self-signed,letsencrypt}` | Tipo de certificado |
-| `--ssl-domain DOMAIN` | Domínio para SSL (padrão: midiaserver.local) |
-| `--ssl-email EMAIL` | Email para Let's Encrypt |
-
-#### Opções de Configuração
-
-| Opção | Descrição |
-|-------|-----------|
-| `--supabase-url URL` | URL do Supabase |
-| `--supabase-key KEY` | Chave do Supabase |
-| `--timezone TIMEZONE` | Timezone (padrão: America/Sao_Paulo) |
-
-</details>
+| ---- | ------- | ---------- | -------- |
+| 🎵 **Completo** | `sudo python3 install.py` | Uso doméstico com tudo | Spotify + YouTube + Local + Karaoke |
+| 🖥️ **Kiosk** | `sudo python3 install.py --mode kiosk` | Bares, eventos, karaokês | Interface touch + Autostart + Bloqueio |
+| 🖧 **Server** | `sudo python3 install.py --mode server` | Servidor headless | API REST + WebSocket + Monitoramento |
 
 ### 📦 Componentes Instalados Automaticamente
 
-| Categoria | Componentes |
-|-----------|-------------|
-| **Core** | Node.js 20.x, UFW, PipeWire, Nginx |
-| **Spotify** | Spotify, Spicetify, spotify-tui, spotifyd |
-| **Monitoring** | Grafana, Prometheus, node_exporter |
-| **Kiosk** | Openbox, Chromium, Autologin |
-| **Tools** | rclone, Fish Shell, GitHub CLI, Avahi |
+| Componente | Descrição | Versão |
+| ---------- | --------- | ------ |
+| 🎵 **Spotify + Spicetify** | Player com temas customizados e extensões | Latest |
+| 📊 **Grafana + Prometheus** | Monitoramento em tempo real com dashboards | 10.x |
+| 🌐 **Nginx** | Servidor web e proxy reverso otimizado | 1.24+ |
+| 💾 **SQLite** | Banco de dados local com WAL mode | 3.40+ |
+| ⚙️ **Systemd Services** | Autostart e gerenciamento de processos | Native |
+| 🔒 **Fail2ban** | Proteção contra ataques de força bruta | 1.0+ |
 
 [📖 Guia Completo de Instalação](docs/QUICK-INSTALL.md) · [🏭 Deploy em Produção](docs/PRODUCTION-DEPLOY.md) · [🐧 CachyOS Setup](https://github.com/B0yZ4kr14/TSiJUKEBOX/wiki/Install-CachyOS)
 
@@ -291,7 +183,7 @@ sudo python3 unified-installer.py --mode full --auto -y
 ### 🎯 Recursos Principais
 
 | Feature | Descrição | Status |
-|---------|-----------|--------|
+| ------- | --------- | ------ |
 | 🎧 **Multi-Provider** | Spotify, YouTube Music, Arquivos Locais | ✅ Completo |
 | 📱 **Kiosk Mode** | Interface touch otimizada para uso público | ✅ Completo |
 | 🎤 **Karaoke Mode** | Letras sincronizadas em fullscreen | ✅ Completo |
@@ -303,22 +195,10 @@ sudo python3 unified-installer.py --mode full --auto -y
 | 📱 **PWA** | Progressive Web App com offline support | ✅ Completo |
 | 🔄 **Auto-Update** | Atualizações automáticas em background | ✅ Completo |
 
-### 🚀 Recursos Avançados
-
-| Feature | Descrição | Status |
-|---------|-----------|--------|
-| 🎉 **JAM Sessions** | Sessões colaborativas com votação em tempo real | ✅ Completo |
-| 🎙️ **Voice Control** | Controle por voz com comandos em português | ✅ Completo |
-| 🐙 **GitHub Sync** | Sincronização automática de configurações | ✅ Completo |
-| 🤖 **AI Suggestions** | Sugestões inteligentes baseadas em histórico | ✅ Completo |
-| 👆 **Touch Gestures** | Gestos touch para modo kiosk | ✅ Completo |
-| ⌨️ **Keyboard Shortcuts** | 50+ atalhos de teclado | ✅ Completo |
-| 🔔 **Discord Webhooks** | Notificações em tempo real | ✅ Completo |
-
 ### 🎵 Integrações de Música
 
 | Provider | Recursos | Autenticação |
-|----------|----------|--------------|
+| -------- | -------- | ------------ |
 | 🎵 **Spotify** | Streaming, Playlists, Spotify Connect, Letras | OAuth 2.0 |
 | 📺 **YouTube Music** | Streaming, Playlists, Mix Personalizado | OAuth 2.0 |
 | 📁 **Arquivos Locais** | MP3, FLAC, AAC, OGG, WAV, OPUS | N/A |
@@ -327,24 +207,11 @@ sudo python3 unified-installer.py --mode full --auto -y
 ### 🎮 Modos de Operação
 
 | Modo | Descrição | Casos de Uso |
-|------|-----------|--------------|
+| ---- | --------- | ------------ |
 | 🖥️ **Desktop** | Interface completa com todas as funcionalidades | Uso pessoal, estúdios |
 | 🏪 **Kiosk** | Interface simplificada e bloqueada | Bares, restaurantes, eventos |
 | 🖧 **Server** | API REST sem interface gráfica | Integração com sistemas externos |
 | 🎤 **Karaoke** | Foco em letras e fila de músicas | Karaokês, festas |
-
----
-
-## 📊 Métricas do Projeto
-
-| Métrica | Valor |
-|---------|-------|
-| 📁 **Arquivos** | 1.209 |
-| 🧩 **Componentes** | 241 |
-| 🪝 **Hooks** | 187 |
-| 📄 **Documentação** | 226 arquivos |
-| 🧪 **Testes** | 70 unit + 31 E2E |
-| ⚡ **Edge Functions** | 31 |
 
 ---
 
@@ -371,17 +238,6 @@ npm run dev
 
 Acesse **http://localhost:5173** · Login padrão: `admin` / `admin`
 
-### 🔐 Variáveis de Ambiente
-
-Copie `.env.example` para `.env` e configure:
-
-| Variável | Descrição | Obrigatório |
-|----------|-----------|-------------|
-| `VITE_SUPABASE_URL` | URL do projeto Supabase | ✅ |
-| `VITE_SUPABASE_ANON_KEY` | Chave anônima do Supabase | ✅ |
-| `VITE_SPOTIFY_CLIENT_ID` | Client ID do Spotify | ⚠️ Para Spotify |
-| `VITE_YOUTUBE_API_KEY` | API Key do YouTube | ⚠️ Para YouTube |
-
 ### 🐳 Docker (Recomendado para Produção)
 
 ```bash
@@ -392,21 +248,10 @@ docker-compose up -d
 make docker-up
 ```
 
-### 🛠️ Comandos Úteis
-
-| Comando | Descrição |
-|---------|-----------|
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run build` | Build de produção |
-| `npm run preview` | Preview do build |
-| `npm run lint` | Verificar código |
-| `npm run test` | Executar testes |
-| `npm run test:e2e` | Testes E2E (Playwright) |
-
 ### 📋 Requisitos do Sistema
 
 | Componente | Mínimo | Recomendado |
-|------------|--------|-------------|
+| ---------- | ------ | ----------- |
 | 🖥️ **OS** | Linux, Windows, macOS | CachyOS / Arch Linux |
 | ⚙️ **CPU** | 2 cores | 4+ cores |
 | 💾 **RAM** | 2 GB | 4+ GB |
@@ -419,39 +264,21 @@ make docker-up
 
 ## 🧪 Testes
 
-### 📊 Cobertura Atual
-
-| Tipo | Arquivos | Cobertura | Meta |
-|------|----------|-----------|------|
-| Unit Tests | 70 | 70% | 90% |
-| E2E Tests | 31 specs | - | 50+ |
-| Integration | 10 | 80% | 90% |
-
-### 🎯 Comandos de Teste
+### TypeScript/React
 
 | Tipo | Comando | Descrição |
-|------|---------|-----------|
+| ---- | ------- | --------- |
 | 🔬 **Unit** | `npm run test:unit` | Testes unitários com Vitest |
 | 🔗 **Integration** | `npm run test:integration` | Testes de integração |
 | 🌐 **E2E** | `npm run test:e2e` | Testes end-to-end (Playwright) |
-| 🖥️ **E2E UI** | `npm run test:e2e:ui` | Playwright UI Mode |
-| ♿ **A11y** | `npm run test:a11y` | Testes de acessibilidade |
 | 📊 **Coverage** | `npm run test:coverage` | Relatório de cobertura |
 | 🖥️ **UI** | `npm run test:ui` | Vitest UI no navegador |
 | 📋 **All** | `npm run test:all` | Executar todos os testes |
 
-### 🌐 Projetos Playwright
-
-- ✅ Chromium, Firefox, WebKit
-- ✅ Mobile (Pixel 5, iPhone 12)
-- ✅ Kiosk Mode (1080x1920)
-- ✅ Accessibility Testing
-- ✅ Performance Testing
-
-### 🐍 Python (Instalador)
+### Python (Instalador)
 
 | Tipo | Comando | Descrição |
-|------|---------|-----------|
+| ---- | ------- | --------- |
 | 🐍 **Unit** | `make test-python` | Testes unitários Python |
 | 📊 **Coverage** | `make test-python-coverage` | Cobertura Python |
 
@@ -472,7 +299,7 @@ cd scripts && pytest tests/ --cov=. --cov-report=term-missing
 ### 🎨 Frontend
 
 | Tecnologia | Versão | Propósito |
-|------------|--------|-----------|
+| ---------- | ------ | --------- |
 | ⚛️ **React** | 18.3 | UI Library |
 | 📘 **TypeScript** | 5.0 | Type Safety |
 | ⚡ **Vite** | 5.0 | Build Tool |
@@ -481,12 +308,11 @@ cd scripts && pytest tests/ --cov=. --cov-report=term-missing
 | 🎬 **Framer Motion** | 11.x | Animations |
 | 🔄 **React Query** | 5.x | Server State |
 | 🗄️ **Zustand** | 4.x | Client State |
-| 🎨 **Radix UI** | Latest | Componentes Acessíveis |
 
 ### 🖧 Backend & Infraestrutura
 
 | Tecnologia | Propósito |
-|------------|-----------|
+| ---------- | --------- |
 | ⚡ **Supabase** | Backend as a Service |
 | 🔥 **Edge Functions** | Serverless Functions |
 | 🐘 **PostgreSQL** | Database |
@@ -496,52 +322,12 @@ cd scripts && pytest tests/ --cov=. --cov-report=term-missing
 ### 🔌 Integrações
 
 | Serviço | API |
-|---------|-----|
+| ------- | --- |
 | 🎵 **Spotify** | Web API + Playback SDK |
 | 📺 **YouTube Music** | Data API v3 |
 | 🎨 **Spicetify** | CLI + Extensions |
 | 📊 **Grafana** | Dashboards |
 | 📈 **Prometheus** | Metrics |
-| 🐙 **GitHub** | API + OAuth |
-| 💬 **Discord** | Webhooks |
-
-### 🔧 Ferramentas de Desenvolvimento
-
-| Ferramenta | Propósito |
-|------------|-----------|
-| 🧪 **Vitest** | Unit Testing |
-| 🎭 **Playwright** | E2E Testing |
-| ♿ **axe-core** | Accessibility Testing |
-| 📊 **Chart.js** | Visualizações |
-| 🔍 **ESLint** | Linting |
-| 💅 **Prettier** | Formatting |
-
----
-
-## 🔒 Segurança
-
-| Feature | Descrição |
-|---------|-----------|
-| 🔐 **OAuth 2.0** | Autenticação segura |
-| 🛡️ **RBAC** | 3 níveis de permissão |
-| 🔥 **UFW** | Firewall configurado |
-| 🔒 **SSL/TLS** | Certificados configuráveis |
-
-📋 [Política de Segurança](docs/SECURITY.md) · 🐛 [Reportar Vulnerabilidade](https://github.com/B0yZ4kr14/TSiJUKEBOX/security/advisories)
-
----
-
-## 🗺️ Roadmap
-
-### Q1 2025
-- [ ] Atingir 90% de cobertura de testes
-- [ ] Completar conformidade WCAG 2.1 AA
-- [ ] Lançar versão 5.0
-
-### Q2 2025
-- [ ] Integração com Apple Music
-- [ ] App mobile nativo (React Native)
-- [ ] Marketplace de temas
 
 ---
 
@@ -564,21 +350,6 @@ R: Após o primeiro login com `admin`/`admin`, acesse **Configurações > Segura
 **P: O instalador funciona em outras distribuições Linux?**
 
 R: O instalador automático é otimizado para Arch Linux e derivados. Para outras distribuições, consulte o [Guia de Instalação Manual](docs/INSTALLATION.md).
-
-**P: Como configuro as JAM Sessions?**
-
-R: Acesse **Configurações > JAM Sessions** e configure:
-- Número máximo de participantes
-- Sistema de votação
-- Integração com Discord
-
-**P: O sistema suporta controle por voz?**
-
-R: Sim! Ative em **Configurações > Acessibilidade > Controle por Voz**. Comandos disponíveis: "reproduzir", "pausar", "próxima", "anterior", "volume".
-
-**P: Como sincronizo com GitHub?**
-
-R: Acesse **Configurações > Integrações > GitHub** e autorize o acesso. O sistema fará backup automático das configurações.
 
 ---
 
@@ -630,49 +401,16 @@ R: Consulte o [Guia de Instalação CachyOS](https://github.com/B0yZ4kr14/TSiJUK
 
 ## 📚 Documentação Completa
 
-### 📖 Guias Principais
-
 | Documento | Descrição |
-|-----------|-----------|
-| 🚀 [Getting Started](docs/guides/GETTING_STARTED.md) | Primeiros passos |
-| 🏗️ [Developer Guide](docs/guides/DEVELOPER_GUIDE.md) | Guia do desenvolvedor |
-| 🏭 [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) | Deploy em produção |
-| 📚 [Wiki Completa](docs/WIKI.md) | Documentação detalhada |
-
-### 🎨 Design e Arquitetura
-
-| Documento | Descrição |
-|-----------|-----------|
-| 🎨 [Design System](docs/DESIGN_SYSTEM.md) | Tokens e componentes |
-| 🏛️ [Architecture](docs/ARCHITECTURE.md) | Arquitetura do sistema |
-| 🪝 [Hooks Architecture](docs/HOOKS-ARCHITECTURE.md) | Arquitetura de hooks |
-| 🎨 [Color Tokens](docs/COLOR_TOKENS_MAPPING.md) | Mapeamento de cores |
-
-### ♿ Acessibilidade
-
-| Documento | Descrição |
-|-----------|-----------|
-| ♿ [Accessibility](docs/ACCESSIBILITY.md) | Visão geral |
-| 📋 [WCAG Compliance](docs/accessibility/WCAG_COMPLIANCE.md) | Conformidade WCAG |
-| 🏷️ [ARIA Guide](docs/accessibility/ARIA_IMPLEMENTATION_GUIDE.md) | Implementação ARIA |
-| ⌨️ [Keyboard Navigation](docs/accessibility/KEYBOARD_NAVIGATION.md) | Navegação por teclado |
-
-### 🧪 Testes
-
-| Documento | Descrição |
-|-----------|-----------|
-| 📋 [Test Plan](docs/testing/TEST_COVERAGE_90_ACTION_PLAN.md) | Plano de cobertura 90% |
-| 🌐 [E2E Tests](docs/testing/E2E_TESTS.md) | Testes end-to-end |
-| 🔬 [Unit Tests](docs/testing/UNIT_TESTS.md) | Testes unitários |
-
-### 📊 Análises
-
-| Documento | Descrição |
-|-----------|-----------|
-| 📊 [Complete Analysis](docs/COMPLETE_REPOSITORY_ANALYSIS.md) | Análise completa do repositório |
-| 🎨 [Color Refactor](docs/COLOR_REFACTOR_REPORT.md) | Relatório de refatoração de cores |
-| 🔐 [Security](docs/SECURITY.md) | Políticas de segurança |
-| 🔄 [Changelog](docs/CHANGELOG.md) | Histórico de versões |
+| --------- | --------- |
+| 🚀 [Guia de Introdução](docs/guides/GETTING_STARTED.md) | Comece a usar o TSiJUKEBOX rapidamente. |
+| 🏗️ [Guia do Desenvolvedor](docs/guides/DEVELOPER_GUIDE.md) | Detalhes da arquitetura e como contribuir. |
+| 🏭 [Guia de Deploy](docs/guides/DEPLOYMENT_GUIDE.md) | Implantação em ambientes de produção. |
+| 📚 [Wiki Completa](docs/WIKI.md) | Documentação detalhada de todos os recursos. |
+| 🎨 [Design System](docs/DESIGN_SYSTEM.md) | Tokens, componentes e padrões visuais. |
+| 🔐 [Segurança](docs/SECURITY.md) | Políticas e práticas de segurança. |
+| ♿ [Acessibilidade](docs/ACCESSIBILITY.md) | Conformidade com as diretrizes WCAG 2.1 AA. |
+| 🔄 [Changelog](docs/CHANGELOG.md) | Histórico completo de versões e alterações. |
 
 ---
 
@@ -686,18 +424,7 @@ Contribuições são bem-vindas! Siga os passos:
 4. 📤 Push para a branch (`git push origin feature/AmazingFeature`)
 5. 🔀 Abra um Pull Request
 
-### 🎯 Como Contribuir
-
-| Tipo | Descrição |
-|------|-----------|
-| 🐛 **Bug Fix** | Corrigir bugs existentes |
-| ✨ **Feature** | Adicionar novas funcionalidades |
-| 📖 **Docs** | Melhorar documentação |
-| 🧪 **Tests** | Adicionar testes |
-| ♿ **A11y** | Melhorar acessibilidade |
-| 🌐 **i18n** | Adicionar traduções |
-
-**📋 [Guia de Contribuição](CONTRIBUTING.md)** · **📜 [Code of Conduct](CODE_OF_CONDUCT.md)** · **🐛 [Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)**
+**📋 [Guia de Contribuição](CONTRIBUTING.md)** · **🎨 [Code Style Guide](docs/CODE-STYLE.md)** · **🐛 [Report Bug](https://github.com/B0yZ4kr14/TSiJUKEBOX/issues)**
 
 ---
 
@@ -831,4 +558,13 @@ Agradecimentos especiais a todos os contribuidores e à comunidade open source:
 [![Fork this repo](https://img.shields.io/github/forks/B0yZ4kr14/tsijukebox?style=social)](https://github.com/B0yZ4kr14/tsijukebox/fork)
 [![Watch this repo](https://img.shields.io/github/watchers/B0yZ4kr14/tsijukebox?style=social)](https://github.com/B0yZ4kr14/tsijukebox)
 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
