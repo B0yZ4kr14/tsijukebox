@@ -605,14 +605,17 @@ class UnifiedInstaller:
         
         # Verificar se já está instalado
         if self.validator.check_command("node"):
-            code, out, _ = run_command(["node", "--version"])
-            version = out.strip()
+            code, out, _ = run_command(["node", "--version"], dry_run=self.config.dry_run)
+            version = out.strip() if out.strip() else "v22.0.0"  # Default para dry-run
             self.logger.info(f"Node.js já instalado: {version}")
             
             # Verificar versão mínima (v18)
-            version_num = int(version.replace('v', '').split('.')[0])
-            if version_num < 18:
-                self.logger.warning("Versão do Node.js é antiga. Recomendado: v18+")
+            try:
+                version_num = int(version.replace('v', '').split('.')[0])
+                if version_num < 18:
+                    self.logger.warning("Versão do Node.js é antiga. Recomendado: v18+")
+            except (ValueError, IndexError):
+                self.logger.debug("Não foi possível verificar versão do Node.js")
         else:
             # Instalar Node.js
             self.logger.info("Instalando Node.js e npm...")
@@ -1362,9 +1365,12 @@ AutomaticLogin={self.system_info.user}
         phase_num = self._next_phase()
         self.logger.step(phase_num, TOTAL_PHASES, InstallPhase.FRONTEND_BUILD.value)
         
-        if not INSTALL_DIR.exists():
+        if not self.config.dry_run and not INSTALL_DIR.exists():
             self.logger.error(f"Diretório {INSTALL_DIR} não existe.")
             return False
+        
+        if self.config.dry_run:
+            self.logger.info(f"[DRY-RUN] Diretório {INSTALL_DIR} seria criado na fase anterior.")
         
         # Criar arquivo .env
         env_file = INSTALL_DIR / ".env"
@@ -1711,7 +1717,7 @@ end
             "Node.js": self.validator.check_command("node"),
             "npm": self.validator.check_command("npm"),
             "Nginx": self.validator.check_service("nginx"),
-            "Repositório": INSTALL_DIR.exists(),
+            "Repositório": INSTALL_DIR.exists() if not self.config.dry_run else True,
             "Build": (INSTALL_DIR / "dist").exists() if not self.config.dry_run else True,
         }
         
