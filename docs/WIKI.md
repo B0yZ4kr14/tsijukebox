@@ -27,6 +27,13 @@ O TSiJUKEBOX é um sistema completo de jukebox digital com suporte a múltiplas 
 - [Cloud Backup](wiki/Config-Cloud-Backup.md) - Backup na nuvem
 - [Shell (Fish)](wiki/Shell-Configuration.md) - Configuração do Fish Shell
 
+### 🗄️ Bancos de Dados
+- [SQLite](database/SQLITE.md) - Banco de dados padrão (embarcado)
+- [MariaDB/MySQL](database/MARIADB_MYSQL.md) - Banco de dados cliente-servidor
+- [PostgreSQL](database/POSTGRESQL.md) - Banco de dados avançado
+- [Firebird](database/FIREBIRD.md) - Banco de dados leve e flexível
+- [Migrações](database/MIGRATIONS.md) - Sistema de migrações
+
 ### 🎵 Integrações de Música
 - [Spotify](integrations/SPOTIFY_API.md) - Integração com Spotify
 - [YouTube Music](integrations/YOUTUBE_API.md) - Integração com YouTube Music
@@ -91,12 +98,27 @@ O TSiJUKEBOX é um sistema completo de jukebox digital com suporte a múltiplas 
 - [ThemeContext](contexts/THEMECONTEXT.md) - Contexto de temas
 
 ### 🔌 Integrações
+
+#### Música e Mídia
 - [Spotify API](integrations/SPOTIFY_API.md) - Integração com a API do Spotify
 - [YouTube API](integrations/YOUTUBE_API.md) - Integração com a API do YouTube
-- [Discord Webhooks](integrations/DISCORD_WEBHOOKS.md) - Integração com Webhooks do Discord
 - [Arquivos Locais](integrations/LOCAL_FILES.md) - Integração com o sistema de arquivos local
-- [Grafana API](integrations/GRAFANA_API.md) - Integração com a API do Grafana
-- [Supabase API](integrations/SUPABASE_API.md) - Integração com a API do Supabase
+
+#### Cloud Storage
+- [Storj](integrations/STORJ_API.md) - Armazenamento descentralizado
+- [Google Drive](integrations/GOOGLE_DRIVE_API.md) - Backup via Google Drive
+- [OneDrive](integrations/ONEDRIVE_API.md) - Backup via OneDrive
+- [Dropbox](integrations/DROPBOX_API.md) - Backup via Dropbox
+- [MEGA](integrations/MEGA_API.md) - Backup via MEGA.nz
+
+#### Monitoramento e Alertas
+- [Prometheus](integrations/PROMETHEUS_API.md) - Métricas e monitoramento
+- [Grafana API](integrations/GRAFANA_API.md) - Dashboards e visualização
+- [Discord Webhooks](integrations/DISCORD_WEBHOOKS.md) - Alertas via Discord
+
+#### Backend e Infraestrutura
+- [Supabase API](integrations/SUPABASE_API.md) - Backend as a Service
+- [GitHub Integration](integrations/GITHUB_INTEGRATION.md) - CI/CD e sincronização
 
 ### 📄 Páginas
 - [Dashboard](pages/DASHBOARD_PAGE.md) - Página do Dashboard
@@ -139,6 +161,7 @@ O TSiJUKEBOX é um sistema completo de jukebox digital com suporte a múltiplas 
 
 ### 📊 Monitoramento
 - [Monitoramento](MONITORING.md) - Sistema de monitoramento
+- [Prometheus](integrations/PROMETHEUS_API.md) - Coleta de métricas
 - [Grafana Setup](GRAFANA-SETUP.md) - Configuração do Grafana
 - [Logs](LOGGER.md) - Sistema de logs
 
@@ -169,15 +192,16 @@ O TSiJUKEBOX é um sistema completo de jukebox digital com suporte a múltiplas 
 - [Backend Endpoints](BACKEND-ENDPOINTS.md) - Endpoints do backend
 - [Dev API Reference](wiki/Dev-API-Reference.md) - API para desenvolvedores
 
-### 📦 Dependências
+### 📦 Dependências e Ferramentas
 - [Dependencies Reference](wiki/Dependencies-Reference.md) - Referência de dependências
 - [Dependencies Audit](DEPENDENCIES-AUDIT.md) - Auditoria de dependências
+- [Developer Tools](tooling/DEVELOPER_TOOLS.md) - Scripts e ferramentas de desenvolvimento
 - [AUR Publishing](AUR-PUBLISHING.md) - Publicação no AUR
 
 ### 🔐 Segurança
 - [Segurança](SECURITY.md) - Guia de segurança
 - [CI/CD](CI-CD.md) - Pipeline de CI/CD
-- [GitHub Integration](GITHUB-INTEGRATION.md) - Integração com GitHub
+- [GitHub Integration](integrations/GITHUB_INTEGRATION.md) - Integração com GitHub
 
 ---
 
