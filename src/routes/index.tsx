@@ -105,6 +105,8 @@ const Install = lazy(() => import('@/pages/public/Install'));
 const Help = lazy(() => import('@/pages/public/Help'));
 const Wiki = lazy(() => import('@/pages/public/Wiki'));
 const LandingPage = lazy(() => import('@/pages/public/LandingPage'));
+const About = lazy(() => import('@/pages/public/About'));
+const DesignSystem = lazy(() => import('@/pages/public/DesignSystem'));
 
 // --- Páginas de Settings ---
 const Settings = lazy(() => import('@/pages/settings/Settings'));
@@ -192,6 +194,8 @@ export const publicRoutes: RouteConfig[] = [
   { path: '/help', element: <Help /> },
   { path: '/wiki', element: <Wiki /> },
   { path: '/landing', element: <LandingPage /> },
+  { path: '/about', element: <About /> },
+  { path: '/design-system', element: <DesignSystem /> },
   
   // --- Acessibilidade ---
   { path: '/wcag-exceptions', element: <WcagExceptions /> },

@@ -47,6 +47,7 @@ import { VolumeNormalizationSection } from '@/components/settings/VolumeNormaliz
 import { VoiceControlSection } from '@/components/settings/VoiceControlSection';
 import { BackupManager } from '@/components/settings/backup';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
+import { SectionIconsShowcase } from '@/components/ui/SectionIconsShowcase';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
 import { SettingsBreadcrumb } from '@/components/settings/SettingsBreadcrumb';
 
@@ -214,6 +215,15 @@ export default function Settings() {
                   <Label className="text-kiosk-text">Download da Logo</Label>
                 </div>
                 <LogoDownload compact showPreview={false} />
+              </div>
+
+              {/* Section Icons Showcase */}
+              <div className="mt-6 pt-6 border-t border-kiosk-border">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-accent-cyan" />
+                  <Label className="text-kiosk-text">Ícones das Seções</Label>
+                </div>
+                <SectionIconsShowcase variant="grid" />
               </div>
             </SettingsSection>
           </>
