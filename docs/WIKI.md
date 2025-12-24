@@ -33,6 +33,7 @@ O TSiJUKEBOX é um sistema completo de jukebox digital com suporte a múltiplas 
 - [PostgreSQL](database/POSTGRESQL.md) - Banco de dados avançado
 - [Firebird](database/FIREBIRD.md) - Banco de dados leve e flexível
 - [Migrações](database/MIGRATIONS.md) - Sistema de migrações
+- [Comparação Técnica](database/COMPARISON.md) - Análise comparativa de escalabilidade e migração
 
 ### 🎵 Integrações de Música
 - [Spotify](integrations/SPOTIFY_API.md) - Integração com Spotify

@@ -133,3 +133,102 @@ services:
 volumes:
   prometheus-data:
 ```
+
+
+---
+
+## 6. Exemplo Prático: Monitorando Conexões do PostgreSQL
+
+Para ilustrar como o Prometheus pode ser usado para monitorar um dos bancos de dados do TSiJUKEBOX, vamos configurar o monitoramento do **PostgreSQL**.
+
+### Passo 1: Instalar o `postgres_exporter`
+
+O `postgres_exporter` é uma ferramenta que se conecta ao PostgreSQL, coleta métricas e as expõe em um endpoint HTTP que o Prometheus pode "raspar" (scrape).
+
+```bash
+# Baixar e instalar o exporter
+wget https://github.com/prometheus-community/postgres_exporter/releases/download/v0.15.0/postgres_exporter-0.15.0.linux-amd64.tar.gz
+tar -xvf postgres_exporter-0.15.0.linux-amd64.tar.gz
+sudo mv postgres_exporter-0.15.0.linux-amd64/postgres_exporter /usr/local/bin/
+```
+
+### Passo 2: Criar um Usuário de Monitoramento no PostgreSQL
+
+É uma boa prática de segurança criar um usuário somente leitura para o exporter.
+
+```sql
+-- Conecte-se ao seu banco de dados PostgreSQL
+CREATE USER prometheus WITH PASSWORD 'sua_senha_segura';
+GRANT pg_monitor TO prometheus;
+```
+
+### Passo 3: Configurar e Iniciar o `postgres_exporter`
+
+Crie um arquivo de serviço do systemd para o exporter em `/etc/systemd/system/postgres_exporter.service`.
+
+```ini
+[Unit]
+Description=Prometheus Exporter for PostgreSQL
+
+[Service]
+User=prometheus
+Group=prometheus
+Environment="DATA_SOURCE_NAME=postgresql://prometheus:sua_senha_segura@localhost:5432/jukebox?sslmode=disable"
+ExecStart=/usr/local/bin/postgres_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Depois, inicie e habilite o serviço:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start postgres_exporter
+sudo systemctl enable postgres_exporter
+```
+
+O exporter agora estará expondo as métricas na porta `9187`.
+
+### Passo 4: Configurar o Prometheus para Coletar as Métricas
+
+Adicione um novo `job` ao seu arquivo de configuração do Prometheus (`prometheus.yml`):
+
+```yaml
+scrape_configs:
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:9187']
+```
+
+Reinicie o Prometheus. Agora ele começará a coletar as métricas do PostgreSQL.
+
+### Passo 5: Visualizar e Alertar no Grafana
+
+Com os dados no Prometheus, você pode criar dashboards no Grafana para visualizar as métricas. Algumas métricas importantes do PostgreSQL para monitorar são:
+
+-   `pg_stat_activity_count{datname="jukebox", state="active"}`: Número de conexões ativas no banco de dados `jukebox`.
+-   `pg_stat_database_xact_commit{datname="jukebox"}`: Número total de transações que foram commitadas.
+-   `pg_locks_count{datname="jukebox", mode="ExclusiveLock"}`: Número de locks exclusivos, que podem indicar contenção.
+-   `pg_postmaster_uptime_seconds`: Tempo que o servidor PostgreSQL está no ar.
+
+**Exemplo de Alerta (Prometheus `alert.rules.yml`):**
+
+Este alerta dispara se o número de conexões ativas no banco de dados `jukebox` exceder 50 por mais de 5 minutos.
+
+```yaml
+groups:
+- name: postgresql.rules
+  rules:
+  - alert: HighPostgresConnections
+    expr: pg_stat_activity_count{datname="jukebox", state="active"} > 50
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Muitas conexões ativas no PostgreSQL"
+      description: "O banco de dados {{ $labels.datname }} tem mais de 50 conexões ativas por mais de 5 minutos."
+```
+
+Este exemplo prático demonstra o fluxo completo: **Banco de Dados -> Exporter -> Prometheus -> Grafana/Alertmanager**, criando um sistema de monitoramento robusto para a infraestrutura do TSiJUKEBOX.
