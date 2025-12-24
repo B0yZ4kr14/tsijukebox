@@ -1,6 +1,6 @@
 # Relatório de Refatoração de Cores Hardcoded
 
-> **Gerado em:** 24/12/2025 01:59  
+> **Gerado em:** 24/12/2025 02:02  
 > **Total de Ocorrências:** 360  
 > **Com Sugestão:** 311  
 > **Sem Sugestão:** 49
