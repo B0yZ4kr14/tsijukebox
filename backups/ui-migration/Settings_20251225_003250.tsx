@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Download, Sparkles } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-;
-;
-;
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-;
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LogoDownload } from '@/components/ui/LogoDownload';
@@ -50,7 +50,6 @@ import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
 import { SectionIconsShowcase } from '@/components/ui/SectionIconsShowcase';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
 import { SettingsBreadcrumb } from '@/components/settings/SettingsBreadcrumb';
-import { Badge, Button, Input, Toggle } from "@/components/ui/themed"
 
 export default function Settings() {
   const { activeCategory, setActiveCategory, categoryTitles } = useSettingsNavigation();
@@ -359,7 +358,7 @@ export default function Settings() {
                       <Button
                         type="button"
                         variant="ghost"
-                        size="xs"
+                        size="icon"
                         className="absolute right-0 top-0 h-full px-3 text-nav-neon-white hover:text-kiosk-text"
                         onClick={() => setShowClientSecret(!showClientSecret)}
                       >
@@ -514,7 +513,7 @@ export default function Settings() {
             <Link to="/">
               <Button
                 variant="ghost"
-                size="xs"
+                size="icon"
                 className="w-10 h-10 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d"
               >
                 <ArrowLeft className="w-5 h-5 text-kiosk-text" />
