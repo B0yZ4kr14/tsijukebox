@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TSiJUKEBOX - Sistema de Jukebox Inteligente com Player, Karaoke, Kiosk e integrações Spotify/YouTube">
+    <meta name="keywords" content="jukebox, karaoke, spotify, youtube, player, música">
+    <meta name="author" content="B0.y_Z4kr14">
+    <meta name="theme-color" content="#0a0a1a">
+    
+    <title>TSiJUKEBOX - Sistema de Jukebox Inteligente</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+    
+    <!-- Google Fonts - Exatamente como no tema Stage -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════
+           TSiJUKEBOX - STAGE NEON METALLIC THEME
+           Design Tokens extraídos de src/themes/stage-theme.ts
+           ═══════════════════════════════════════════════════════════════════════ */
+        
+        :root {
+            /* Background - Gradiente de palco com luzes */
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #1a0a2e;
+            --bg-tertiary: #2a1040;
+            --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #2a1040 100%);
+            --bg-spotlight: radial-gradient(ellipse at top, rgba(255, 0, 212, 0.3) 0%, transparent 50%);
+            --bg-stage: radial-gradient(ellipse at bottom, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
+            
+            /* Accent - Neon Lights */
+            --accent-cyan: #00ffff;
+            --accent-magenta: #ff00d4;
+            --accent-purple: #8a2be2;
+            --accent-pink: #ff1493;
+            --accent-gold: #ffd700;
+            --accent-lime: #00ff44;
+            
+            /* Interface Metálica */
+            --metallic-silver: #c0c0c0;
+            --metallic-chrome: #e8e8e8;
+            --metallic-steel: #71797E;
+            --metallic-brushed: linear-gradient(180deg, #e8e8e8 0%, #a0a0a0 50%, #c0c0c0 100%);
+            --metallic-dark: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 50%, #3a3a3a 100%);
+            
+            /* Texto */
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --text-highlight: #00ffff;
+            
+            /* Estados */
+            --state-success: #00ff44;
+            --state-warning: #ffd700;
+            --state-error: #ff4444;
+            --state-info: #00ffff;
+            
+            /* Glow Effects */
+            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 212, 0.6), 0 0 40px rgba(255, 0, 212, 0.3);
+            --glow-purple: 0 0 20px rgba(138, 43, 226, 0.6), 0 0 40px rgba(138, 43, 226, 0.3);
+            --glow-gold: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
+            
+            /* Tipografia */
+            --font-display: 'Bebas Neue', 'Impact', sans-serif;
+            --font-body: 'Inter', 'Roboto', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --font-lyrics: 'Poppins', 'Arial Black', sans-serif;
+            
+            /* Componentes */
+            --card-bg: rgba(26, 10, 46, 0.8);
+            --card-border: 2px solid #4a4a4a;
+            --card-radius: 12px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Reset */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Body com efeitos de palco */
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Efeitos de luz de palco */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                var(--bg-spotlight),
+                var(--bg-stage),
+                radial-gradient(ellipse 50% 80% at 0% 50%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 80% at 100% 50%, rgba(0, 255, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Grid overlay sutil */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Container principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--metallic-brushed);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: var(--glow-cyan), var(--card-shadow);
+            border: 2px solid var(--accent-cyan);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            letter-spacing: 0.1em;
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-magenta) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 255, 255, 0.5);
+            filter: drop-shadow(0 0 30px rgba(255, 0, 212, 0.3));
+        }
+        
+        .tagline {
+            font-family: var(--font-lyrics);
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--accent-cyan);
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .version-badge i {
+            color: var(--accent-lime);
+        }
+        
+        /* Badges de status */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--metallic-dark);
+            border: 1px solid #4a4a4a;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge.cyan { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .badge.magenta { border-color: var(--accent-magenta); color: var(--accent-magenta); }
+        .badge.lime { border-color: var(--accent-lime); color: var(--accent-lime); }
+        .badge.gold { border-color: var(--accent-gold); color: var(--accent-gold); }
+        
+        /* Botões estilo metálico */
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(180deg, var(--accent-cyan) 0%, #00cccc 100%);
+            color: #000000;
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(180deg, var(--accent-magenta) 0%, #cc00aa 100%);
+            color: var(--text-primary);
+            border: 2px solid var(--accent-magenta);
+            box-shadow: 0 0 15px rgba(255, 0, 212, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 0 30px rgba(255, 0, 212, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-metallic {
+            background: var(--metallic-brushed);
+            color: #1a1a1a;
+            border: 2px solid #808080;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-metallic:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           STATS SECTION
+           ═══════════════════════════════════════════════════════════════════════ */
+        .stats {
+            padding: 4rem 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-cyan), var(--card-shadow);
+            border-color: var(--accent-cyan);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card:nth-child(1) .stat-icon { color: var(--accent-cyan); }
+        .stat-card:nth-child(2) .stat-icon { color: var(--accent-magenta); }
+        .stat-card:nth-child(3) .stat-icon { color: var(--accent-purple); }
+        .stat-card:nth-child(4) .stat-icon { color: var(--accent-gold); }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           FEATURES SECTION
+           ═══════════════════════════════════════════════════════════════════════ */
+        .features {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-magenta);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--metallic-dark);
+            border: 2px solid #4a4a4a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card:nth-child(1) .feature-icon { color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        .feature-card:nth-child(2) .feature-icon { color: var(--accent-magenta); border-color: var(--accent-magenta); }
+        .feature-card:nth-child(3) .feature-icon { color: var(--accent-purple); border-color: var(--accent-purple); }
+        .feature-card:nth-child(4) .feature-icon { color: #1DB954; border-color: #1DB954; }
+        .feature-card:nth-child(5) .feature-icon { color: #FF0000; border-color: #FF0000; }
+        .feature-card:nth-child(6) .feature-icon { color: var(--accent-gold); border-color: var(--accent-gold); }
+        
+        .feature-title {
+            font-family: var(--font-lyrics);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           THEMES SHOWCASE
+           ═══════════════════════════════════════════════════════════════════════ */
+        .themes {
+            padding: 4rem 0;
+        }
+        
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .theme-card {
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-magenta), var(--card-shadow);
+        }
+        
+        .theme-preview {
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-preview.cosmic { background: linear-gradient(135deg, #09090B, #1a1a2e, #2a1a3e); }
+        .theme-preview.karaoke { background: linear-gradient(135deg, #1a0a2e, #2a1040, #3a1050); }
+        .theme-preview.stage { background: linear-gradient(135deg, #0a0a1a, #1a0a2e, #2a1040); }
+        .theme-preview.dashboard { background: linear-gradient(135deg, #0f172a, #1e293b, #334155); }
+        .theme-preview.spotify { background: linear-gradient(135deg, #121212, #1a1a1a, #1DB954); }
+        .theme-preview.settings { background: linear-gradient(135deg, #18181B, #27272A, #3F3F46); }
+        
+        .theme-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+        }
+        
+        .theme-info {
+            padding: 1.5rem;
+        }
+        
+        .theme-name {
+            font-family: var(--font-lyrics);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .theme-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           INSTALLATION WIZARD
+           ═══════════════════════════════════════════════════════════════════════ */
+        .installation {
+            padding: 4rem 0;
+        }
+        
+        .wizard-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .wizard-step {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .wizard-step:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan), var(--card-shadow);
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--metallic-brushed);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: #000;
+            flex-shrink: 0;
+            box-shadow: var(--glow-cyan);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-family: var(--font-lyrics);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent-cyan);
+        }
+        
+        .step-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-lime);
+            overflow-x: auto;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           LINKS SECTION
+           ═══════════════════════════════════════════════════════════════════════ */
+        .links {
+            padding: 4rem 0;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-cyan);
+        }
+        
+        .link-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--metallic-dark);
+            border: 2px solid #4a4a4a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+        }
+        
+        .link-info {
+            flex: 1;
+        }
+        
+        .link-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .link-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════ */
+        .footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid #2a2a2a;
+            margin-top: 4rem;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.25rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           ANIMATIONS
+           ═══════════════════════════════════════════════════════════════════════ */
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: var(--glow-cyan), var(--card-shadow); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.9), 0 0 80px rgba(0, 255, 255, 0.5), var(--card-shadow); }
+        }
+        
+        @keyframes spotlightSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .wizard-step {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="hero">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">🎵</div>
+                <h1 class="logo-text">TSiJUKEBOX</h1>
+            </div>
+            
+            <p class="tagline">Sistema de Jukebox Inteligente</p>
+            
+            <div class="version-badge">
+                <i class="fas fa-circle"></i>
+                <span>v4.2.1</span>
+                <span>•</span>
+                <span>Build Passing</span>
+            </div>
+            
+            <div class="badges">
+                <span class="badge cyan"><i class="fas fa-code"></i> TypeScript</span>
+                <span class="badge magenta"><i class="fab fa-react"></i> React 18</span>
+                <span class="badge lime"><i class="fas fa-check-circle"></i> MIT License</span>
+                <span class="badge gold"><i class="fas fa-star"></i> Production Ready</span>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#installation" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Começar Agora
+                </a>
+                <a href="https://github.com/B0yZ4kr14/tsijukebox" class="btn btn-secondary" target="_blank">
+                    <i class="fab fa-github"></i>
+                    Ver no GitHub
+                </a>
+                <a href="showcase.html" class="btn btn-metallic">
+                    <i class="fas fa-eye"></i>
+                    Ver Showcase
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         STATS SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="stat-value">72</div>
+                    <div class="stat-label">Componentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-icons"></i></div>
+                    <div class="stat-value">176</div>
+                    <div class="stat-label">Ícones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-file-code"></i></div>
+                    <div class="stat-value">45</div>
+                    <div class="stat-label">Páginas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-palette"></i></div>
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Temas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         FEATURES SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">FUNCIONALIDADES</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-music"></i></div>
+                    <h3 class="feature-title">Player Avançado</h3>
+                    <p class="feature-description">Player de música completo com visualizador de áudio, equalizer e controles avançados de reprodução.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-microphone"></i></div>
+                    <h3 class="feature-title">Modo Karaoke</h3>
+                    <p class="feature-description">Sistema de karaoke com letras sincronizadas, pontuação em tempo real, pitch control e efeitos de voz.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-tv"></i></div>
+                    <h3 class="feature-title">Modo Kiosk</h3>
+                    <p class="feature-description">Interface fullscreen otimizada para telas de toque, perfeita para estabelecimentos comerciais.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fab fa-spotify"></i></div>
+                    <h3 class="feature-title">Spotify Integration</h3>
+                    <p class="feature-description">Integração completa com Spotify para acesso a milhões de músicas, playlists e recomendações.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fab fa-youtube"></i></div>
+                    <h3 class="feature-title">YouTube Integration</h3>
+                    <p class="feature-description">Busca e reprodução de vídeos musicais do YouTube com extração automática de letras.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-cog"></i></div>
+                    <h3 class="feature-title">Configurações</h3>
+                    <p class="feature-description">Sistema completo de configurações com temas, preferências de áudio, atalhos e muito mais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         THEMES SHOWCASE
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="themes">
+        <div class="container">
+            <h2 class="section-title">TEMAS DISPONÍVEIS</h2>
+            
+            <div class="themes-grid">
+                <div class="theme-card">
+                    <div class="theme-preview cosmic"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">🌌 Cosmic Player</h3>
+                        <p class="theme-desc">Tema padrão com estética espacial e cores vibrantes</p>
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-preview karaoke"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">🎤 Karaoke Stage</h3>
+                        <p class="theme-desc">Tema otimizado para o modo karaoke com luzes de palco</p>
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-preview stage"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">✨ Stage Neon Metallic</h3>
+                        <p class="theme-desc">Interface metálica com efeitos neon cyan e magenta</p>
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-preview dashboard"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">📊 Dashboard Home</h3>
+                        <p class="theme-desc">Tema clean para visualização de estatísticas</p>
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-preview spotify"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">🟢 Spotify Integration</h3>
+                        <p class="theme-desc">Tema inspirado na interface do Spotify</p>
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-preview settings"></div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">⚙️ Settings Dark</h3>
+                        <p class="theme-desc">Tema escuro para configurações do sistema</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         INSTALLATION WIZARD
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="installation" id="installation">
+        <div class="container">
+            <h2 class="section-title">INSTALAÇÃO RÁPIDA</h2>
+            
+            <div class="wizard-steps">
+                <div class="wizard-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Clone o Repositório</h3>
+                        <p class="step-description">Faça o clone do projeto para sua máquina local</p>
+                        <div class="code-block">git clone https://github.com/B0yZ4kr14/tsijukebox.git</div>
+                    </div>
+                </div>
+                
+                <div class="wizard-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Instale as Dependências</h3>
+                        <p class="step-description">Use pnpm para instalar todas as dependências do projeto</p>
+                        <div class="code-block">cd tsijukebox && pnpm install</div>
+                    </div>
+                </div>
+                
+                <div class="wizard-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Configure as Variáveis</h3>
+                        <p class="step-description">Copie o arquivo de exemplo e configure suas credenciais</p>
+                        <div class="code-block">cp .env.example .env && nano .env</div>
+                    </div>
+                </div>
+                
+                <div class="wizard-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Inicie o Servidor</h3>
+                        <p class="step-description">Execute o servidor de desenvolvimento</p>
+                        <div class="code-block">pnpm dev</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         LINKS SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="links">
+        <div class="container">
+            <h2 class="section-title">RECURSOS</h2>
+            
+            <div class="links-grid">
+                <a href="https://github.com/B0yZ4kr14/tsijukebox" class="link-card" target="_blank">
+                    <div class="link-icon"><i class="fab fa-github"></i></div>
+                    <div class="link-info">
+                        <div class="link-title">GitHub</div>
+                        <div class="link-desc">Código fonte e issues</div>
+                    </div>
+                </a>
+                
+                <a href="https://github.com/B0yZ4kr14/tsijukebox/wiki" class="link-card" target="_blank">
+                    <div class="link-icon"><i class="fas fa-book"></i></div>
+                    <div class="link-info">
+                        <div class="link-title">Documentação</div>
+                        <div class="link-desc">Wiki completa do projeto</div>
+                    </div>
+                </a>
+                
+                <a href="showcase.html" class="link-card">
+                    <div class="link-icon"><i class="fas fa-images"></i></div>
+                    <div class="link-info">
+                        <div class="link-title">Showcase</div>
+                        <div class="link-desc">Galeria de componentes</div>
+                    </div>
+                </a>
+                
+                <a href="stage-theme-mockups.html" class="link-card">
+                    <div class="link-icon"><i class="fas fa-palette"></i></div>
+                    <div class="link-info">
+                        <div class="link-title">Mockups</div>
+                        <div class="link-desc">Previews dos temas</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">TSiJUKEBOX</div>
+            <p class="footer-text">
+                Desenvolvido com ❤️ por B0.y_Z4kr14 + Manus AI<br>
+                © 2025 TSiJUKEBOX. Licença MIT.
+            </p>
+            <div class="footer-links">
+                <a href="https://github.com/B0yZ4kr14/tsijukebox" target="_blank" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://github.com/B0yZ4kr14/tsijukebox/wiki" target="_blank" title="Wiki">
+                    <i class="fas fa-book"></i>
+                </a>
+                <a href="https://github.com/B0yZ4kr14/tsijukebox/issues" target="_blank" title="Issues">
+                    <i class="fas fa-bug"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
