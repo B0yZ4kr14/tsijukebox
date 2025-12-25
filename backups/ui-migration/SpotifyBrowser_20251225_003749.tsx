@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Search, Heart, Clock, TrendingUp, Loader2, Music, Disc3 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from "@/components/ui/themed";
+import { Button } from '@/components/ui/button';
 import { PlaylistCard } from '@/components/spotify/PlaylistCard';
 import { TrackItem } from '@/components/spotify/TrackItem';
 import { CreatePlaylistModal } from '@/components/spotify/CreatePlaylistModal';
@@ -53,7 +53,7 @@ export default function SpotifyBrowser() {
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-4">
               <Link to="/">
-                <Button variant="ghost" size="xs" className="text-kiosk-text" aria-label="Voltar ao player">
+                <Button variant="ghost" size="icon" className="text-kiosk-text" aria-label="Voltar ao player">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
@@ -64,7 +64,7 @@ export default function SpotifyBrowser() {
             </div>
             <div className="flex items-center gap-2">
               <Link to="/spotify/search">
-                <Button variant="ghost" size="xs" className="text-kiosk-text" aria-label="Buscar músicas">
+                <Button variant="ghost" size="icon" className="text-kiosk-text" aria-label="Buscar músicas">
                   <Search className="w-5 h-5" />
                 </Button>
               </Link>
