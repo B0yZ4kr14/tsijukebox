@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List, Callable, TypeVar
 from dataclasses import dataclass, field
 
-from config import Config
-from utils.logger import Logger
+from .config import Config
+from .utils.logger import Logger
 
 # Type variable for generic retry function
 T = TypeVar('T')

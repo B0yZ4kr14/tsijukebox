@@ -1,0 +1,6 @@
+# Unified dependency set for TSiJUKEBOX automation and installers
+# Runtime dependencies for the interactive installer
+-r scripts/installer/requirements.txt
+
+# Test and CI dependencies for the installer
+-r scripts/requirements-test.txt

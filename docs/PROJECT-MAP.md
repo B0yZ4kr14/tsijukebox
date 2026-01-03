@@ -91,6 +91,14 @@ src/
 └── 🔌 integrations/   (supabase)
 ```
 
+### Fluxo de Dados Supabase ↔ Frontend Vite
+
+- **Edge Functions críticas**: `supabase/functions/github-sync-export` (sincronização de arquivos/GitHub), `supabase/functions/installer-metrics` (telemetria de instalação) e `supabase/functions/spotify-auth`/`youtube-music-auth` (brokers OAuth) publicam respostas JSON já compatíveis com CORS para domínios `*.lovable.app` e `*.manus.ai`. As funções expõem cabeçalhos `Access-Control-Allow-*` e lidam com preflight `OPTIONS` para evitar bloqueios durante prototipação.
+- **Supabase Client**: criado em `src/lib/supabase/client.ts` (importado por hooks e providers) com as chaves de ambiente `VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID` e `VITE_SUPABASE_PUBLISHABLE_KEY`. Todas são tipadas em `src/vite-env.d.ts`, permitindo autocompletar em LLMs e no TypeScript Language Service.
+- **API Layer**: `src/lib/api/client.ts` agrega chamadas REST do backend FastAPI (`/status`, `/play`, `/seek`, `/volume`) com circuit breaker, cache e retries. Hooks como `src/hooks/player/usePlayer.ts` e `src/hooks/system/useSystemStatus.ts` invalidam queries via `@tanstack/react-query`, alimentando componentes como `src/components/player/NowPlayingCard.tsx` e `src/components/system/SystemHealthCard.tsx`.
+- **Estado Global**: o contexto `src/contexts/SessionContext.tsx` injeta a sessão Supabase e o tema atual. O player consome estado combinado de Supabase (preferências) + API local (status do player) + store de fila (`src/stores/queueStore.ts`).
+- **Pipeline de sincronização**: mutações de conteúdo (playlists, arquivos do repositório) chamam Edge Functions via `src/lib/api/supabaseEdge.ts`, que encapsula fetch com headers de autenticação e roteia respostas para os caches React Query. Eventos de realtime do Supabase são tratados em `src/hooks/system/useRealtimeChannels.ts` para refletir updates na UI.
+
 ---
 
 ## 📄 Páginas (32)

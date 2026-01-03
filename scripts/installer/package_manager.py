@@ -11,7 +11,7 @@ from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 
-from utils.logger import Logger
+from .utils.logger import Logger
 
 class PackageManager(Enum):
     """Supported package managers."""

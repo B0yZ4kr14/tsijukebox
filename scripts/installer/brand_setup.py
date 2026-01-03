@@ -9,7 +9,7 @@ from typing import Optional, Dict, List
 from pathlib import Path
 import json
 
-from config import Colors
+from .config import Colors
 
 
 @dataclass
