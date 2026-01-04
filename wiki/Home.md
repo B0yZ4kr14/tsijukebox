@@ -1,16 +1,20 @@
-<h1 align="center">
-  <img src="https://img.shields.io/badge/📖-TSiJUKEBOX_Wiki-00D4FF?style=for-the-badge&labelColor=09090B" alt="Wiki">
-</h1>
+<div align="center">
 
-<p align="center">
-  <strong>Documentação Completa do Sistema de Entretenimento Musical</strong>
-</p>
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/logo.svg" alt="TSiJUKEBOX Logo" width="350">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-4.2.1-FF00D4?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/badge/docs-75_arquivos-00FF88?style=flat-square" alt="Docs">
-  <img src="https://img.shields.io/badge/pages-10-FFD400?style=flat-square" alt="Pages">
-</p>
+# 🎵 TSiJUKEBOX Wiki
+
+### Enterprise Digital Jukebox System
+
+[![Version](https://img.shields.io/badge/version-4.2.1-00d4ff?style=for-the-badge)](https://github.com/B0yZ4kr14/tsijukebox/releases)
+[![Python](https://img.shields.io/badge/Python-3.11-3776ab?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+
+**Sistema kiosk musical profissional com Python + Docker**
+
+**🌐 Acesso:** `https://midiaserver.local/jukebox` · **🔐 Login:** `admin` / `admin`
+
+</div>
 
 ---
 
@@ -108,10 +112,40 @@ O TSiJUKEBOX é um sistema de música kiosk empresarial com integração Spotify
 </td>
 <td width="50%">
 
-- 🔧 **Admin Panel** - Painel de administração
-- 🚀 **Instalador** - Setup autônomo de 26 fases
-- ♿ **Acessibilidade** - WCAG 2.1 AA
-- 🔗 **Integrações** - Spotify, YouTube, GitHub
+- 🐳 **Docker** - Containerização completa
+- 🔥 **UFW + Fail2ban** - Segurança integrada
+- 📊 **Grafana + Prometheus** - Monitoramento
+- 📡 **Avahi/mDNS** - Acesso via `.local`
+
+</td>
+</tr>
+</table>
+
+---
+
+### 🎨 Temas Visuais
+
+<table>
+<tr>
+<td align="center">
+
+**🌌 Cosmic Player**
+<br>
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-cosmic-player.png" width="120">
+
+</td>
+<td align="center">
+
+**🎤 Karaoke Stage**
+<br>
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-karaoke-stage.png" width="120">
+
+</td>
+<td align="center">
+
+**🏠 Dashboard Home**
+<br>
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-dashboard-home.png" width="120">
 
 </td>
 </tr>
@@ -150,7 +184,7 @@ O TSiJUKEBOX é um sistema de música kiosk empresarial com integração Spotify
 </td>
 <td align="center">
 
-[![Demo](https://img.shields.io/badge/🎮_Demo-Acessar-1DB954?style=for-the-badge)](https://b0yz4kr14.github.io/tsijukebox/)
+[![Demo](https://img.shields.io/badge/🎮_Demo-Acessar-1DB954?style=for-the-badge)](https://tsijukebox.vercel.app)
 
 </td>
 </tr>

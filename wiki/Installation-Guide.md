@@ -1,15 +1,16 @@
-<h1 align="center">
-  <img src="https://img.shields.io/badge/📥-Guia_de_Instalação-00D4FF?style=for-the-badge&labelColor=09090B" alt="Instalação">
-</h1>
+<div align="center">
 
-<p align="center">
-  <strong>Instale o TSiJUKEBOX em 5 minutos</strong>
-</p>
+# 📥 Guia de Instalação
 
-<p align="center">
-  <img src="https://img.shields.io/badge/⏱️_Tempo-5_min-FFD400?style=flat-square" alt="Tempo">
-  <img src="https://img.shields.io/badge/📊_Dificuldade-Fácil-00FF88?style=flat-square" alt="Dificuldade">
-</p>
+[![CachyOS](https://img.shields.io/badge/CachyOS-Ready-00D4FF?style=for-the-badge&logo=archlinux&logoColor=white)](https://cachyos.org)
+[![Python](https://img.shields.io/badge/Python-3.11-3776ab?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+
+**Instalação completa do TSiJUKEBOX em CachyOS / Arch Linux**
+
+**🌐 Acesso:** `https://midiaserver.local/jukebox` · **🔐 Login:** `admin` / `admin`
+
+</div>
 
 ---
 
@@ -19,97 +20,24 @@
 <tr>
 <td width="50%">
 
-### 💻 Desenvolvimento
+### 🐧 Sistema Operacional
 
-| Componente | Versão |
-|------------|:------:|
-| **Node.js** | 18+ ou 20+ |
-| **pnpm** | 8+ |
-| **Git** | 2.30+ |
+| Componente | Recomendado |
+|------------|:-----------:|
+| **OS** | CachyOS / Arch Linux |
+| **Shell** | fish |
+| **WM** | Openbox |
 
 </td>
 <td width="50%">
 
-### 🖥️ Produção
+### ⚙️ Hardware
 
-| Componente | Requisito |
-|------------|:---------:|
-| **SO** | Ubuntu 22.04 LTS |
-| **RAM** | 2GB mínimo |
-| **Disco** | 10GB |
-
-</td>
-</tr>
-</table>
-
----
-
-## 🚀 Instalação para Desenvolvimento
-
-<table>
-<tr>
-<td width="80">
-
-### 1️⃣
-
-</td>
-<td>
-
-**Clone o repositório**
-
-```bash
-git clone https://github.com/B0yZ4kr14/tsijukebox.git
-cd tsijukebox
-```
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 2️⃣
-
-</td>
-<td>
-
-**Instale as dependências**
-
-```bash
-pnpm install
-```
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 3️⃣
-
-</td>
-<td>
-
-**Configure o ambiente**
-
-```bash
-cp .env.example .env
-# Edite .env com suas credenciais
-```
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 4️⃣
-
-</td>
-<td>
-
-**Inicie o servidor**
-
-```bash
-pnpm dev
-```
+| Componente | Mínimo | Recomendado |
+|------------|:------:|:-----------:|
+| **CPU** | 2 cores | 4+ cores |
+| **RAM** | 2 GB | 4+ GB |
+| **Disco** | 500 MB | 2+ GB |
 
 </td>
 </tr>
@@ -117,99 +45,81 @@ pnpm dev
 
 ---
 
-## 🔧 Instalação em Produção
+## 🚀 Instalação Rápida
 
-### Método 1: Instalador Unificado (Recomendado)
+### 🧙 Wizard Interativo (Recomendado)
+
+O wizard analisa seu hardware e sugere o melhor modo:
 
 ```bash
-# Instalação completa
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/scripts/unified-installer.py | sudo python3 -- --mode full
-
-# Instalação em modo kiosk
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/scripts/unified-installer.py | sudo python3 -- --mode kiosk
-
-# Simulação (dry-run)
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/scripts/unified-installer.py | sudo python3 -- --dry-run
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/scripts/installation-wizard.py | python3
 ```
 
-### Método 2: Instalação Manual
+### 🚀 Instalação Direta
 
 ```bash
-# 1. Instale Node.js
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# 2. Instale pnpm
-npm install -g pnpm
-
-# 3. Clone e instale
-git clone https://github.com/B0yZ4kr14/tsijukebox.git /opt/tsijukebox
-cd /opt/tsijukebox
-pnpm install
-pnpm build
-
-# 4. Configure Nginx
-sudo cp docs/nginx/tsijukebox.conf /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/tsijukebox.conf /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/scripts/unified-installer.py | sudo python3
 ```
 
 ---
 
-## ⚙️ Modos de Instalação
+## 🎮 Modos de Instalação
 
-<table>
-<tr>
-<td align="center" width="25%">
-
-### 🖥️ Full
+### 🎵 Modo Full (Completo)
 
 ```bash
---mode full
+sudo python3 unified-installer.py
 ```
 
-**26/26 fases**
-Instalação completa
+**Inclui:** Docker, UFW, NTP, Nginx, SSL, Avahi, Grafana, Prometheus, Fail2ban, Spotify
 
-</td>
-<td align="center" width="25%">
+**Acesso:** `https://midiaserver.local/jukebox`
 
-### 🌐 Server
+---
+
+### 🖥️ Modo Kiosk
 
 ```bash
---mode server
+sudo python3 unified-installer.py --mode kiosk
 ```
 
-**20/26 fases**
-Apenas servidor
+**Características:**
+- ✅ Interface touchscreen otimizada
+- ✅ Proteção contra saída do app
+- ✅ Chromium --kiosk
+- ✅ HTTPS via `https://midiaserver.local/jukebox`
 
-</td>
-<td align="center" width="25%">
+---
 
-### 📺 Kiosk
+### 🖧 Modo Server
 
 ```bash
---mode kiosk
+sudo python3 unified-installer.py --mode server --no-spotify
 ```
 
-**24/26 fases**
-Modo kiosk
+**Características:**
+- ✅ Sem interface gráfica
+- ✅ API REST disponível
+- ✅ Baixo consumo de recursos
 
-</td>
-<td align="center" width="25%">
+**Acesso:** `https://midiaserver.local:8080/api`
 
-### ⚡ Minimal
+---
 
-```bash
---mode minimal
-```
+## 📦 Componentes Instalados
 
-**15/26 fases**
-Instalação mínima
-
-</td>
-</tr>
-</table>
+| Componente | Descrição | Porta |
+|------------|-----------|:-----:|
+| 🐳 **Docker** | Containerização | - |
+| 🔥 **UFW** | Firewall | - |
+| ⏰ **NTP** | Sincronização de tempo | 123 |
+| 🌐 **Nginx** | Proxy reverso + SSL | 80, 443 |
+| 📊 **Grafana** | Monitoramento visual | 3000 |
+| 📈 **Prometheus** | Métricas | 9090 |
+| 🛡️ **Fail2ban** | Proteção contra ataques | - |
+| 📡 **Avahi/mDNS** | Acesso via `.local` | 5353 |
+| 🎵 **Spotify** | Player integrado | - |
+| 🎨 **Spicetify** | Customização Spotify | - |
 
 ---
 

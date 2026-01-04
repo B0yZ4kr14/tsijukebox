@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 try:
-    from utils.logger import Logger
+    from .utils.logger import Logger
 except ImportError:
     class Logger:
         def info(self, msg): print(f"[INFO] {msg}")

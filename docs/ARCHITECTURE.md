@@ -203,6 +203,13 @@ flowchart LR
     ExtAPI -.-> |"Response"| Edge
 ```
 
+### Detalhamento do fluxo Supabase ↔ Frontend
+
+- **Origem dos dados**: Edge Functions como `github-sync-export`, `installer-metrics` e `track-playback` expõem respostas JSON com cabeçalhos CORS dinâmicos para `*.lovable.app`/`*.manus.ai` e pré-flight `OPTIONS`, permitindo que prototipação externa consuma os endpoints sem bloqueio de navegador.
+- **Ingestão no cliente**: `src/lib/api/supabaseEdge.ts` e `src/lib/api/client.ts` adicionam autenticação (Supabase anon key + bearer do usuário) e enviam as respostas para caches do `QueryClient`. As chaves de cache (`['status']`, `['queue']`, `['sync-history']`) são invalidadas por hooks como `usePlayer` e `useQueue` após mutações.
+- **Propagação**: Context providers (`SessionContext`, `ThemeContext`) mesclam dados de Supabase (preferências, tokens OAuth) com o estado local do player e disponibilizam via hooks (`useSession`, `useFeatureFlags`). Realtime channels configurados em `src/hooks/system/useRealtimeChannels.ts` atualizam métricas de playback e sincronização conforme eventos Postgres chegam pelo `supabase.realtime`.
+- **Renderização**: componentes como `NowPlayingCard`, `SyncStatusBanner` e `KioskStatusBadge` consomem o cache React Query e disparam refetch com `staleTime` curto quando detectam updates de canal, garantindo UI responsiva mesmo em ambientes kiosk/offline-first.
+
 ---
 
 ## Estrutura de Componentes

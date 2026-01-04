@@ -1,16 +1,67 @@
-<h1 align="center">
-  <img src="https://img.shields.io/badge/🎨-Design_System-FF00D4?style=for-the-badge&labelColor=09090B" alt="Design System">
-</h1>
+<div align="center">
 
-<p align="center">
-  <strong>Tokens, Cores e Componentes do TSiJUKEBOX</strong>
-</p>
+# 🎨 Design System
 
-<p align="center">
-  <img src="https://img.shields.io/badge/componentes-72-00D4FF?style=flat-square" alt="Componentes">
-  <img src="https://img.shields.io/badge/temas-6-FF00D4?style=flat-square" alt="Temas">
-  <img src="https://img.shields.io/badge/ícones-176-FFD400?style=flat-square" alt="Ícones">
-</p>
+[![Stage Neon Metallic](https://img.shields.io/badge/Theme-Stage_Neon_Metallic-00FFFF?style=for-the-badge)](https://github.com/B0yZ4kr14/tsijukebox)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1_AA-22c55e?style=for-the-badge)](https://www.w3.org/WAI/WCAG21/quickref/)
+
+**Sistema de design visual do TSiJUKEBOX**
+
+</div>
+
+---
+
+## 🎨 Temas Visuais
+
+<table>
+<tr>
+<td align="center" width="33%">
+
+### 🌌 Cosmic Player
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-cosmic-player.png" width="150">
+
+</td>
+<td align="center" width="33%">
+
+### 🎤 Karaoke Stage
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-karaoke-stage.png" width="150">
+
+</td>
+<td align="center" width="33%">
+
+### 🏠 Dashboard Home
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-dashboard-home.png" width="150">
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+### 🎵 Spotify Integration
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-spotify-integration.png" width="150">
+
+</td>
+<td align="center">
+
+### ⚙️ Settings Dark
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/theme-references/theme-settings-dark.png" width="150">
+
+</td>
+<td align="center">
+
+### ✨ Stage Neon Metallic
+
+`--accent-cyan: #00ffff`
+`--accent-magenta: #ff00d4`
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -220,18 +271,85 @@ font-family: 'Inter', system-ui, sans-serif;
 
 ---
 
+## 🗂️ Ícones Customizados
+
+<table>
+<tr>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/installation.png" width="48">
+
+**Installation**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/configuration.png" width="48">
+
+**Configuration**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/development.png" width="48">
+
+**Development**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/api.png" width="48">
+
+**API**
+
+</td>
+</tr>
+<tr>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/monitoring.png" width="48">
+
+**Monitoring**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/security.png" width="48">
+
+**Security**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/testing.png" width="48">
+
+**Testing**
+
+</td>
+<td align="center">
+
+<img src="https://raw.githubusercontent.com/B0yZ4kr14/tsijukebox/main/docs/assets/icons/tutorials.png" width="48">
+
+**Tutorials**
+
+</td>
+</tr>
+</table>
+
+---
+
 ## 🔗 Recursos
 
 <table>
 <tr>
 <td align="center">
 
-[![Showcase](https://img.shields.io/badge/🎨-Showcase-FF00D4?style=for-the-badge)](https://b0yz4kr14.github.io/tsijukebox/showcase.html)
+[![Demo](https://img.shields.io/badge/🌐-Demo-00D4FF?style=for-the-badge)](https://tsijukebox.vercel.app)
 
 </td>
 <td align="center">
 
-[![Mockups](https://img.shields.io/badge/🎭-Mockups-FFD400?style=for-the-badge)](https://b0yz4kr14.github.io/tsijukebox/stage-theme-mockups.html)
+[![Mockups](https://img.shields.io/badge/🎭-Mockups-FFD400?style=for-the-badge)](https://github.com/B0yZ4kr14/tsijukebox/blob/main/docs/mockups/index.html)
 
 </td>
 </tr>

@@ -4,34 +4,37 @@
 # Default owner for everything
 * @B0yZ4kr14
 
-# Core application code
+# Frontend and design system
 /src/ @B0yZ4kr14
 /src/components/ @B0yZ4kr14
-/src/pages/ @B0yZ4kr14
 /src/hooks/ @B0yZ4kr14
+/src/styles/ @B0yZ4kr14
+/src/index.css @B0yZ4kr14
+tailwind.config.ts @B0yZ4kr14
 
-# Supabase and backend
-/supabase/ @B0yZ4kr14
+# API clients and runtime contracts
+/src/lib/api/** @B0yZ4kr14
+
+# Supabase and backend edge functions
+/supabase/functions/** @B0yZ4kr14
+/supabase/migrations/** @B0yZ4kr14
+
+# Automation, installers, and scripting
+/scripts/ @B0yZ4kr14
+/scripts/installer/** @B0yZ4kr14
+requirements.txt @B0yZ4kr14
 
 # Documentation
 /docs/ @B0yZ4kr14
 *.md @B0yZ4kr14
 
-# GitHub configuration
+# CI/CD and repository configuration
 /.github/ @B0yZ4kr14
+/.github/workflows/** @B0yZ4kr14
+/.github/CODEOWNERS @B0yZ4kr14
 
-# CI/CD and workflows
-/.github/workflows/ @B0yZ4kr14
-
-# Styling and design system
-/src/index.css @B0yZ4kr14
-tailwind.config.ts @B0yZ4kr14
-
-# Tests
+# Testing suites
 /tests/ @B0yZ4kr14
 /e2e/ @B0yZ4kr14
 *.test.ts @B0yZ4kr14
 *.test.tsx @B0yZ4kr14
-
-# Installer scripts
-/scripts/ @B0yZ4kr14
