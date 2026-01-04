@@ -13,8 +13,8 @@ from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from enum import Enum
 
-from config import Config, CloudProvider
-from utils.logger import Logger
+from .config import Config, CloudProvider
+from .utils.logger import Logger
 
 class CloudProviderType(Enum):
     """Supported cloud providers."""

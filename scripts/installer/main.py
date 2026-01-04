@@ -27,18 +27,21 @@ import time
 from pathlib import Path
 from typing import Optional
 
+if __package__ is None or __package__ == "":
+    sys.path.append(str(Path(__file__).resolve().parent))
+
 # Importações locais
-from config import Config, Colors
-from system_check import SystemChecker
-from package_manager import PackageManager
-from user_manager import UserManager
-from database_manager import DatabaseManager
-from cloud_setup import CloudSetup
-from spicetify_setup import SpicetifySetup
-from auth_setup import AuthSetup
-from docker_setup import DockerSetup
-from landing_server import LandingServer
-from brand_setup import configure_brand, BrandSetup, BRAND_PRESETS
+from .config import Config, Colors
+from .system_check import SystemChecker
+from .package_manager import PackageManager
+from .user_manager import UserManager
+from .database_manager import DatabaseManager
+from .cloud_setup import CloudSetup
+from .spicetify_setup import SpicetifySetup
+from .auth_setup import AuthSetup
+from .docker_setup import DockerSetup
+from .landing_server import LandingServer
+from .brand_setup import configure_brand, BrandSetup, BRAND_PRESETS
 
 
 def check_root():

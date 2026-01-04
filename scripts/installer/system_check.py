@@ -14,7 +14,7 @@ from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from datetime import datetime
 
-from config import Config, Colors
+from .config import Config, Colors
 
 
 @dataclass

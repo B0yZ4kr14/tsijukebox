@@ -6,8 +6,8 @@ import { toast } from 'sonner';
 export function usePlayer() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (action: PlaybackAction) => api.controlPlayback(action),
+  const mutation = useMutation<{ success: boolean }, Error, PlaybackAction>({
+    mutationFn: (action) => api.controlPlayback(action),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['status'] });
     },

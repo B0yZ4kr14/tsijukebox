@@ -16,7 +16,7 @@ from urllib.parse import parse_qs, urlparse
 from dataclasses import dataclass, asdict
 import socket
 
-from utils.logger import Logger
+from .utils.logger import Logger
 
 @dataclass
 class InstallProgress:

@@ -14,7 +14,7 @@ from typing import Optional, Dict, Any, List, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 
-from utils.logger import Logger
+from .utils.logger import Logger
 
 @dataclass
 class KeyPair:
