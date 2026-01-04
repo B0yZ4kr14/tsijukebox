@@ -252,23 +252,28 @@ npm run fix-deps
 
 **⚠️ MANDATORY GUIDELINE - NON-NEGOTIABLE:**
 
-- **SQLite as Default Database:** All new installations MUST use SQLite by default
+- **SQLite ONLY in Default Installation:** The default installation MUST include ONLY SQLite - no other database engines
+- **On-Demand Database Installation:** Other databases (PostgreSQL, MariaDB/MySQL, Firebird) are installed ONLY when user requests migration via configuration menu
+- **Automatic Migration + Installation:** When user selects a different database in the configuration menu:
+  1. Install the selected database engine automatically
+  2. Migrate all tables from SQLite to the new database
+  3. Update application configuration to use the new database
+  4. Keep SQLite backup for rollback capability
 - **Autonomous Installation:** Python/Docker installers MUST provision everything automatically without user intervention
-- **Zero Configuration:** The installer should work out-of-the-box with sensible defaults
+- **Zero Configuration:** The installer should work out-of-the-box with sensible defaults (SQLite only)
 - **Backend Refactoring:** When working on backend code, prioritize SQLite compatibility over cloud-only solutions
-- **Migration Support:** Maintain migration tools for PostgreSQL, MariaDB/MySQL, and Firebird
 - **Local-First Architecture:** Design features to work offline with local SQLite before adding cloud sync
 
 ### Supported Database Systems
 
-The TSiJUKEBOX supports multiple database backends with migration tools:
+The TSiJUKEBOX supports multiple database backends with on-demand installation:
 
-| Database | Use Case | Documentation |
-|----------|----------|---------------|
-| **SQLite** (Default) | Standalone installations, embedded mode | `docs/database/SQLITE.md` |
-| **PostgreSQL** | Enterprise deployments, high concurrency | `docs/database/POSTGRESQL.md` |
-| **MariaDB/MySQL** | Multi-user environments, existing infrastructure | `docs/database/MARIADB_MYSQL.md` |
-| **Firebird** | Low-footprint server, embedded mode | `docs/database/FIREBIRD.md` |
+| Database | Use Case | Installation | Documentation |
+|----------|----------|--------------|---------------|
+| **SQLite** (Default) | Standalone installations, embedded mode | Pre-installed | `docs/database/SQLITE.md` |
+| **PostgreSQL** | Enterprise deployments, high concurrency | On-demand via config menu | `docs/database/POSTGRESQL.md` |
+| **MariaDB/MySQL** | Multi-user environments, existing infrastructure | On-demand via config menu | `docs/database/MARIADB_MYSQL.md` |
+| **Firebird** | Low-footprint server, embedded mode | On-demand via config menu | `docs/database/FIREBIRD.md` |
 
 **Database Comparison:** See `docs/database/COMPARISON.md` for detailed technical analysis.
 
@@ -278,16 +283,30 @@ The TSiJUKEBOX supports multiple database backends with migration tools:
 
 - **Schema Versioning:** SQL-based migrations with timestamps
 - **Cross-Database Support:** Migrations work across all supported databases
-- **Automated Migration:** Use `scripts/unified-installer.py` with `--migrate-db` flag
+- **On-Demand Installation:** Database engines installed automatically during migration
+- **Automated Migration:** Migration triggered from Settings > Database > Change Database
 - **Zero Downtime:** Logical replication support for live migrations
+- **Automatic Rollback:** SQLite backup maintained for rollback if migration fails
 
-**Migration Commands:**
+**Migration Workflow:**
+
+1. **Via Configuration Menu (Recommended):**
+   - Navigate to: Settings > Database Configuration > Change Database
+   - Select target database (PostgreSQL, MariaDB, MySQL, or Firebird)
+   - System automatically:
+     - Installs the selected database engine
+     - Creates database schema
+     - Migrates all tables and data from SQLite
+     - Updates application configuration
+     - Creates SQLite backup for rollback
+
+2. **Via Command Line (Advanced):**
 ```bash
-# Migrate from Supabase/PostgreSQL to SQLite
-python3 scripts/unified-installer.py --migrate-db --from postgresql --to sqlite
+# Migrate from SQLite to PostgreSQL (installs PostgreSQL if needed)
+python3 scripts/unified-installer.py --migrate-db --to postgresql
 
-# Migrate from SQLite to MariaDB
-python3 scripts/unified-installer.py --migrate-db --from sqlite --to mariadb
+# Migrate from PostgreSQL back to SQLite
+python3 scripts/unified-installer.py --migrate-db --to sqlite
 ```
 
 ### Backup & Maintenance
@@ -328,13 +347,39 @@ python3 scripts/unified-installer.py --repair-db
 **Implementation Requirements:**
 ```python
 # scripts/unified-installer.py must:
-# 1. Auto-detect environment and database type
-# 2. Set up SQLite database with schema by default
-# 3. Provide migration path to/from all supported databases
-# 4. Configure automatic backups (local + cloud)
-# 5. Include maintenance tools (VACUUM, integrity check, reindex)
-# 6. Support zero-configuration installation
-# 7. No interactive prompts unless explicitly requested
+# 1. Install ONLY SQLite by default (no other database engines)
+# 2. Set up SQLite database with schema on first run
+# 3. Detect database migration requests from config menu
+# 4. On migration request:
+#    a. Install target database engine (PostgreSQL/MariaDB/MySQL/Firebird)
+#    b. Create database and schema on target
+#    c. Migrate all tables and data from source to target
+#    d. Create backup of source database before migration
+#    e. Update app config to use new database
+#    f. Verify data integrity after migration
+# 5. Configure automatic backups (local + cloud)
+# 6. Include maintenance tools (VACUUM, integrity check, reindex)
+# 7. Support zero-configuration installation (SQLite only)
+# 8. No interactive prompts unless explicitly requested
+# 9. Rollback capability if migration fails
+```
+
+**Settings Menu Structure:**
+```
+Settings > Database Configuration
+  ├── Current Database: SQLite (default)
+  ├── Change Database
+  │   ├── PostgreSQL (installs on selection + migrates)
+  │   ├── MariaDB/MySQL (installs on selection + migrates)
+  │   ├── Firebird (installs on selection + migrates)
+  │   └── Back to SQLite (migrates back)
+  ├── Backup Configuration
+  │   ├── Local Backups
+  │   └── Cloud Backups (Google Drive, OneDrive, MEGA, Dropbox, Storj)
+  └── Maintenance
+      ├── Optimize Database
+      ├── Check Integrity
+      └── Repair Database
 ```
 
 ## 🎨 Theming
