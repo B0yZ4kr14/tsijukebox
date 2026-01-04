@@ -162,7 +162,11 @@ function checkTypeScript() {
     success('tsconfig.json found');
     
     info('Running TypeScript type check...');
-    const result = runCommand('npm run typecheck 2>&1 || npx tsc --noEmit', { silent: true });
+    // Try npm run typecheck first, then fallback to npx tsc
+    let result = runCommand('npm run typecheck', { silent: true });
+    if (!result.success) {
+      result = runCommand('npx tsc --noEmit', { silent: true });
+    }
     
     if (result.success || result.output.includes('Found 0 errors')) {
       success('TypeScript type check passed');
