@@ -355,6 +355,6 @@ try {
 ```
 
 ## See Also
-- [SettingsContext](/docs/contexts/SETTINGS_CONTEXT.md)
+- [ThemeContext](/docs/contexts/THEMECONTEXT.md)
 - [Configuration Guide](/docs/CONFIGURATION.md)
-- [Environment Variables](/docs/guides/ENVIRONMENT_SETUP.md)
+- [Developer Guide](/docs/guides/DEVELOPER_GUIDE.md)

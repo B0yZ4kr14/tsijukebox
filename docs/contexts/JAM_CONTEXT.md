@@ -412,6 +412,6 @@ Uses specialized hooks for functionality:
 - `useJamQueue` - Queue operations
 
 ## See Also
-- [useJamSession](/docs/hooks/USEJAMSESSION.md)
-- [useJamQueue](/docs/hooks/USEJAMQUEUE.md)
-- [Jam Session Guide](/docs/guides/JAM_SESSIONS.md)
+- [useQueue Hook](/docs/hooks/USEQUEUE.md)
+- [Jam Session Development](/docs/guides/DEVELOPER_GUIDE.md)
+- [API Reference](/docs/API-REFERENCE.md)

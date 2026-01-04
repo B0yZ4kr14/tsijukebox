@@ -260,4 +260,4 @@ try {
 ## See Also
 - [SpotifyContext](/docs/contexts/SPOTIFY_CONTEXT.md)
 - [YouTube Music API Integration](/docs/integrations/YOUTUBE_API.md)
-- [OAuth Flow Documentation](/docs/guides/OAUTH_FLOW.md)
+- [Developer Guide](/docs/guides/DEVELOPER_GUIDE.md)

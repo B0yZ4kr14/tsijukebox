@@ -206,5 +206,5 @@ try {
 
 ## See Also
 - [YouTubeMusicContext](/docs/contexts/YOUTUBE_MUSIC_CONTEXT.md)
-- [useMediaProviderStorage](/docs/hooks/USEMEDIAPROVIDER.md)
+- [useSpotify Hook](/docs/hooks/USESPOTIFY.md)
 - [Spotify API Integration](/docs/integrations/SPOTIFY_API.md)
