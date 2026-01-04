@@ -1,0 +1,82 @@
+name: Dependency Check
+
+on:
+  pull_request:
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**.js'
+      - '**.jsx'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-dependencies:
+    name: Verify Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🔍 Check for missing dependencies
+        id: check_deps
+        run: |
+          echo "Running dependency check..."
+          node scripts/fix-missing-dependencies.mjs --check || {
+            echo "::warning::Missing dependencies detected"
+            echo "missing=true" >> $GITHUB_OUTPUT
+            exit 0
+          }
+          echo "missing=false" >> $GITHUB_OUTPUT
+
+      - name: 💬 Comment on PR (if missing dependencies)
+        if: steps.check_deps.outputs.missing == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ⚠️ Missing Dependencies Detected
+
+            The dependency check found missing packages that are imported in the code but not declared in \`package.json\`.
+
+            ### 🔧 To fix this:
+
+            \`\`\`bash
+            npm run deps:fix
+            \`\`\`
+
+            Or manually run:
+
+            \`\`\`bash
+            node scripts/fix-missing-dependencies.mjs
+            \`\`\`
+
+            This will install the missing dependencies and update \`package.json\`.
+
+            ---
+            *This check helps prevent build failures due to missing dependencies.*
+            `
+            })
+
+      - name: ✅ Dependency check completed
+        run: echo "Dependency verification completed successfully"

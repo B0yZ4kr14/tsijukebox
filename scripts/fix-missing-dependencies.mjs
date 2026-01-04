@@ -4,6 +4,9 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
+// Check if running in --check mode
+const CHECK_MODE = process.argv.includes('--check');
+
 const RADIX_PACKAGES = [
   '@radix-ui/react-alert-dialog',
   '@radix-ui/react-arrow',
@@ -84,6 +87,14 @@ console.log(`\n📊 Summary: ${foundPackages.length} found, ${missingPackages.le
 if (missingPackages.length === 0) {
   console.log('✅ All @radix-ui dependencies are installed!');
   process.exit(0);
+}
+
+if (CHECK_MODE) {
+  console.log('❌ Missing dependencies found in --check mode!');
+  console.log('\nMissing packages:');
+  missingPackages.forEach(pkg => console.log(`  - ${pkg}`));
+  console.log('\n💡 Run "npm run deps:fix" or "node scripts/fix-missing-dependencies.mjs" to install them.\n');
+  process.exit(1);
 }
 
 console.log(`📦 Installing ${missingPackages.length} missing packages...\n`);
