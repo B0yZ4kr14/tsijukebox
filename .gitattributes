@@ -1,6 +1,5 @@
 # Prevent auto-sync from modifying critical config files
 package.json merge=ours
-package-lock.json merge=ours
 
 # Text files normalization
 * text=auto
