@@ -16,7 +16,7 @@ TSiJUKEBOX is an enterprise-grade digital jukebox system built with React, TypeS
 ## 🏗️ Architecture
 
 ### Tech Stack
-- **Frontend:** React 18.3 + TypeScript 5.5 + Vite 5.4
+- **Frontend:** React 18.3 + TypeScript 5.5.3 + Vite 5.4.1
 - **Styling:** Tailwind CSS + shadcn/ui components
 - **State Management:** Zustand for global state
 - **UI Components:** Radix UI primitives with custom theming
@@ -99,11 +99,13 @@ const process = (data: unknown) => {
 
 **Prefer const objects over enums:**
 ```typescript
-const PlaybackState = {
+const PlaybackStates = {
   PLAYING: 'playing',
   PAUSED: 'paused',
   STOPPED: 'stopped',
 } as const;
+
+type PlaybackState = typeof PlaybackStates[keyof typeof PlaybackStates];
 ```
 
 ### React Component Patterns
