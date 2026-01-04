@@ -222,22 +222,86 @@ npm run fix-deps
 
 ## 🧪 Testing
 
-### Unit Tests (Vitest)
+### Frontend Tests
+
+#### Unit Tests (Vitest)
 - Located in `src/**/*.test.{ts,tsx}`
 - Run with `npm run test`
 - Use `jsdom` environment
 - Setup file: `src/test/setup.ts`
+- **Coverage threshold:** 70% (statements, branches, functions, lines)
 
-### E2E Tests (Playwright)
+#### E2E Tests (Playwright)
 - Located in `e2e/specs/*.spec.ts`
 - Run with `npm run test:e2e`
 - Config: `playwright.config.ts`
 
-**Test patterns:**
+**Frontend test patterns:**
 - Test accessibility with axe-core
 - Test keyboard navigation
 - Test responsive behavior
 - Mock external services (Spotify, YouTube)
+
+### Backend Tests (Python)
+
+#### Unit Tests (pytest)
+- **Location:** `scripts/tests/test_*.py`
+- **Framework:** pytest with pytest-cov
+- **Coverage target:** 60% minimum
+- **Run:** `pytest scripts/tests/ -v --cov`
+
+#### Test Types
+- **Unit:** `test_*.py` - Component isolation
+- **Integration:** `test_*_integration.py` - Component interaction
+- **Edge Cases:** `test_*_edge_cases.py` - Boundary conditions
+- **Security:** `test_*_security.py` - Security validation
+- **Benchmark:** `test_*_benchmark.py` - Performance tests
+- **E2E:** `scripts/tests/e2e/` - Full installation in Docker
+
+#### Test Environment
+```python
+# pytest.ini configuration
+[tool.pytest.ini_options]
+testpaths = ["scripts/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=scripts --cov-report=html --cov-report=term"
+
+# Running tests
+pytest scripts/tests/                          # All tests
+pytest scripts/tests/test_installer.py         # Specific file
+pytest scripts/tests/ -k "test_database"       # Match pattern
+pytest scripts/tests/ --cov --cov-report=html  # With coverage
+```
+
+### CI/CD Testing
+
+#### GitHub Actions Workflows
+- **Location:** `.github/workflows/`
+- **Main Pipeline:** `tsijukebox-cicd.yml`
+- **Test Workflows:**
+  - `test-pipeline.yml` - Frontend tests
+  - `python-installer-tests.yml` - Backend tests
+  - `e2e-tests.yml` - E2E automation
+  - `accessibility.yml` - A11y validation
+  - `codeql.yml` - Security scanning
+
+#### Test Matrix
+```yaml
+# Multi-environment testing
+- Node.js: 18.x, 20.x
+- Python: 3.10, 3.11, 3.12
+- OS: ubuntu-latest, macos-latest
+- Browsers: chromium, firefox, webkit (Playwright)
+- Distros: CachyOS, Arch, Manjaro, EndeavourOS (E2E)
+```
+
+### Test Documentation
+- **Python Testing Guide:** `docs/PYTHON_TESTING.md`
+- **Frontend Tests:** `docs/testing/UNIT_TESTS.md`
+- **Integration Tests:** `docs/testing/INTEGRATION_TESTS.md`
+- **Test Plan:** `docs/testing/TEST_PLAN_COMPLETE.md`
 
 ## 🔐 Security & Best Practices
 
@@ -415,6 +479,186 @@ The project includes 6 visual themes:
 - Auth: Email/password + OAuth (when using Supabase)
 - Storage: Audio files, album art (local filesystem or cloud)
 - Config: `src/integrations/supabase/` (legacy cloud support)
+
+## 🐍 Backend & Python Scripts
+
+### Python Backend (FastAPI)
+- **Location:** `backend/`
+- **Framework:** FastAPI (Python 3.11+)
+- **API Server:** `backend/main.py`
+- **Database Models:** `backend/models/database.py`
+- **API Modules:**
+  - `backend/api/auth.py` - Authentication endpoints
+  - `backend/api/users.py` - User management
+  - `backend/api/backup.py` - Backup operations
+  - `backend/api/github.py` - GitHub integration
+- **Requirements:** `backend/requirements.txt`
+- **Docker:** `backend/Dockerfile`
+
+### Python Scripts (28+ scripts)
+- **Location:** `scripts/`
+- **Unified Installer:** `scripts/unified-installer.py` - Main installation script
+- **Installation Wizard:** `scripts/installation-wizard.py` - Interactive setup
+- **Docker Installer:** `scripts/docker-install.py` - Docker-based installation
+- **Testing:** `scripts/tests/` - 30+ test files with 500+ tests
+- **Test Coverage:** 60% minimum required
+
+### Python Coding Standards
+```python
+# Use type hints
+def migrate_database(source: str, target: str) -> bool:
+    """Migrate database from source to target.
+    
+    Args:
+        source: Source database type (sqlite, postgresql, etc.)
+        target: Target database type
+        
+    Returns:
+        True if migration successful, False otherwise
+    """
+    pass
+
+# Use pathlib for file operations
+from pathlib import Path
+db_path = Path("/var/lib/jukebox/jukebox.db")
+
+# Use logging instead of print
+import logging
+logger = logging.getLogger(__name__)
+logger.info("Migration started")
+
+# Handle errors gracefully
+try:
+    result = migrate_database("sqlite", "postgresql")
+except DatabaseError as e:
+    logger.error(f"Migration failed: {e}")
+    raise
+```
+
+### Python Testing
+- **Framework:** pytest
+- **Test Types:**
+  - Unit tests: `scripts/tests/test_*.py`
+  - Integration: `scripts/tests/test_*_integration.py`
+  - Edge cases: `scripts/tests/test_*_edge_cases.py`
+  - Security: `scripts/tests/test_*_security.py`
+  - E2E: `scripts/tests/e2e/`
+- **Coverage Tool:** pytest-cov
+- **Run Tests:** `pytest scripts/tests/ -v --cov`
+- **Documentation:** `docs/PYTHON_TESTING.md`
+
+## 🐳 Docker & Infrastructure
+
+### Docker Deployment
+- **Main Compose:** `docker/docker-compose.yml`
+- **Dev Compose:** `docker/docker-compose.dev.yml`
+- **Dockerfiles:**
+  - Frontend: `docker/Dockerfile`
+  - Backend: `backend/Dockerfile`
+  - E2E Tests: `scripts/tests/e2e/Dockerfile.*`
+
+### Infrastructure Components
+- **Nginx:** Reverse proxy with SSL/TLS
+  - Config: `docker/nginx/`
+  - HTTPS on port 443
+  - mDNS support for `.local` domains
+- **Prometheus:** Metrics collection
+  - Config: `docker/prometheus/`
+  - Port: 9090
+- **Grafana:** Monitoring dashboards
+  - Config: `docker/grafana/`
+  - Port: 3000
+- **Fail2ban:** Attack protection
+- **Avahi/mDNS:** Local network discovery
+
+### Deployment Modes
+```bash
+# Production mode
+docker-compose -f docker/docker-compose.yml up -d
+
+# Development mode
+docker-compose -f docker/docker-compose.dev.yml up
+
+# Kiosk mode (full setup)
+python3 scripts/unified-installer.py --mode kiosk
+
+# Server mode (headless)
+python3 scripts/unified-installer.py --mode server
+```
+
+## 🎤 Karaoke System
+
+### Features
+- **Lyrics Synchronization:** Real-time lyrics display synced with audio
+- **Pitch Control:** Adjust vocal pitch (±12 semitones)
+- **Audio Effects:** Reverb, echo, vocal enhancement
+- **Scoring System:** Real-time performance scoring
+- **Dual Display:** Lyrics + performance metrics
+
+### Components
+- **Frontend:** `src/components/karaoke/`
+- **Lyrics Display:** Time-synced lyrics rendering
+- **Score Tracker:** Performance analysis
+- **Audio Processor:** Pitch detection and effects
+
+### API Endpoints
+```typescript
+// Karaoke API (FastAPI backend)
+GET    /api/karaoke/lyrics/{trackId}    // Get lyrics
+POST   /api/karaoke/session/start       // Start karaoke session
+POST   /api/karaoke/session/end         // End session
+POST   /api/karaoke/pitch                // Adjust pitch
+POST   /api/karaoke/effects              // Configure effects
+GET    /api/karaoke/scores               // Get score history
+```
+
+### Theme Integration
+- **Karaoke Stage Theme:** Optimized purple/magenta color scheme
+- **Full-screen Mode:** Dedicated karaoke UI
+- **WCAG Compliance:** High contrast for lyrics readability
+
+## 📊 Monitoring & Observability
+
+### Prometheus Metrics
+- Application metrics collection
+- System resource monitoring
+- Custom metrics for music playback
+- Database query performance
+- API endpoint latency
+
+### Grafana Dashboards
+- **System Dashboard:** CPU, memory, disk usage
+- **Application Dashboard:** Active users, playback stats
+- **Database Dashboard:** Query performance, connection pool
+- **Karaoke Dashboard:** Session metrics, scoring stats
+
+### Logging
+- **Structured Logging:** JSON format
+- **Log Levels:** DEBUG, INFO, WARNING, ERROR, CRITICAL
+- **Log Location:** `/var/log/jukebox/`
+- **Rotation:** Daily rotation with 7-day retention
+- **Centralized:** Aggregated via syslog
+
+## 🔒 Security & SSL
+
+### SSL/TLS Configuration
+- **Certificate Management:** Let's Encrypt or self-signed
+- **Nginx SSL:** HTTPS enforced
+- **Certificate Location:** `/etc/ssl/jukebox/`
+- **Auto-renewal:** Certbot integration
+
+### Security Hardening
+- **Firewall:** UFW with minimal open ports
+- **Fail2ban:** Automatic IP blocking on repeated failures
+- **SSH Hardening:** Key-based auth only
+- **File Permissions:** Strict ownership and permissions
+- **Security Headers:** HSTS, CSP, X-Frame-Options
+
+### Authentication
+- **OAuth 2.0:** Spotify, YouTube Music, GitHub
+- **JWT Tokens:** Session management
+- **Password Hashing:** bcrypt with salt
+- **Rate Limiting:** API endpoint protection
 
 ## 📚 Additional Resources
 
