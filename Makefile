@@ -5,7 +5,8 @@
 .PHONY: help test test-watch test-ui test-unit test-integration \
         test-coverage test-e2e test-e2e-headed test-all \
         test-schemas test-spotify test-youtube test-lyrics test-jam test-playback \
-        coverage-report clean-coverage setup-e2e install ci-test ci-coverage
+        coverage-report clean-coverage setup-e2e install ci-test ci-coverage \
+        validate health deps-check deps-fix format typecheck
 
 # Cores para output
 CYAN := \033[0;36m
@@ -164,3 +165,36 @@ tw: test-watch ## Atalho para test-watch
 tc: test-coverage ## Atalho para test-coverage
 tu: test-ui ## Atalho para test-ui
 tp: test-python ## Atalho para test-python
+
+# ============================================================================
+# Enterprise-Grade Development Tools
+# ============================================================================
+
+validate: ## Executar validação completa (typecheck + lint + format + deps)
+	@echo "$(CYAN)▶ Executando validação completa...$(NC)"
+	npm run validate
+
+health: ## Verificar saúde do projeto
+	@echo "$(CYAN)▶ Executando health check...$(NC)"
+	node scripts/health-check.mjs
+
+deps-check: ## Verificar dependências faltantes
+	@echo "$(CYAN)▶ Verificando dependências...$(NC)"
+	node scripts/fix-missing-dependencies.mjs --check
+
+deps-fix: ## Corrigir dependências faltantes
+	@echo "$(CYAN)▶ Corrigindo dependências...$(NC)"
+	node scripts/fix-missing-dependencies.mjs
+
+format: ## Formatar código com Prettier
+	@echo "$(CYAN)▶ Formatando código...$(NC)"
+	npm run format
+
+format-check: ## Verificar formatação sem modificar
+	@echo "$(CYAN)▶ Verificando formatação...$(NC)"
+	npm run format:check
+
+typecheck: ## Verificar tipos TypeScript
+	@echo "$(CYAN)▶ Verificando tipos TypeScript...$(NC)"
+	npm run typecheck
+

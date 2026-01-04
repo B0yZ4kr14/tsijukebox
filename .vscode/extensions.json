@@ -1,0 +1,39 @@
+{
+  "recommendations": [
+    // Language support
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    
+    // TypeScript & React
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    
+    // Git tools
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    
+    // Utilities
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "usernamehw.errorlens",
+    "yzhang.markdown-all-in-one",
+    
+    // Testing
+    "ms-playwright.playwright",
+    
+    // Docker
+    "ms-azuretools.vscode-docker",
+    
+    // Python (for scripts)
+    "ms-python.python",
+    
+    // EditorConfig
+    "editorconfig.editorconfig",
+    
+    // Code quality
+    "streetsidesoftware.code-spell-checker",
+    
+    // Accessibility
+    "deque-systems.vscode-axe-linter"
+  ]
+}

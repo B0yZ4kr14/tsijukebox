@@ -1,6 +1,24 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged for code formatting and linting
+echo ""
+echo "📝 Running lint-staged..."
+npx lint-staged
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit bloqueado: Lint-staged falhou"
+  echo "💡 Corrija os erros acima antes de commitar"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Lint-staged passou!"
+
+echo ""
 echo "🔍 Verificando problemas de contraste WCAG..."
 
 # Executar script de verificação de contraste
@@ -57,6 +75,22 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "✅ Nenhum elemento HTML nativo encontrado!"
+
+echo ""
+echo "🔍 Verificando tipos TypeScript..."
+
+# Run TypeScript type check
+npm run typecheck
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit bloqueado: Erros de tipo TypeScript encontrados"
+  echo "💡 Corrija os erros de tipo antes de commitar"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Verificação de tipos passou!"
 
 echo ""
 echo "🎉 Todas as verificações passaram!"

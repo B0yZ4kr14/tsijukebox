@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "schedule": [
+    "before 5am on monday"
+  ],
+  "timezone": "America/Sao_Paulo",
+  "labels": [
+    "dependencies",
+    "automated"
+  ],
+  "rangeStrategy": "bump",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "⬆️",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "groupName": "React packages",
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "schedule": ["before 5am on the first day of the month"]
+    },
+    {
+      "groupName": "Radix UI packages",
+      "matchPackagePatterns": ["^@radix-ui/"],
+      "schedule": ["before 5am on the first day of the month"]
+    },
+    {
+      "groupName": "Testing tools",
+      "matchPackagePatterns": ["vitest", "playwright", "@playwright/", "@axe-core/"],
+      "schedule": ["before 5am on the 15th day of the month"]
+    },
+    {
+      "groupName": "ESLint and TypeScript",
+      "matchPackagePatterns": ["eslint", "typescript", "@typescript-eslint/", "typescript-eslint"],
+      "schedule": ["before 5am on the 15th day of the month"]
+    },
+    {
+      "groupName": "Build tools",
+      "matchPackagePatterns": ["vite", "@vitejs/", "postcss", "autoprefixer", "tailwindcss"],
+      "schedule": ["before 5am on the 15th day of the month"]
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "matchUpdateTypes": ["patch"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": []
+  },
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2
+}
