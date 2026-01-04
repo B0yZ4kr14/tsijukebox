@@ -81,7 +81,7 @@ curl -X POST https://[project-id].supabase.co/functions/v1/screenshot-service \
 
 ```bash
 curl -X POST https://[project-id].supabase.co/functions/v1/screenshot-service \
-  -H "Content-Type": application/json" \
+  -H "Content-Type: application/json" \
   -d '{
     "action": "capture-single",
     "route": "/dashboard",
