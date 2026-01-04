@@ -59,6 +59,8 @@ npm run lint         # Run ESLint
 The GitHub Actions environment has firewall rules that may block certain external URLs. To work around this:
 
 1. **Playwright/Chromium Dependencies**: These require `googlechromelabs.github.io` access
+   - **Solution**: Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` during `npm ci`
+   - Install Playwright browsers separately using `npx playwright install`
    - Use Playwright Docker images when possible
    - Cache Playwright browsers to avoid repeated downloads
    - Run Playwright install before firewall activation in Copilot workflows
@@ -73,6 +75,16 @@ The GitHub Actions environment has firewall rules that may block certain externa
    - Cache npm packages and Playwright browsers
    - Use `actions/cache@v4` for dependencies
    - Install all external dependencies in setup phase
+   - Example:
+     ```yaml
+     - name: Install dependencies
+       run: npm ci --legacy-peer-deps
+       env:
+         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+     
+     - name: Install Playwright browsers
+       run: npx playwright install --with-deps chromium
+     ```
 
 #### Workflow Best Practices
 - Use `npm ci` for clean installs in CI (not `npm install`)

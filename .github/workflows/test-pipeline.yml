@@ -34,6 +34,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run unit tests
         run: npx vitest run --reporter=verbose --exclude="**/*.integration.test.ts"
@@ -67,6 +69,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run integration tests
         run: npx vitest run --reporter=verbose --testPathPattern="integration"
@@ -107,6 +111,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -161,6 +167,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Generate coverage report
         run: npx vitest run --coverage --coverage.reporter=lcov --coverage.reporter=text
