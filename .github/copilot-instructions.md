@@ -248,6 +248,26 @@ npm run fix-deps
 - **Handle errors gracefully:** Use try-catch and error boundaries
 - **Optimize performance:** Code splitting, lazy loading, memoization
 
+## 🗄️ Database & Backend Requirements
+
+**⚠️ MANDATORY GUIDELINE - NON-NEGOTIABLE:**
+
+- **SQLite as Default Database:** All new installations MUST use SQLite by default
+- **Autonomous Installation:** Python/Docker installers MUST provision everything automatically without user intervention
+- **Zero Configuration:** The installer should work out-of-the-box with sensible defaults
+- **Backend Refactoring:** When working on backend code, prioritize SQLite compatibility over cloud-only solutions
+- **Migration Path:** Maintain Supabase support for existing deployments, but SQLite is the primary target
+- **Local-First Architecture:** Design features to work offline with local SQLite before adding cloud sync
+
+**Implementation Requirements:**
+```python
+# scripts/unified-installer.py must:
+# 1. Auto-detect environment
+# 2. Set up SQLite database with schema
+# 3. Configure all services automatically
+# 4. No interactive prompts unless explicitly requested
+```
+
 ## 🎨 Theming
 
 The project includes 6 visual themes:
@@ -274,11 +294,13 @@ The project includes 6 visual themes:
 - Hooks: `src/hooks/youtube/`
 - OAuth 2.0 authentication
 
-### Supabase Backend
-- Database: PostgreSQL
-- Auth: Email/password + OAuth
-- Storage: Audio files, album art
-- Config: `src/integrations/supabase/`
+### Database Backend
+- **Primary (Default):** SQLite for local installations
+- **Secondary (Optional):** Supabase/PostgreSQL for cloud deployments
+- Database: SQLite (local) or PostgreSQL (cloud)
+- Auth: Email/password + OAuth (when using Supabase)
+- Storage: Audio files, album art (local filesystem or cloud)
+- Config: `src/integrations/supabase/` (legacy cloud support)
 
 ## 📚 Additional Resources
 
