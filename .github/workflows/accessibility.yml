@@ -21,7 +21,9 @@ jobs:
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         
       - name: Install Puppeteer browser
         run: npx puppeteer browsers install chrome

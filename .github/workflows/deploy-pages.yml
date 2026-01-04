@@ -25,17 +25,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+          cache: 'npm'
 
       - name: 📦 Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci --legacy-peer-deps
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: 🔨 Build
-        run: pnpm build
+        run: npm run build
 
       - name: ⚙️ Setup Pages
         uses: actions/configure-pages@v4
