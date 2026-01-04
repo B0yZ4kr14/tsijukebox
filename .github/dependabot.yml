@@ -10,8 +10,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
@@ -19,48 +17,45 @@ updates:
     commit-message:
       prefix: "chore(deps):"
     groups:
-      # Group React-related dependencies
-      react:
-        patterns:
-          - "react*"
-          - "@types/react*"
-      # Group Radix UI components
-      radix:
+      radix-ui:
         patterns:
           - "@radix-ui/*"
-      # Group Testing dependencies
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
       testing:
         patterns:
-          - "vitest*"
+          - "vitest"
           - "@testing-library/*"
-          - "playwright*"
-          - "puppeteer*"
-      # Group TanStack dependencies
-      tanstack:
-        patterns:
-          - "@tanstack/*"
+          - "playwright"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
     labels:
       - "dependencies"
       - "github-actions"
-    commit-message:
-      prefix: "ci(deps):"
 
-  # Python dependencies (for installer)
-  - package-ecosystem: "pip"
-    directory: "/scripts/installer"
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/docker"
     schedule:
       interval: "monthly"
     labels:
       - "dependencies"
-      - "python"
-    commit-message:
-      prefix: "chore(deps):"
+      - "docker"

@@ -1,79 +1,40 @@
-## 📋 Descrição
+## 📋 Description
 
-<!-- Descreva suas mudanças em detalhes -->
+<!-- Describe your changes in detail -->
 
-## 🎯 Tipo de Mudança
+## 🔗 Related Issues
 
-<!-- Marque as opções relevantes com [x] -->
+<!-- Link related issues: Fixes #123, Closes #456 -->
 
-- [ ] 🐛 Bug fix (mudança que corrige um problema)
-- [ ] ✨ Nova feature (mudança que adiciona funcionalidade)
-- [ ] 💥 Breaking change (correção ou feature que quebraria funcionalidade existente)
-- [ ] 📝 Documentação (mudanças apenas em documentação)
-- [ ] 🎨 Estilo (formatação, ponto e vírgula, etc; sem mudança de código)
-- [ ] ♻️ Refatoração (mudança de código que não corrige bug nem adiciona feature)
-- [ ] ⚡ Performance (mudança que melhora performance)
-- [ ] ✅ Testes (adição ou correção de testes)
-- [ ] 🔧 Build/CI (mudanças em arquivos de build ou CI)
+## 📝 Type of Change
 
-## 🔗 Issue Relacionada
-
-<!-- Link para a issue que este PR resolve (se aplicável) -->
-<!-- Use "Fixes #123" ou "Closes #123" para fechar automaticamente -->
-
-Fixes #
-
-## 📸 Screenshots
-
-<!-- Se aplicável, adicione screenshots para mostrar as mudanças -->
-
-| Antes | Depois |
-|-------|--------|
-| screenshot | screenshot |
-
-## 🧪 Como Testar
-
-<!-- Descreva os passos para testar suas mudanças -->
-
-1. Passo 1
-2. Passo 2
-3. Passo 3
+- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
+- [ ] ✨ New feature (non-breaking change that adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] 📚 Documentation update
+- [ ] 🔧 Configuration change
+- [ ] ♻️ Refactoring (no functional changes)
+- [ ] 🧪 Test update
 
 ## ✅ Checklist
 
-### Código
-- [ ] Meu código segue os padrões de estilo do projeto
-- [ ] Eu realizei uma auto-revisão do meu código
-- [ ] Eu comentei meu código em áreas difíceis de entender
-- [ ] Eu fiz as mudanças correspondentes na documentação
+- [ ] My code follows the project's code style
+- [ ] I have performed a self-review of my own code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
+- [ ] Any dependent changes have been merged and published
 
-### Testes
-- [ ] Testes existentes passam localmente (`npm run test`)
-- [ ] Eu adicionei testes que provam que minha correção/feature funciona
-- [ ] Novos e existentes testes unitários passam localmente
+## 📸 Screenshots (if applicable)
 
-### Build
-- [ ] Build passa sem erros (`npm run build`)
-- [ ] Linting passa sem erros (`npm run lint`)
-- [ ] Sem novos warnings
+<!-- Add screenshots to help explain your changes -->
 
-### Brand Components (se aplicável)
-- [ ] Testei todas as variantes do componente (se BrandLogo/SplashScreen)
-- [ ] Animações funcionam corretamente
-- [ ] Animações respeitam `prefers-reduced-motion`
-- [ ] Documentação atualizada em `docs/BRAND-COMPONENTS.md`
+## 🧪 Testing Instructions
 
-### Acessibilidade (se aplicável)
-- [ ] Validação WCAG passa (`npm run wcag:validate`)
-- [ ] Verificação de contraste passa (`npm run contrast`)
-- [ ] Exceções WCAG estão documentadas com comentários
+<!-- How should reviewers test this PR? -->
 
-## 📝 Notas para Revisores
+## 📊 Performance Impact
 
-<!-- Adicione qualquer informação adicional para os revisores -->
-
-## 🔄 Dependências
-
-<!-- Liste quaisquer PRs que devem ser mergeados primeiro -->
-
-- [ ] Depende de #
+<!-- Any performance implications? -->
