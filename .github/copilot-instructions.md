@@ -256,16 +256,79 @@ npm run fix-deps
 - **Autonomous Installation:** Python/Docker installers MUST provision everything automatically without user intervention
 - **Zero Configuration:** The installer should work out-of-the-box with sensible defaults
 - **Backend Refactoring:** When working on backend code, prioritize SQLite compatibility over cloud-only solutions
-- **Migration Path:** Maintain Supabase support for existing deployments, but SQLite is the primary target
+- **Migration Support:** Maintain migration tools for PostgreSQL, MariaDB/MySQL, and Firebird
 - **Local-First Architecture:** Design features to work offline with local SQLite before adding cloud sync
+
+### Supported Database Systems
+
+The TSiJUKEBOX supports multiple database backends with migration tools:
+
+| Database | Use Case | Documentation |
+|----------|----------|---------------|
+| **SQLite** (Default) | Standalone installations, embedded mode | `docs/database/SQLITE.md` |
+| **PostgreSQL** | Enterprise deployments, high concurrency | `docs/database/POSTGRESQL.md` |
+| **MariaDB/MySQL** | Multi-user environments, existing infrastructure | `docs/database/MARIADB_MYSQL.md` |
+| **Firebird** | Low-footprint server, embedded mode | `docs/database/FIREBIRD.md` |
+
+**Database Comparison:** See `docs/database/COMPARISON.md` for detailed technical analysis.
+
+### Migration System
+
+**Migration Tools Location:** `docs/database/MIGRATIONS.md`
+
+- **Schema Versioning:** SQL-based migrations with timestamps
+- **Cross-Database Support:** Migrations work across all supported databases
+- **Automated Migration:** Use `scripts/unified-installer.py` with `--migrate-db` flag
+- **Zero Downtime:** Logical replication support for live migrations
+
+**Migration Commands:**
+```bash
+# Migrate from Supabase/PostgreSQL to SQLite
+python3 scripts/unified-installer.py --migrate-db --from postgresql --to sqlite
+
+# Migrate from SQLite to MariaDB
+python3 scripts/unified-installer.py --migrate-db --from sqlite --to mariadb
+```
+
+### Backup & Maintenance
+
+**Backup Configuration:** `docs/wiki/Config-Cloud-Backup.md`
+
+#### Local Backups
+- **SQLite:** Hot backup via SQLite backup API
+- **PostgreSQL:** `pg_dump` / `pg_restore` utilities
+- **MariaDB/MySQL:** `mysqldump` / `mysqlpump` utilities
+- **Firebird:** `gbak` utility
+
+#### Cloud Backups
+- **Provider:** Storj (S3-compatible, decentralized)
+- **Encryption:** End-to-end encryption
+- **Retention Policy:** Configurable (7 daily, 4 weekly, 3 monthly)
+- **Automated Scheduling:** Daily backups at 03:00
+- **Alternative Providers:** Any S3-compatible storage (AWS S3, MinIO, Wasabi)
+
+#### Maintenance Tools
+```bash
+# Database optimization
+python3 scripts/unified-installer.py --optimize-db
+
+# Integrity check
+python3 scripts/unified-installer.py --check-db
+
+# Repair corrupted database
+python3 scripts/unified-installer.py --repair-db
+```
 
 **Implementation Requirements:**
 ```python
 # scripts/unified-installer.py must:
-# 1. Auto-detect environment
-# 2. Set up SQLite database with schema
-# 3. Configure all services automatically
-# 4. No interactive prompts unless explicitly requested
+# 1. Auto-detect environment and database type
+# 2. Set up SQLite database with schema by default
+# 3. Provide migration path to/from all supported databases
+# 4. Configure automatic backups (local + cloud)
+# 5. Include maintenance tools (VACUUM, integrity check, reindex)
+# 6. Support zero-configuration installation
+# 7. No interactive prompts unless explicitly requested
 ```
 
 ## 🎨 Theming
