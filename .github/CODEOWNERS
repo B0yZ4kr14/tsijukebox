@@ -1,40 +1,24 @@
 # Code Owners para TSiJUKEBOX
 # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Default owner for everything
+# Global owners
 * @B0yZ4kr14
 
-# Frontend and design system
-/src/ @B0yZ4kr14
+# Frontend
 /src/components/ @B0yZ4kr14
-/src/hooks/ @B0yZ4kr14
-/src/styles/ @B0yZ4kr14
-/src/index.css @B0yZ4kr14
-tailwind.config.ts @B0yZ4kr14
+/src/pages/ @B0yZ4kr14
+/src/lib/ @B0yZ4kr14
 
-# API clients and runtime contracts
-/src/lib/api/** @B0yZ4kr14
+# Backend
+/backend/ @B0yZ4kr14
 
-# Supabase and backend edge functions
-/supabase/functions/** @B0yZ4kr14
-/supabase/migrations/** @B0yZ4kr14
-
-# Automation, installers, and scripting
+# Infrastructure
+/docker/ @B0yZ4kr14
 /scripts/ @B0yZ4kr14
-/scripts/installer/** @B0yZ4kr14
-requirements.txt @B0yZ4kr14
-
-# Documentation
-/docs/ @B0yZ4kr14
-*.md @B0yZ4kr14
-
-# CI/CD and repository configuration
 /.github/ @B0yZ4kr14
-/.github/workflows/** @B0yZ4kr14
-/.github/CODEOWNERS @B0yZ4kr14
 
-# Testing suites
-/tests/ @B0yZ4kr14
-/e2e/ @B0yZ4kr14
-*.test.ts @B0yZ4kr14
-*.test.tsx @B0yZ4kr14
+# Configuration files
+package.json @B0yZ4kr14
+tsconfig*.json @B0yZ4kr14
+tailwind.config.ts @B0yZ4kr14
+vite.config.ts @B0yZ4kr14

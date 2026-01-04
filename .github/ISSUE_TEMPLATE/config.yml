@@ -1,11 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 📚 Documentation
-    url: https://github.com/B0yZ4kr14/TSiJUKEBOX/tree/main/docs
-    about: Check our documentation before opening an issue
   - name: 💬 Discussions
-    url: https://github.com/B0yZ4kr14/TSiJUKEBOX/discussions
-    about: Ask questions and discuss features
-  - name: 🔒 Security Issues
-    url: https://github.com/B0yZ4kr14/TSiJUKEBOX/security/policy
-    about: Report security vulnerabilities privately
+    url: https://github.com/B0yZ4kr14/tsijukebox/discussions
+    about: Use discussions for questions and ideas
+  - name: 📖 Documentation
+    url: https://github.com/B0yZ4kr14/tsijukebox/wiki
+    about: Check our documentation first
