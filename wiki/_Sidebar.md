@@ -2,10 +2,16 @@
 
 ### Início
 - [🏠 Home](Home)
+- [⚡ Guia de Início Rápido](Quick-Start-Guide)
+- [❓ FAQ](FAQ)
 
 ### Instalação
 - [🚀 Guia de Instalação](Installation-Guide)
 - [⚙️ Configuração](Configuration)
+
+### Guias
+- [📖 Melhores Práticas](Best-Practices)
+- [🔍 API Quick Reference](API-Quick-Reference)
 
 ### Desenvolvimento
 - [🎨 Design System](Design-System)
