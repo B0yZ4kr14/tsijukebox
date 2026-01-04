@@ -301,11 +301,17 @@ python3 scripts/unified-installer.py --migrate-db --from sqlite --to mariadb
 - **Firebird:** `gbak` utility
 
 #### Cloud Backups
-- **Provider:** Storj (S3-compatible, decentralized)
-- **Encryption:** End-to-end encryption
+- **Primary Provider:** Storj (S3-compatible, decentralized)
+- **Supported Providers:**
+  - **Storj:** Decentralized, S3-compatible, end-to-end encryption
+  - **Google Drive:** OAuth 2.0 authentication, 15GB free tier
+  - **OneDrive:** Microsoft account integration, 5GB free tier
+  - **MEGA.nz:** Zero-knowledge encryption, 20GB free tier
+  - **Dropbox:** OAuth 2.0 authentication, 2GB free tier
+  - **S3-Compatible:** AWS S3, MinIO, Wasabi, DigitalOcean Spaces
+- **Encryption:** End-to-end encryption for all providers
 - **Retention Policy:** Configurable (7 daily, 4 weekly, 3 monthly)
 - **Automated Scheduling:** Daily backups at 03:00
-- **Alternative Providers:** Any S3-compatible storage (AWS S3, MinIO, Wasabi)
 
 #### Maintenance Tools
 ```bash
