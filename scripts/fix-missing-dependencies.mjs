@@ -40,10 +40,21 @@ const RADIX_PACKAGES = [
   '@radix-ui/react-use-controllable-state',
   '@radix-ui/react-use-escape-keydown',
   '@radix-ui/react-use-layout-effect',
-  '@radix-ui/react-use-prev',
   '@radix-ui/react-use-size',
   '@radix-ui/react-direction',
   '@radix-ui/react-context',
+];
+
+const SHADCN_DEPENDENCIES = [
+  'vaul',
+  'input-otp',
+  'react-resizable-panels',
+  'embla-carousel-react',
+  'embla-carousel-autoplay',
+  'html2canvas',
+  'cmdk',
+  'react-day-picker',
+  'sonner',
 ];
 
 function isPackageInstalled(packageName) {
@@ -64,12 +75,14 @@ function checkWithNpm(packageName) {
   }
 }
 
-console.log('🔍 Scanning for missing @radix-ui dependencies...\n');
+console.log('🔍 Scanning for missing @radix-ui and shadcn/ui dependencies...\n');
 
 const missingPackages = [];
 const foundPackages = [];
 
-for (const pkg of RADIX_PACKAGES) {
+const allPackages = [...RADIX_PACKAGES, ...SHADCN_DEPENDENCIES];
+
+for (const pkg of allPackages) {
   if (checkWithNpm(pkg)) {
     console.log(`✅ Found: ${pkg}`);
     foundPackages.push(pkg);
@@ -82,7 +95,7 @@ for (const pkg of RADIX_PACKAGES) {
 console.log(`\n📊 Summary: ${foundPackages.length} found, ${missingPackages.length} missing\n`);
 
 if (missingPackages.length === 0) {
-  console.log('✅ All @radix-ui dependencies are installed!');
+  console.log('✅ All dependencies are installed!');
   process.exit(0);
 }
 
