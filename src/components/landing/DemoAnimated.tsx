@@ -87,9 +87,9 @@ const DemoAnimated: React.FC = () => {
         <div className="flex items-center gap-2 px-4 py-3">
           {/* Traffic Lights */}
           <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
+            <div className="w-3 h-3 rounded-full bg-red-500" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-green-500" aria-hidden="true" />
           </div>
           
           {/* URL Bar */}
@@ -111,7 +111,7 @@ const DemoAnimated: React.FC = () => {
       </div>
 
       {/* Screen Content */}
-      <div className="relative bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 border-x border-b border-zinc-700 rounded-b-xl overflow-hidden aspect-video">
+      <div className="relative bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 border-x border-b border-zinc-700 rounded-b-xl overflow-hidden aspect-video" role="presentation">
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div 
@@ -257,7 +257,7 @@ const DemoAnimated: React.FC = () => {
             <screen.icon className="w-3 h-3" />
             {screen.title}
             {index === currentIndex && (
-              <ChevronRight className="w-3 h-3 animate-pulse" />
+              <ChevronRight aria-hidden="true" className="w-3 h-3 animate-pulse" />
             )}
           </button>
         ))}

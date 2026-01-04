@@ -20,9 +20,6 @@ import {
   Rocket,
   Stethoscope
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { useSettingsStatus, SettingsCategoryId, StatusLevel, type CategoryStatus } from '@/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -33,6 +30,7 @@ import { SettingsGuideModal } from './SettingsGuideModal';
 import { BackupManager } from './backup';
 import { SettingsFAQ } from './SettingsFAQ';
 import { SettingsNotificationBanner } from './SettingsNotificationBanner';
+import { Button, Card, Input } from "@/components/ui/themed"
 
 interface SettingsGuide {
   id: SettingsCategoryId;
@@ -237,7 +235,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute inset-0 flex items-center justify-center flex-col">
+                <div className="absolute inset-0 flex items-center justify-center flex-col" role="presentation">
                   <span className="text-2xl font-bold text-kiosk-text">{configuredPercent}%</span>
                   <span className="text-xs text-kiosk-text/85">configurado</span>
                 </div>
@@ -303,7 +301,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
 
           {/* Search */}
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
+            <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
             <Input
               placeholder="Buscar nos guias..."
               value={searchQuery}
@@ -336,7 +334,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
 
           {filteredGuides.length === 0 && (
             <div className="text-center py-8 text-kiosk-text/85">
-              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <Search aria-hidden="true" className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>Nenhum guia encontrado para "{searchQuery}"</p>
             </div>
           )}
@@ -385,7 +383,7 @@ export function SettingsDashboard({ onNavigateToCategory }: SettingsDashboardPro
             className="h-auto py-3 flex-col gap-2 bg-[hsl(220_25%_12%)] border border-kiosk-border hover:border-cyan-500/50 hover:bg-cyan-500/10"
             onClick={handleResetTour}
           >
-            <RefreshCw className="w-5 h-5 text-cyan-400" />
+            <RefreshCw aria-hidden="true" className="w-5 h-5 text-cyan-400" />
             <span className="text-xs font-bold text-neon-action-label">Reiniciar Tour</span>
           </Button>
           <Button

@@ -5,12 +5,11 @@ import { PanelLeft } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/common/use-mobile";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button, Input } from "@/components/ui/themed"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -225,14 +224,13 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
         ref={ref}
         data-sidebar="trigger"
         variant="ghost"
-        size="icon"
+        size="xs"
         className={cn("h-7 w-7", className)}
         onClick={(event) => {
           onClick?.(event);
           toggleSidebar();
         }}
-        {...props}
-      >
+        {...props} aria-label="Painel esquerdo">
         <PanelLeft />
         <span className="sr-only">Toggle Sidebar</span>
       </Button>

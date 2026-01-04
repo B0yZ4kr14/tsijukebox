@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Download, Copy, FileImage, FileCode, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface LogoDownloadProps {
   showPreview?: boolean;
@@ -170,7 +168,7 @@ export function LogoDownload({
           onClick={copySVG}
           className="gap-2"
         >
-          {copiedSvg ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+          {copiedSvg ? <Check aria-hidden="true" className="w-4 h-4 text-green-500" /> : <Copy aria-hidden="true" className="w-4 h-4" />}
           Copiar
         </Button>
       </div>
@@ -179,24 +177,23 @@ export function LogoDownload({
 
   return (
     <Card className={cn("bg-kiosk-card border-kiosk-border", className)}>
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-kiosk-text flex items-center gap-2">
-              <Download className="w-5 h-5 icon-neon-blue" />
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+              <Download aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
               Download da Logo
-            </CardTitle>
-            <CardDescription className="text-description-visible mt-1">
+            </h3>
+            <p className="text-sm text-[var(--text-muted)]">
               Baixe a logo do TSiJUKEBOX em formato vetorial ou raster
-            </CardDescription>
+            </p>
           </div>
           <Badge variant="outline" className="border-kiosk-primary/50 text-kiosk-primary">
             Oficial
           </Badge>
         </div>
-      </CardHeader>
       
-      <CardContent className="space-y-6">
+      
+      <div className="mt-4">
         {/* Preview */}
         {showPreview && (
           <div className="p-6 rounded-lg bg-[#0a0a14] border border-kiosk-border flex items-center justify-center">
@@ -224,9 +221,9 @@ export function LogoDownload({
             className="h-auto py-4 flex flex-col items-center gap-2"
           >
             {copiedSvg ? (
-              <Check className="w-6 h-6 text-green-500" />
+              <Check aria-hidden="true" className="w-6 h-6 text-green-500" />
             ) : (
-              <Copy className="w-6 h-6 icon-neon-blue" />
+              <Copy aria-hidden="true" className="w-6 h-6 icon-neon-blue" />
             )}
             <span className="font-medium">{copiedSvg ? 'Copiado!' : 'Copiar SVG'}</span>
             <span className="text-xs text-description-visible">Área de transferência</span>
@@ -259,7 +256,7 @@ export function LogoDownload({
           <p>• PNG: Ideal para documentos e redes sociais</p>
           <p>• Proporção original: 400 × 120 pixels</p>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

@@ -97,7 +97,7 @@ export function WeatherForecastChart({ forecast, className }: WeatherForecastCha
             <span className="text-xs font-medium text-kiosk-text/85">
               {day.dayName}
             </span>
-            <AnimatedWeatherIcon conditionCode={day.conditionCode} size="sm" />
+            <AnimatedWeatherIcon aria-hidden="true" conditionCode={day.conditionCode} size="sm" />
             <div className="flex items-center gap-1 text-xs">
               <span className="text-kiosk-primary font-bold">{day.tempMax}°</span>
               <span className="text-kiosk-text/85">/</span>

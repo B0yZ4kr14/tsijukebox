@@ -30,6 +30,10 @@ O TSiJUKEBOX oferece um **assistente guiado** para configurar o Spotify:
 
 ## 🔗 Conectando sua Conta (Manual)
 
+![Spotify Integration](../assets/mockups/spotify-integration-screen.png)
+
+*Tela de gerenciamento da integração Spotify com status, permissões e playlists sincronizadas*
+
 ### Passo 1: Acessar Configurações
 
 1. Navegue até **Configurações** (ícone de engrenagem)

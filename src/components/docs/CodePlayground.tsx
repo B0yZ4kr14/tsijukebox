@@ -1,16 +1,11 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check, Play, RotateCcw, Code2, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
+import { Badge, Button, Card, Input, Slider, Toggle } from "@/components/ui/themed"
 
 export interface PropDefinition {
   name: string;
@@ -109,13 +104,12 @@ export function CodePlayground({
 
   return (
     <Card className="card-neon-border overflow-hidden">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-gold-neon text-lg flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <Code2 className="w-5 h-5 icon-neon-blue" />
               {title}
-            </CardTitle>
+            </h3>
             {description && (
               <p className="text-kiosk-text/70 text-sm mt-1">{description}</p>
             )}
@@ -124,9 +118,9 @@ export function CodePlayground({
             {language.toUpperCase()}
           </Badge>
         </div>
-      </CardHeader>
       
-      <CardContent className="p-0">
+      
+      <div className="mt-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'preview' | 'code')}>
           <div className="px-4 border-b border-border">
             <TabsList className="bg-transparent h-10">
@@ -257,12 +251,12 @@ export function CodePlayground({
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4 text-green-500" />
+                    <Check aria-hidden="true" className="w-4 h-4 text-green-500" />
                     Copiado
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4" />
+                    <Copy aria-hidden="true" className="w-4 h-4" />
                     Copiar
                   </>
                 )}
@@ -278,7 +272,7 @@ export function CodePlayground({
             </div>
           </TabsContent>
         </Tabs>
-      </CardContent>
+      </div>
     </Card>
   );
 }

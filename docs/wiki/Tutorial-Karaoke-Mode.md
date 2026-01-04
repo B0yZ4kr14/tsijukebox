@@ -17,6 +17,10 @@ O modo karaoke do TSiJUKEBOX exibe letras sincronizadas em tela cheia para uma e
 
 ## 🚀 Ativando o Modo Karaoke
 
+![Karaoke Mode](../assets/mockups/karaoke-mode-screen.png)
+
+*Modo karaoke com letras sincronizadas, controles de áudio e pontuação*
+
 ### Método 1: Botão Rápido
 Durante a reprodução de qualquer música:
 1. Clique no ícone **🎤 Karaoke** nos controles

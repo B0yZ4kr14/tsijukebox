@@ -38,7 +38,7 @@ export function WeatherWidget() {
             >
               <Cloud className="w-5 h-5 text-kiosk-text/85" />
               <span className="text-xs text-kiosk-text/80 font-medium">--°C</span>
-              <Settings className="w-3 h-3 text-kiosk-text/80" />
+              <Settings aria-hidden="true" className="w-3 h-3 text-kiosk-text/80" />
             </motion.button>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="bg-kiosk-surface border-kiosk-surface/50">
@@ -74,7 +74,7 @@ export function WeatherWidget() {
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         >
-          <RefreshCw className="w-4 h-4 text-kiosk-text/85" />
+          <RefreshCw aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
         </motion.div>
         <span className="text-xs text-kiosk-text/90 font-medium">Carregando...</span>
       </div>
@@ -102,7 +102,7 @@ export function WeatherWidget() {
               onClick={() => setIsExpanded(!isExpanded)}
             >
               {/* Animated Weather Icon */}
-              <AnimatedWeatherIcon conditionCode={weather.conditionCode} size="sm" />
+              <AnimatedWeatherIcon aria-hidden="true" conditionCode={weather.conditionCode} size="sm" />
 
               {/* Temperature & Location */}
               <div className="flex flex-col">
@@ -122,14 +122,14 @@ export function WeatherWidget() {
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <ChevronDown className="w-4 h-4 text-kiosk-text/85" />
+                <ChevronDown aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
               </motion.div>
             </motion.div>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="bg-kiosk-surface border-kiosk-surface/50 p-4">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <AnimatedWeatherIcon conditionCode={weather.conditionCode} size="md" />
+                <AnimatedWeatherIcon aria-hidden="true" conditionCode={weather.conditionCode} size="md" />
                 <div>
                   <p className="font-semibold text-kiosk-text">{weather.condition}</p>
                   <p className="text-xs text-kiosk-text/90">
@@ -182,7 +182,7 @@ export function WeatherWidget() {
                   }}
                   className="p-1.5 rounded-lg hover:bg-kiosk-surface transition-colors"
                 >
-                  <RefreshCw className="w-4 h-4 text-kiosk-text/85" />
+                  <RefreshCw aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
                 </button>
               </div>
               

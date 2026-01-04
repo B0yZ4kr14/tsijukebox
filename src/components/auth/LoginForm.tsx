@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Mail, Lock } from 'lucide-react';
 import { AuthFormField } from './AuthFormField';
 import { loginSchema, LoginFormData } from '@/lib/validations/authSchemas';

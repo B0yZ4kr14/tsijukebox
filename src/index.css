@@ -40,7 +40,7 @@
     /* Kiosk Theme (Light - not used but defined) */
     --kiosk-bg: 240 10% 10%;
     --kiosk-surface: 240 10% 15%;
-    --kiosk-primary: 346 84% 61%;
+    --kiosk-primary: 195 100% 50%;
     --kiosk-text: 0 0% 93%;
   }
 
@@ -51,7 +51,7 @@
     --card-foreground: 0 0% 95%;
     --popover: 240 10% 6%;
     --popover-foreground: 0 0% 95%;
-    --primary: 346 84% 61%;
+    --primary: 195 100% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 10% 15%;
     --secondary-foreground: 0 0% 95%;
@@ -63,22 +63,22 @@
     --destructive-foreground: 0 0% 100%;
     --border: 240 10% 20%;
     --input: 240 10% 20%;
-    --ring: 346 84% 61%;
+    --ring: 195 100% 50%;
 
     /* Sidebar Dark */
     --sidebar-background: 240 10% 6%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 346 84% 61%;
+    --sidebar-primary: 195 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 10% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 240 10% 15%;
-    --sidebar-ring: 346 84% 61%;
+    --sidebar-ring: 195 100% 50%;
 
     /* Kiosk Theme Dark */
     --kiosk-bg: 240 10% 10%;
     --kiosk-surface: 240 10% 15%;
-    --kiosk-primary: 346 84% 61%;
+    --kiosk-primary: 195 100% 50%;
     --kiosk-text: 0 0% 96%;
 
     /* Genre Colors */

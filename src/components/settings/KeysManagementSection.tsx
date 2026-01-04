@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Key, Shield, FileKey, FolderKey, Save, CheckCircle2, AlertTriangle, RefreshCw, Github, Loader2, KeyRound, Plus, Trash2 } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { CreateDeployKeyModal } from './CreateDeployKeyModal';
+import { Badge, Button, Input, Toggle } from "@/components/ui/themed"
 
 interface KeysConfig {
   sshKeyPath: string;
@@ -214,12 +211,12 @@ export function KeysManagementSection() {
                 {isLoadingKeys ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw aria-hidden="true" className="w-4 h-4 mr-2" />
                 )}
                 {isLoadingKeys ? 'Carregando...' : 'Carregar Chaves'}
               </Button>
-              <Button onClick={() => setShowCreateModal(true)} variant="default">
-                <Plus className="w-4 h-4 mr-2" />
+              <Button onClick={() => setShowCreateModal(true)} variant="primary">
+                <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
                 Adicionar Deploy Key
               </Button>
             </div>
@@ -249,7 +246,7 @@ export function KeysManagementSection() {
                             </Badge>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive">
+                                <Button variant="ghost" size="xs" className="h-6 w-6 text-destructive hover:text-destructive" aria-label="Carregando">
                                   {deletingKeyId === key.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                                 </Button>
                               </AlertDialogTrigger>
@@ -297,7 +294,7 @@ export function KeysManagementSection() {
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">{key.title}</span>
                           {key.verified && (
-                            <Badge variant="default" className="text-xs bg-green-600">
+                            <Badge variant="primary" className="text-xs bg-green-600">
                               <CheckCircle2 className="w-3 h-3 mr-1" />
                               Verificada
                             </Badge>

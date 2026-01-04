@@ -11,8 +11,6 @@ import {
   BookOpen
 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
@@ -20,6 +18,7 @@ import { BrandText, BrandTextSize, BrandTextWeight } from '@/components/ui/Brand
 import { BrandTagline, TaglineVariant, TaglineSize, BrandAnimationType } from '@/components/ui/BrandTagline';
 import { BrandLogo, LogoAnimationType, LogoVariant } from '@/components/ui/BrandLogo';
 import { CodePlayground, PropDefinition } from '@/components/docs/CodePlayground';
+import { Badge, Button } from "@/components/ui/themed"
 
 // Component categories
 const categories = [
@@ -286,9 +285,8 @@ const showcaseComponents = {
       description: 'Botão de controle de reprodução',
       code: `<Button 
   variant="ghost" 
-  size="icon"
-  className="w-{size}px h-{size}px rounded-full button-3d"
->
+  size="xs"
+  className="w-{size}px h-{size}px rounded-full button-3d" aria-label="Reproduzir">
   <Play className="w-6 h-6" />
 </Button>`,
       props: [
@@ -303,13 +301,12 @@ const showcaseComponents = {
       renderPreview: (props: Record<string, unknown>) => (
         <Button 
           variant="ghost" 
-          size="icon"
+          size="xs"
           className="rounded-full bg-primary/20 hover:bg-primary/30"
           style={{ 
             width: props.size as number, 
             height: props.size as number 
-          }}
-        >
+          }} aria-label="Ação rápida">
           <Zap className="w-6 h-6 text-primary" />
         </Button>
       ),
@@ -349,9 +346,8 @@ export default function ComponentsShowcase() {
           <Link to="/wiki">
             <Button
               variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80"
-            >
+              size="xs"
+              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80" aria-label="Voltar">
               <ArrowLeft className="w-6 h-6 text-kiosk-text" />
             </Button>
           </Link>
@@ -408,7 +404,7 @@ export default function ComponentsShowcase() {
                       ))
                     ) : (
                       <div className="text-center py-12 text-kiosk-text/50">
-                        <Palette className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                        <Palette aria-hidden="true" className="w-12 h-12 mx-auto mb-4 opacity-30" />
                         <p>Componentes em desenvolvimento</p>
                         <p className="text-sm mt-1">Em breve: mais exemplos interativos</p>
                       </div>

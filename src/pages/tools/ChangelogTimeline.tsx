@@ -16,11 +16,9 @@ import {
   Filter
 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface ChangelogEntry {
   version: string;
@@ -198,9 +196,8 @@ export default function ChangelogTimeline() {
           <Link to="/wiki">
             <Button
               variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80"
-            >
+              size="xs"
+              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80" aria-label="Voltar">
               <ArrowLeft className="w-6 h-6 text-kiosk-text" />
             </Button>
           </Link>
@@ -261,7 +258,7 @@ export default function ChangelogTimeline() {
                     <div 
                       className={`absolute left-[-22px] w-5 h-5 rounded-full ${versionTypeColors[entry.type]} shadow-lg flex items-center justify-center`}
                     >
-                      <div className="w-2 h-2 rounded-full bg-white" />
+                      <div className="w-2 h-2 rounded-full bg-white" aria-hidden="true" />
                     </div>
                     
                     {/* Card */}
@@ -301,7 +298,7 @@ export default function ChangelogTimeline() {
                         animate={{ height: isExpanded ? 'auto' : 0 }}
                         className="overflow-hidden"
                       >
-                        <CardContent className="pt-0 pb-4 px-4">
+                        <div className="mt-4">
                           <div className="border-t border-border pt-4 space-y-2">
                             {entry.changes.map((change, i) => {
                               const Icon = changeTypeIcons[change.type];
@@ -331,7 +328,7 @@ export default function ChangelogTimeline() {
                               Ver detalhes <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
-                        </CardContent>
+                        </div>
                       </motion.div>
                     </Card>
                   </motion.div>

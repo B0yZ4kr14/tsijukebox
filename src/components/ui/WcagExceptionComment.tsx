@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { 
@@ -11,10 +8,9 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import { Copy, Check, Code, FileCode, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge, Button, Card, Input, Toggle } from "@/components/ui/themed"
 
 type WcagCategory = 'decorative' | 'state-change' | 'disabled' | 'secondary';
 type CommentFormat = 'inline' | 'multiline' | 'javascript';
@@ -111,13 +107,12 @@ export function WcagExceptionComment({
 
   return (
     <Card className="card-neon-border bg-kiosk-surface/50">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-gold-neon flex items-center gap-2">
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
           <Code className="w-5 h-5 icon-neon-blue" />
           Gerador de Comentários WCAG
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </h3>
+      
+      <div className="mt-4">
         {/* File & Opacity Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -258,16 +253,15 @@ export function WcagExceptionComment({
               {comment}
             </pre>
             <Button
-              size="icon"
+              size="xs"
               variant="ghost"
               className="absolute right-2 top-2 h-7 w-7 hover:bg-kiosk-surface/50"
               onClick={handleCopy}
-              disabled={!isValid}
-            >
+              disabled={!isValid} aria-label="Confirmar">
               {copied ? (
-                <Check className="w-4 h-4 text-green-500" />
+                <Check aria-hidden="true" className="w-4 h-4 text-green-500" />
               ) : (
-                <Copy className="w-4 h-4 text-description-visible" />
+                <Copy aria-hidden="true" className="w-4 h-4 text-description-visible" />
               )}
             </Button>
           </div>
@@ -281,12 +275,12 @@ export function WcagExceptionComment({
         >
           {copied ? (
             <>
-              <Check className="w-4 h-4 mr-2" />
+              <Check aria-hidden="true" className="w-4 h-4 mr-2" />
               Copiado!
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy aria-hidden="true" className="w-4 h-4 mr-2" />
               Copiar Comentário
             </>
           )}
@@ -298,7 +292,7 @@ export function WcagExceptionComment({
             Preencha o elemento e a justificativa para gerar o comentário
           </p>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

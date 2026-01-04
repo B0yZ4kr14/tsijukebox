@@ -1,5 +1,5 @@
 import { Shuffle, Repeat, Repeat1, ListMusic } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
@@ -43,7 +43,7 @@ export function PlaybackControls({
             >
               <Button
                 variant="ghost"
-                size="icon"
+                size="xs"
                 onClick={onShuffleToggle}
                 disabled={disabled}
                 aria-label={shuffle ? t('player.shuffleOn') : t('player.shuffleOff')}
@@ -86,7 +86,7 @@ export function PlaybackControls({
             >
               <Button
                 variant="ghost"
-                size="icon"
+                size="xs"
                 onClick={onRepeatToggle}
                 disabled={disabled}
                 aria-label={repeatLabel}
@@ -140,7 +140,7 @@ export function PlaybackControls({
             <motion.div whileTap={{ scale: 0.9 }}>
               <Button
                 variant="ghost"
-                size="icon"
+                size="xs"
                 onClick={onQueueOpen}
                 disabled={disabled}
                 aria-label={t('player.openQueue')}

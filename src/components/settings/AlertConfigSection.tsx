@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
@@ -25,6 +19,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge, Button, Card, Input, Slider, Toggle } from "@/components/ui/themed"
 
 interface ChannelConfig {
   enabled: boolean;
@@ -181,25 +176,24 @@ export function AlertConfigSection() {
 
   return (
     <Card className="card-dark-neon-border">
-      <CardHeader>
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-primary/20">
-              <Bell className="h-5 w-5 text-primary" />
+              <Bell aria-hidden="true" className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-settings-title">Configuração de Alertas</CardTitle>
-              <CardDescription className="text-settings-description">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Configuração de Alertas</h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 Configure webhooks para PagerDuty, Opsgenie, Datadog e integrações personalizadas
-              </CardDescription>
+              </p>
             </div>
           </div>
           <Badge variant="outline" className={enabledCount > 0 ? "border-green-500/50 text-green-400" : ""}>
             {enabledCount} ativo{enabledCount !== 1 ? "s" : ""}
           </Badge>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      
+      <div className="mt-4">
         {/* Global Settings */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
@@ -255,13 +249,12 @@ export function AlertConfigSection() {
           <TabsContent value="corporate" className="space-y-4 mt-4">
             {/* PagerDuty */}
             <Card className={`transition-all ${config.channels.pagerduty.enabled ? channelColors.pagerduty : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.pagerduty}
                     <div>
-                      <CardTitle className="text-base">PagerDuty</CardTitle>
-                      <CardDescription className="text-xs">Gestão de incidentes e alertas on-call</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">PagerDuty</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Gestão de incidentes e alertas on-call</p>
                     </div>
                   </div>
                   <Switch
@@ -269,9 +262,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("pagerduty", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.pagerduty.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="space-y-1">
                       <Label className="text-xs">Routing Key (Integration Key)</Label>
@@ -301,7 +294,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Como configurar
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Como configurar
                     </a>
                     <Button
                       size="sm"
@@ -320,19 +313,18 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
 
             {/* Opsgenie */}
             <Card className={`transition-all ${config.channels.opsgenie.enabled ? channelColors.opsgenie : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.opsgenie}
                     <div>
-                      <CardTitle className="text-base">Opsgenie</CardTitle>
-                      <CardDescription className="text-xs">Gestão de alertas e escalação Atlassian</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Opsgenie</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Gestão de alertas e escalação Atlassian</p>
                     </div>
                   </div>
                   <Switch
@@ -340,9 +332,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("opsgenie", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.opsgenie.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="space-y-1">
                       <Label className="text-xs">API Key</Label>
@@ -371,7 +363,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Como configurar
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Como configurar
                     </a>
                     <Button
                       size="sm"
@@ -390,19 +382,18 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
 
             {/* Datadog */}
             <Card className={`transition-all ${config.channels.datadog.enabled ? channelColors.datadog : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.datadog}
                     <div>
-                      <CardTitle className="text-base">Datadog</CardTitle>
-                      <CardDescription className="text-xs">Monitoramento e observabilidade</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Datadog</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Monitoramento e observabilidade</p>
                     </div>
                   </div>
                   <Switch
@@ -410,9 +401,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("datadog", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.datadog.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="space-y-1">
                       <Label className="text-xs">API Key</Label>
@@ -445,7 +436,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Como configurar
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Como configurar
                     </a>
                     <Button
                       size="sm"
@@ -464,7 +455,7 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
           </TabsContent>
@@ -473,13 +464,12 @@ export function AlertConfigSection() {
           <TabsContent value="messaging" className="space-y-4 mt-4">
             {/* Slack */}
             <Card className={`transition-all ${config.channels.slack.enabled ? channelColors.slack : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.slack}
                     <div>
-                      <CardTitle className="text-base">Slack</CardTitle>
-                      <CardDescription className="text-xs">Enviar alertas para canais Slack</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Slack</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Enviar alertas para canais Slack</p>
                     </div>
                   </div>
                   <Switch
@@ -487,9 +477,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("slack", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.slack.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="space-y-1">
                     <Label className="text-xs">Webhook URL</Label>
                     <Input
@@ -507,7 +497,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Criar webhook
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Criar webhook
                     </a>
                     <Button
                       size="sm"
@@ -526,19 +516,18 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
 
             {/* Discord */}
             <Card className={`transition-all ${config.channels.discord.enabled ? channelColors.discord : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.discord}
                     <div>
-                      <CardTitle className="text-base">Discord</CardTitle>
-                      <CardDescription className="text-xs">Enviar alertas para servidores Discord</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Discord</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Enviar alertas para servidores Discord</p>
                     </div>
                   </div>
                   <Switch
@@ -546,9 +535,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("discord", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.discord.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="space-y-1">
                     <Label className="text-xs">Webhook URL</Label>
                     <Input
@@ -566,7 +555,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Criar webhook
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Criar webhook
                     </a>
                     <Button
                       size="sm"
@@ -585,19 +574,18 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
 
             {/* Email */}
             <Card className={`transition-all ${config.channels.email.enabled ? channelColors.email : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.email}
                     <div>
-                      <CardTitle className="text-base">Email</CardTitle>
-                      <CardDescription className="text-xs">Enviar alertas por email (requer RESEND_API_KEY)</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Email</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Enviar alertas por email (requer RESEND_API_KEY)</p>
                     </div>
                   </div>
                   <Switch
@@ -605,9 +593,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("email", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.email.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="space-y-1">
                     <Label className="text-xs">Destinatários (separados por vírgula)</Label>
                     <Input
@@ -626,7 +614,7 @@ export function AlertConfigSection() {
                       rel="noopener noreferrer"
                       className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                     >
-                      <ExternalLink className="h-3 w-3" /> Configurar Resend
+                      <ExternalLink aria-hidden="true" className="h-3 w-3" /> Configurar Resend
                     </a>
                     <Button
                       size="sm"
@@ -645,7 +633,7 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
           </TabsContent>
@@ -653,13 +641,12 @@ export function AlertConfigSection() {
           {/* Custom Webhook */}
           <TabsContent value="custom" className="space-y-4 mt-4">
             <Card className={`transition-all ${config.channels.customWebhook.enabled ? channelColors.customWebhook : "bg-muted/10 border-border/30"}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {channelIcons.customWebhook}
                     <div>
-                      <CardTitle className="text-base">Webhook Personalizado</CardTitle>
-                      <CardDescription className="text-xs">Configure qualquer endpoint HTTP para receber alertas</CardDescription>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Webhook Personalizado</h3>
+                      <p className="text-sm text-[var(--text-muted)]">Configure qualquer endpoint HTTP para receber alertas</p>
                     </div>
                   </div>
                   <Switch
@@ -667,9 +654,9 @@ export function AlertConfigSection() {
                     onCheckedChange={(enabled) => updateChannel("customWebhook", { enabled })}
                   />
                 </div>
-              </CardHeader>
+              
               {config.channels.customWebhook.enabled && (
-                <CardContent className="space-y-3 pt-0">
+                <div className="mt-4">
                   <div className="grid gap-3 md:grid-cols-4">
                     <div className="md:col-span-3 space-y-1">
                       <Label className="text-xs">URL do Webhook</Label>
@@ -742,7 +729,7 @@ export function AlertConfigSection() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               )}
             </Card>
           </TabsContent>
@@ -753,11 +740,11 @@ export function AlertConfigSection() {
         {/* Save Button */}
         <div className="flex justify-end">
           <Button onClick={saveConfig} disabled={isSaving} className="gap-2">
-            <Settings className="h-4 w-4" />
+            <Settings aria-hidden="true" className="h-4 w-4" />
             {isSaving ? "Salvando..." : "Salvar Configurações"}
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

@@ -13,9 +13,6 @@ import {
   BarChart3,
   TrendingUp
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -30,6 +27,7 @@ import {
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { BackButton } from '@/components/ui/BackButton';
 import { useA11yStats } from '@/hooks';
+import { Badge, Button, Card } from "@/components/ui/themed"
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -114,7 +112,7 @@ export default function A11yDashboard() {
           {/* Score Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <Card className="card-dark-neon-border">
-              <CardContent className="pt-6">
+              <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-label-yellow text-sm font-semibold">PONTUAÇÃO GERAL</p>
@@ -122,16 +120,16 @@ export default function A11yDashboard() {
                       {stats.overallScore}%
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center" aria-hidden="true">
                     <TrendingUp className="w-8 h-8 icon-neon-blue" />
                   </div>
                 </div>
                 <Progress value={stats.overallScore} className="mt-4 h-2" />
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-dark-neon-border">
-              <CardContent className="pt-6">
+              <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-label-yellow text-sm font-semibold">ELEMENTOS</p>
@@ -139,18 +137,18 @@ export default function A11yDashboard() {
                       {stats.totalElements.toLocaleString()}
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center" aria-hidden="true">
                     <FileCode className="w-8 h-8 icon-neon-blue" />
                   </div>
                 </div>
                 <p className="text-description-visible text-sm mt-2">
                   {stats.conformingElements.toLocaleString()} conformes
                 </p>
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-dark-neon-border">
-              <CardContent className="pt-6">
+              <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-label-yellow text-sm font-semibold">VIOLAÇÕES</p>
@@ -158,7 +156,7 @@ export default function A11yDashboard() {
                       {stats.violations.length}
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center" aria-hidden="true">
                     <AlertTriangle className="w-8 h-8 text-amber-500" />
                   </div>
                 </div>
@@ -170,11 +168,11 @@ export default function A11yDashboard() {
                     {violationsBySeverity.warning} avisos
                   </Badge>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-dark-neon-border">
-              <CardContent className="pt-6">
+              <div className="mt-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-label-yellow text-sm font-semibold">RATIO MÉDIO</p>
@@ -182,14 +180,14 @@ export default function A11yDashboard() {
                       {stats.contrastStats.averageRatio}:1
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center" aria-hidden="true">
                     <Eye className="w-8 h-8 icon-neon-blue" />
                   </div>
                 </div>
                 <p className="text-description-visible text-sm mt-2">
                   WCAG AA requer 4.5:1
                 </p>
-              </CardContent>
+              </div>
             </Card>
           </div>
 
@@ -197,13 +195,12 @@ export default function A11yDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Compliance Pie Chart */}
             <Card className="card-dark-neon-border">
-              <CardHeader>
-                <CardTitle className="text-label-yellow flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <PieChart className="w-5 h-5 icon-neon-blue" />
                   Conformidade Geral
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsPieChart>
@@ -231,21 +228,20 @@ export default function A11yDashboard() {
                     </RechartsPieChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Opacity Distribution */}
             <Card className="card-dark-neon-border">
-              <CardHeader>
-                <CardTitle className="text-label-yellow flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <BarChart3 className="w-5 h-5 icon-neon-blue" />
                   Distribuição de Opacidades
-                </CardTitle>
-                <CardDescription className="text-description-visible">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Classes de opacidade text-*/* usadas
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              
+              <div className="mt-4">
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={opacityChartData}>
@@ -267,18 +263,17 @@ export default function A11yDashboard() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Coverage Stats */}
             <Card className="card-dark-neon-border">
-              <CardHeader>
-                <CardTitle className="text-label-yellow flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Image className="w-5 h-5 icon-neon-blue" />
                   Cobertura de Atributos
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="space-y-6">
                   {coverageChartData.map((item) => (
                     <div key={item.name}>
@@ -296,18 +291,17 @@ export default function A11yDashboard() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Violations by Type */}
             <Card className="card-dark-neon-border">
-              <CardHeader>
-                <CardTitle className="text-label-yellow flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <AlertTriangle className="w-5 h-5 icon-neon-blue" />
                   Violações por Tipo
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 gap-4">
                   {Object.entries(violationsByType).map(([type, count]) => (
                     <div 
@@ -319,22 +313,21 @@ export default function A11yDashboard() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
 
           {/* Violations Table */}
           <Card className="card-dark-neon-border">
-            <CardHeader>
-              <CardTitle className="text-label-yellow flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <FileCode className="w-5 h-5 icon-neon-blue" />
                 Lista de Violações
-              </CardTitle>
-              <CardDescription className="text-description-visible">
+              </h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 Problemas detectados no último scan
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            
+            <div className="mt-4">
               <ScrollArea className="h-[400px]">
                 <Table>
                   <TableHeader>
@@ -375,7 +368,7 @@ export default function A11yDashboard() {
                   </TableBody>
                 </Table>
               </ScrollArea>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Scan Info */}

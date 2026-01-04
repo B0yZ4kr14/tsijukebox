@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Github, RefreshCw, Upload, FolderGit2, Check, AlertCircle, Clock, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { SettingsSection } from './SettingsSection';
 import { useGitHubExport } from '@/hooks/system/useGitHubExport';
+import { Badge, Button } from "@/components/ui/themed"
 
 export function GitHubExportSection() {
   const {
@@ -41,7 +40,7 @@ export function GitHubExportSection() {
       badge={
         syncStatus?.connected ? (
           <Badge variant="outline" className="ml-2 border-green-500 text-green-500">
-            <Check className="w-3 h-3 mr-1" />
+            <Check aria-hidden="true" className="w-3 h-3 mr-1" />
             Conectado
           </Badge>
         ) : null
@@ -63,7 +62,7 @@ export function GitHubExportSection() {
               <span className="text-sm font-medium text-kiosk-text">Repositório</span>
             </div>
             <Button variant="ghost" size="sm" onClick={() => checkSyncStatus()} disabled={isLoading}>
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw aria-hidden="true" className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
           
@@ -78,7 +77,7 @@ export function GitHubExportSection() {
                   className="text-kiosk-primary hover:underline flex items-center gap-1"
                 >
                   {syncStatus.repository.name}
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink aria-hidden="true" className="w-3 h-3" />
                 </a>
               </div>
               <div className="flex justify-between">
@@ -124,7 +123,7 @@ export function GitHubExportSection() {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               />
             ) : (
-              <Upload className="w-4 h-4 mr-2" />
+              <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
             )}
             {isExporting ? 'Exportando...' : 'Exportar para GitHub'}
           </Button>

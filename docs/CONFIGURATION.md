@@ -49,6 +49,10 @@ nano .env.local
 
 ## Application Settings
 
+![Settings Screen](assets/mockups/settings-screen.png)
+
+*Tela de configurações do TSiJUKEBOX com todas as opções disponíveis*
+
 Access via **Settings** in the app.
 
 ### General Settings

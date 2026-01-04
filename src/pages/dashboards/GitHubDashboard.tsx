@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Star, 
   GitFork, 
@@ -22,12 +22,11 @@ import { useGitHubStats, GitHubCommit } from '@/hooks/system/useGitHubStats';
 import { useGitHubFullSync } from '@/hooks/system/useGitHubFullSync';
 import { useAutoSync } from '@/hooks/system/useAutoSync';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { ComponentBoundary } from '@/components/errors';
 import { Progress } from '@/components/ui/progress';
-import { 
+import { Badge, Button } from "@/components/ui/themed"
+import {
   KpiCard,
   LanguagesChart,
   ContributorsChart,
@@ -38,7 +37,9 @@ import {
   CacheIndicator,
   GitHubDashboardCharts,
   SyncHistoryPanel,
-  FileSelectionModal
+  FileSelectionModal,
+  GitHubDashboardSkeleton,
+  GitHubErrorState,
 } from '@/components/github';
 
 export default function GitHubDashboard() {
@@ -85,10 +86,9 @@ export default function GitHubDashboard() {
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
-              size="icon"
+              size="xs"
               onClick={() => navigate('/settings')}
-              className="hover:bg-muted"
-            >
+              className="hover:bg-muted" aria-label="Voltar">
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <LogoBrand size="sm" />
@@ -113,7 +113,7 @@ export default function GitHubDashboard() {
             {/* Full Sync Button with Progress */}
             <div className="relative">
               <Button 
-                variant="default" 
+                variant="primary" 
                 size="sm"
                 onClick={handleFullSync}
                 disabled={isSyncing}
@@ -173,7 +173,7 @@ export default function GitHubDashboard() {
               onClear={clearAllCache} 
             />
             <Button 
-              variant="default" 
+              variant="primary" 
               size="sm"
               onClick={() => refetch(true)}
               disabled={isLoading}
@@ -184,104 +184,167 @@ export default function GitHubDashboard() {
           </div>
         </motion.header>
 
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 mb-6"
-          >
-            <p className="text-destructive">{error}</p>
-          </motion.div>
-        )}
+        {/* Content with AnimatePresence for smooth transitions */}
+        <AnimatePresence mode="wait">
+          {/* Error State */}
+          {error && !isLoading && (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              <GitHubErrorState 
+                error={error} 
+                onRetry={() => refetch(true)} 
+              />
+            </motion.div>
+          )}
 
-        {/* Auto-Sync Panel */}
-        <div className="mb-8">
-          <AutoSyncPanel autoSync={autoSync} />
-        </div>
+          {/* Loading State with Skeleton */}
+          {isLoading && !repoInfo && (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              <GitHubDashboardSkeleton />
+            </motion.div>
+          )}
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <KpiCard 
-            title="Stars" 
-            value={repoInfo?.stargazers_count || 0} 
-            icon={Star} 
-            color="bg-yellow-500"
-            isLoading={isLoading}
-          />
-          <KpiCard 
-            title="Forks" 
-            value={repoInfo?.forks_count || 0} 
-            icon={GitFork} 
-            color="bg-blue-500"
-            isLoading={isLoading}
-          />
-          <KpiCard 
-            title="Watchers" 
-            value={repoInfo?.watchers_count || 0} 
-            icon={Eye} 
-            color="bg-purple-500"
-            isLoading={isLoading}
-          />
-          <KpiCard 
-            title="Open Issues" 
-            value={repoInfo?.open_issues_count || 0} 
-            icon={AlertCircle} 
-            color="bg-red-500"
-            isLoading={isLoading}
-          />
-        </div>
+          {/* Main Content - Only show when loaded */}
+          {!isLoading && !error && repoInfo && (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
+              {/* Auto-Sync Panel */}
+              <motion.div 
+                className="mb-8"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+              >
+                <AutoSyncPanel autoSync={autoSync} />
+              </motion.div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <LanguagesChart languages={languages} isLoading={isLoading} />
-          <ContributorsChart contributors={contributors} isLoading={isLoading} />
-        </div>
+              {/* KPI Cards */}
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.3 }}
+              >
+                <KpiCard 
+                  title="Stars" 
+                  value={repoInfo?.stargazers_count || 0} 
+                  icon={Star} 
+                  color="bg-yellow-500"
+                  isLoading={isLoading}
+                />
+                <KpiCard 
+                  title="Forks" 
+                  value={repoInfo?.forks_count || 0} 
+                  icon={GitFork} 
+                  color="bg-blue-500"
+                  isLoading={isLoading}
+                />
+                <KpiCard 
+                  title="Watchers" 
+                  value={repoInfo?.watchers_count || 0} 
+                  icon={Eye} 
+                  color="bg-purple-500"
+                  isLoading={isLoading}
+                />
+                <KpiCard 
+                  title="Open Issues" 
+                  value={repoInfo?.open_issues_count || 0} 
+                  icon={AlertCircle} 
+                  color="bg-red-500"
+                  isLoading={isLoading}
+                />
+              </motion.div>
 
-        {/* Advanced Charts */}
-        <GitHubDashboardCharts
-          commits={commits}
-          contributors={contributors}
-          languages={languages}
-          releases={releases}
-        />
+              {/* Charts Section */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
+                <LanguagesChart languages={languages} isLoading={isLoading} />
+                <ContributorsChart contributors={contributors} isLoading={isLoading} />
+              </motion.div>
 
-        {/* Commits Table */}
-        <CommitsTable
-          commits={commits}
-          contributors={contributors}
-          displayCommits={displayCommits}
-          isLoading={isLoading}
-          onFilteredCommits={handleFilteredCommits}
-        />
+              {/* Advanced Charts */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.3 }}
+              >
+                <GitHubDashboardCharts
+                  commits={commits}
+                  contributors={contributors}
+                  languages={languages}
+                  releases={releases}
+                />
+              </motion.div>
 
-        {/* Releases and Branches */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ReleasesSection releases={releases} isLoading={isLoading} />
-          <BranchesSection branches={branches} repoInfo={repoInfo} isLoading={isLoading} />
-        </div>
+              {/* Commits Table */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+              >
+                <CommitsTable
+                  commits={commits}
+                  contributors={contributors}
+                  displayCommits={displayCommits}
+                  isLoading={isLoading}
+                  onFilteredCommits={handleFilteredCommits}
+                />
+              </motion.div>
 
-        {/* Footer Info */}
-        {repoInfo && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="mt-8 text-center text-sm text-muted-foreground"
-          >
-            <p>
-              Repositório criado em{' '}
-              {new Date(repoInfo.created_at).toLocaleDateString('pt-BR')}
-              {' • '}
-              Última atualização{' '}
-              {formatDistanceToNow(new Date(repoInfo.pushed_at), { 
-                addSuffix: true,
-                locale: ptBR 
-              })}
-              {' • '}
-              {(repoInfo.size / 1024).toFixed(1)} MB
-            </p>
-          </motion.div>
-        )}
+              {/* Releases and Branches */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.3 }}
+              >
+                <ReleasesSection releases={releases} isLoading={isLoading} />
+                <BranchesSection branches={branches} repoInfo={repoInfo} isLoading={isLoading} />
+              </motion.div>
+
+              {/* Footer Info */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="mt-8 text-center text-sm text-muted-foreground"
+              >
+                <p>
+                  Repositório criado em{' '}
+                  {new Date(repoInfo.created_at).toLocaleDateString('pt-BR')}
+                  {' • '}
+                  Última atualização{' '}
+                  {formatDistanceToNow(new Date(repoInfo.pushed_at), { 
+                    addSuffix: true,
+                    locale: ptBR 
+                  })}
+                  {' • '}
+                  {(repoInfo.size / 1024).toFixed(1)} MB
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </KioskLayout>
   );

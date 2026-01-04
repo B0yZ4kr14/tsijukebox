@@ -1,6 +1,16 @@
 import { LucideIcon, ArrowRight } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
+
+/**
+ * SettingsGuideCard Component - TSiJUKEBOX
+ * 
+ * Card de navegação para seções de configuração.
+ * Refatorado para usar os novos componentes com Design Tokens.
+ * 
+ * @author B0.y_Z4kr14
+ * @version 4.2.0
+ */
 
 interface SettingsGuideCardProps {
   id: string;
@@ -17,23 +27,29 @@ export function SettingsGuideCard({
 }: SettingsGuideCardProps) {
   return (
     <Card
+      variant="interactive"
+      padding="sm"
+      clickable
       onClick={onClick}
       className={cn(
-        "p-3 cursor-pointer transition-all hover:scale-[1.02] group",
-        "bg-kiosk-surface/50 border border-cyan-500/30 hover:border-cyan-500/50",
-        "hover:shadow-[0_0_20px_hsl(195_100%_50%_/_0.15)]"
+        "group",
+        // Usando design tokens via Tailwind
+        "bg-bg-secondary/50 border-accent-cyan/30 hover:border-accent-cyan/50"
       )}
     >
       <div className="flex items-center gap-3">
-        {/* Icon with neon blue effect */}
-        <div className="p-2.5 rounded-lg bg-cyan-500/10 shadow-[0_0_12px_hsl(185_100%_50%_/_0.2)] flex-shrink-0">
-          <Icon className="w-5 h-5 icon-neon-blue" />
+        {/* Icon with neon cyan effect - usando design tokens */}
+        <div className="p-2.5 rounded-lg bg-accent-cyan/10 shadow-glow-cyan flex-shrink-0 transition-all group-hover:shadow-glow-cyan group-hover:bg-accent-cyan/15">
+          <Icon className="w-5 h-5 text-accent-cyan transition-transform group-hover:scale-110" />
         </div>
         
-        {/* Title only - high contrast */}
-        <h4 className="font-semibold text-white text-sm flex-1">{title}</h4>
+        {/* Title - usando design tokens */}
+        <h4 className="font-semibold text-text-primary text-small flex-1 transition-colors group-hover:text-accent-cyan">
+          {title}
+        </h4>
         
-        <ArrowRight className="w-4 h-4 text-cyan-400/50 group-hover:text-cyan-400 transition-colors flex-shrink-0" />
+        {/* Arrow icon - usando design tokens */}
+        <ArrowRight className="w-4 h-4 text-accent-cyan/50 group-hover:text-accent-cyan transition-all group-hover:translate-x-1 flex-shrink-0" />
       </div>
     </Card>
   );

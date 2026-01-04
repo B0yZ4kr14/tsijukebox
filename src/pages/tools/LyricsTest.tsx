@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Mic2, AlignLeft, Music, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LyricsDisplay } from '@/components/player/LyricsDisplay';
 import { KaraokeLyrics } from '@/components/player/KaraokeLyrics';
 import { FullscreenKaraoke } from '@/components/player/FullscreenKaraoke';
 import { useLyrics, useTranslation } from '@/hooks';
 import { formatTime } from '@/lib/lrcParser';
 import { Link } from 'react-router-dom';
+import { Badge, Button, Card, Slider } from "@/components/ui/themed"
 
 // Demo tracks for testing with album covers
 const DEMO_TRACKS = [
@@ -151,13 +148,12 @@ export default function LyricsTest() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Controls Panel */}
           <Card className="lg:col-span-1 bg-kiosk-surface border-cyan-500/20">
-            <CardHeader>
-              <CardTitle className="text-label-yellow flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Music className="w-5 h-5" />
                 {t('lyrics.controls')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+              </h3>
+            
+            <div className="mt-4">
               {/* Track Selector */}
               <div className="space-y-2">
                 <label className="text-sm text-kiosk-text/85 font-medium">{t('lyrics.selectTrackLabel')}</label>
@@ -189,7 +185,7 @@ export default function LyricsTest() {
               
               {/* Playback Controls */}
               <div className="flex items-center justify-center gap-2">
-                <Button variant="outline" size="icon" onClick={handlePrevTrack}>
+                <Button variant="outline" size="xs" onClick={handlePrevTrack} aria-label="Voltar">
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
                 <Button
@@ -203,10 +199,10 @@ export default function LyricsTest() {
                     <Play className="w-6 h-6 ml-1" />
                   )}
                 </Button>
-                <Button variant="outline" size="icon" onClick={handleNextTrack}>
+                <Button variant="outline" size="xs" onClick={handleNextTrack} aria-label="Avançar">
                   <ChevronRight className="w-4 h-4" />
                 </Button>
-                <Button variant="outline" size="icon" onClick={handleReset}>
+                <Button variant="outline" size="xs" onClick={handleReset} aria-label="Girar">
                   <RotateCcw className="w-4 h-4" />
                 </Button>
               </div>
@@ -244,7 +240,7 @@ export default function LyricsTest() {
                 {isLoading ? (
                   <Badge variant="outline">{t('lyrics.loading')}</Badge>
                 ) : error ? (
-                  <Badge variant="destructive">{t('lyrics.error')}</Badge>
+                  <Badge variant="danger">{t('lyrics.error')}</Badge>
                 ) : lyricsData ? (
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary">{lyricsData.source.toUpperCase()}</Badge>
@@ -257,12 +253,12 @@ export default function LyricsTest() {
                   <Badge variant="outline">{t('lyrics.notAvailable')}</Badge>
                 )}
               </div>
-            </CardContent>
+            </div>
           </Card>
           
           {/* Lyrics Display */}
           <Card className="lg:col-span-2 bg-kiosk-surface border-cyan-500/20 min-h-[600px]">
-            <CardContent className="p-0 h-full">
+            <div className="mt-4">
               {displayMode === 'line' ? (
                 <LyricsDisplay
                   trackId={selectedTrack.id}
@@ -287,7 +283,7 @@ export default function LyricsTest() {
                   </div>
                 )
               )}
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>

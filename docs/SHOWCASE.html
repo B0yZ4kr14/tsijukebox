@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSiJUKEBOX - Showcase Completo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════
+           DESIGN TOKENS - TSiJUKEBOX
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            /* Background Colors */
+            --bg-primary: #09090b;
+            --bg-secondary: #121214;
+            --bg-tertiary: #18181b;
+            --bg-hover: #1f1f23;
+            --bg-active: #2a2a2a;
+            
+            /* Accent Colors (Neon) */
+            --accent-cyan: #00d4ff;
+            --accent-green-neon: #00ff88;
+            --accent-magenta: #ff00d4;
+            --accent-yellow-gold: #ffd400;
+            --accent-purple: #d400ff;
+            --accent-orange: #ff4400;
+            --accent-green-lime: #00ff44;
+            --accent-blue-electric: #4400ff;
+            
+            /* Branding */
+            --spotify-green: #1DB954;
+            --youtube-red: #FF0000;
+            --github-gray: #24292e;
+            
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-tertiary: #999999;
+            --text-disabled: #666666;
+            
+            /* State Colors */
+            --state-success: #00ff44;
+            --state-warning: #ffd400;
+            --state-error: #ff4444;
+            --state-info: #00d4ff;
+            
+            /* Borders */
+            --border-default: #333333;
+            --border-hover: #444444;
+            --border-focus: #00d4ff;
+            
+            /* Typography */
+            --font-sans: 'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+            --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.5);
+            --glow-gold: 0 0 20px rgba(255, 212, 0, 0.5);
+            --glow-magenta: 0 0 20px rgba(255, 0, 212, 0.5);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════════════ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           NAVIGATION
+           ═══════════════════════════════════════════════════════════════════ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(9, 9, 11, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-default);
+            z-index: 1000;
+            padding: var(--spacing-md) var(--spacing-xl);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+        
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--spacing-2xl);
+            padding-top: 100px;
+            background: 
+                radial-gradient(ellipse at top, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(255, 0, 212, 0.1) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-full);
+            padding: var(--spacing-xs) var(--spacing-md);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green-neon);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta), var(--accent-yellow-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════════════════════════════ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        
+        .btn-spotify {
+            background: var(--spotify-green);
+            color: white;
+        }
+        
+        .btn-youtube {
+            background: var(--youtube-red);
+            color: white;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           SECTIONS
+           ═══════════════════════════════════════════════════════════════════ */
+        section {
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           COLOR PALETTE
+           ═══════════════════════════════════════════════════════════════════ */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .color-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        
+        .color-swatch {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .color-info {
+            padding: var(--spacing-md);
+        }
+        
+        .color-info h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .color-info p {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           ICONS SHOWCASE
+           ═══════════════════════════════════════════════════════════════════ */
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+        
+        .icon-item:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+        
+        .icon-item i {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-cyan);
+        }
+        
+        .icon-item span {
+            font-size: 0.625rem;
+            color: var(--text-tertiary);
+            text-align: center;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           COMPONENTS SHOWCASE
+           ═══════════════════════════════════════════════════════════════════ */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .component-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .component-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent-cyan);
+        }
+        
+        .component-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-cyan { background: rgba(0, 212, 255, 0.2); color: var(--accent-cyan); }
+        .badge-green { background: rgba(0, 255, 136, 0.2); color: var(--accent-green-neon); }
+        .badge-magenta { background: rgba(255, 0, 212, 0.2); color: var(--accent-magenta); }
+        .badge-gold { background: rgba(255, 212, 0, 0.2); color: var(--accent-yellow-gold); }
+        .badge-spotify { background: rgba(29, 185, 84, 0.2); color: var(--spotify-green); }
+        
+        /* Inputs */
+        .input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+        
+        .input::placeholder {
+            color: var(--text-disabled);
+        }
+        
+        /* Toggle */
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--bg-active);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .toggle.active {
+            background: var(--accent-cyan);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        /* Progress */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-active);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            border-radius: var(--radius-full);
+            transition: width 0.3s;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           SCREENS SHOWCASE
+           ═══════════════════════════════════════════════════════════════════ */
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .screen-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .screen-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .screen-preview {
+            aspect-ratio: 16/10;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .screen-preview .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-disabled);
+        }
+        
+        .screen-info {
+            padding: var(--spacing-lg);
+        }
+        
+        .screen-info h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .screen-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .screen-route {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           FEATURES GRID
+           ═══════════════════════════════════════════════════════════════════ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            transition: all 0.2s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent-cyan);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .feature-icon i {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-cyan);
+        }
+        
+        .feature-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           STATS
+           ═══════════════════════════════════════════════════════════════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════ */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-default);
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            text-align: center;
+        }
+        
+        footer p {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+        }
+        
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            section {
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">
+                <i data-lucide="music"></i>
+                <span>TSiJUKEBOX</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#colors">Cores</a></li>
+                <li><a href="#icons">Ícones</a></li>
+                <li><a href="#components">Componentes</a></li>
+                <li><a href="#screens">Telas</a></li>
+                <li><a href="#features">Funcionalidades</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            <span>Versão 4.2.1 • Enterprise Edition</span>
+        </div>
+        <h1>
+            <span class="gradient">TSiJUKEBOX</span><br>
+            Showcase Completo
+        </h1>
+        <p>
+            Sistema de Música Kiosk Empresarial com integração Spotify, YouTube Music, 
+            modo karaoke e instalação autônoma.
+        </p>
+        <div class="hero-buttons">
+            <a href="https://github.com/B0yZ4kr14/tsijukebox" class="btn btn-primary">
+                <i data-lucide="github"></i>
+                Ver no GitHub
+            </a>
+            <a href="#screens" class="btn btn-secondary">
+                <i data-lucide="layout-grid"></i>
+                Ver Telas
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>72</h3>
+                <p>Componentes UI</p>
+            </div>
+            <div class="stat-item">
+                <h3>176</h3>
+                <p>Ícones Lucide</p>
+            </div>
+            <div class="stat-item">
+                <h3>45</h3>
+                <p>Páginas/Rotas</p>
+            </div>
+            <div class="stat-item">
+                <h3>143K</h3>
+                <p>Linhas de Código</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Color Palette -->
+    <section id="colors">
+        <div class="section-header">
+            <h2>🎨 Design System - Cores</h2>
+            <p>Paleta de cores Dark-Neon-Gold-Black com tokens centralizados</p>
+        </div>
+        
+        <h3 style="margin-bottom: var(--spacing-md); color: var(--text-secondary);">Cores de Fundo</h3>
+        <div class="color-grid" style="margin-bottom: var(--spacing-xl);">
+            <div class="color-card">
+                <div class="color-swatch" style="background: #09090b; color: white;">#09090B</div>
+                <div class="color-info">
+                    <h4>Primary Background</h4>
+                    <p>Fundo principal da aplicação</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #121214; color: white;">#121214</div>
+                <div class="color-info">
+                    <h4>Secondary Background</h4>
+                    <p>Cards e painéis</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #18181b; color: white;">#18181B</div>
+                <div class="color-info">
+                    <h4>Tertiary Background</h4>
+                    <p>Inputs e elementos elevados</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="margin-bottom: var(--spacing-md); color: var(--text-secondary);">Cores Neon (Accent)</h3>
+        <div class="color-grid" style="margin-bottom: var(--spacing-xl);">
+            <div class="color-card">
+                <div class="color-swatch" style="background: #00d4ff; color: black;">#00D4FF</div>
+                <div class="color-info">
+                    <h4>Cyan Neon</h4>
+                    <p>Cor primária - Botões, links</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #00ff88; color: black;">#00FF88</div>
+                <div class="color-info">
+                    <h4>Green Neon</h4>
+                    <p>Sucesso, instalação, positivo</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #ff00d4; color: white;">#FF00D4</div>
+                <div class="color-info">
+                    <h4>Magenta</h4>
+                    <p>Karaoke, destaque, tutoriais</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #ffd400; color: black;">#FFD400</div>
+                <div class="color-info">
+                    <h4>Yellow Gold</h4>
+                    <p>Atenção, avisos, desenvolvimento</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #d400ff; color: white;">#D400FF</div>
+                <div class="color-info">
+                    <h4>Purple</h4>
+                    <p>API, dados, storage</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #ff4400; color: white;">#FF4400</div>
+                <div class="color-info">
+                    <h4>Orange</h4>
+                    <p>Segurança, alerta, erros</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="margin-bottom: var(--spacing-md); color: var(--text-secondary);">Cores de Branding</h3>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-swatch" style="background: #1DB954; color: white;">#1DB954</div>
+                <div class="color-info">
+                    <h4>Spotify Green</h4>
+                    <p>Integração Spotify</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #FF0000; color: white;">#FF0000</div>
+                <div class="color-info">
+                    <h4>YouTube Red</h4>
+                    <p>Integração YouTube Music</p>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background: #24292e; color: white;">#24292E</div>
+                <div class="color-info">
+                    <h4>GitHub Gray</h4>
+                    <p>Integração GitHub</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Icons -->
+    <section id="icons">
+        <div class="section-header">
+            <h2>🎯 Ícones Lucide</h2>
+            <p>176 ícones únicos utilizados no projeto</p>
+        </div>
+        
+        <div class="icons-grid">
+            <div class="icon-item"><i data-lucide="music"></i><span>Music</span></div>
+            <div class="icon-item"><i data-lucide="play"></i><span>Play</span></div>
+            <div class="icon-item"><i data-lucide="pause"></i><span>Pause</span></div>
+            <div class="icon-item"><i data-lucide="skip-forward"></i><span>Skip Forward</span></div>
+            <div class="icon-item"><i data-lucide="skip-back"></i><span>Skip Back</span></div>
+            <div class="icon-item"><i data-lucide="volume-2"></i><span>Volume</span></div>
+            <div class="icon-item"><i data-lucide="mic"></i><span>Mic</span></div>
+            <div class="icon-item"><i data-lucide="headphones"></i><span>Headphones</span></div>
+            <div class="icon-item"><i data-lucide="radio"></i><span>Radio</span></div>
+            <div class="icon-item"><i data-lucide="disc-3"></i><span>Disc</span></div>
+            <div class="icon-item"><i data-lucide="list-music"></i><span>Playlist</span></div>
+            <div class="icon-item"><i data-lucide="heart"></i><span>Heart</span></div>
+            <div class="icon-item"><i data-lucide="shuffle"></i><span>Shuffle</span></div>
+            <div class="icon-item"><i data-lucide="repeat"></i><span>Repeat</span></div>
+            <div class="icon-item"><i data-lucide="settings"></i><span>Settings</span></div>
+            <div class="icon-item"><i data-lucide="user"></i><span>User</span></div>
+            <div class="icon-item"><i data-lucide="home"></i><span>Home</span></div>
+            <div class="icon-item"><i data-lucide="search"></i><span>Search</span></div>
+            <div class="icon-item"><i data-lucide="library"></i><span>Library</span></div>
+            <div class="icon-item"><i data-lucide="download"></i><span>Download</span></div>
+            <div class="icon-item"><i data-lucide="upload"></i><span>Upload</span></div>
+            <div class="icon-item"><i data-lucide="cloud"></i><span>Cloud</span></div>
+            <div class="icon-item"><i data-lucide="database"></i><span>Database</span></div>
+            <div class="icon-item"><i data-lucide="server"></i><span>Server</span></div>
+            <div class="icon-item"><i data-lucide="monitor"></i><span>Monitor</span></div>
+            <div class="icon-item"><i data-lucide="terminal"></i><span>Terminal</span></div>
+            <div class="icon-item"><i data-lucide="code"></i><span>Code</span></div>
+            <div class="icon-item"><i data-lucide="git-branch"></i><span>Git Branch</span></div>
+            <div class="icon-item"><i data-lucide="github"></i><span>GitHub</span></div>
+            <div class="icon-item"><i data-lucide="youtube"></i><span>YouTube</span></div>
+            <div class="icon-item"><i data-lucide="shield"></i><span>Shield</span></div>
+            <div class="icon-item"><i data-lucide="lock"></i><span>Lock</span></div>
+            <div class="icon-item"><i data-lucide="key"></i><span>Key</span></div>
+            <div class="icon-item"><i data-lucide="bell"></i><span>Bell</span></div>
+            <div class="icon-item"><i data-lucide="mail"></i><span>Mail</span></div>
+            <div class="icon-item"><i data-lucide="calendar"></i><span>Calendar</span></div>
+            <div class="icon-item"><i data-lucide="clock"></i><span>Clock</span></div>
+            <div class="icon-item"><i data-lucide="check"></i><span>Check</span></div>
+            <div class="icon-item"><i data-lucide="x"></i><span>X</span></div>
+            <div class="icon-item"><i data-lucide="alert-triangle"></i><span>Alert</span></div>
+            <div class="icon-item"><i data-lucide="info"></i><span>Info</span></div>
+            <div class="icon-item"><i data-lucide="help-circle"></i><span>Help</span></div>
+            <div class="icon-item"><i data-lucide="sparkles"></i><span>Sparkles</span></div>
+            <div class="icon-item"><i data-lucide="zap"></i><span>Zap</span></div>
+            <div class="icon-item"><i data-lucide="star"></i><span>Star</span></div>
+            <div class="icon-item"><i data-lucide="crown"></i><span>Crown</span></div>
+            <div class="icon-item"><i data-lucide="palette"></i><span>Palette</span></div>
+            <div class="icon-item"><i data-lucide="accessibility"></i><span>A11y</span></div>
+        </div>
+    </section>
+
+    <!-- Components -->
+    <section id="components">
+        <div class="section-header">
+            <h2>🧩 Componentes UI</h2>
+            <p>72 componentes React reutilizáveis</p>
+        </div>
+        
+        <div class="components-grid">
+            <div class="component-card">
+                <h4>Buttons</h4>
+                <div class="component-preview">
+                    <button class="btn btn-primary">Primary</button>
+                    <button class="btn btn-secondary">Secondary</button>
+                    <button class="btn btn-spotify">Spotify</button>
+                    <button class="btn btn-youtube">YouTube</button>
+                </div>
+            </div>
+            
+            <div class="component-card">
+                <h4>Badges</h4>
+                <div class="component-preview">
+                    <span class="badge badge-cyan">Cyan</span>
+                    <span class="badge badge-green">Success</span>
+                    <span class="badge badge-magenta">Karaoke</span>
+                    <span class="badge badge-gold">Warning</span>
+                    <span class="badge badge-spotify">Spotify</span>
+                </div>
+            </div>
+            
+            <div class="component-card">
+                <h4>Input</h4>
+                <div class="component-preview" style="flex-direction: column;">
+                    <input type="text" class="input" placeholder="Buscar músicas...">
+                </div>
+            </div>
+            
+            <div class="component-card">
+                <h4>Toggle</h4>
+                <div class="component-preview">
+                    <div class="toggle"></div>
+                    <div class="toggle active"></div>
+                </div>
+            </div>
+            
+            <div class="component-card">
+                <h4>Progress</h4>
+                <div class="component-preview" style="flex-direction: column; width: 100%;">
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 65%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="component-card">
+                <h4>Cards</h4>
+                <div class="component-preview">
+                    <span style="font-size: 0.75rem; color: var(--text-tertiary);">
+                        Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screens -->
+    <section id="screens">
+        <div class="section-header">
+            <h2>📱 Telas do Sistema</h2>
+            <p>45 páginas e rotas mapeadas</p>
+        </div>
+        
+        <div class="screens-grid">
+            <!-- Player -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/player-screen.png" alt="Player Screen" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="music" style="width: 48px; height: 48px;"></i>
+                        <span>Player de Música</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Player de Música</h4>
+                    <p>Reprodução com visualizador de áudio, controles avançados e fila de reprodução</p>
+                    <span class="screen-route">/spotify</span>
+                </div>
+            </div>
+            
+            <!-- Dashboard -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/dashboard-screen.png" alt="Dashboard" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="layout-dashboard" style="width: 48px; height: 48px;"></i>
+                        <span>Dashboard</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Dashboard Principal</h4>
+                    <p>Visão geral do sistema com métricas, gráficos e status em tempo real</p>
+                    <span class="screen-route">/dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Settings -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/settings-screen.png" alt="Settings" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="settings" style="width: 48px; height: 48px;"></i>
+                        <span>Configurações</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Configurações</h4>
+                    <p>Personalização completa do sistema, temas, integrações e backup</p>
+                    <span class="screen-route">/settings</span>
+                </div>
+            </div>
+            
+            <!-- Karaoke -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/karaoke-mode-screen.png" alt="Karaoke" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="mic" style="width: 48px; height: 48px;"></i>
+                        <span>Modo Karaoke</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Modo Karaoke</h4>
+                    <p>Letras sincronizadas em tempo real com destaque visual</p>
+                    <span class="screen-route">/lyrics-test</span>
+                </div>
+            </div>
+            
+            <!-- Setup Wizard -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/setup-wizard-screen.png" alt="Setup Wizard" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="wand-2" style="width: 48px; height: 48px;"></i>
+                        <span>Setup Wizard</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Assistente de Configuração</h4>
+                    <p>Configuração guiada passo a passo para primeiro uso</p>
+                    <span class="screen-route">/setup</span>
+                </div>
+            </div>
+            
+            <!-- Spotify Integration -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/spotify-integration-screen.png" alt="Spotify" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="disc-3" style="width: 48px; height: 48px; color: #1DB954;"></i>
+                        <span>Spotify</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Integração Spotify</h4>
+                    <p>Navegação completa pela biblioteca do Spotify</p>
+                    <span class="screen-route">/spotify/library</span>
+                </div>
+            </div>
+            
+            <!-- Kiosk Mode -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <img src="assets/mockups/kiosk-mode-screen.png" alt="Kiosk Mode" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder" style="display: none;">
+                        <i data-lucide="monitor" style="width: 48px; height: 48px;"></i>
+                        <span>Modo Kiosk</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Modo Kiosk</h4>
+                    <p>Interface otimizada para telas de exibição em estabelecimentos</p>
+                    <span class="screen-route">/kiosk-monitor</span>
+                </div>
+            </div>
+            
+            <!-- Brand Guidelines -->
+            <div class="screen-card">
+                <div class="screen-preview">
+                    <div class="placeholder">
+                        <i data-lucide="palette" style="width: 48px; height: 48px;"></i>
+                        <span>Brand Guidelines</span>
+                    </div>
+                </div>
+                <div class="screen-info">
+                    <h4>Brand Guidelines</h4>
+                    <p>Documentação visual da marca, logos e identidade</p>
+                    <span class="screen-route">/brand</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <div class="section-header">
+            <h2>✨ Funcionalidades</h2>
+            <p>Recursos completos do sistema TSiJUKEBOX</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="music"></i>
+                </div>
+                <h4>Player de Música</h4>
+                <p>Reprodução com visualizador de áudio, controles avançados, fila inteligente e modo shuffle/repeat.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(29, 185, 84, 0.1);">
+                    <i data-lucide="disc-3" style="color: #1DB954;"></i>
+                </div>
+                <h4>Integração Spotify</h4>
+                <p>Conexão completa com Spotify Web API para acesso à biblioteca, playlists e reprodução.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(255, 0, 0, 0.1);">
+                    <i data-lucide="youtube" style="color: #FF0000;"></i>
+                </div>
+                <h4>YouTube Music</h4>
+                <p>Integração com YouTube Music para acesso a milhões de músicas e vídeos.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon" style="background: rgba(255, 0, 212, 0.1);">
+                    <i data-lucide="mic" style="color: #ff00d4;"></i>
+                </div>
+                <h4>Modo Karaoke</h4>
+                <p>Letras sincronizadas em tempo real com destaque visual e controle de velocidade.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="monitor"></i>
+                </div>
+                <h4>Modo Kiosk</h4>
+                <p>Interface otimizada para telas de exibição com autologin e tela cheia automática.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="terminal"></i>
+                </div>
+                <h4>Instalação Autônoma</h4>
+                <p>Instalador unificado de 26 fases com suporte a SSL, Nginx e systemd services.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="accessibility"></i>
+                </div>
+                <h4>Acessibilidade WCAG 2.1</h4>
+                <p>Conformidade com diretrizes de acessibilidade, navegação por teclado e leitores de tela.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="cloud"></i>
+                </div>
+                <h4>Backup na Nuvem</h4>
+                <p>Backup automático de configurações e dados com sincronização em tempo real.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="git-branch"></i>
+                </div>
+                <h4>Integração GitHub</h4>
+                <p>Dashboard de commits, branches, releases e métricas do repositório.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="activity"></i>
+                </div>
+                <h4>Monitoramento</h4>
+                <p>Health dashboard com métricas de sistema, logs e alertas em tempo real.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="palette"></i>
+                </div>
+                <h4>Temas Personalizáveis</h4>
+                <p>Galeria de temas Spicetify com preview em tempo real e customização.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i data-lucide="mic-2"></i>
+                </div>
+                <h4>Controle por Voz</h4>
+                <p>Comandos de voz para controlar reprodução, busca e navegação.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Routes Table -->
+    <section>
+        <div class="section-header">
+            <h2>🗺️ Mapa de Rotas</h2>
+            <p>Todas as 45 rotas do sistema organizadas por categoria</p>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; background: var(--bg-secondary); border-radius: var(--radius-lg); overflow: hidden;">
+                <thead>
+                    <tr style="background: var(--bg-tertiary);">
+                        <th style="padding: var(--spacing-md); text-align: left; border-bottom: 1px solid var(--border-default);">Categoria</th>
+                        <th style="padding: var(--spacing-md); text-align: left; border-bottom: 1px solid var(--border-default);">Rota</th>
+                        <th style="padding: var(--spacing-md); text-align: left; border-bottom: 1px solid var(--border-default);">Componente</th>
+                        <th style="padding: var(--spacing-md); text-align: left; border-bottom: 1px solid var(--border-default);">Proteção</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/</td><td>Index</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/landing</td><td>LandingPage</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/auth</td><td>Auth</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/setup</td><td>SetupWizard</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/install</td><td>Install</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/help</td><td>Help</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/wiki</td><td>Wiki</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/about</td><td>About</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/design-system</td><td>DesignSystem</td><td>-</td></tr>
+                    <tr><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Público</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-cyan);">/brand</td><td>BrandGuidelines</td><td>-</td></tr>
+                    <tr style="background: rgba(0, 212, 255, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Spotify</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #1DB954;">/spotify</td><td>SpotifyBrowser</td><td>-</td></tr>
+                    <tr style="background: rgba(0, 212, 255, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Spotify</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #1DB954;">/spotify/library</td><td>SpotifyLibrary</td><td>-</td></tr>
+                    <tr style="background: rgba(0, 212, 255, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Spotify</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #1DB954;">/spotify/search</td><td>SpotifySearch</td><td>-</td></tr>
+                    <tr style="background: rgba(0, 212, 255, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Spotify</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #1DB954;">/spotify/playlist/:id</td><td>SpotifyPlaylist</td><td>-</td></tr>
+                    <tr style="background: rgba(255, 0, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">YouTube</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #FF0000;">/youtube-music</td><td>YouTubeMusicBrowser</td><td>-</td></tr>
+                    <tr style="background: rgba(255, 0, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">YouTube</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: #FF0000;">/youtube-music/library</td><td>YouTubeMusicLibrary</td><td>-</td></tr>
+                    <tr style="background: rgba(255, 212, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Admin</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-yellow-gold);">/settings</td><td>Settings</td><td>🔒 canAccessSettings</td></tr>
+                    <tr style="background: rgba(255, 212, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Admin</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-yellow-gold);">/dashboard</td><td>Dashboard</td><td>🔒 canAccessSettings</td></tr>
+                    <tr style="background: rgba(255, 212, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Admin</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-yellow-gold);">/admin</td><td>Admin</td><td>🔒 canAccessSettings</td></tr>
+                    <tr style="background: rgba(255, 212, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Admin</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-yellow-gold);">/github-dashboard</td><td>GitHubDashboard</td><td>🔒 canAccessSettings</td></tr>
+                    <tr style="background: rgba(255, 212, 0, 0.05);"><td style="padding: var(--spacing-sm) var(--spacing-md); border-bottom: 1px solid var(--border-default);">Admin</td><td style="padding: var(--spacing-sm) var(--spacing-md); font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent-yellow-gold);">/health</td><td>HealthDashboard</td><td>🔒 canAccessSettings</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <strong>TSiJUKEBOX Enterprise</strong> v4.2.1 • 
+            Feito com ❤️ por <a href="https://github.com/B0yZ4kr14">B0yZ4kr14</a> e <a href="https://manus.im">Manus AI</a>
+        </p>
+        <p style="margin-top: var(--spacing-sm);">
+            <a href="https://github.com/B0yZ4kr14/tsijukebox">GitHub</a> • 
+            <a href="https://github.com/B0yZ4kr14/tsijukebox/wiki">Wiki</a> • 
+            <a href="https://github.com/B0yZ4kr14/tsijukebox/issues">Issues</a>
+        </p>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Toggle functionality
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -6,16 +6,13 @@ import {
   HardDrive, Thermometer, RefreshCw, Filter, List, Map,
   AlertTriangle, CheckCircle2, Clock, Building2, Zap
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { BrandText } from '@/components/ui/BrandText';
 import { useClientWebSocket } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 interface JukeboxClient {
   id: string;
@@ -130,10 +127,9 @@ export default function ClientsMonitorDashboard() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/settings')}
-              className="text-kiosk-text/90 hover:text-kiosk-text"
-            >
+              className="text-kiosk-text/90 hover:text-kiosk-text" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
@@ -271,7 +267,7 @@ export default function ClientsMonitorDashboard() {
           {viewMode === 'map' ? (
             /* Map View */
             <Card className="p-4 bg-kiosk-surface/50 border-cyan-500/20">
-              <div className="relative aspect-video bg-kiosk-background rounded-lg overflow-hidden">
+              <div className="relative aspect-video bg-kiosk-background rounded-lg overflow-hidden" role="presentation">
                 {/* Simple Map Placeholder - Replace with actual map library */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-green-900/20">
                   <svg viewBox="0 0 800 500" className="w-full h-full opacity-20">
@@ -324,7 +320,7 @@ export default function ClientsMonitorDashboard() {
                 })}
 
                 {filteredClients.length === 0 && (
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center" role="presentation">
                     <p className="text-kiosk-text/90">Nenhum cliente encontrado</p>
                   </div>
                 )}

@@ -2,16 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Music, Radio, ExternalLink, Check, AlertCircle, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsSection } from './SettingsSection';
 import { useSettings } from '@/contexts/SettingsContext';
 import { cn } from '@/lib/utils';
+import { Badge, Button, Card, Toggle } from "@/components/ui/themed"
 
 type MusicProvider = 'spotify' | 'youtube-music' | 'spicetify' | 'local';
 
@@ -126,7 +123,7 @@ export function MusicIntegrationsSection() {
                             className="text-xs font-bold"
                             style={{ borderColor: provider.color, color: provider.color }}
                           >
-                            <Check className="w-3 h-3 mr-1" />
+                            <Check aria-hidden="true" className="w-3 h-3 mr-1" />
                             Conectado
                           </Badge>
                         )}
@@ -134,7 +131,7 @@ export function MusicIntegrationsSection() {
                       <p className="text-sm text-kiosk-text/90">{provider.description}</p>
                     </div>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-kiosk-text/85" />
+                  <ChevronRight aria-hidden="true" className="w-5 h-5 text-kiosk-text/85" />
                 </div>
               </Card>
             </motion.div>
@@ -251,7 +248,7 @@ export function MusicIntegrationsSection() {
             className="gap-2"
             style={{ borderColor: '#1DB954', color: '#1DB954' }}
           >
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink aria-hidden="true" className="w-4 h-4" />
             Abrir Spotify Browser
           </Button>
           <Button
@@ -261,7 +258,7 @@ export function MusicIntegrationsSection() {
             className="gap-2"
             style={{ borderColor: '#FF0000', color: '#FF0000' }}
           >
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink aria-hidden="true" className="w-4 h-4" />
             Abrir YouTube Music
           </Button>
         </div>

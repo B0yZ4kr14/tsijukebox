@@ -9,3 +9,4 @@ export { GitHubExportSection } from '../GitHubExportSection';
 export { GitHubSyncStatus } from '../GitHubSyncStatus';
 export { CreateDeployKeyModal } from '../CreateDeployKeyModal';
 export { ManusAutomationSection } from '../ManusAutomationSection';
+export { AIConfigSection } from '../AIConfigSection';

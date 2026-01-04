@@ -1,6 +1,4 @@
 import { Database, Trash2, Clock, HardDrive } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Popover,
   PopoverContent,
@@ -8,6 +6,7 @@ import {
 } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface CacheStats {
   size: number;
@@ -99,7 +98,7 @@ export function CacheIndicator({ stats, fromCache, onClear }: CacheIndicatorProp
           )}
 
           <Button
-            variant="destructive"
+            variant="danger"
             size="sm"
             onClick={onClear}
             className="w-full"

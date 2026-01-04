@@ -7,14 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { Search, Music, Plus, Loader2, Radio, Youtube, Disc3 } from 'lucide-react';
 import { AddTrackParams } from '@/hooks/jam/useJamQueue';
 import { useJamMusicSearch, JamTrack, MusicProvider } from '@/hooks/jam/useJamMusicSearch';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface JamAddTrackModalProps {
   open: boolean;
@@ -130,7 +128,7 @@ export function JamAddTrackModal({ open, onOpenChange, onAddTrack }: JamAddTrack
 
             {/* Search Input */}
             <div className="relative mt-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={`Pesquisar no ${getProviderLabel(activeProvider)}...`}
                 value={query}
@@ -240,7 +238,7 @@ function TrackList({ tracks, isLoading, isAdding, onAddTrack, query, emptyMessag
               }}
             />
           ) : (
-            <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
+            <div className="w-10 h-10 rounded bg-muted flex items-center justify-center" aria-hidden="true">
               <Music className="w-4 h-4 text-muted-foreground" />
             </div>
           )}
@@ -268,7 +266,7 @@ function TrackList({ tracks, isLoading, isAdding, onAddTrack, query, emptyMessag
             {isAdding === track.id ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Plus className="w-4 h-4" />
+              <Plus aria-hidden="true" className="w-4 h-4" />
             )}
           </Button>
         </motion.div>

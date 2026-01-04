@@ -10,7 +10,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { useContrastDebug, ContrastIssue } from '@/hooks';
 
 export function ContrastDebugPanel() {
@@ -86,7 +86,7 @@ export function ContrastDebugPanel() {
             className="h-6 w-6 p-0 hover:bg-red-500/20"
             onClick={() => setIsEnabled(false)}
           >
-            <X className="w-4 h-4 text-red-400" />
+            <X aria-hidden="true" className="w-4 h-4 text-red-400" />
           </Button>
         </div>
 
@@ -105,7 +105,7 @@ export function ContrastDebugPanel() {
         {/* Scanning indicator */}
         {isScanning && (
           <div className="flex items-center gap-2 text-xs text-kiosk-text/85 mb-3">
-            <RefreshCw className="w-3 h-3 animate-spin" />
+            <RefreshCw aria-hidden="true" className="w-3 h-3 animate-spin" />
             <span>Escaneando...</span>
           </div>
         )}
@@ -170,7 +170,7 @@ export function ContrastDebugPanel() {
             onClick={prevIssue}
             disabled={issues.length === 0}
           >
-            <ChevronLeft className="w-3 h-3 mr-1" />
+            <ChevronLeft aria-hidden="true" className="w-3 h-3 mr-1" />
             Anterior
           </Button>
           <Button
@@ -180,7 +180,7 @@ export function ContrastDebugPanel() {
             onClick={scanForIssues}
             title="Re-escanear"
           >
-            <RefreshCw className={`w-3 h-3 ${isScanning ? 'animate-spin' : ''}`} />
+            <RefreshCw aria-hidden="true" className={`w-3 h-3 ${isScanning ? 'animate-spin' : ''}`} />
           </Button>
           <Button
             variant="ghost"
@@ -190,7 +190,7 @@ export function ContrastDebugPanel() {
             disabled={issues.length === 0}
           >
             Próximo
-            <ChevronRight className="w-3 h-3 ml-1" />
+            <ChevronRight aria-hidden="true" className="w-3 h-3 ml-1" />
           </Button>
         </div>
 

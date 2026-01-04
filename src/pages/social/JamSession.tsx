@@ -11,7 +11,7 @@ import { JamNicknameModal } from '@/components/jam/JamNicknameModal';
 import { JamInviteModal } from '@/components/jam/JamInviteModal';
 import { JamAddTrackModal } from '@/components/jam/JamAddTrackModal';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { toast } from 'sonner';
 
 function JamSessionContent() {

@@ -27,12 +27,11 @@ import {
   Image
 } from 'lucide-react';
 import { formatBrandInText } from '@/components/ui/BrandText';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { SectionIconsShowcase } from '@/components/ui/SectionIconsShowcase';
 import { LogoDownload } from '@/components/ui/LogoDownload';
 import { resetTour } from '@/components/tour/GuidedTour';
 import { InteractiveTestMode } from '@/components/help/InteractiveTestMode';
@@ -42,6 +41,7 @@ import { BackButton } from '@/components/ui/BackButton';
 import { Home } from 'lucide-react';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
+import { Button, Input } from "@/components/ui/themed"
 
 interface HelpSection {
   id: string;
@@ -1025,7 +1025,7 @@ export default function Help() {
                   className="space-y-4"
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary" aria-hidden="true">
                       {selectedSectionData.icon}
                     </div>
                     <div>
@@ -1072,6 +1072,17 @@ export default function Help() {
                     </div>
                   )}
 
+                  {/* Section Icons Showcase for Getting Started */}
+                  {selectedSection === 'getting-started' && (
+                    <div className="mb-6 p-4 rounded-xl bg-kiosk-surface/50 border border-border no-print">
+                      <h3 className="text-lg font-semibold text-kiosk-text mb-4 flex items-center gap-2">
+                        <span className="text-accent-cyan">✨</span>
+                        Seções da Documentação
+                      </h3>
+                      <SectionIconsShowcase variant="grid" />
+                    </div>
+                  )}
+
                   <Accordion type="single" collapsible className="space-y-2">
                     {selectedSectionData.items.map((item) => (
                       <AccordionItem
@@ -1115,7 +1126,7 @@ export default function Help() {
                 </motion.div>
               ) : (
               <div className="text-center py-12">
-                  <HelpCircle className="w-16 h-16 mx-auto icon-neon-blue opacity-30 mb-4" />
+                  <HelpCircle aria-hidden="true" className="w-16 h-16 mx-auto icon-neon-blue opacity-30 mb-4" />
                   <p className="text-kiosk-text/90">Selecione uma seção no índice para ver o conteúdo</p>
                 </div>
               )}

@@ -9,7 +9,7 @@ import { SpotifyPanelToggle } from '@/components/spotify/SpotifyPanel';
 import { LibraryPanelToggle } from '@/components/player/LibraryPanel';
 import { SideInfoPanelToggle } from '@/components/player/SideInfoPanel';
 import { NotificationsDropdown } from '@/components/ui/NotificationsDropdown';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Download, Palette } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { SystemStatus } from '@/lib/api/types';
@@ -135,7 +135,7 @@ export function IndexHeader({
           <div className="hidden md:block">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               asChild
               className="w-10 h-10 rounded-full hover:bg-kiosk-surface/50"
               aria-label="Brand Guidelines"
@@ -150,11 +150,10 @@ export function IndexHeader({
           {canInstall && (
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={onInstall}
-              className="w-10 h-10 rounded-full button-primary-3d bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors"
-            >
-              <Download className="w-5 h-5" />
+              className="w-10 h-10 rounded-full button-primary-3d bg-kiosk-primary/20 hover:bg-kiosk-primary/30 text-kiosk-primary transition-colors" aria-label="Baixar">
+              <Download aria-hidden="true" className="w-5 h-5" />
             </Button>
           )}
         </div>

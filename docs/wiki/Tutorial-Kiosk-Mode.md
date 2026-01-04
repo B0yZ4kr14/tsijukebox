@@ -6,6 +6,10 @@ Configure o TSiJUKEBOX como um kiosk musical dedicado para bares, restaurantes, 
 
 ## 🌟 O que é Modo Kiosk?
 
+![Kiosk Mode](../assets/mockups/kiosk-mode-screen.png)
+
+*Interface simplificada do modo kiosk com controles grandes otimizados para toque*
+
 O modo kiosk transforma qualquer computador em um terminal musical dedicado:
 
 - **Tela cheia** permanente

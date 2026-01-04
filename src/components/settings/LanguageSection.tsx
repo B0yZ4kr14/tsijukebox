@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { SettingsSection } from './SettingsSection';
 import { useSettings } from '@/contexts/SettingsContext';
 import { languages, Language } from '@/i18n';

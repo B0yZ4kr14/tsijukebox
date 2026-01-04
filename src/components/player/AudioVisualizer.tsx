@@ -78,45 +78,56 @@ export function AudioVisualizer({
   );
   const animationRef = useRef<number>();
   const lastUpdateRef = useRef<number>(0);
+  
+  // Ref para config para evitar memory leak e re-renders desnecessários
+  const configRef = useRef(config);
+  configRef.current = config;
 
   useEffect(() => {
+    let isMounted = true;
+    
     if (!isPlaying) {
       setBars(prev => prev.map(h => Math.max(h * 0.95, 0.05)));
       return;
     }
 
     const animate = (timestamp: number) => {
+      // Guard clause para prevenir memory leak
+      if (!isMounted) return;
+      
       if (timestamp - lastUpdateRef.current < 33) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
       lastUpdateRef.current = timestamp;
 
+      const currentConfig = configRef.current;
+      
       setBars(prev => prev.map((_, i) => {
         const centerBoost = 1 - Math.abs(i - barCount / 2) / (barCount / 2) * 0.3;
         let value: number;
 
-        switch (config.pattern) {
+        switch (currentConfig.pattern) {
           case 'bounce':
             // Rock: sharp, energetic bounces
-            const bounce = Math.abs(Math.sin(timestamp / config.speed + i * 0.5));
-            value = (bounce * config.intensity + Math.random() * 0.3) * centerBoost;
+            const bounce = Math.abs(Math.sin(timestamp / currentConfig.speed + i * 0.5));
+            value = (bounce * currentConfig.intensity + Math.random() * 0.3) * centerBoost;
             break;
           case 'pulse':
             // Hip-hop: rhythmic pulses
-            const pulse = Math.pow(Math.sin(timestamp / config.speed + i * 0.2), 2);
-            value = (0.2 + pulse * config.intensity + Math.random() * 0.25) * centerBoost;
+            const pulse = Math.pow(Math.sin(timestamp / currentConfig.speed + i * 0.2), 2);
+            value = (0.2 + pulse * currentConfig.intensity + Math.random() * 0.25) * centerBoost;
             break;
           case 'smooth':
             // Ballad/Soul: gentle, flowing motion
-            const smooth = Math.sin(timestamp / config.speed + i * 0.15) * 0.5 + 0.5;
-            value = (0.15 + smooth * config.intensity + Math.random() * 0.15) * centerBoost;
+            const smooth = Math.sin(timestamp / currentConfig.speed + i * 0.15) * 0.5 + 0.5;
+            value = (0.15 + smooth * currentConfig.intensity + Math.random() * 0.15) * centerBoost;
             break;
           case 'wave':
           default:
             // Pop/Classic-rock: classic wave pattern
-            const wave = Math.sin(timestamp / config.speed + i * 0.3) * 0.2;
-            value = (0.3 + wave + Math.random() * config.intensity) * centerBoost;
+            const wave = Math.sin(timestamp / currentConfig.speed + i * 0.3) * 0.2;
+            value = (0.3 + wave + Math.random() * currentConfig.intensity) * centerBoost;
             break;
         }
 
@@ -129,11 +140,12 @@ export function AudioVisualizer({
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
+      isMounted = false;
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying, barCount, config]);
+  }, [isPlaying, barCount]);
 
   return (
     <div className={cn(

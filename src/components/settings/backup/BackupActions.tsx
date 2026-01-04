@@ -1,5 +1,5 @@
 import { Download, HardDrive } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import type { BackupType } from './types';
 
 interface BackupActionsProps {
@@ -26,7 +26,7 @@ export function BackupActions({
         {isLoading ? (
           <HardDrive className="w-4 h-4 mr-2 animate-spin" />
         ) : (
-          <Download className="w-4 h-4 mr-2" />
+          <Download aria-hidden="true" className="w-4 h-4 mr-2" />
         )}
         Backup Completo
       </Button>
@@ -41,7 +41,7 @@ export function BackupActions({
           {isLoading ? (
             <HardDrive className="w-4 h-4 mr-2 animate-spin" />
           ) : (
-            <Download className="w-4 h-4 mr-2" />
+            <Download aria-hidden="true" className="w-4 h-4 mr-2" />
           )}
           Incremental
         </Button>

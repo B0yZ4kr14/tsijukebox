@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { cn } from '@/lib/utils';
 import { 
@@ -64,7 +64,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-sidebar-border space-y-2">
           <Link to="/">
             <Button variant="kiosk-outline" className="w-full justify-start" size="sm">
-              <Home className="w-4 h-4 mr-2" />
+              <Home aria-hidden="true" className="w-4 h-4 mr-2" />
               Voltar ao Kiosk
             </Button>
           </Link>

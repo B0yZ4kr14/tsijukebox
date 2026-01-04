@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { STORAGE_KEYS } from '@/lib/constants';
 import { formatBrandName } from '@/lib/utils';
 
@@ -153,7 +153,7 @@ export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourPro
             onClick={handleSkip}
             className="absolute top-3 right-3 text-kiosk-text/85 hover:text-kiosk-text transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X aria-hidden="true" className="w-4 h-4" />
           </button>
 
           {/* Content */}
@@ -192,7 +192,7 @@ export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourPro
               disabled={currentStep === 0}
               className="text-kiosk-text/90 hover:text-kiosk-text button-ghost-visible"
             >
-              <ChevronLeft className="w-4 h-4 mr-1" />
+              <ChevronLeft aria-hidden="true" className="w-4 h-4 mr-1" />
               Anterior
             </Button>
 
@@ -206,7 +206,7 @@ export function GuidedTour({ steps, isOpen, onClose, onComplete }: GuidedTourPro
               className="button-primary-glow-3d"
             >
               {isLastStep ? 'Concluir' : 'Próximo'}
-              {!isLastStep && <ChevronRight className="w-4 h-4 ml-1" />}
+              {!isLastStep && <ChevronRight aria-hidden="true" className="w-4 h-4 ml-1" />}
             </Button>
           </div>
         </motion.div>

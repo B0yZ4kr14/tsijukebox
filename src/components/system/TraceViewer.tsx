@@ -1,8 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -23,6 +19,7 @@ import {
 } from "lucide-react";
 import { useOpenTelemetry, Trace, TraceSpan } from "@/hooks/system/useOpenTelemetry";
 import { toast } from "sonner";
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 interface TraceViewerProps {
   sessionId?: string;
@@ -66,9 +63,9 @@ function SpanRow({ span, totalDuration, startOffset, level = 0 }: {
       >
         <div className="w-5 flex justify-center" style={{ marginLeft: level * 16 }}>
           {expanded ? (
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            <ChevronDown aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
           )}
         </div>
         
@@ -267,11 +264,10 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
     <div className="grid gap-4 lg:grid-cols-3">
       {/* Traces List */}
       <Card className="lg:col-span-1 card-dark-neon-border">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-primary" />
-              <CardTitle className="text-base">Traces</CardTitle>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Traces</h3>
             </div>
             <Button
               size="sm"
@@ -279,11 +275,11 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
               onClick={() => fetchTraces()}
               disabled={isLoading}
             >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+              <RefreshCw aria-hidden="true" className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             </Button>
           </div>
           <div className="relative mt-2">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search aria-hidden="true" className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar traces..."
               value={searchQuery}
@@ -291,8 +287,8 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
               className="pl-9 bg-background/50"
             />
           </div>
-        </CardHeader>
-        <CardContent>
+        
+        <div className="mt-4">
           <ScrollArea className="h-[400px]">
             <div className="space-y-2 pr-4">
               {filteredTraces.length === 0 ? (
@@ -314,20 +310,19 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
               )}
             </div>
           </ScrollArea>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Trace Detail */}
       <Card className="lg:col-span-2 card-dark-neon-border">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Clock className="h-5 w-5 text-primary" />
                 Detalhes do Trace
-              </CardTitle>
+              </h3>
               {selectedTrace && (
-                <CardDescription className="flex items-center gap-2 mt-1">
+                <p className="text-sm text-[var(--text-muted)]">
                   <code className="text-xs">{selectedTrace.traceId}</code>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -337,12 +332,12 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
                         className="h-6 w-6 p-0"
                         onClick={() => handleCopyTraceId(selectedTrace.traceId)}
                       >
-                        <Copy className="h-3 w-3" />
+                        <Copy aria-hidden="true" className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Copiar Trace ID</TooltipContent>
                   </Tooltip>
-                </CardDescription>
+                </p>
               )}
             </div>
             
@@ -354,9 +349,9 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
               </div>
             )}
           </div>
-        </CardHeader>
         
-        <CardContent>
+        
+        <div className="mt-4">
           {!selectedTrace ? (
             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Layers className="h-12 w-12 mb-4 opacity-50" />
@@ -412,7 +407,7 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
               {/* Export Options */}
               <div className="space-y-3">
                 <h4 className="text-sm font-medium flex items-center gap-2">
-                  <ExternalLink className="h-4 w-4 text-primary" />
+                  <ExternalLink aria-hidden="true" className="h-4 w-4 text-primary" />
                   Exportar
                 </h4>
                 <div className="flex items-center gap-2">
@@ -426,14 +421,14 @@ export function TraceViewer({ sessionId, onSelectTrace }: TraceViewerProps) {
                     Enviar OTLP
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => downloadAsJson(selectedTrace ? [selectedTrace] : undefined)}>
-                    <Download className="h-4 w-4 mr-1" />
+                    <Download aria-hidden="true" className="h-4 w-4 mr-1" />
                     JSON
                   </Button>
                 </div>
               </div>
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

@@ -1,5 +1,5 @@
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { useStatus, useLogs } from '@/hooks';
 import { Cpu, HardDrive, Thermometer, Music, Play, Pause, AlertCircle } from 'lucide-react';
@@ -19,18 +19,17 @@ function StatCard({
 }) {
   return (
     <Card className="card-admin-extreme-3d">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-label-yellow">{title}</CardTitle>
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">{title}</h3>
         <Icon className={cn(
           "h-4 w-4 icon-neon-blue",
           status === 'good' && "text-green-400",
           status === 'warning' && "text-yellow-400",
           status === 'danger' && "text-destructive"
         )} />
-      </CardHeader>
-      <CardContent>
+      
+      <div className="mt-4">
         <div className="text-2xl font-bold">{value}</div>
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -89,13 +88,12 @@ export default function Admin() {
         {/* Current Track */}
         <ComponentBoundary loadingMessage="Carregando faixa atual...">
           <Card className="card-admin-extreme-3d">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gold-neon">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Music className="h-5 w-5 icon-neon-blue" />
                 Faixa Atual
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            
+            <div className="mt-4">
               {status?.track ? (
                 <div className="flex items-center gap-4">
                   {status.track.cover ? (
@@ -105,7 +103,7 @@ export default function Admin() {
                       className="w-16 h-16 rounded-md object-cover"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center" aria-hidden="true">
                       <Music className="w-8 h-8 icon-neon-blue" />
                     </div>
                   )}
@@ -120,21 +118,20 @@ export default function Admin() {
               ) : (
                 <p className="text-kiosk-text/85">Nenhuma faixa em reprodução</p>
               )}
-            </CardContent>
+            </div>
           </Card>
         </ComponentBoundary>
 
         {/* Recent Logs */}
         <ComponentBoundary loadingMessage="Carregando logs...">
           <Card className="card-admin-extreme-3d">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gold-neon">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <AlertCircle className="h-5 w-5 icon-neon-blue" />
                 Logs Recentes
-              </CardTitle>
-              <CardDescription>Últimas 10 entradas do sistema</CardDescription>
-            </CardHeader>
-            <CardContent>
+              </h3>
+              <p className="text-sm text-[var(--text-muted)]">Últimas 10 entradas do sistema</p>
+            
+            <div className="mt-4">
               <div className="space-y-2">
                 {logs?.slice(0, 10).map((log) => (
                   <div 
@@ -163,7 +160,7 @@ export default function Admin() {
                   <p className="text-kiosk-text/85">Nenhum log disponível</p>
                 )}
               </div>
-            </CardContent>
+            </div>
           </Card>
         </ComponentBoundary>
       </div>

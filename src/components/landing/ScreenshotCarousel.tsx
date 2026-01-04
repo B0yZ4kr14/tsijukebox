@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/themed";
 import { ScreenshotPreview } from "./ScreenshotPreview";
 import { cn } from "@/lib/utils";
 
@@ -79,21 +79,19 @@ export function ScreenshotCarousel() {
       {/* Navigation Arrows */}
       <Button
         variant="ghost"
-        size="icon"
+        size="xs"
         className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm border border-border hover:bg-background"
         onClick={scrollPrev}
-        disabled={!canScrollPrev}
-      >
-        <ChevronLeft className="w-5 h-5" />
+        disabled={!canScrollPrev} aria-label="Voltar">
+        <ChevronLeft aria-hidden="true" className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
-        size="icon"
+        size="xs"
         className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm border border-border hover:bg-background"
         onClick={scrollNext}
-        disabled={!canScrollNext}
-      >
-        <ChevronRight className="w-5 h-5" />
+        disabled={!canScrollNext} aria-label="Avançar">
+        <ChevronRight aria-hidden="true" className="w-5 h-5" />
       </Button>
 
       {/* Dots */}

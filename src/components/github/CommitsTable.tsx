@@ -2,14 +2,13 @@ import { motion } from 'framer-motion';
 import { Clock, ExternalLink } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CommitFilters } from '@/components/github/CommitFilters';
 import { getCommitTypeInfo } from '@/lib/constants/commitTypes';
 import { GitHubCommit, GitHubContributor } from '@/hooks/system/useGitHubStats';
+import { Badge, Card } from "@/components/ui/themed"
 
 interface CommitsTableProps {
   commits: GitHubCommit[];
@@ -34,8 +33,7 @@ export function CommitsTable({
       className="mb-8"
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Clock className="h-5 w-5 text-primary" />
             Commits Recentes
             {displayCommits.length !== commits.length && (
@@ -43,9 +41,9 @@ export function CommitsTable({
                 {displayCommits.length} de {commits.length}
               </Badge>
             )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </h3>
+        
+        <div className="mt-4">
           {!isLoading && commits.length > 0 && (
             <CommitFilters
               commits={commits}
@@ -102,7 +100,7 @@ export function CommitsTable({
                           </span>
                         </div>
                       </div>
-                      <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                      <ExternalLink aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
                     </motion.div>
                   );
                 })}
@@ -113,7 +111,7 @@ export function CommitsTable({
           ) : (
             <p className="text-muted-foreground text-center py-10">Sem commits recentes</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

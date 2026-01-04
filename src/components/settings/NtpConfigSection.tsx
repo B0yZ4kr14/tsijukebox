@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Clock, RefreshCw, Check, AlertCircle, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsSection } from './SettingsSection';
 import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
+/**
+ * Lista de servidores NTP pré-configurados
+ */
 const NTP_SERVERS = [
   { value: 'pool.ntp.br', labelKey: 'recommended' },
   { value: 'a.ntp.br', label: 'a.ntp.br' },
@@ -26,6 +27,18 @@ interface NtpConfig {
   syncStatus: 'synced' | 'error' | 'unknown';
 }
 
+/**
+ * NtpConfigSection Component
+ * 
+ * Configuração de sincronização de hora via NTP (Network Time Protocol).
+ * Permite selecionar servidores pré-configurados ou customizados.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <NtpConfigSection />
+ * ```
+ */
 export function NtpConfigSection() {
   const { t, language } = useTranslation();
   const [config, setConfig] = useState<NtpConfig>(() => {
@@ -137,15 +150,17 @@ export function NtpConfigSection() {
 
   return (
     <SettingsSection
-      icon={<Clock className="w-5 h-5 icon-neon-blue" />}
+      icon={<Clock className="w-5 h-5 text-accent-cyan" />}
       title={t('ntp.title')}
       description={t('ntp.description')}
       instructions={instructions}
       badge={
         <Badge 
-          variant={config.syncStatus === 'synced' ? 'default' : 'secondary'}
-          className={config.syncStatus === 'synced' ? 'bg-green-500/20 text-green-400' : ''}
+          variant={config.syncStatus === 'synced' ? 'success' : config.syncStatus === 'error' ? 'error' : 'default'}
+          size="sm"
         >
+          {config.syncStatus === 'synced' && <Check aria-hidden="true" className="w-3 h-3" />}
+          {config.syncStatus === 'error' && <AlertCircle className="w-3 h-3" />}
           {getBadgeText()}
         </Badge>
       }
@@ -154,17 +169,24 @@ export function NtpConfigSection() {
       <div className="space-y-4">
         {/* Server Selection */}
         <div className="space-y-2">
-          <Label className="text-label-yellow">{t('ntp.server')}</Label>
+          <Label className="text-text-primary font-medium">{t('ntp.server')}</Label>
           <Select value={config.server} onValueChange={handleServerChange}>
-            <SelectTrigger data-tour="ntp-server" className="bg-kiosk-surface/50 border-kiosk-border">
+            <SelectTrigger 
+              data-tour="ntp-server" 
+              className="bg-bg-secondary/80 backdrop-blur-sm border-border-primary focus:border-accent-cyan focus:shadow-glow-cyan transition-all duration-normal"
+            >
               <SelectValue placeholder={t('ntp.selectServer')} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-bg-secondary border-border-primary">
               {NTP_SERVERS.map((server) => (
-                <SelectItem key={server.value} value={server.value}>
+                <SelectItem 
+                  key={server.value} 
+                  value={server.value}
+                  className="hover:bg-bg-tertiary focus:bg-bg-tertiary"
+                >
                   <div className="flex items-center gap-2">
-                    <Globe className="w-3 h-3" />
-                    {getServerLabel(server)}
+                    <Globe className="w-3 h-3 text-accent-cyan" />
+                    <span className="text-text-primary">{getServerLabel(server)}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -175,39 +197,39 @@ export function NtpConfigSection() {
         {/* Custom Server Input */}
         {config.server === 'custom' && (
           <div className="space-y-2">
-            <Label className="text-label-yellow">{t('ntp.customServer')}</Label>
+            <Label className="text-text-primary font-medium">{t('ntp.customServer')}</Label>
             <Input
               value={config.customServer}
               onChange={(e) => handleCustomServerChange(e.target.value)}
               placeholder="ntp.example.com"
-              className="bg-kiosk-surface/50 border-kiosk-border font-mono text-kiosk-text"
+              className="bg-bg-secondary/80 backdrop-blur-sm border-border-primary focus:border-accent-cyan focus:shadow-glow-cyan font-mono text-text-primary transition-all duration-normal"
             />
           </div>
         )}
 
         {/* Status Info */}
-        <div className="p-3 rounded-lg card-option-dark-3d space-y-2">
+        <div className="p-4 rounded-lg bg-bg-secondary/60 backdrop-blur-sm border border-border-primary space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-neon">{t('ntp.activeServer')}:</span>
-            <span className="font-mono text-neon-white">{getActiveServer() || t('ntp.notConfigured')}</span>
+            <span className="text-text-secondary font-medium">{t('ntp.activeServer')}:</span>
+            <span className="font-mono text-text-primary">{getActiveServer() || t('ntp.notConfigured')}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-neon">{t('ntp.lastSync')}:</span>
-            <span className="text-neon-white">{formatLastSync()}</span>
+            <span className="text-text-secondary font-medium">{t('ntp.lastSync')}:</span>
+            <span className="text-text-primary">{formatLastSync()}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-label-neon">{t('ntp.status')}:</span>
-            <div className="flex items-center gap-1">
+            <span className="text-text-secondary font-medium">{t('ntp.status')}:</span>
+            <div className="flex items-center gap-2">
               {config.syncStatus === 'synced' ? (
-                <Check className="w-3 h-3 text-green-400" />
+                <Check aria-hidden="true" className="w-4 h-4 text-state-success" />
               ) : config.syncStatus === 'error' ? (
-                <AlertCircle className="w-3 h-3 text-destructive" />
+                <AlertCircle className="w-4 h-4 text-state-error" />
               ) : (
-                <Clock className="w-3 h-3 text-kiosk-text/90" />
+                <Clock className="w-4 h-4 text-text-secondary" />
               )}
               <span className={
-                config.syncStatus === 'synced' ? 'text-green-400' :
-                config.syncStatus === 'error' ? 'text-destructive' : 'text-kiosk-text/90'
+                config.syncStatus === 'synced' ? 'text-state-success font-medium' :
+                config.syncStatus === 'error' ? 'text-state-error font-medium' : 'text-text-secondary'
               }>
                 {getStatusText()}
               </span>
@@ -219,15 +241,15 @@ export function NtpConfigSection() {
         <Button
           onClick={handleSync}
           disabled={isSyncing || (!getActiveServer())}
-          className="w-full button-primary-glow-3d"
+          className="w-full bg-accent-cyan hover:bg-accent-cyan/90 text-text-primary font-medium shadow-glow-cyan hover:shadow-glow-cyan-strong transition-all duration-normal disabled:opacity-50 disabled:cursor-not-allowed"
           data-tour="ntp-sync-button"
         >
-          <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+          <RefreshCw aria-hidden="true" className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
           {isSyncing ? t('ntp.syncing') : t('ntp.syncNow')}
         </Button>
 
         {/* Info Text */}
-        <p className="text-xs text-settings-hint">
+        <p className="text-xs text-text-secondary leading-relaxed">
           {t('ntp.infoText')}
         </p>
       </div>

@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { X, Trash2, Music, GripVertical, Play } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { QueueItem, PlaybackQueue } from '@/lib/api/types';
 import { useUser } from '@/contexts/UserContext';
@@ -75,7 +75,7 @@ function QueueTrackItemBase({
       )}
       
       {/* Cover */}
-      <div className="w-10 h-10 rounded bg-kiosk-surface flex-shrink-0 overflow-hidden">
+      <div className="w-10 h-10 rounded bg-kiosk-surface flex-shrink-0 overflow-hidden" aria-hidden="true">
         {item.cover ? (
           <img src={item.cover} alt={item.album} className="w-full h-full object-cover" />
         ) : (
@@ -96,7 +96,7 @@ function QueueTrackItemBase({
         {showPlay && onPlay && (
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             onClick={onPlay}
             aria-label={playLabel}
             className="w-8 h-8 text-kiosk-text/85 hover:text-[#1DB954]"
@@ -107,12 +107,12 @@ function QueueTrackItemBase({
         {canRemove && onRemove && (
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             onClick={onRemove}
             aria-label={removeLabel}
             className="w-8 h-8 text-kiosk-text/85 hover:text-destructive"
           >
-            <X className="w-4 h-4" />
+            <X aria-hidden="true" className="w-4 h-4" />
           </Button>
         )}
       </div>
@@ -249,13 +249,13 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
             )}
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={onClose}
               aria-label={t('common.close')}
               data-testid="queue-close"
               className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
             >
-              <X className="w-5 h-5" />
+              <X aria-hidden="true" className="w-5 h-5" />
             </Button>
           </div>
         </div>
@@ -271,7 +271,7 @@ export const QueuePanel = forwardRef<HTMLDivElement, QueuePanelProps>(function Q
                 </h3>
                 <div className="p-3 rounded-lg bg-[#1DB954]/10 border border-[#1DB954]/20">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded bg-kiosk-surface overflow-hidden">
+                    <div className="w-12 h-12 rounded bg-kiosk-surface overflow-hidden" aria-hidden="true">
                       {queue.current.cover ? (
                         <img src={queue.current.cover} alt={queue.current.album} className="w-full h-full object-cover" />
                       ) : (

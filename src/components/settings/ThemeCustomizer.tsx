@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Palette, Save, Trash2, Check, RotateCcw, Sparkles, Plus, Layers } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
 import { ColorPicker } from './ColorPicker';
 import { 
   useThemeCustomizer, 
@@ -17,6 +13,7 @@ import {
 } from '@/hooks';
 import { useSettings } from '@/contexts/SettingsContext';
 import { toast } from 'sonner';
+import { Button, Input, Slider, Toggle } from "@/components/ui/themed"
 import {
   Dialog,
   DialogContent,
@@ -135,7 +132,7 @@ export function ThemeCustomizer() {
                     animate={{ scale: 1 }}
                     className="absolute top-1 right-1 w-4 h-4 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center"
                   >
-                    <Check className="w-2.5 h-2.5 text-black" />
+                    <Check aria-hidden="true" className="w-2.5 h-2.5 text-black" />
                   </motion.div>
                 )}
               </motion.button>
@@ -412,7 +409,7 @@ export function ThemeCustomizer() {
                   onClick={handleSavePreset}
                   className="button-primary-glow-3d flex-1"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
                   Salvar
                 </Button>
                 <Button

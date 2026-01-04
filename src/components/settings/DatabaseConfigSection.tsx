@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { SettingsSection } from './SettingsSection';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
-import { Database, Server, Cloud, HardDrive, Save, CheckCircle2, Sparkles } from 'lucide-react';
+import { Database, Server, Cloud, HardDrive, Save, CheckCircle2, Sparkles, AlertTriangle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 type DatabaseType = 'sqlite-local' | 'sqlite-remote' | 'supabase' | 'lovable-cloud';
 
@@ -37,6 +37,13 @@ interface DatabaseConfigSectionProps {
   isDemoMode?: boolean;
 }
 
+/**
+ * DatabaseConfigSection Component
+ * 
+ * Configuration panel for database connection settings.
+ * Supports SQLite (local/remote), Supabase, and Lovable Cloud.
+ * Integrated with TSiJUKEBOX Design System tokens.
+ */
 export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSectionProps) {
   const [config, setConfig] = useState<DatabaseConfig>(defaultConfig);
   const [isSaving, setIsSaving] = useState(false);
@@ -87,7 +94,7 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
     <SettingsSection
       title="Banco de Dados"
       description="Configure onde seus dados serão armazenados"
-      icon={<Database className="w-5 h-5 icon-neon-blue" />}
+      icon={<Database className="w-5 h-5 text-accent-cyan drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]" />}
       instructions={instructions}
     >
       <div className="space-y-6">
@@ -98,68 +105,108 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
         >
           {/* SQLite Local */}
           <div 
-            className={`flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all ripple-effect ${
-              config.type === 'sqlite-local' ? 'card-option-selected-3d' : 'card-option-dark-3d'
-            }`}
+            className={cn(
+              "flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all duration-normal",
+              "border backdrop-blur-sm",
+              config.type === 'sqlite-local' 
+                ? "bg-accent-cyan/10 border-accent-cyan/50 shadow-glow-cyan" 
+                : "bg-bg-tertiary/50 border-[#333333] hover:bg-bg-tertiary hover:border-accent-cyan/30"
+            )}
             onClick={() => updateConfig('type', 'sqlite-local')}
           >
             <RadioGroupItem value="sqlite-local" id="sqlite-local" />
             <Label htmlFor="sqlite-local" className="flex items-center gap-3 cursor-pointer flex-1">
-              <HardDrive className="w-5 h-5 icon-neon-blue" />
-              <div>
-                <p className="font-medium text-kiosk-text">SQLite Local</p>
-                <p className="text-sm text-kiosk-text/90">Arquivo no servidor local - Simples e rápido</p>
+              <HardDrive className={cn(
+                "w-5 h-5 transition-all duration-normal",
+                config.type === 'sqlite-local' && "text-accent-cyan drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]"
+              )} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-text-primary">SQLite Local</p>
+                  <Badge variant="info" size="sm">Simples</Badge>
+                </div>
+                <p className="text-sm text-text-secondary">Arquivo no servidor local - Simples e rápido</p>
               </div>
             </Label>
           </div>
 
           {/* SQLite Remote */}
           <div 
-            className={`flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all ripple-effect ${
-              config.type === 'sqlite-remote' ? 'card-option-selected-3d' : 'card-option-dark-3d'
-            }`}
+            className={cn(
+              "flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all duration-normal",
+              "border backdrop-blur-sm",
+              config.type === 'sqlite-remote' 
+                ? "bg-accent-cyan/10 border-accent-cyan/50 shadow-glow-cyan" 
+                : "bg-bg-tertiary/50 border-[#333333] hover:bg-bg-tertiary hover:border-accent-cyan/30"
+            )}
             onClick={() => updateConfig('type', 'sqlite-remote')}
           >
             <RadioGroupItem value="sqlite-remote" id="sqlite-remote" />
             <Label htmlFor="sqlite-remote" className="flex items-center gap-3 cursor-pointer flex-1">
-              <Server className="w-5 h-5 icon-neon-blue" />
-              <div>
-                <p className="font-medium text-kiosk-text">SQLite Remoto</p>
-                <p className="text-sm text-kiosk-text/90">Arquivo em servidor externo via SSH</p>
+              <Server className={cn(
+                "w-5 h-5 transition-all duration-normal",
+                config.type === 'sqlite-remote' && "text-accent-cyan drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]"
+              )} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-text-primary">SQLite Remoto</p>
+                  <Badge variant="warning" size="sm">Avançado</Badge>
+                </div>
+                <p className="text-sm text-text-secondary">Arquivo em servidor externo via SSH</p>
               </div>
             </Label>
           </div>
 
           {/* Supabase */}
           <div 
-            className={`flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all ripple-effect ${
-              config.type === 'supabase' ? 'card-option-selected-3d' : 'card-option-dark-3d'
-            }`}
+            className={cn(
+              "flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all duration-normal",
+              "border backdrop-blur-sm",
+              config.type === 'supabase' 
+                ? "bg-accent-cyan/10 border-accent-cyan/50 shadow-glow-cyan" 
+                : "bg-bg-tertiary/50 border-[#333333] hover:bg-bg-tertiary hover:border-accent-cyan/30"
+            )}
             onClick={() => updateConfig('type', 'supabase')}
           >
             <RadioGroupItem value="supabase" id="supabase" />
             <Label htmlFor="supabase" className="flex items-center gap-3 cursor-pointer flex-1">
-              <Sparkles className="w-5 h-5 icon-neon-blue" />
-              <div>
-                <p className="font-medium text-kiosk-text">Supabase</p>
-                <p className="text-sm text-kiosk-text/90">Banco PostgreSQL na nuvem com painel admin</p>
+              <Sparkles className={cn(
+                "w-5 h-5 transition-all duration-normal",
+                config.type === 'supabase' && "text-accent-cyan drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]"
+              )} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-text-primary">Supabase</p>
+                  <Badge variant="primary" size="sm">Cloud</Badge>
+                </div>
+                <p className="text-sm text-text-secondary">Banco PostgreSQL na nuvem com painel admin</p>
               </div>
             </Label>
           </div>
 
           {/* Lovable Cloud */}
           <div 
-            className={`flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all ripple-effect ${
-              config.type === 'lovable-cloud' ? 'card-option-selected-3d' : 'card-option-dark-3d'
-            }`}
+            className={cn(
+              "flex items-center space-x-3 rounded-lg p-4 cursor-pointer transition-all duration-normal",
+              "border backdrop-blur-sm",
+              config.type === 'lovable-cloud' 
+                ? "bg-accent-cyan/10 border-accent-cyan/50 shadow-glow-cyan" 
+                : "bg-bg-tertiary/50 border-[#333333] hover:bg-bg-tertiary hover:border-accent-cyan/30"
+            )}
             onClick={() => updateConfig('type', 'lovable-cloud')}
           >
             <RadioGroupItem value="lovable-cloud" id="lovable-cloud" />
             <Label htmlFor="lovable-cloud" className="flex items-center gap-3 cursor-pointer flex-1">
-              <Cloud className="w-5 h-5 icon-neon-blue" />
-              <div>
-                <p className="font-medium text-kiosk-text">Lovable Cloud</p>
-                <p className="text-sm text-kiosk-text/90">100% gerenciado - Zero configuração</p>
+              <Cloud className={cn(
+                "w-5 h-5 transition-all duration-normal",
+                config.type === 'lovable-cloud' && "text-accent-cyan drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]"
+              )} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-text-primary">Lovable Cloud</p>
+                  <Badge variant="success" size="sm">Gerenciado</Badge>
+                </div>
+                <p className="text-sm text-text-secondary">100% gerenciado - Zero configuração</p>
               </div>
             </Label>
           </div>
@@ -167,18 +214,18 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
 
         {/* SQLite Local Config */}
         {config.type === 'sqlite-local' && (
-          <div className="space-y-4 pt-4 border-t border-border">
+          <div className="space-y-4 pt-4 border-t border-[#333333]">
             <div className="space-y-2">
-              <Label htmlFor="sqlite-path" className="text-label-yellow">Caminho do arquivo</Label>
+              <Label htmlFor="sqlite-path" className="text-brand-gold">Caminho do arquivo</Label>
               <Input
                 id="sqlite-path"
                 value={config.sqlitePath}
                 onChange={(e) => updateConfig('sqlitePath', e.target.value)}
                 placeholder="/var/lib/jukebox/jukebox.db"
                 disabled={isDemoMode}
-                className="input-3d bg-kiosk-bg"
+                variant="primary"
               />
-              <p className="text-xs text-kiosk-text/90">
+              <p className="text-xs text-text-tertiary">
                 Caminho completo para o arquivo SQLite no computador
               </p>
             </div>
@@ -187,58 +234,58 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
 
         {/* SQLite Remote Config */}
         {config.type === 'sqlite-remote' && (
-          <div className="space-y-4 pt-4 border-t border-border">
+          <div className="space-y-4 pt-4 border-t border-[#333333]">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="sqlite-host" className="text-label-yellow">Endereço do Servidor</Label>
+                <Label htmlFor="sqlite-host" className="text-brand-gold">Endereço do Servidor</Label>
                 <Input
                   id="sqlite-host"
                   value={config.sqliteHost}
                   onChange={(e) => updateConfig('sqliteHost', e.target.value)}
                   placeholder="192.168.1.100"
                   disabled={isDemoMode}
-                  className="input-3d bg-kiosk-bg"
+                  variant="primary"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sqlite-port" className="text-label-yellow">Porta SSH</Label>
+                <Label htmlFor="sqlite-port" className="text-brand-gold">Porta SSH</Label>
                 <Input
                   id="sqlite-port"
                   value={config.sqlitePort}
                   onChange={(e) => updateConfig('sqlitePort', e.target.value)}
                   placeholder="22"
                   disabled={isDemoMode}
-                  className="input-3d bg-kiosk-bg"
+                  variant="primary"
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="sqlite-path-remote" className="text-label-yellow">Caminho do arquivo</Label>
+              <Label htmlFor="sqlite-path-remote" className="text-brand-gold">Caminho do arquivo</Label>
               <Input
                 id="sqlite-path-remote"
                 value={config.sqlitePath}
                 onChange={(e) => updateConfig('sqlitePath', e.target.value)}
                 placeholder="/var/lib/jukebox/jukebox.db"
                 disabled={isDemoMode}
-                className="input-3d bg-kiosk-bg"
+                variant="primary"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="sqlite-username" className="text-label-yellow">Usuário SSH</Label>
+                <Label htmlFor="sqlite-username" className="text-brand-gold">Usuário SSH</Label>
                 <Input
                   id="sqlite-username"
                   value={config.sqliteUsername}
                   onChange={(e) => updateConfig('sqliteUsername', e.target.value)}
                   placeholder="admin"
                   disabled={isDemoMode}
-                  className="input-3d bg-kiosk-bg"
+                  variant="primary"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sqlite-password" className="text-label-yellow">Senha SSH</Label>
+                <Label htmlFor="sqlite-password" className="text-brand-gold">Senha SSH</Label>
                 <Input
                   id="sqlite-password"
                   type="password"
@@ -246,7 +293,7 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
                   onChange={(e) => updateConfig('sqlitePassword', e.target.value)}
                   placeholder="••••••••"
                   disabled={isDemoMode}
-                  className="input-3d bg-kiosk-bg"
+                  variant="primary"
                 />
               </div>
             </div>
@@ -255,39 +302,40 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
 
         {/* Supabase Config */}
         {config.type === 'supabase' && (
-          <div className="space-y-4 pt-4 border-t border-border">
+          <div className="space-y-4 pt-4 border-t border-[#333333]">
             <div className="space-y-2">
-              <Label htmlFor="supabase-url" className="text-label-yellow">URL do Projeto Supabase</Label>
+              <Label htmlFor="supabase-url" className="text-brand-gold">URL do Projeto Supabase</Label>
               <Input
                 id="supabase-url"
                 value={config.supabaseUrl}
                 onChange={(e) => updateConfig('supabaseUrl', e.target.value)}
                 placeholder="https://xyzcompany.supabase.co"
                 disabled={isDemoMode}
-                className="input-3d bg-kiosk-bg"
+                variant="primary"
               />
-              <p className="text-xs text-kiosk-text/90">
+              <p className="text-xs text-text-tertiary">
                 Encontre isso em: Supabase Dashboard → Settings → API
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="supabase-anon-key" className="text-label-yellow">Chave Pública (anon key)</Label>
+              <Label htmlFor="supabase-anon-key" className="text-brand-gold">Chave Pública (anon key)</Label>
               <Input
                 id="supabase-anon-key"
                 value={config.supabaseAnonKey}
                 onChange={(e) => updateConfig('supabaseAnonKey', e.target.value)}
                 placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 disabled={isDemoMode}
-                className="input-3d bg-kiosk-bg font-mono text-xs"
+                variant="primary"
+                className="font-mono text-xs"
               />
-              <p className="text-xs text-kiosk-text/90">
+              <p className="text-xs text-text-tertiary">
                 Esta chave é segura para usar no frontend
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="supabase-service-key" className="text-label-yellow">Chave de Serviço (service_role)</Label>
+              <Label htmlFor="supabase-service-key" className="text-brand-gold">Chave de Serviço (service_role)</Label>
               <Input
                 id="supabase-service-key"
                 type="password"
@@ -295,30 +343,45 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
                 onChange={(e) => updateConfig('supabaseServiceKey', e.target.value)}
                 placeholder="••••••••"
                 disabled={isDemoMode}
-                className="input-3d bg-kiosk-bg"
+                variant="primary"
               />
-              <p className="text-xs text-amber-500">
-                ⚠️ NUNCA compartilhe esta chave - ela tem acesso total!
-              </p>
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-state-warning/10 border border-state-warning/30">
+                <AlertTriangle className="w-4 h-4 text-state-warning shrink-0 mt-0.5" />
+                <p className="text-xs text-state-warning">
+                  NUNCA compartilhe esta chave - ela tem acesso total!
+                </p>
+              </div>
             </div>
           </div>
         )}
 
         {/* Lovable Cloud Info */}
         {config.type === 'lovable-cloud' && (
-          <div className="space-y-4 pt-4 border-t border-border">
-            <div className="flex items-center gap-3 p-4 rounded-lg card-option-selected-3d">
-              <CheckCircle2 className="w-6 h-6 text-green-400" />
-              <div>
-                <p className="font-medium text-green-400">✨ Conectado ao Lovable Cloud</p>
-                <p className="text-sm text-kiosk-text/90 mt-1">
+          <div className="space-y-4 pt-4 border-t border-[#333333]">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-state-success/10 border border-state-success/30">
+              <CheckCircle2 className="w-6 h-6 text-state-success shrink-0" />
+              <div className="flex-1">
+                <p className="font-medium text-state-success">✨ Conectado ao Lovable Cloud</p>
+                <p className="text-sm text-text-secondary mt-1">
                   Banco de dados gerenciado automaticamente. Nenhuma configuração necessária!
                 </p>
-                <ul className="mt-2 text-xs text-kiosk-text/85 space-y-1">
-                  <li>• Backup automático diário</li>
-                  <li>• Escalabilidade ilimitada</li>
-                  <li>• Segurança de nível empresarial</li>
-                  <li>• Suporte técnico incluído</li>
+                <ul className="mt-3 text-xs text-text-tertiary space-y-1.5">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-state-success"></span>
+                    Backup automático diário
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-state-success"></span>
+                    Escalabilidade ilimitada
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-state-success"></span>
+                    Segurança de nível empresarial
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-state-success"></span>
+                    Suporte técnico incluído
+                  </li>
                 </ul>
               </div>
             </div>
@@ -329,7 +392,9 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
           <Button 
             onClick={handleSave} 
             disabled={isSaving || isDemoMode}
-            className="w-full button-primary-glow-3d ripple-effect"
+            variant="primary"
+            size="lg"
+            className="w-full"
           >
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? 'Salvando...' : 'Salvar Configuração'}
@@ -337,9 +402,12 @@ export function DatabaseConfigSection({ isDemoMode = false }: DatabaseConfigSect
         )}
 
         {isDemoMode && (
-          <p className="text-xs text-amber-500 text-center">
-            Configuração de banco de dados desabilitada no modo demo
-          </p>
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-state-warning/10 border border-state-warning/30">
+            <AlertTriangle className="w-4 h-4 text-state-warning shrink-0" />
+            <p className="text-xs text-state-warning">
+              Configuração de banco de dados desabilitada no modo demo
+            </p>
+          </div>
         )}
       </div>
     </SettingsSection>

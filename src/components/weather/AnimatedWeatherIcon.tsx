@@ -29,7 +29,7 @@ function SunIcon({ size }: { size: { width: number; height: number } }) {
             y1="10"
             x2="50"
             y2="22"
-            stroke="#FFD93D"
+            stroke="var(--weather-sun)"
             strokeWidth="4"
             strokeLinecap="round"
             style={{ transform: `rotate(${i * 45}deg)`, transformOrigin: '50px 50px' }}
@@ -43,7 +43,7 @@ function SunIcon({ size }: { size: { width: number; height: number } }) {
         cx="50"
         cy="50"
         r="20"
-        fill="#FFD93D"
+        fill="var(--weather-sun)"
         animate={{
           scale: [1, 1.1, 1],
           filter: ['drop-shadow(0 0 8px #FFD93D)', 'drop-shadow(0 0 16px #FFD93D)', 'drop-shadow(0 0 8px #FFD93D)'],
@@ -82,7 +82,7 @@ function RainIcon({ size }: { size: { width: number; height: number } }) {
       {/* Cloud */}
       <motion.path
         d="M20 55 Q20 42 33 42 Q37 30 50 30 Q68 30 68 47 Q77 47 77 55 Q77 63 68 63 L28 63 Q20 63 20 55"
-        fill="#78909C"
+        fill="var(--weather-cloud-dark)"
         animate={{ x: [-1, 1, -1] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
       />
@@ -94,7 +94,7 @@ function RainIcon({ size }: { size: { width: number; height: number } }) {
           cy={75}
           rx="3"
           ry="6"
-          fill="#4FC3F7"
+          fill="var(--weather-rain)"
           animate={{ 
             y: [0, 15, 0],
             opacity: [0, 1, 0],
@@ -118,7 +118,7 @@ function SnowIcon({ size }: { size: { width: number; height: number } }) {
       {/* Cloud */}
       <motion.path
         d="M20 55 Q20 42 33 42 Q37 30 50 30 Q68 30 68 47 Q77 47 77 55 Q77 63 68 63 L28 63 Q20 63 20 55"
-        fill="#90A4AE"
+        fill="var(--weather-cloud-medium)"
       />
       {/* Snowflakes */}
       {[28, 42, 56, 70].map((x, i) => (
@@ -127,7 +127,7 @@ function SnowIcon({ size }: { size: { width: number; height: number } }) {
           x={x}
           y={80}
           fontSize="12"
-          fill="#E3F2FD"
+          fill="var(--weather-snow)"
           textAnchor="middle"
           animate={{
             y: [70, 90, 70],
@@ -187,7 +187,7 @@ function FogIcon({ size }: { size: { width: number; height: number } }) {
           y1={y}
           x2="80"
           y2={y}
-          stroke="#90A4AE"
+          stroke="var(--weather-cloud-medium)"
           strokeWidth="6"
           strokeLinecap="round"
           animate={{
@@ -214,7 +214,7 @@ function PartialCloudsIcon({ size }: { size: { width: number; height: number } }
         cx="65"
         cy="35"
         r="15"
-        fill="#FFD93D"
+        fill="var(--weather-sun)"
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 2, repeat: Infinity }}
         style={{ filter: 'drop-shadow(0 0 8px #FFD93D)' }}
@@ -235,26 +235,26 @@ export function AnimatedWeatherIcon({ conditionCode, size = 'md', className }: A
 
   // OpenWeatherMap condition codes
   if (conditionCode >= 200 && conditionCode < 300) {
-    return <ThunderIcon size={sizeValue} />;
+    return <ThunderIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode >= 300 && conditionCode < 600) {
-    return <RainIcon size={sizeValue} />;
+    return <RainIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode >= 600 && conditionCode < 700) {
-    return <SnowIcon size={sizeValue} />;
+    return <SnowIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode >= 700 && conditionCode < 800) {
-    return <FogIcon size={sizeValue} />;
+    return <FogIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode === 800) {
-    return <SunIcon size={sizeValue} />;
+    return <SunIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode > 800 && conditionCode < 803) {
-    return <PartialCloudsIcon size={sizeValue} />;
+    return <PartialCloudsIcon aria-hidden="true" size={sizeValue} />;
   }
   if (conditionCode >= 803) {
-    return <CloudIcon size={sizeValue} />;
+    return <CloudIcon aria-hidden="true" size={sizeValue} />;
   }
   
-  return <SunIcon size={sizeValue} />;
+  return <SunIcon aria-hidden="true" size={sizeValue} />;
 }

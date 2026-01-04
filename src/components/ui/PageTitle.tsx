@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { cn } from '@/lib/utils';
 
@@ -46,9 +46,8 @@ export function PageTitle({
           <Link to={backTo}>
             <Button
               variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d"
-            >
+              size="xs"
+              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d" aria-label="Voltar">
               <ArrowLeft className="w-6 h-6 text-kiosk-text" />
             </Button>
           </Link>

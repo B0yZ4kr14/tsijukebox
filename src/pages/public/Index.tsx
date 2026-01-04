@@ -90,7 +90,7 @@ export default function Index() {
               swipeDirection === 'left' ? 'right-8' : 'left-8'
             }`}
           >
-            <div className="w-16 h-16 rounded-full bg-kiosk-primary/20 flex items-center justify-center backdrop-blur-sm">
+            <div className="w-16 h-16 rounded-full bg-kiosk-primary/20 flex items-center justify-center backdrop-blur-sm" aria-hidden="true">
               {swipeDirection === 'left' ? (
                 <ChevronRight className="w-10 h-10 text-kiosk-primary" />
               ) : (

@@ -13,11 +13,6 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -30,6 +25,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { UseAutoSyncReturn } from '@/hooks/system/useAutoSync';
+import { Badge, Button, Card, Toggle } from "@/components/ui/themed"
 
 interface AutoSyncPanelProps {
   autoSync: UseAutoSyncReturn;
@@ -110,10 +106,9 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
       transition={{ delay: 0.1 }}
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <RefreshCw className={`h-5 w-5 ${isSyncing ? 'animate-spin text-primary' : 'text-muted-foreground'}`} />
+        <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+              <RefreshCw aria-hidden="true" className={`h-5 w-5 ${isSyncing ? 'animate-spin text-primary' : 'text-muted-foreground'}`} />
               Auto-Sync
               <Badge 
                 variant={isEnabled ? 'default' : 'secondary'}
@@ -121,7 +116,7 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
               >
                 {isEnabled ? 'ON' : 'OFF'}
               </Badge>
-            </CardTitle>
+            </h3>
             <div className="flex items-center gap-3">
               <Switch
                 id="auto-sync-toggle"
@@ -133,9 +128,9 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
               </Label>
             </div>
           </div>
-        </CardHeader>
         
-        <CardContent className="space-y-4">
+        
+        <div className="mt-4">
           {/* Status Row */}
           <div className="grid grid-cols-3 gap-4">
             {/* Last Sync */}
@@ -226,9 +221,9 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
                     {pendingCount} arquivo(s) pendente(s)
                   </span>
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4" />
+                    <ChevronUp aria-hidden="true" className="h-4 w-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown aria-hidden="true" className="h-4 w-4" />
                   )}
                 </Button>
               </CollapsibleTrigger>
@@ -283,11 +278,11 @@ export function AutoSyncPanel({ autoSync }: AutoSyncPanelProps) {
           {/* Empty State */}
           {pendingCount === 0 && isEnabled && (
             <div className="text-center py-3 text-sm text-muted-foreground">
-              <Check className="h-5 w-5 mx-auto mb-1 text-green-500" />
+              <Check aria-hidden="true" className="h-5 w-5 mx-auto mb-1 text-green-500" />
               Nenhum arquivo pendente
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

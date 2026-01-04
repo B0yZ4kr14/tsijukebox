@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipForward, Volume2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
 import { CurrentTrack, PlaybackState } from '@/hooks/jam/useJamSession';
 import { cn } from '@/lib/utils';
+import { Button, Slider } from "@/components/ui/themed"
 
 interface JamPlayerProps {
   currentTrack: CurrentTrack | null;
@@ -53,7 +52,7 @@ export function JamPlayer({
               />
             ) : (
               <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center">
-                <Volume2 className="w-8 h-8 text-muted-foreground" />
+                <Volume2 aria-hidden="true" className="w-8 h-8 text-muted-foreground" />
               </div>
             )}
             <div className="flex-1 min-w-0">
@@ -108,18 +107,17 @@ export function JamPlayer({
                 className="w-14 h-14 rounded-full button-jam-silver-neon"
               >
                 {playbackState.is_playing ? (
-                  <Pause className="w-6 h-6 text-zinc-900" />
+                  <Pause className="w-6 h-6 text-zinc-300" />
                 ) : (
-                  <Play className="w-6 h-6 text-zinc-900 ml-1" />
+                  <Play className="w-6 h-6 text-zinc-300 ml-1" />
                 )}
               </Button>
               <Button
                 variant="outline"
-                size="icon"
+                size="xs"
                 onClick={onSkip}
-                className="rounded-full"
-              >
-                <SkipForward className="w-5 h-5" />
+                className="rounded-full" aria-label="Próxima música">
+                <SkipForward aria-hidden="true" className="w-5 h-5" />
               </Button>
             </div>
           )}
@@ -132,8 +130,8 @@ export function JamPlayer({
         </div>
       ) : (
         <div className="text-center py-8">
-          <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-4">
-            <Volume2 className="w-8 h-8 text-muted-foreground" />
+          <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-4" aria-hidden="true">
+            <Volume2 aria-hidden="true" className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="font-semibold text-foreground mb-1">Nenhuma música tocando</h3>
           <p className="text-sm text-muted-foreground">

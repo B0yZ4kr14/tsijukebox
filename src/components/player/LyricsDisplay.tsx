@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Music, Mic2, AlertCircle, Maximize2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { useTranslation } from '@/hooks';
 import { FullscreenKaraoke } from './FullscreenKaraoke';
 
@@ -105,7 +105,7 @@ export function LyricsDisplay({
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8">
-        <div className="w-12 h-12 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mb-4" />
+        <div className="w-12 h-12 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mb-4" aria-hidden="true" />
         <p className="text-description-visible">{t('lyrics.loading')}</p>
       </div>
     );
@@ -142,12 +142,11 @@ export function LyricsDisplay({
           </div>
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="h-8 w-8 text-kiosk-text/80 hover:text-kiosk-text"
             onClick={() => setIsFullscreen(true)}
-            title={t('lyrics.fullscreen')}
-          >
-            <Maximize2 className="w-4 h-4" />
+            title={t('lyrics.fullscreen')} aria-label="Maximizar">
+            <Maximize2 aria-hidden="true" className="w-4 h-4" />
           </Button>
         </div>
         <p className="text-sm text-kiosk-text/90 mt-1 truncate">{trackName}</p>

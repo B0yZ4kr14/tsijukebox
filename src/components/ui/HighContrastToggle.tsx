@@ -1,5 +1,5 @@
 import { Monitor } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { Toggle } from "@/components/ui/themed";
 import { Label } from '@/components/ui/label';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';

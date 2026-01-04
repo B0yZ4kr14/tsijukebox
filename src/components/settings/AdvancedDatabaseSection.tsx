@@ -6,16 +6,14 @@ import {
   FileText, Table, Copy, ExternalLink, CheckCircle2, XCircle, Loader2
 } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { DatabaseConnectionHistory, addConnectionHistoryEntry } from './DatabaseConnectionHistory';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 type DatabaseEngine = 'sqlite' | 'postgresql' | 'mariadb' | 'firebird';
 
@@ -577,7 +575,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-6 mb-4 bg-kiosk-surface/50">
           <TabsTrigger value="engine" className="text-xs data-[state=active]:bg-primary/20">
-            <Settings className="w-3 h-3 mr-1" />
+            <Settings aria-hidden="true" className="w-3 h-3 mr-1" />
             Motor
           </TabsTrigger>
           <TabsTrigger value="config" className="text-xs data-[state=active]:bg-primary/20">
@@ -631,7 +629,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                       )}
                     </div>
                     {selectedEngine === eng.id && (
-                      <Check className="w-5 h-5 text-primary" />
+                      <Check aria-hidden="true" className="w-5 h-5 text-primary" />
                     )}
                   </div>
                   <p className="text-xs text-kiosk-text/85 mb-3">{eng.description}</p>
@@ -819,7 +817,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                     className="h-7 text-xs button-action-neon"
                   >
                     {isRunningTool === tool.id ? (
-                      <RefreshCw className="w-3 h-3 animate-spin" />
+                      <RefreshCw aria-hidden="true" className="w-3 h-3 animate-spin" />
                     ) : (
                       <Play className="w-3 h-3" />
                     )}
@@ -847,12 +845,12 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
 
           <div className="grid grid-cols-2 gap-3">
             <Button variant="kiosk-outline" className="h-auto py-4 flex-col gap-2 button-action-neon">
-              <Download className="w-6 h-6" />
+              <Download aria-hidden="true" className="w-6 h-6" />
               <span className="text-sm">Exportar Dados</span>
               <span className="text-xs text-kiosk-text/85">JSON/SQL</span>
             </Button>
             <Button variant="kiosk-outline" className="h-auto py-4 flex-col gap-2 button-action-neon">
-              <Upload className="w-6 h-6" />
+              <Upload aria-hidden="true" className="w-6 h-6" />
               <span className="text-sm">Importar Dados</span>
               <span className="text-xs text-kiosk-text/85">De outro banco</span>
             </Button>
@@ -911,7 +909,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                     onClick={() => handleCopySQL(template.sql, template.name)}
                     className="h-7 text-xs button-action-neon"
                   >
-                    <Copy className="w-3 h-3 mr-1" />
+                    <Copy aria-hidden="true" className="w-3 h-3 mr-1" />
                     Copiar
                   </Button>
                 </div>
@@ -943,7 +941,7 @@ export function AdvancedDatabaseSection({ isDemoMode }: AdvancedDatabaseSectionP
                   <BookOpen className="w-5 h-5 icon-neon-blue" />
                   <span className="text-sm text-kiosk-text">{doc.title}</span>
                 </div>
-                <ExternalLink className="w-4 h-4 text-kiosk-text/85" />
+                <ExternalLink aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
               </a>
             ))}
           </div>

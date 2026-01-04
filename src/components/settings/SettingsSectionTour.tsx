@@ -1,5 +1,5 @@
 import { HelpCircle, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { GuidedTour } from '@/components/tour/GuidedTour';
 import { useSettingsTour, type SettingsTourId } from '@/hooks';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

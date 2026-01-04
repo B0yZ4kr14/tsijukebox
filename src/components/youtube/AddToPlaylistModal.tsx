@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { X, Plus, Music, Loader2, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { YouTubeMusicPlaylist, YouTubeMusicTrack } from '@/lib/api/youtubeMusic';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Button, Input } from "@/components/ui/themed"
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -157,7 +156,7 @@ export function AddToPlaylistModal({
                 onClick={() => setIsCreating(true)}
                 className="w-full mb-4 border-dashed border-[#FF0000]/50 text-[#FF0000] hover:bg-[#FF0000]/10"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
                 Nova Playlist
               </Button>
 
@@ -180,7 +179,7 @@ export function AddToPlaylistModal({
                             : "hover:bg-kiosk-background/50"
                         )}
                       >
-                        <div className="w-12 h-12 rounded overflow-hidden bg-kiosk-background flex-shrink-0">
+                        <div className="w-12 h-12 rounded overflow-hidden bg-kiosk-background flex-shrink-0" aria-hidden="true">
                           {playlist.thumbnailUrl ? (
                             <img
                               src={playlist.thumbnailUrl}
@@ -202,13 +201,13 @@ export function AddToPlaylistModal({
                           </p>
                         </div>
                         {addedTo.includes(playlist.id) ? (
-                          <Check className="w-5 h-5 text-[#FF0000] flex-shrink-0" />
+                          <Check aria-hidden="true" className="w-5 h-5 text-[#FF0000] flex-shrink-0" />
                         ) : isLoading ? (
                           /* WCAG Exception: /30 subtle Loader2 icon that becomes #FF0000 when track is added */
                           <Loader2 className="w-5 h-5 text-kiosk-text/30 animate-spin flex-shrink-0" />
                         ) : (
                           /* WCAG Exception: /30 subtle Plus icon that becomes #FF0000 when track is added */
-                          <Plus className="w-5 h-5 text-kiosk-text/30 flex-shrink-0" />
+                          <Plus aria-hidden="true" className="w-5 h-5 text-kiosk-text/30 flex-shrink-0" />
                         )}
                       </button>
                     ))

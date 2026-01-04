@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Plus, Loader2, ChevronDown, ChevronUp, Music } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { JamQueueItem, AddTrackParams } from '@/hooks/jam/useJamQueue';
 import { toast } from 'sonner';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface AISuggestion {
   trackName: string;
@@ -101,12 +99,11 @@ export function JamAISuggestions({
 
   return (
     <Card className="bg-card/80 backdrop-blur-xl border-primary/20">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Sparkles className="w-4 h-4 text-primary" />
             Sugestões da IA
-          </CardTitle>
+          </h3>
           
           <div className="flex items-center gap-2">
             {analysis?.mood && (
@@ -122,14 +119,14 @@ export function JamAISuggestions({
               className="h-7 w-7 p-0"
             >
               {isExpanded ? (
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp aria-hidden="true" className="w-4 h-4" />
               ) : (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown aria-hidden="true" className="w-4 h-4" />
               )}
             </Button>
           </div>
         </div>
-      </CardHeader>
+      
 
       <AnimatePresence>
         {isExpanded && (
@@ -139,7 +136,7 @@ export function JamAISuggestions({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <CardContent className="pt-0 space-y-3">
+            <div className="mt-4">
               {!analysis && !isLoading && (
                 <Button
                   variant="outline"
@@ -195,7 +192,7 @@ export function JamAISuggestions({
                         {addingTrack === suggestion.trackName ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <Plus className="w-4 h-4" />
+                          <Plus aria-hidden="true" className="w-4 h-4" />
                         )}
                       </Button>
                     </motion.div>
@@ -219,13 +216,13 @@ export function JamAISuggestions({
                   Todas as sugestões foram adicionadas!
                 </p>
               )}
-            </CardContent>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {!isExpanded && !analysis && (
-        <CardContent className="pt-0">
+        <div className="mt-4">
           <Button
             variant="ghost"
             size="sm"
@@ -240,7 +237,7 @@ export function JamAISuggestions({
             )}
             {isLoading ? 'Analisando...' : 'Pedir sugestões'}
           </Button>
-        </CardContent>
+        </div>
       )}
     </Card>
   );

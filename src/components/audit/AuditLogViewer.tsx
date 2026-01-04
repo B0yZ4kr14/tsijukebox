@@ -1,8 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -23,6 +19,7 @@ import { useAuditLogs, type AuditLog } from '@/hooks/useAuditLogs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 interface AuditLogViewerProps {
   targetId?: string;
@@ -149,7 +146,7 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
       <div className="space-y-2">
         {isLoading && logs.length === 0 ? (
           <div className="flex items-center justify-center py-8">
-            <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+            <RefreshCw aria-hidden="true" className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : logs.length === 0 ? (
           <div className="text-center py-4 text-muted-foreground text-sm">
@@ -170,32 +167,31 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <Shield className="h-5 w-5" />
               Logs de Auditoria
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-sm text-[var(--text-muted)]">
               Rastreamento de ações administrativas e eventos do sistema
-            </CardDescription>
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
-              <Filter className="h-4 w-4 mr-1" />
+              <Filter aria-hidden="true" className="h-4 w-4 mr-1" />
               Filtros
             </Button>
             <Button variant="outline" size="sm" onClick={handleExportJSON}>
-              <Download className="h-4 w-4 mr-1" />
+              <Download aria-hidden="true" className="h-4 w-4 mr-1" />
               JSON
             </Button>
             <Button variant="outline" size="sm" onClick={handleExportCSV}>
-              <Download className="h-4 w-4 mr-1" />
+              <Download aria-hidden="true" className="h-4 w-4 mr-1" />
               CSV
             </Button>
             <Button variant="outline" size="sm" onClick={fetchLogs} disabled={isLoading}>
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw aria-hidden="true" className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
@@ -220,7 +216,7 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
                       className="flex-1"
                     />
                     <Button variant="secondary" size="sm" onClick={handleSearch}>
-                      <Search className="h-4 w-4" />
+                      <Search aria-hidden="true" className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -279,9 +275,9 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
             </motion.div>
           )}
         </AnimatePresence>
-      </CardHeader>
+      
 
-      <CardContent>
+      <div className="mt-4">
         {error ? (
           <div className="text-center py-8 text-destructive">
             <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
@@ -292,14 +288,14 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
           </div>
         ) : isLoading && logs.length === 0 ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+            <RefreshCw aria-hidden="true" className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : logs.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
             <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>Nenhum log de auditoria encontrado</p>
             {Object.keys(filters).length > 0 && (
-              <Button variant="link" onClick={clearFilters}>
+              <Button variant="ghost" onClick={clearFilters}>
                 Limpar filtros
               </Button>
             )}
@@ -327,7 +323,7 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
               <div className="mt-4 text-center">
                 <Button variant="outline" onClick={loadMore} disabled={isLoading}>
                   {isLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                    <RefreshCw aria-hidden="true" className="h-4 w-4 animate-spin mr-2" />
                   ) : null}
                   Carregar mais
                 </Button>
@@ -335,7 +331,7 @@ export function AuditLogViewer({ targetId, category: initialCategory, compact = 
             )}
           </>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

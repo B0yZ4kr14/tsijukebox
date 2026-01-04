@@ -1,12 +1,11 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { Camera, Download, CheckCircle2, XCircle, Loader2, Image as ImageIcon } from 'lucide-react';
 import { useScreenshotCapture } from '@/hooks/useScreenshotCapture';
 import { KioskLayout } from '@/components/layout/KioskLayout';
+import { Button, Card } from "@/components/ui/themed"
 
 // Páginas principais para captura
 const PAGES_TO_CAPTURE = [
@@ -119,7 +118,7 @@ export default function ScreenshotService() {
 
   const getStatusIcon = (status: CaptureStatus['status']) => {
     switch (status) {
-      case 'pending': return <div className="w-4 h-4 rounded-full bg-muted" />;
+      case 'pending': return <div className="w-4 h-4 rounded-full bg-muted" aria-hidden="true" />;
       case 'capturing': return <Loader2 className="w-4 h-4 animate-spin text-primary" />;
       case 'success': return <CheckCircle2 className="w-4 h-4 text-green-500" />;
       case 'error': return <XCircle className="w-4 h-4 text-red-500" />;
@@ -147,16 +146,15 @@ export default function ScreenshotService() {
 
         {/* Quick Capture */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <ImageIcon className="w-5 h-5" />
               Captura Rápida
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-sm text-[var(--text-muted)]">
               Capture um screenshot da página atual
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          
+          <div className="mt-4">
             <Button 
               onClick={captureCurrentPage} 
               disabled={isCapturing}
@@ -169,21 +167,20 @@ export default function ScreenshotService() {
               )}
               Capturar Esta Página
             </Button>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Batch Capture */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <Download className="w-5 h-5" />
               Captura em Lote
-            </CardTitle>
-            <CardDescription>
+            </h3>
+            <p className="text-sm text-[var(--text-muted)]">
               Capture screenshots de todas as páginas principais
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            </p>
+          
+          <div className="mt-4">
             {/* Progress */}
             {isRunning && (
               <div className="space-y-2">
@@ -249,7 +246,7 @@ export default function ScreenshotService() {
                 <li>Os arquivos serão salvos na pasta de downloads</li>
               </ol>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </KioskLayout>

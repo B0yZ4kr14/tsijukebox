@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 type CloudProvider = 'aws' | 'gdrive' | 'dropbox' | 'mega' | 'onedrive' | 'storj';
@@ -206,9 +206,8 @@ export function CloudProviderHelp({ provider }: CloudProviderHelpProps) {
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
-                className="h-6 w-6 rounded-full hover:bg-cyan-500/20"
-              >
+                size="xs"
+                className="h-6 w-6 rounded-full hover:bg-cyan-500/20" aria-label="Ajuda">
                 <HelpCircle className="w-4 h-4 text-cyan-400" />
               </Button>
             </DialogTrigger>

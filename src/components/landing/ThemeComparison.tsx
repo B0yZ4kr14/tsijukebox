@@ -27,10 +27,10 @@ export function ThemeComparison() {
               Interface elegante com acentos vibrantes em verde neon. Ideal para ambientes com pouca luz e uso prolongado.
             </p>
             <div className="flex gap-2">
-              <div className="w-6 h-6 rounded-full bg-zinc-900 border border-border" title="Background" />
-              <div className="w-6 h-6 rounded-full bg-emerald-500 border border-border" title="Accent" />
-              <div className="w-6 h-6 rounded-full bg-teal-500 border border-border" title="Secondary" />
-              <div className="w-6 h-6 rounded-full bg-zinc-100 border border-border" title="Text" />
+              <div className="w-6 h-6 rounded-full bg-zinc-900 border border-border" title="Background" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-emerald-500 border border-border" title="Accent" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-teal-500 border border-border" title="Secondary" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-zinc-100 border border-border" title="Text" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -47,7 +47,7 @@ export function ThemeComparison() {
         <div className="relative rounded-2xl overflow-hidden border border-border bg-card p-4 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/50">
           <div className="absolute top-4 right-4 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100/90 backdrop-blur-sm border border-zinc-300">
             <Sun className="w-4 h-4 text-emerald-600" />
-            <span className="text-sm font-medium text-zinc-900">Light Silver</span>
+            <span className="text-sm font-medium text-zinc-300">Light Silver</span>
           </div>
           
           <ScreenshotPreview variant="player" theme="light" />
@@ -58,10 +58,10 @@ export function ThemeComparison() {
               Visual clean e moderno com tons suaves de prata. Perfeito para ambientes bem iluminados e maior legibilidade.
             </p>
             <div className="flex gap-2">
-              <div className="w-6 h-6 rounded-full bg-zinc-100 border border-border" title="Background" />
-              <div className="w-6 h-6 rounded-full bg-emerald-600 border border-border" title="Accent" />
-              <div className="w-6 h-6 rounded-full bg-teal-600 border border-border" title="Secondary" />
-              <div className="w-6 h-6 rounded-full bg-zinc-900 border border-border" title="Text" />
+              <div className="w-6 h-6 rounded-full bg-zinc-100 border border-border" title="Background" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-emerald-600 border border-border" title="Accent" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-teal-600 border border-border" title="Secondary" aria-hidden="true" />
+              <div className="w-6 h-6 rounded-full bg-zinc-900 border border-border" title="Text" aria-hidden="true" />
             </div>
           </div>
         </div>

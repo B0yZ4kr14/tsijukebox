@@ -9,11 +9,10 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useSettingsNotifications, SettingsNotification, SettingsCategoryId } from '@/hooks';
 import { useState } from 'react';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface SettingsNotificationBannerProps {
   onNavigateToCategory: (category: SettingsCategoryId) => void;
@@ -57,7 +56,7 @@ export function SettingsNotificationBanner({
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-yellow-400" />
+          <Bell aria-hidden="true" className="w-4 h-4 text-yellow-400" />
           <span className="text-sm font-medium text-kiosk-text">
             {totalCount} {totalCount === 1 ? 'notificação' : 'notificações'}
           </span>
@@ -119,7 +118,7 @@ export function SettingsNotificationBanner({
                       onClick={() => dismiss(notification.id)}
                       className="h-6 w-6 p-0 text-kiosk-text/80 hover:text-kiosk-text flex-shrink-0"
                     >
-                      <X className="w-3 h-3" />
+                      <X aria-hidden="true" className="w-3 h-3" />
                     </Button>
                   )}
                 </div>
@@ -132,7 +131,7 @@ export function SettingsNotificationBanner({
                     className="h-7 px-2 mt-2 text-xs text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
                   >
                     {notification.actionLabel}
-                    <ChevronRight className="w-3 h-3 ml-1" />
+                    <ChevronRight aria-hidden="true" className="w-3 h-3 ml-1" />
                   </Button>
                 )}
               </div>
@@ -151,12 +150,12 @@ export function SettingsNotificationBanner({
         >
           {isExpanded ? (
             <>
-              <ChevronUp className="w-3 h-3 mr-1" />
+              <ChevronUp aria-hidden="true" className="w-3 h-3 mr-1" />
               Mostrar menos
             </>
           ) : (
             <>
-              <ChevronDown className="w-3 h-3 mr-1" />
+              <ChevronDown aria-hidden="true" className="w-3 h-3 mr-1" />
               Mostrar mais {notifications.length - maxVisible} notificações
             </>
           )}

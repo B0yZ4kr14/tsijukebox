@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Users, Copy, Check, LogOut, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -42,7 +42,7 @@ export function JamHeader({
           {/* Session Info */}
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-gradient-to-br from-zinc-300 to-zinc-500">
-              <Users className="w-5 h-5 text-zinc-900" />
+              <Users className="w-5 h-5 text-zinc-300" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -60,9 +60,9 @@ export function JamHeader({
                 >
                   <span className="font-mono font-bold tracking-wider">{sessionCode}</span>
                   {copied ? (
-                    <Check className="w-3 h-3 text-green-500" />
+                    <Check aria-hidden="true" className="w-3 h-3 text-green-500" />
                   ) : (
-                    <Copy className="w-3 h-3" />
+                    <Copy aria-hidden="true" className="w-3 h-3" />
                   )}
                 </button>
                 <span className="text-muted-foreground">•</span>

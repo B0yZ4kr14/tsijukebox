@@ -1,5 +1,5 @@
 import { YouTubeMusicUser } from '@/lib/api/youtubeMusic';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
 
 interface YouTubeMusicUserBadgeProps {

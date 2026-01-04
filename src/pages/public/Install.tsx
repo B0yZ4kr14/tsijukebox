@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+
+
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { 
+import { Button, Card } from "@/components/ui/themed"
+import {
   Download, 
   Smartphone, 
   Monitor, 
@@ -91,7 +92,7 @@ export default function Install() {
           animate={{ opacity: 1, y: 0 }}
         >
           <Link to="/">
-            <Button variant="ghost" size="icon" className="text-kiosk-text/90 hover:text-kiosk-text" aria-label="Voltar ao player">
+            <Button variant="ghost" size="xs" className="text-kiosk-text/90 hover:text-kiosk-text" aria-label="Voltar ao player">
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
@@ -178,7 +179,7 @@ export default function Install() {
                 </h3>
 
                 <Card className="bg-kiosk-surface/50 border-kiosk-surface">
-                  <CardContent className="p-4 space-y-4">
+                  <div className="mt-4">
                     {steps.map((step, index) => (
                       <motion.div
                         key={index}
@@ -187,13 +188,13 @@ export default function Install() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 + index * 0.1 }}
                       >
-                        <div className="w-10 h-10 rounded-full bg-kiosk-primary/20 flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-kiosk-primary/20 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                           <step.icon className="w-5 h-5 text-kiosk-primary" />
                         </div>
                         <p className="text-kiosk-text/85 text-sm">{step.text}</p>
                       </motion.div>
                     ))}
-                  </CardContent>
+                  </div>
                 </Card>
               </motion.div>
 

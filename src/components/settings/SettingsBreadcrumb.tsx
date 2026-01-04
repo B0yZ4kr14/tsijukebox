@@ -30,13 +30,13 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
             : "text-kiosk-text/85 hover:text-cyan-400"
         )}
       >
-        <Home className="w-3.5 h-3.5" />
+        <Home aria-hidden="true" className="w-3.5 h-3.5" />
         <span>Configurações</span>
       </button>
       
       {category !== 'dashboard' && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/80" />
+          <ChevronRight aria-hidden="true" className="w-3.5 h-3.5 text-kiosk-text/80" />
           <button
             onClick={() => onNavigateToCategory(category)}
             className={cn(
@@ -53,7 +53,7 @@ export function SettingsBreadcrumb({ category, section, onNavigateToCategory }: 
       
       {section && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-kiosk-text/80" />
+          <ChevronRight aria-hidden="true" className="w-3.5 h-3.5 text-kiosk-text/80" />
           <span className="text-kiosk-text">{section}</span>
         </>
       )}

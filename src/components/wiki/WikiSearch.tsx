@@ -1,12 +1,10 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, FileText, Star } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { getAllArticles, getArticlePath, WikiArticle } from './wikiData';
 import { formatBrandInText } from '@/components/ui/BrandText';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface WikiSearchProps {
   onSelectArticle: (articleId: string) => void;
@@ -85,7 +83,7 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
   return (
     <div className="relative">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/85" />
+        <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-kiosk-text/85" />
         <Input
           placeholder="Buscar na wiki..."
           value={query}
@@ -99,14 +97,13 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
         {query && (
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
             onClick={() => {
               setQuery('');
               setIsOpen(false);
-            }}
-          >
-            <X className="w-4 h-4" />
+            }} aria-label="Fechar">
+            <X aria-hidden="true" className="w-4 h-4" />
           </Button>
         )}
       </div>
@@ -163,7 +160,7 @@ export function WikiSearch({ onSelectArticle }: WikiSearchProps) {
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-full left-0 right-0 mt-2 bg-kiosk-surface border border-border rounded-xl shadow-xl z-50 p-6 text-center"
           >
-            <Search className="w-8 h-8 mx-auto text-kiosk-text/85 mb-2" />
+            <Search aria-hidden="true" className="w-8 h-8 mx-auto text-kiosk-text/85 mb-2" />
             <p className="text-sm text-kiosk-text/90">Nenhum resultado para "{query}"</p>
           </motion.div>
         )}

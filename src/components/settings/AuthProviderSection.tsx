@@ -81,8 +81,8 @@ export function AuthProviderSection() {
                     <div className="flex items-center justify-between">
                       <h4 className="text-provider-name text-sm">{provider.name}</h4>
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                          <Check className="w-3 h-3 text-primary-foreground" />
+                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center" aria-hidden="true">
+                          <Check aria-hidden="true" className="w-3 h-3 text-primary-foreground" />
                         </div>
                       )}
                     </div>

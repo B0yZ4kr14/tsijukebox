@@ -13,12 +13,9 @@ import {
   Shield,
   Globe
 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { SettingsCategoryId } from '@/hooks';
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 interface FAQItem {
   id: string;
@@ -299,7 +296,7 @@ export function SettingsFAQ({ filterCategory }: SettingsFAQProps) {
 
       {/* Search */}
       <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
+        <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/80" />
         <Input
           placeholder="Buscar no FAQ..."
           value={searchQuery}
@@ -374,9 +371,9 @@ export function SettingsFAQ({ filterCategory }: SettingsFAQProps) {
                       {item.question}
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-kiosk-text/85" />
+                      <ChevronUp aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-kiosk-text/85" />
+                      <ChevronDown aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
                     )}
                   </button>
 

@@ -3,15 +3,13 @@ import {
   Activity, Server, Database, Wifi, WifiOff, AlertCircle, CheckCircle, 
   Clock, RefreshCw, Cpu, HardDrive, MemoryStick, Zap, Heart
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { useHealthMonitorWebSocket, HealthMetrics } from '@/hooks/system/useHealthMonitorWebSocket';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   tsijukebox: <Activity className="w-5 h-5" />,
@@ -28,8 +26,8 @@ const STATUS_COLORS = {
 };
 
 const STATUS_ICONS = {
-  active: <CheckCircle className="w-4 h-4 text-green-400" />,
-  inactive: <Clock className="w-4 h-4 text-yellow-400" />,
+  active: <CheckCircle className="w-4 h-4 text-green-700" />,
+  inactive: <Clock className="w-4 h-4 text-yellow-600" />,
   failed: <AlertCircle className="w-4 h-4 text-red-400" />,
   unknown: <Clock className="w-4 h-4 text-slate-400" />,
 };
@@ -88,7 +86,7 @@ function MetricGauge({
   
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-      <CardContent className="p-4">
+      <div className="mt-4">
         <div className="flex items-center gap-3 mb-3">
           <div className={`p-2 rounded-lg bg-gradient-to-br ${colorClasses[color]} text-white`}>
             {icon}
@@ -104,7 +102,7 @@ function MetricGauge({
           value={percentage} 
           className="h-2"
         />
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -145,13 +143,12 @@ function MetricsChart({ history }: { history: HealthMetrics[] }) {
 
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
           <Activity className="w-5 h-5 text-cyan-400" />
           Histórico de Métricas
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      
+      <div className="mt-4">
         <div className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
@@ -203,15 +200,15 @@ function MetricsChart({ history }: { history: HealthMetrics[] }) {
         </div>
         <div className="flex justify-center gap-4 mt-2">
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full bg-cyan-500" />
+            <div className="w-3 h-3 rounded-full bg-cyan-500" aria-hidden="true" />
             <span className="text-xs text-muted-foreground">CPU</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full bg-green-500" />
+            <div className="w-3 h-3 rounded-full bg-green-500" aria-hidden="true" />
             <span className="text-xs text-muted-foreground">Memória</span>
           </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -220,18 +217,17 @@ function AlertsTimeline({ alerts }: { alerts: HealthMetrics['alerts'] }) {
   if (alerts.length === 0) {
     return (
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <AlertCircle className="w-5 h-5 text-amber-400" />
             Alertas Recentes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
             <CheckCircle className="w-12 h-12 mb-2 text-green-500/50" />
             <p>Nenhum alerta ativo</p>
           </div>
-        </CardContent>
+        </div>
       </Card>
     );
   }
@@ -245,13 +241,12 @@ function AlertsTimeline({ alerts }: { alerts: HealthMetrics['alerts'] }) {
 
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
           <AlertCircle className="w-5 h-5 text-amber-400" />
           Alertas Recentes
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      
+      <div className="mt-4">
         <div className="space-y-2 max-h-[200px] overflow-y-auto">
           {alerts.map((alert) => (
             <div
@@ -265,7 +260,7 @@ function AlertsTimeline({ alerts }: { alerts: HealthMetrics['alerts'] }) {
             </div>
           ))}
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

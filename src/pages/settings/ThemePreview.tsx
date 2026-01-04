@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, Sun, Moon, Sparkles, Eye, Palette, Columns, LayoutGrid } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { builtInPresets, applyCustomColors, type ThemePreset } from '@/hooks';
 import { toast } from 'sonner';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 export default function ThemePreview() {
   const [previewPreset, setPreviewPreset] = useState<ThemePreset | null>(null);
@@ -79,9 +77,8 @@ export default function ThemePreview() {
           <Link to="/settings">
             <Button
               variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d"
-            >
+              size="xs"
+              className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d" aria-label="Voltar">
               <ArrowLeft className="w-6 h-6 text-kiosk-text" />
             </Button>
           </Link>
@@ -481,13 +478,12 @@ export default function ThemePreview() {
               transition={{ delay: 0.3 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-lg flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Eye className="w-5 h-5 icon-neon-blue" />
                     Tema Ativo: {currentPreset.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <div className="grid grid-cols-6 gap-3">
                     {[
                       { key: 'primary', label: 'Primary' },
@@ -516,7 +512,7 @@ export default function ThemePreview() {
                       )}
                     </p>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
           )}

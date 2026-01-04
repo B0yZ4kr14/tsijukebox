@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Copy, Check, Share2, QrCode, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -80,14 +80,13 @@ export function JamInviteModal({ open, onOpenChange, sessionCode, sessionName }:
               </span>
               <Button
                 variant="ghost"
-                size="icon"
+                size="xs"
                 onClick={handleCopyCode}
-                className="h-10 w-10"
-              >
+                className="h-10 w-10" aria-label="Confirmar">
                 {copied === 'code' ? (
-                  <Check className="w-5 h-5 text-green-500" />
+                  <Check aria-hidden="true" className="w-5 h-5 text-green-500" />
                 ) : (
-                  <Copy className="w-5 h-5" />
+                  <Copy aria-hidden="true" className="w-5 h-5" />
                 )}
               </Button>
             </motion.div>
@@ -107,13 +106,13 @@ export function JamInviteModal({ open, onOpenChange, sessionCode, sessionName }:
                   {jamLink}
                 </p>
               </div>
-              {copied === 'link' && <Check className="w-4 h-4 text-green-500" />}
+              {copied === 'link' && <Check aria-hidden="true" className="w-4 h-4 text-green-500" />}
             </Button>
 
             {navigator.share && (
               <Button
                 onClick={handleShare}
-                className="w-full justify-start gap-3 h-12 button-jam-silver-neon text-zinc-900"
+                className="w-full justify-start gap-3 h-12 button-jam-silver-neon text-zinc-600"
               >
                 <Share2 className="w-5 h-5" />
                 <span className="font-medium">Compartilhar</span>

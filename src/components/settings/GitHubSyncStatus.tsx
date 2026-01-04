@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { Github, RefreshCw, ExternalLink, GitCommit, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useGitHubSync } from '@/hooks/system/useGitHubSync';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Badge, Button } from "@/components/ui/themed"
 
 export function GitHubSyncStatus() {
   const { syncStatus, isLoading, error, refresh, lastRefresh } = useGitHubSync();
@@ -21,7 +20,7 @@ export function GitHubSyncStatus() {
   const getStatusBadge = () => {
     if (isLoading) {
       return (
-        <Badge variant="secondary" className="animate-pulse">
+        <Badge data-testid="github-status-badge" variant="secondary" className="animate-pulse">
           <Loader2 className="w-3 h-3 mr-1 animate-spin" />
           Verificando...
         </Badge>
@@ -30,7 +29,7 @@ export function GitHubSyncStatus() {
 
     if (error) {
       return (
-        <Badge variant="destructive">
+        <Badge data-testid="github-status-badge" variant="danger">
           <AlertCircle className="w-3 h-3 mr-1" />
           Erro
         </Badge>
@@ -40,21 +39,21 @@ export function GitHubSyncStatus() {
     switch (syncStatus?.syncStatus) {
       case 'synced':
         return (
-          <Badge className="bg-green-600 hover:bg-green-600/90">
+          <Badge data-testid="github-status-badge" className="bg-green-600 hover:bg-green-600/90">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             Sincronizado
           </Badge>
         );
       case 'pending':
         return (
-          <Badge variant="outline" className="border-yellow-500 text-yellow-500">
+          <Badge data-testid="github-status-badge" variant="outline" className="border-yellow-500 text-yellow-500">
             <Clock className="w-3 h-3 mr-1" />
             Pendente
           </Badge>
         );
       default:
         return (
-          <Badge variant="secondary">
+          <Badge data-testid="github-status-badge" variant="secondary">
             Desconhecido
           </Badge>
         );
@@ -94,31 +93,33 @@ export function GitHubSyncStatus() {
       instructions={instructions}
       delay={0.3}
     >
-      <div className="space-y-4">
+      <div data-testid="github-sync-section" className="space-y-4">
         {/* Refresh Button */}
         <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+          <div data-testid="github-last-check" className="text-sm text-muted-foreground">
             {lastRefresh && (
               <span>Última verificação: {formatDate(lastRefresh.toISOString())}</span>
             )}
           </div>
           <Button
+            data-testid="github-refresh-button"
             variant="outline"
             size="sm"
             onClick={refresh}
             disabled={isLoading}
+            aria-label="Atualizar status de sincronização"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
-              <RefreshCw className="w-4 h-4 mr-2" />
+              <RefreshCw aria-hidden="true" className="w-4 h-4 mr-2" />
             )}
             Atualizar
           </Button>
         </div>
 
         {error && (
-          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm">
+          <div data-testid="github-error-display" className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm" role="alert">
             {error}
           </div>
         )}
@@ -127,7 +128,7 @@ export function GitHubSyncStatus() {
           <>
             {/* Last Commit */}
             {syncStatus.lastCommit && (
-              <div className="card-option-dark-3d rounded-lg p-4 space-y-3">
+              <div data-testid="github-last-commit" className="card-option-dark-3d rounded-lg p-4 space-y-3">
                 <div className="flex items-center gap-2 text-label-yellow">
                   <GitCommit className="w-4 h-4" />
                   <span className="font-medium">Último Commit</span>
@@ -137,7 +138,7 @@ export function GitHubSyncStatus() {
                   {syncStatus.lastCommit.authorAvatar && (
                     <img
                       src={syncStatus.lastCommit.authorAvatar}
-                      alt={syncStatus.lastCommit.author}
+                      alt={`Avatar de ${syncStatus.lastCommit.author}`}
                       className="w-10 h-10 rounded-full"
                     />
                   )}
@@ -156,12 +157,14 @@ export function GitHubSyncStatus() {
                     </div>
                   </div>
                   <a
+                    data-testid="github-commit-link"
                     href={syncStatus.lastCommit.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-kiosk-primary hover:text-kiosk-primary/80"
+                    aria-label="Ver commit no GitHub"
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink aria-hidden="true" className="w-4 h-4" />
                   </a>
                 </div>
               </div>
@@ -170,10 +173,10 @@ export function GitHubSyncStatus() {
             <Separator className="bg-kiosk-border" />
 
             {/* Repo Info */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div data-testid="github-repo-info" className="grid grid-cols-2 gap-4 text-sm">
               <div className="space-y-1">
                 <p className="text-muted-foreground">Branch</p>
-                <Badge variant="outline">{syncStatus.branch}</Badge>
+                <Badge data-testid="github-branch-badge" variant="outline">{syncStatus.branch}</Badge>
               </div>
               <div className="space-y-1">
                 <p className="text-muted-foreground">Último Push</p>
@@ -186,13 +189,14 @@ export function GitHubSyncStatus() {
               <div className="space-y-1">
                 <p className="text-muted-foreground">Repositório</p>
                 <a
+                  data-testid="github-repo-link"
                   href={syncStatus.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-kiosk-primary hover:underline inline-flex items-center gap-1"
                 >
                   Ver no GitHub
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink aria-hidden="true" className="w-3 h-3" />
                 </a>
               </div>
             </div>

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { hslToHex, hexToHsl } from '@/hooks';
 import { motion } from 'framer-motion';
+import { Input, Slider } from "@/components/ui/themed"
 
 interface ColorPickerProps {
   label: string;
@@ -73,7 +72,7 @@ export function ColorPicker({ label, value, onChange, presets }: ColorPickerProp
             type="text"
             value={hexValue}
             onChange={(e) => handleHexChange(e.target.value)}
-            placeholder="#00BFFF"
+            placeholder="var(--accent-sky)"
             className="input-3d font-mono uppercase"
             maxLength={7}
           />

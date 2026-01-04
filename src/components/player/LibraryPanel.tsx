@@ -4,14 +4,13 @@ import {
   X, Search, ListMusic, Disc3, User2, Music, Play, 
   Plus, ChevronRight, Heart
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from '@/hooks';
 import { useSpotifyPlaylists, useSpotifyLibrary, useSpotifySearch } from '@/hooks';
 import { api } from '@/lib/api/client';
 import { toast } from 'sonner';
+import { Button, Input } from "@/components/ui/themed"
 
 interface LibraryPanelProps {
   isOpen: boolean;
@@ -80,18 +79,17 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
             </h2>
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={onClose}
-              className="w-8 h-8 text-description-visible hover:text-kiosk-text"
-            >
-              <X className="w-5 h-5" />
+              className="w-8 h-8 text-description-visible hover:text-kiosk-text" aria-label="Fechar">
+              <X aria-hidden="true" className="w-5 h-5" />
             </Button>
           </div>
 
           {/* Search */}
           <div className="p-4 border-b border-cyan-500/10">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
+              <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
               <Input
                 placeholder={t('spotify.search')}
                 value={searchQuery}
@@ -109,7 +107,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                 Playlists
               </TabsTrigger>
               <TabsTrigger value="search" className="text-xs data-[state=active]:bg-primary/20">
-                <Search className="w-3 h-3 mr-1" />
+                <Search aria-hidden="true" className="w-3 h-3 mr-1" />
                 {t('common.search')}
               </TabsTrigger>
               <TabsTrigger value="albums" className="text-xs data-[state=active]:bg-primary/20">
@@ -131,8 +129,8 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                     onClick={() => handlePlayPlaylist('spotify:collection:tracks')}
                     className="w-full flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 hover:border-purple-500/50 transition-all group"
                   >
-                    <div className="w-12 h-12 rounded bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                      <Heart className="w-6 h-6 text-white fill-white" />
+                    <div className="w-12 h-12 rounded bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center" aria-hidden="true">
+                      <Heart aria-hidden="true" className="w-6 h-6 text-white fill-white" />
                     </div>
                     <div className="flex-1 text-left">
                       <p className="font-semibold text-kiosk-text">{t('spotify.liked')}</p>
@@ -145,7 +143,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                   {playlistsLoading ? (
                     <div className="space-y-2">
                       {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="h-16 rounded-lg bg-kiosk-surface/30 animate-pulse" />
+                        <div key={i} className="h-16 rounded-lg bg-kiosk-surface/30 animate-pulse" aria-hidden="true" />
                       ))}
                     </div>
                   ) : (
@@ -155,7 +153,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                         onClick={() => handlePlayPlaylist(`spotify:playlist:${playlist.id}`)}
                         className="w-full flex items-center gap-3 p-3 rounded-lg bg-kiosk-surface/30 border border-cyan-500/10 hover:border-cyan-500/30 hover:bg-kiosk-surface/50 transition-all group"
                       >
-                        <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0" aria-hidden="true">
                           {playlist.imageUrl ? (
                             <img src={playlist.imageUrl} alt={playlist.name} className="w-full h-full object-cover" />
                           ) : (
@@ -168,7 +166,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                           <p className="font-medium text-kiosk-text truncate">{playlist.name}</p>
                           <p className="text-xs text-description-visible">{playlist.tracksTotal || 0} {t('spotify.songs')}</p>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-secondary-visible group-hover:text-description-visible transition-colors" />
+                        <ChevronRight aria-hidden="true" className="w-4 h-4 text-secondary-visible group-hover:text-description-visible transition-colors" />
                       </button>
                     ))
                   )}
@@ -186,7 +184,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                     </div>
                   ) : searchQuery.length < 3 ? (
                     <div className="text-center py-12 text-description-visible">
-                      <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <Search aria-hidden="true" className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>{t('spotify.search')}</p>
                     </div>
                   ) : results.tracks.length === 0 ? (
@@ -201,7 +199,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                           key={track.id}
                           className="flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors group"
                         >
-                          <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                          <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0" aria-hidden="true">
                             {track.albumImageUrl ? (
                               <img src={track.albumImageUrl} alt={track.name} className="w-full h-full object-cover" />
                             ) : (
@@ -219,19 +217,17 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="xs"
                               className="w-8 h-8"
-                              onClick={() => handlePlayTrack(track.uri)}
-                            >
+                              onClick={() => handlePlayTrack(track.uri)} aria-label="Reproduzir">
                               <Play className="w-4 h-4 text-[#1DB954]" />
                             </Button>
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="xs"
                               className="w-8 h-8"
-                              onClick={() => handleAddToQueue(track.uri)}
-                            >
-                              <Plus className="w-4 h-4" />
+                              onClick={() => handleAddToQueue(track.uri)} aria-label="Adicionar">
+                              <Plus aria-hidden="true" className="w-4 h-4" />
                             </Button>
                           </div>
                         </div>
@@ -292,7 +288,7 @@ export function LibraryPanel({ isOpen, onClose }: LibraryPanelProps) {
                         onClick={() => handlePlayPlaylist(`spotify:artist:${artist.id}`)}
                         className="p-3 rounded-lg bg-kiosk-surface/30 border border-cyan-500/10 hover:border-cyan-500/30 transition-all text-center group"
                       >
-                        <div className="w-16 h-16 mx-auto rounded-full overflow-hidden mb-2">
+                        <div className="w-16 h-16 mx-auto rounded-full overflow-hidden mb-2" aria-hidden="true">
                           {artist.imageUrl ? (
                             <img src={artist.imageUrl} alt={artist.name} className="w-full h-full object-cover" />
                           ) : (
@@ -325,14 +321,13 @@ export function LibraryPanelToggle({
   return (
     <Button
       variant="ghost"
-      size="icon"
+      size="xs"
       onClick={onClick}
       className={`w-10 h-10 rounded-full transition-all ${
         isOpen 
           ? 'bg-cyan-500/20 text-cyan-400' 
           : 'bg-kiosk-surface/50 text-description-visible hover:text-cyan-400'
-      }`}
-    >
+      }`} aria-label="Fila de reprodução">
       <ListMusic className="w-5 h-5" />
     </Button>
   );

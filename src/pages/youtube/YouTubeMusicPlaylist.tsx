@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Play, Shuffle, Clock, Music, Loader2 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Skeleton } from '@/components/ui/skeleton';
 import { YouTubeMusicTrackItem, AddToPlaylistModal } from '@/components/youtube';
 import { useYouTubeMusicLibrary, useYouTubeMusicPlayer } from '@/hooks';
@@ -110,10 +110,9 @@ export default function YouTubeMusicPlaylistPage() {
           <div className="relative p-6">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/youtube-music')}
-              className="w-10 h-10 rounded-full mb-4"
-            >
+              className="w-10 h-10 rounded-full mb-4" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
 
@@ -198,7 +197,7 @@ export default function YouTubeMusicPlaylistPage() {
             </div>
           ) : tracks.length === 0 ? (
             <div className="text-center py-12 text-kiosk-text/85">
-              <Music className="w-16 h-16 mx-auto mb-4 opacity-30" />
+              <Music aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p>Esta playlist está vazia</p>
             </div>
           ) : (

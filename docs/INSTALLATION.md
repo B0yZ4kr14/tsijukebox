@@ -1,6 +1,8 @@
-# TSiJUKEBOX Installation Guide
+# TSiJUKEBOX Installation Guide v6.0.0
 
 Complete installation instructions for all deployment scenarios.
+
+![Version](https://img.shields.io/badge/version-6.0.0-blue?style=flat-square)
 
 ---
 
@@ -8,14 +10,18 @@ Complete installation instructions for all deployment scenarios.
 
 1. [System Requirements](#system-requirements)
 2. [Installation Methods](#installation-methods)
-   - [Wizard Installation](#wizard-installation-recommended)
+   - [One-Command Installation](#one-command-installation-recommended)
+   - [Wizard Installation](#wizard-installation)
    - [Automatic Installation](#automatic-installation)
    - [Docker Installation](#docker-installation)
    - [Manual Installation](#manual-installation)
-3. [Database Configuration](#database-configuration)
-4. [Cloud Backup Setup](#cloud-backup-setup)
-5. [Post-Installation](#post-installation)
-6. [Uninstallation](#uninstallation)
+3. [26 Installation Phases](#26-installation-phases)
+4. [Database Configuration](#database-configuration)
+5. [SSL Configuration](#ssl-configuration)
+6. [Avahi/mDNS Configuration](#avahimdns-configuration)
+7. [Cloud Backup Setup](#cloud-backup-setup)
+8. [Post-Installation](#post-installation)
+9. [Uninstallation](#uninstallation)
 
 ---
 
@@ -54,17 +60,51 @@ chromium openbox xorg-server xorg-xinit
 
 ## Installation Methods
 
-### Wizard Installation (Recommended)
+### One-Command Installation (Recommended)
+
+Install TSiJUKEBOX with a single command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
+```
+
+**With options:**
+
+```bash
+# Full installation with verbose output
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --verbose
+
+# Minimal installation (no monitoring, no dev tools)
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode minimal
+
+# Kiosk mode for public displays
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode kiosk
+
+# Dry run (preview what will be installed)
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --dry-run
+```
+
+**Alternative using shim (auto-downloads unified installer):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+```
+
+### Wizard Installation
+
+![Setup Wizard](assets/mockups/setup-wizard-screen.png)
+
+*Assistente visual de instalação - Etapa 2: Seleção de provedores de música*
 
 The visual wizard provides a user-friendly installation experience.
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/tsijukebox.git
-cd tsijukebox
+git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git
+cd TSiJUKEBOX
 
 # Run installer
-sudo python3 scripts/installer/main.py
+sudo python3 scripts/unified-installer.py
 ```
 
 The wizard will:

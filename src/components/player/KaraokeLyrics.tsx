@@ -60,7 +60,7 @@ export function KaraokeLyrics({ lines, position, className }: KaraokeLyricsProps
               className={cn(
                 'text-center transition-all duration-300',
                 isCurrentLine && 'scale-105',
-                isPastLine && 'opacity-40'
+                isPastLine && 'opacity-60'
               )}
             >
               {line.text ? (

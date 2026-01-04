@@ -1,12 +1,10 @@
 import { useState, useRef } from 'react';
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useLibrary } from '@/hooks';
 import { Music, Play, Trash2, Upload, Search, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button, Card, Input } from "@/components/ui/themed"
 
 function formatDuration(seconds: number): string {
   const mins = Math.floor(seconds / 60);
@@ -67,7 +65,7 @@ export default function AdminLibrary() {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <CardContent className="pt-6">
+          <div className="mt-4">
             <div className="flex flex-col items-center justify-center py-8 text-center">
               {isUploading ? (
                 <>
@@ -98,16 +96,15 @@ export default function AdminLibrary() {
                 </>
               )}
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Library Table */}
         <Card className="card-admin-extreme-3d">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-gold-neon">Faixas ({tracks.length})</CardTitle>
-                <CardDescription className="text-kiosk-text/90">Lista de todas as músicas disponíveis</CardDescription>
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Faixas ({tracks.length})</h3>
+                <p className="text-sm text-[var(--text-muted)]">Lista de todas as músicas disponíveis</p>
               </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -119,8 +116,8 @@ export default function AdminLibrary() {
                 />
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
+          
+          <div className="mt-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-8 h-8 animate-spin icon-neon-blue" />
@@ -156,18 +153,16 @@ export default function AdminLibrary() {
                         <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="xs"
                             onClick={() => playTrack(track.id)}
-                            className="h-8 w-8"
-                          >
+                            className="h-8 w-8" aria-label="Reproduzir">
                             <Play className="w-4 h-4" />
                           </Button>
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="xs"
                             onClick={() => deleteTrack(track.id)}
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                          >
+                            className="h-8 w-8 text-destructive hover:text-destructive" aria-label="Excluir">
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
@@ -177,7 +172,7 @@ export default function AdminLibrary() {
                 </TableBody>
               </Table>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </AdminLayout>

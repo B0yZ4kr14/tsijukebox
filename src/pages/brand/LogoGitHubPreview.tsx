@@ -1,8 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { LogoGitHub } from '@/components/ui/LogoGitHub';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Download, Copy, Check, Eye, Moon, Sun, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -83,13 +81,12 @@ export default function LogoGitHubPreview() {
           transition={{ delay: 0.1 }}
         >
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Eye className="w-5 h-5 text-primary" />
                 Preview Principal
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+              </h3>
+            
+            <div className="mt-4">
               {/* Background selector */}
               <div className="flex items-center gap-4">
                 <span className="text-sm text-muted-foreground">Fundo:</span>
@@ -142,7 +139,7 @@ export default function LogoGitHubPreview() {
 
               {/* Export Actions */}
               <div className="flex gap-3">
-                <Button onClick={handleExportPNG} className="gap-2 button-jam-silver-neon text-zinc-900">
+                <Button onClick={handleExportPNG} className="gap-2 button-jam-silver-neon text-zinc-300">
                   <Download className="w-4 h-4" />
                   Exportar PNG
                 </Button>
@@ -151,7 +148,7 @@ export default function LogoGitHubPreview() {
                   {copied ? 'Copiado!' : 'Copiar Código'}
                 </Button>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </motion.div>
 
@@ -162,10 +159,9 @@ export default function LogoGitHubPreview() {
           transition={{ delay: 0.2 }}
         >
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-            <CardHeader>
-              <CardTitle>Todos os Tamanhos</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Todos os Tamanhos</h3>
+            
+            <div className="mt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {sizes.map((size) => (
                   <div key={size} className="space-y-2">
@@ -178,7 +174,7 @@ export default function LogoGitHubPreview() {
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
         </motion.div>
 
@@ -189,12 +185,12 @@ export default function LogoGitHubPreview() {
           transition={{ delay: 0.3 }}
         >
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-            <CardHeader>
-              <CardTitle>Como Usar</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Como Usar</h3>
+            
+            <div className="mt-4">
               <pre className="bg-zinc-900 text-zinc-100 p-4 rounded-lg overflow-x-auto text-sm">
 {`import { LogoGitHub } from '@/components/ui/LogoGitHub';
+import { Button, Card } from "@/components/ui/themed"
 
 // Uso básico
 <LogoGitHub />
@@ -206,7 +202,7 @@ export default function LogoGitHubPreview() {
   showEnterprise={true} // TSiJUKEBOX Enterprise
 />`}
               </pre>
-            </CardContent>
+            </div>
           </Card>
         </motion.div>
       </div>

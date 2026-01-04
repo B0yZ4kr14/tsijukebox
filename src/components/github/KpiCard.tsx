@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface KpiCardProps {
@@ -24,7 +24,7 @@ export function KpiCard({
       transition={{ duration: 0.3 }}
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm hover:border-primary/30 transition-colors">
-        <CardContent className="p-6">
+        <div className="mt-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground">{title}</p>
@@ -38,7 +38,7 @@ export function KpiCard({
               <Icon className="h-6 w-6 text-white" />
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

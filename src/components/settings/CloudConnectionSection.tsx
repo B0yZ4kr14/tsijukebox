@@ -1,8 +1,7 @@
 import { Cloud, Check, ExternalLink } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SettingsSection } from './SettingsSection';
+import { Badge, Button } from "@/components/ui/themed"
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 
@@ -18,7 +17,7 @@ export function CloudConnectionSection() {
       badge={
         isConnected ? (
           <Badge variant="outline" className="ml-2 border-[#3ECF8E] text-[#3ECF8E]">
-            <Check className="w-3 h-3 mr-1" />
+            <Check aria-hidden="true" className="w-3 h-3 mr-1" />
             Conectado
           </Badge>
         ) : null
@@ -87,7 +86,7 @@ export function CloudConnectionSection() {
             <Cloud className="w-12 h-12 text-kiosk-text/20 mx-auto mb-3" />
             <p className="text-settings-hint mb-4">Lovable Cloud não está configurado</p>
             <Button variant="kiosk-outline" className="border-kiosk-border text-kiosk-text">
-              <ExternalLink className="w-4 h-4 mr-2" />
+              <ExternalLink aria-hidden="true" className="w-4 h-4 mr-2" />
               Saiba mais
             </Button>
           </div>

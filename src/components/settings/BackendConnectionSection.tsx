@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { Server, Zap, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { SettingsSection } from './SettingsSection';
+import { Button, Input, Slider, Toggle } from "@/components/ui/themed"
 
 interface BackendConnectionSectionProps {
   apiUrl: string;

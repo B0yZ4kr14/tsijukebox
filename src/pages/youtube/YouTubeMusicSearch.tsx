@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Search, X, Music, Disc, ListMusic, Loader2 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { YouTubeMusicTrackItem, YouTubeMusicAlbumCard, YouTubeMusicPlaylistCard, AddToPlaylistModal } from '@/components/youtube';
 import { useYouTubeMusicSearch, useYouTubeMusicLibrary, useYouTubeMusicPlayer } from '@/hooks';
 import { useSettings } from '@/contexts/SettingsContext';
 import { YouTubeMusicTrack } from '@/lib/api/youtubeMusic';
 import { toast } from 'sonner';
+import { Button, Input } from "@/components/ui/themed"
 
 export default function YouTubeMusicSearch() {
   const navigate = useNavigate();
@@ -72,10 +71,9 @@ export default function YouTubeMusicSearch() {
           <div className="flex items-center gap-4 mb-4">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/youtube-music')}
-              className="w-10 h-10 rounded-full"
-            >
+              className="w-10 h-10 rounded-full" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
@@ -98,10 +96,9 @@ export default function YouTubeMusicSearch() {
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
+                size="xs"
                 onClick={handleClear}
-                className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8"
-              >
+                className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8" aria-label="Fechar">
                 <X className="w-4 h-4" />
               </Button>
             )}
@@ -115,7 +112,7 @@ export default function YouTubeMusicSearch() {
             </div>
           ) : !hasResults ? (
             <div className="text-center py-20 text-kiosk-text/85">
-              <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
+              <Search aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p className="text-lg">Busque por músicas, álbuns ou playlists</p>
               <p className="text-sm">Digite algo no campo de busca acima</p>
             </div>

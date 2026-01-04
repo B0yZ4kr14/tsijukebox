@@ -1,6 +1,6 @@
 import { Play, Heart, Plus } from 'lucide-react';
 import { SpotifyTrack } from '@/lib/api/spotify';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
 
 interface TrackItemProps {
@@ -63,7 +63,7 @@ export function TrackItem({
 
       {/* Album art */}
       {showImage && (
-        <div className="w-10 h-10 rounded overflow-hidden bg-kiosk-surface flex-shrink-0">
+        <div className="w-10 h-10 rounded overflow-hidden bg-kiosk-surface flex-shrink-0" aria-hidden="true">
           {track.albumImageUrl ? (
             <img
               src={track.albumImageUrl}
@@ -103,22 +103,20 @@ export function TrackItem({
       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className={cn(
             "w-8 h-8",
             isLiked ? "text-[#1DB954]" : "text-kiosk-text/85 hover:text-kiosk-text"
           )}
-          onClick={onLike}
-        >
-          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+          onClick={onLike} aria-label="Favoritar">
+          <Heart aria-hidden="true" className={cn("w-4 h-4", isLiked && "fill-current")} />
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
-          onClick={onAddToPlaylist}
-        >
-          <Plus className="w-4 h-4" />
+          onClick={onAddToPlaylist} aria-label="Adicionar">
+          <Plus aria-hidden="true" className="w-4 h-4" />
         </Button>
       </div>
 

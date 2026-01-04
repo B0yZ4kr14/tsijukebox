@@ -12,13 +12,11 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePlaybackStats, StatsPeriod } from '@/hooks/system/usePlaybackStats';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 const CHART_COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
@@ -46,7 +44,7 @@ export default function JukeboxStatsDashboard() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <Button variant="ghost" size="icon" className="text-kiosk-text hover:bg-kiosk-surface">
+              <Button variant="ghost" size="xs" className="text-kiosk-text hover:bg-kiosk-surface" aria-label="Voltar">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
@@ -78,10 +76,9 @@ export default function JukeboxStatsDashboard() {
             
             <Button 
               variant="outline" 
-              size="icon"
+              size="xs"
               onClick={() => refetch()}
-              className="border-kiosk-border"
-            >
+              className="border-kiosk-border" aria-label="Atualizar">
               <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
@@ -89,9 +86,9 @@ export default function JukeboxStatsDashboard() {
 
         {error && (
           <Card className="mb-6 border-red-500/50 bg-red-500/10">
-            <CardContent className="p-4">
+            <div className="mt-4">
               <p className="text-red-500">Erro ao carregar estatísticas: {error.message}</p>
-            </CardContent>
+            </div>
           </Card>
         )}
 
@@ -110,7 +107,7 @@ export default function JukeboxStatsDashboard() {
               transition={{ delay: i * 0.1 }}
             >
               <Card className="bg-kiosk-surface border-kiosk-border">
-                <CardContent className="p-4">
+                <div className="mt-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-muted-foreground">{kpi.label}</p>
@@ -122,7 +119,7 @@ export default function JukeboxStatsDashboard() {
                     </div>
                     <kpi.icon className={`h-8 w-8 ${kpi.color} opacity-50`} />
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
           ))}
@@ -131,13 +128,12 @@ export default function JukeboxStatsDashboard() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Hourly Activity Chart */}
           <Card className="lg:col-span-2 bg-kiosk-surface border-kiosk-border">
-            <CardHeader>
-              <CardTitle className="text-kiosk-text flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <TrendingUp className="h-5 w-5 text-kiosk-primary" />
                 Atividade por Hora
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            
+            <div className="mt-4">
               {isLoading ? (
                 <Skeleton className="h-64 w-full" />
               ) : stats?.hourlyActivity ? (
@@ -170,15 +166,14 @@ export default function JukeboxStatsDashboard() {
               ) : (
                 <p className="text-muted-foreground text-center py-8">Sem dados disponíveis</p>
               )}
-            </CardContent>
+            </div>
           </Card>
 
           {/* Provider Distribution */}
           <Card className="bg-kiosk-surface border-kiosk-border">
-            <CardHeader>
-              <CardTitle className="text-kiosk-text text-sm">Por Provedor</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Por Provedor</h3>
+            
+            <div className="mt-4">
               {isLoading ? (
                 <Skeleton className="h-48 w-full" />
               ) : stats?.providerStats && stats.providerStats.length > 0 ? (
@@ -204,7 +199,7 @@ export default function JukeboxStatsDashboard() {
               ) : (
                 <p className="text-muted-foreground text-center py-8">Sem dados</p>
               )}
-            </CardContent>
+            </div>
           </Card>
         </div>
 
@@ -212,13 +207,12 @@ export default function JukeboxStatsDashboard() {
         <div className="grid lg:grid-cols-2 gap-6 mt-6">
           {/* Top Tracks */}
           <Card className="bg-kiosk-surface border-kiosk-border">
-            <CardHeader>
-              <CardTitle className="text-kiosk-text flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Music className="h-5 w-5 text-kiosk-primary" />
                 Top 10 Músicas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            
+            <div className="mt-4">
               {isLoading ? (
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
@@ -245,7 +239,7 @@ export default function JukeboxStatsDashboard() {
                           className="w-10 h-10 rounded object-cover"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded bg-kiosk-border flex items-center justify-center">
+                        <div className="w-10 h-10 rounded bg-kiosk-border flex items-center justify-center" aria-hidden="true">
                           <Music className="h-4 w-4 text-muted-foreground" />
                         </div>
                       )}
@@ -266,18 +260,17 @@ export default function JukeboxStatsDashboard() {
               ) : (
                 <p className="text-muted-foreground text-center py-8">Nenhuma música reproduzida</p>
               )}
-            </CardContent>
+            </div>
           </Card>
 
           {/* Top Artists */}
           <Card className="bg-kiosk-surface border-kiosk-border">
-            <CardHeader>
-              <CardTitle className="text-kiosk-text flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Users className="h-5 w-5 text-kiosk-primary" />
                 Top 10 Artistas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            
+            <div className="mt-4">
               {isLoading ? (
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
@@ -326,19 +319,18 @@ export default function JukeboxStatsDashboard() {
               ) : (
                 <p className="text-muted-foreground text-center py-8">Nenhum artista encontrado</p>
               )}
-            </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* Recent Plays */}
         <Card className="mt-6 bg-kiosk-surface border-kiosk-border">
-          <CardHeader>
-            <CardTitle className="text-kiosk-text flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <Clock className="h-5 w-5 text-kiosk-primary" />
               Reproduções Recentes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          
+          <div className="mt-4">
             {isLoading ? (
               <div className="space-y-2">
                 {[...Array(5)].map((_, i) => (
@@ -386,7 +378,7 @@ export default function JukeboxStatsDashboard() {
             ) : (
               <p className="text-muted-foreground text-center py-8">Nenhuma reprodução recente</p>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </KioskLayout>

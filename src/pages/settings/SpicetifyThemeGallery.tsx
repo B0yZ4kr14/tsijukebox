@@ -1,15 +1,12 @@
 import { useState, useMemo } from 'react';
 import { Palette, Search, Filter, Grid, LayoutGrid, Sparkles } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { ThemePreviewCard, SpicetifyTheme } from '@/components/spicetify/ThemePreviewCard';
 import { useSpicetifyIntegration } from '@/hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 // Sample themes for demonstration
 const SAMPLE_THEMES: SpicetifyTheme[] = [
@@ -245,7 +242,7 @@ export default function SpicetifyThemeGallery() {
         {/* Empty State */}
         {filteredThemes.length === 0 && (
           <Card className="bg-card/50 backdrop-blur-sm">
-            <CardContent className="flex flex-col items-center justify-center py-12">
+            <div className="mt-4">
               <Palette className="w-12 h-12 text-muted-foreground/50 mb-4" />
               <p className="text-lg font-medium text-muted-foreground">
                 Nenhum tema encontrado
@@ -263,7 +260,7 @@ export default function SpicetifyThemeGallery() {
               >
                 Limpar filtros
               </Button>
-            </CardContent>
+            </div>
           </Card>
         )}
 

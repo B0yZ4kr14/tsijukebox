@@ -2,34 +2,30 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ExternalLink, GitCommit, Clock, FileCode, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSyncHistory } from '@/hooks/system/useSyncHistory';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 export function SyncHistoryPanel() {
   const { history, isLoading, refetch } = useSyncHistory(15);
 
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
           <Clock className="h-5 w-5 text-primary" />
           Histórico de Sincronizações
-        </CardTitle>
+        </h3>
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={() => refetch()}
           disabled={isLoading}
         >
-          <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          <RefreshCw aria-hidden="true" className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         </Button>
-      </CardHeader>
-      <CardContent>
+      
+      <div className="mt-4">
         <ScrollArea className="h-[300px] pr-4">
           {isLoading ? (
             <div className="space-y-3">
@@ -105,11 +101,10 @@ export function SyncHistoryPanel() {
                   {entry.commit_url && (
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="xs"
                       className="h-8 w-8 shrink-0"
-                      onClick={() => window.open(entry.commit_url!, '_blank')}
-                    >
-                      <ExternalLink className="h-4 w-4" />
+                      onClick={() => window.open(entry.commit_url!, '_blank')} aria-label="Abrir em nova aba">
+                      <ExternalLink aria-hidden="true" className="h-4 w-4" />
                     </Button>
                   )}
                 </motion.div>
@@ -117,7 +112,7 @@ export function SyncHistoryPanel() {
             </div>
           )}
         </ScrollArea>
-      </CardContent>
+      </div>
     </Card>
   );
 }

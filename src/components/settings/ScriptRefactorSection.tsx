@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SettingsSection } from './SettingsSection';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,6 +14,7 @@ import {
   RefactoredScript 
 } from '@/hooks/system/useScriptRefactor';
 import { toast } from 'sonner';
+import { Badge, Button, Card } from "@/components/ui/themed"
 import {
   Wand2,
   Copy,
@@ -46,7 +44,7 @@ const CATEGORY_CONFIG: Record<InstallerScript['category'], {
   bgColor: string;
 }> = {
   core: { 
-    icon: <Settings className="w-4 h-4" />, 
+    icon: <Settings aria-hidden="true" className="w-4 h-4" />, 
     label: 'Core', 
     color: 'text-cyan-400',
     bgColor: 'bg-cyan-500/20',
@@ -121,8 +119,7 @@ function ScriptCard({
         `}
         onClick={onSelect}
       >
-        <CardHeader className="p-3 pb-2">
-          <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {/* Selection indicator */}
               <div className={`flex-shrink-0 transition-colors ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
@@ -143,9 +140,9 @@ function ScriptCard({
               </div>
               
               <div className="flex-1 min-w-0">
-                <CardTitle className="text-sm font-medium truncate">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   {script.name}
-                </CardTitle>
+                </h3>
                 <p className="text-xs text-muted-foreground truncate">
                   ~{script.estimatedLines} linhas
                 </p>
@@ -157,15 +154,15 @@ function ScriptCard({
               {priorityConfig.label}
             </Badge>
           </div>
-        </CardHeader>
         
-        <CardContent className="p-3 pt-0">
+        
+        <div className="mt-4">
           <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleTrigger 
               className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              {isOpen ? <ChevronDown aria-hidden="true" className="w-3 h-3" /> : <ChevronRight aria-hidden="true" className="w-3 h-3" />}
               <span>Detalhes</span>
             </CollapsibleTrigger>
             
@@ -216,7 +213,7 @@ function ScriptCard({
               )}
             </CollapsibleContent>
           </Collapsible>
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );
@@ -625,18 +622,17 @@ export function ScriptRefactorSection() {
                   <div className="space-y-4 pr-4">
                     {refactoredScriptsArray.map(([path, data]) => (
                       <Card key={path} className="border-success/30 bg-success/5">
-                        <CardHeader className="pb-2">
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium flex items-center gap-2">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                               <CheckCircle className="w-4 h-4 text-success" />
                               {path.split('/').pop()}
-                            </CardTitle>
+                            </h3>
                             <Badge variant="outline" className="text-xs text-success">
                               {data.improvements.length} melhorias
                             </Badge>
                           </div>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
+                        
+                        <div className="mt-4">
                           <p className="text-sm text-muted-foreground">
                             {data.summary}
                           </p>
@@ -670,7 +666,7 @@ export function ScriptRefactorSection() {
                               className="flex-1"
                               onClick={() => copyToClipboard(data.refactoredCode)}
                             >
-                              <Copy className="w-3 h-3 mr-1" />
+                              <Copy aria-hidden="true" className="w-3 h-3 mr-1" />
                               Copiar Código
                             </Button>
                             <Button
@@ -685,7 +681,7 @@ export function ScriptRefactorSection() {
                               Ver Diff
                             </Button>
                           </div>
-                        </CardContent>
+                        </div>
                       </Card>
                     ))}
                   </div>

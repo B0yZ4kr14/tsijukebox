@@ -13,12 +13,12 @@ export function ScreenshotPreview({ variant, theme = "dark" }: ScreenshotPreview
     ? "bg-zinc-900 border-zinc-700" 
     : "bg-zinc-100 border-zinc-300";
   
-  const textClass = isDark ? "text-zinc-100" : "text-zinc-900";
+  const textClass = isDark ? "text-zinc-600" : "text-zinc-300";
   const mutedClass = isDark ? "text-zinc-400" : "text-zinc-600";
   const cardClass = isDark 
     ? "bg-zinc-800/50 border-zinc-700" 
     : "bg-white border-zinc-200";
-  const accentClass = isDark ? "text-emerald-400" : "text-emerald-600";
+  const accentClass = isDark ? "text-emerald-700" : "text-emerald-600";
 
   if (variant === "dashboard") {
     return (
@@ -103,19 +103,19 @@ export function ScreenshotPreview({ variant, theme = "dark" }: ScreenshotPreview
 
         {/* Controls */}
         <div className="flex items-center justify-center gap-4">
-          <Heart className={`w-5 h-5 ${mutedClass}`} />
+          <Heart aria-hidden="true" className={`w-5 h-5 ${mutedClass}`} />
           <div className="flex items-center gap-2">
-            <button className={`p-1 ${mutedClass}`}>
-              <SkipForward className="w-5 h-5 rotate-180" />
+            <button aria-label="PREENCHER" type="button" className={`p-1 ${mutedClass}`}>
+              <SkipForward aria-hidden="true" className="w-5 h-5 rotate-180" />
             </button>
-            <button className={`p-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500`}>
+            <button aria-label="PREENCHER" type="button" className={`p-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500`}>
               <Pause className="w-5 h-5 text-white" />
             </button>
-            <button className={`p-1 ${mutedClass}`}>
-              <SkipForward className="w-5 h-5" />
+            <button aria-label="PREENCHER" type="button" className={`p-1 ${mutedClass}`}>
+              <SkipForward aria-hidden="true" className="w-5 h-5" />
             </button>
           </div>
-          <Volume2 className={`w-5 h-5 ${mutedClass}`} />
+          <Volume2 aria-hidden="true" className={`w-5 h-5 ${mutedClass}`} />
         </div>
       </div>
     );
@@ -126,7 +126,7 @@ export function ScreenshotPreview({ variant, theme = "dark" }: ScreenshotPreview
       <div className={`rounded-xl border ${bgClass} p-4 aspect-video overflow-hidden`}>
         {/* Header */}
         <div className="flex items-center gap-2 mb-4">
-          <Settings className={`w-5 h-5 ${accentClass}`} />
+          <Settings aria-hidden="true" className={`w-5 h-5 ${accentClass}`} />
           <span className={`font-semibold ${textClass}`}>Configurações</span>
         </div>
 
@@ -149,7 +149,7 @@ export function ScreenshotPreview({ variant, theme = "dark" }: ScreenshotPreview
         <div className={`flex items-center justify-between mt-3 p-2 rounded-lg border ${cardClass}`}>
           <span className={`text-sm ${textClass}`}>Acessibilidade</span>
           <div className="w-10 h-5 rounded-full bg-emerald-500 flex items-center p-0.5">
-            <div className="w-4 h-4 rounded-full bg-white ml-auto" />
+            <div className="w-4 h-4 rounded-full bg-white ml-auto" aria-hidden="true" />
           </div>
         </div>
       </div>
@@ -307,7 +307,7 @@ export function ScreenshotPreview({ variant, theme = "dark" }: ScreenshotPreview
           {/* Top bar */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center" aria-hidden="true">
                 <Music className="w-3 h-3 text-white" />
               </div>
               <span className="font-bold text-white text-sm">TSiJUKEBOX</span>

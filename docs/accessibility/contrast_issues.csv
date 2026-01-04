@@ -1,0 +1,697 @@
+Arquivo,Linha,Coluna,Padrão,Match,Severidade,Crítico,Descrição,Sugestão
+src/components/landing/FAQSection.tsx,97,25,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/FAQSection.tsx,124,53,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/ScreenshotCarousel.tsx,71,41,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/StatsSection.tsx,70,39,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/StatsSection.tsx,89,131,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/ThemeComparison.tsx,26,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/landing/ThemeComparison.tsx,57,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/GlobalSidebar.tsx,393,37,text-gray-600,text-gray-600,ALTA,Sim,Cinza 600 (#4b5563) tem baixo contraste em fundo escuro,Usar text-gray-400 ou mais claro em temas escuros
+src/components/navigation/Header.tsx,148,71,text-gray-600,text-gray-600,ALTA,Sim,Cinza 600 (#4b5563) tem baixo contraste em fundo escuro,Usar text-gray-400 ou mais claro em temas escuros
+src/components/navigation/Header.tsx,269,51,text-gray-600,text-gray-600,ALTA,Sim,Cinza 600 (#4b5563) tem baixo contraste em fundo escuro,Usar text-gray-400 ou mais claro em temas escuros
+src/components/navigation/HeaderV2.tsx,165,64,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,179,30,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,179,18,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,195,28,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,195,16,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,241,24,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,241,12,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,281,57,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,281,45,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,284,57,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,284,45,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,364,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,364,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,451,26,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,451,14,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,495,83,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,495,71,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,503,38,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,503,26,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/HeaderV2.tsx,548,26,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/HeaderV2.tsx,548,14,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/Sidebar.tsx,237,99,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/Sidebar.tsx,237,87,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/navigation/Sidebar.tsx,265,26,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/navigation/Sidebar.tsx,265,14,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/FullscreenKaraoke.tsx,240,45,text-white-opacity,text-white/30,ALTA,Sim,Texto branco com opacidade baixa,Usar cor sólida com contraste adequado
+src/components/player/FullscreenKaraoke.tsx,278,45,text-white-opacity,text-white/30,ALTA,Sim,Texto branco com opacidade baixa,Usar cor sólida com contraste adequado
+src/components/player/KaraokeLyrics.tsx,63,32,opacity-40,opacity-40,ALTA,Sim,Opacidade 40% causa baixo contraste severo,Usar cor com contraste adequado em vez de opacidade
+src/components/player/ThemedPlayer.tsx,147,57,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,147,45,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,209,73,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,209,61,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,270,28,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,270,16,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,337,28,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,337,16,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,373,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,373,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,386,44,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,386,32,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,423,43,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,423,31,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,511,45,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,511,33,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,596,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,596,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,640,36,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,640,24,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,650,55,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,650,43,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,659,55,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,659,43,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/ThemedPlayer.tsx,669,78,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/ThemedPlayer.tsx,669,66,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/player/UserBadge.tsx,84,33,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/player/VoiceControlButton.tsx,171,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/CodeDiffViewer.tsx,143,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/CodeDiffViewer.tsx,157,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/CodePreview.tsx,56,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/CodePreview.tsx,60,36,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/LogoDownload.tsx,186,47,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/LogoDownload.tsx,186,35,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/NotificationFiltersPopover.tsx,237,45,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationFiltersPopover.tsx,264,45,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,66,101,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,74,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,78,33,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,99,32,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,189,40,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,202,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,220,53,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,225,67,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/NotificationsDropdown.tsx,226,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/TSiLogo.tsx,209,22,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/TSiLogo.tsx,209,10,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/calendar.tsx,29,21,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/calendar.tsx,38,24,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/calendar.tsx,38,98,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/calendar.tsx,39,24,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/chart.tsx,172,98,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/chart.tsx,208,42,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/chart.tsx,256,86,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/command.tsx,30,121,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/command.tsx,47,91,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/command.tsx,84,201,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/command.tsx,118,63,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/dialog.tsx,45,174,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/menubar.tsx,186,63,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/permission-toggle.tsx,45,36,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/sonner.tsx,17,40,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/sonner.tsx,19,65,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/specialized-cards.tsx,77,45,text-gray-600,text-gray-600,ALTA,Sim,Cinza 600 (#4b5563) tem baixo contraste em fundo escuro,Usar text-gray-400 ou mais claro em temas escuros
+src/components/ui/textarea.tsx,11,136,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,232,82,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,232,70,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/themed/index.tsx,241,62,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,254,83,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,254,71,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/themed/index.tsx,332,50,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,332,38,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/themed/index.tsx,487,43,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/ui/themed/index.tsx,487,31,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/ui/toggle.tsx,8,137,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/A11yDashboard.tsx,240,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/A11yDashboard.tsx,240,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/dashboards/A11yDashboard.tsx,326,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/A11yDashboard.tsx,326,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/dashboards/GitHubDashboard.tsx,107,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/GitHubDashboard.tsx,330,53,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,57,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,95,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,204,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,208,38,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,226,74,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,257,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,307,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/HealthDashboard.tsx,354,45,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,56,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,113,45,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,167,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,200,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,232,58,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,243,53,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,250,47,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,261,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,290,58,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,312,50,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,320,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,358,51,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,365,49,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,369,50,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/JukeboxStatsDashboard.tsx,379,29,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,51,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,71,25,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,143,53,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,143,41,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/dashboards/KioskMonitorDashboard.tsx,150,66,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,153,54,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,205,54,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,241,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,283,35,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,292,33,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,297,47,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,326,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,329,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,332,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,335,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,338,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,341,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,344,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,347,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,357,34,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,363,37,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,376,49,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,379,41,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/dashboards/KioskMonitorDashboard.tsx,386,39,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/About.tsx,112,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/About.tsx,112,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/Auth.tsx,407,49,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/Auth.tsx,407,37,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,227,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,227,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,239,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,239,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,251,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,251,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,263,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,263,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,406,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,406,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/DesignSystem.tsx,416,51,text-muted,text-muted,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/DesignSystem.tsx,416,39,text-muted-var,text-[var(--text-muted)],ALTA,Sim,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/public/LandingPage.tsx,145,46,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,200,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,228,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,258,31,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,283,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,310,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,340,27,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,350,34,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,389,32,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,401,30,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/public/LandingPage.tsx,411,28,text-muted,text-muted-foreground,ALTA,Sim,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/layout/MainLayout.tsx,134,63,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/navigation/GlobalSidebar.tsx,226,42,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/navigation/GlobalSidebar.tsx,263,62,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/navigation/GlobalSidebar.tsx,375,44,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/navigation/Header.tsx,326,43,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/ui/specialized-cards.tsx,120,49,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/ui/specialized-cards.tsx,201,37,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/ui/specialized-cards.tsx,306,61,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/ui/specialized-cards.tsx,386,35,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/ui/specialized-cards.tsx,497,37,text-gray-500,text-gray-500,BAIXA,Sim,Cinza 500 (#6b7280) tem contraste ~4.6:1 em fundo escuro,"Aceitável para texto grande, verificar para texto pequeno"
+src/components/player/FullscreenKaraoke.tsx,27,40,opacity-30,opacity-30,CRÍTICA,Sim,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/ui/calendar.tsx,38,134,opacity-30,opacity-30,CRÍTICA,Sim,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/public/Help.tsx,1129,75,opacity-30,opacity-30,CRÍTICA,Sim,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/landing/DemoAnimated.tsx,97,82,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/DemoAnimated.tsx,108,73,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/DemoAnimated.tsx,173,26,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/DemoAnimated.tsx,254,20,text-zinc-500,text-zinc-500,MÉDIA,Sim,Zinc 500 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/ScreenshotCarousel.tsx,65,81,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/landing/ScreenshotPreview.tsx,17,32,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/ScreenshotPreview.tsx,211,52,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/landing/ScreenshotPreview.tsx,315,65,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/ScreenshotPreview.tsx,332,31,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/landing/ScreenshotPreview.tsx,337,73,text-zinc-500,text-zinc-500,MÉDIA,Sim,Zinc 500 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/layout/MainLayout.tsx,145,30,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/layout/MainLayout.tsx,151,30,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/layout/MainLayout.tsx,157,30,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/GlobalSidebar.tsx,224,36,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/GlobalSidebar.tsx,238,14,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/GlobalSidebar.tsx,297,32,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/GlobalSidebar.tsx,378,44,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,136,175,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,156,26,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,194,167,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,205,173,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,220,178,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,266,51,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/Header.tsx,293,165,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/SidebarNavItem.tsx,128,20,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/navigation/__tests__/Header.test.tsx,107,38,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/player/CommandDeck.tsx,150,24,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/LibraryPanel.tsx,187,84,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/LibraryPanel.tsx,192,64,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/LibraryPanel.tsx,247,64,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/LibraryPanel.tsx,281,64,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/LyricsDisplay.tsx,99,42,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/NowPlaying.tsx,19,82,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/PlayerControls.tsx,101,29,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/PlayerControls.tsx,128,29,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/PlayerControls.tsx,165,29,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/PlayerControls.tsx,196,29,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/QueuePanel.tsx,66,127,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/QueuePanel.tsx,299,58,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/QueuePanel.tsx,344,43,opacity-60,opacity-60,MÉDIA,Sim,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/components/player/SideInfoPanel.tsx,128,66,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/SideInfoPanel.tsx,207,64,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/VoiceControlButton.tsx,102,33,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/player/__tests__/PlayerControls.test.tsx,233,39,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/LogoGitHub.tsx,90,14,text-zinc-400,text-zinc-400,MÉDIA,Sim,Zinc 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/components/ui/WcagExceptionComment.tsx,41,13,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/ui/button.tsx,20,293,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/calendar.tsx,23,39,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/calendar.tsx,38,46,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/calendar.tsx,39,46,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/card-extensions.tsx,223,17,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/ui/checkbox.tsx,14,300,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/command.tsx,43,65,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/command.tsx,47,150,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/command.tsx,108,245,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/context-menu.tsx,81,158,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/context-menu.tsx,97,163,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/context-menu.tsx,120,163,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/dropdown-menu.tsx,82,176,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/dropdown-menu.tsx,98,181,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/dropdown-menu.tsx,121,181,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/input-otp.tsx,11,71,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/input.tsx,19,226,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/menubar.tsx,109,158,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/menubar.tsx,125,163,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/menubar.tsx,148,163,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/navigation-menu.tsx,38,284,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/permission-toggle.tsx,58,49,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/radio-group.tsx,22,209,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/select.tsx,20,294,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/select.tsx,115,60,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/sidebar.tsx,413,349,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/sidebar.tsx,413,462,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/sidebar.tsx,597,197,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/sidebar.tsx,597,391,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/slider.tsx,18,264,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/specialized-cards.tsx,181,17,text-gray-400,text-gray-400,MÉDIA,Sim,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro
+src/components/ui/switch.tsx,14,295,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/tabs.tsx,30,419,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/textarea.tsx,11,295,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/themed/index.tsx,149,21,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/themed/index.tsx,311,21,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/themed/index.tsx,393,23,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/toast.tsx,55,512,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/ui/toggle.tsx,8,297,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/dashboards/HealthDashboard.tsx,25,29,text-slate-400,text-slate-400,MÉDIA,Sim,Slate 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/pages/dashboards/HealthDashboard.tsx,32,38,text-slate-400,text-slate-400,MÉDIA,Sim,Slate 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/pages/dashboards/JukeboxStatsDashboard.tsx,120,64,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/dashboards/KioskMonitorDashboard.tsx,154,66,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/dashboards/KioskMonitorDashboard.tsx,206,60,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/public/Install.tsx,242,67,opacity-60,opacity-60,MÉDIA,Sim,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/pages/public/SetupWizard.tsx,956,79,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/public/Wiki.tsx,443,57,opacity-50,opacity-50,MÉDIA,Sim,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/audit/AuditLogViewer.tsx,149,75,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,152,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,176,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,176,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/audit/AuditLogViewer.tsx,261,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,291,75,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,294,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,349,30,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,352,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,377,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,381,66,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,408,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/audit/AuditLogViewer.tsx,419,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/dev/DevFileChangeMonitor.tsx,196,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/dev/DevFileChangeMonitor.tsx,200,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/dev/DevFileChangeMonitor.tsx,222,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/errors/ErrorBoundary.tsx,88,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/errors/ErrorBoundary.tsx,88,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/errors/ErrorBoundary.tsx,101,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/errors/SuspenseBoundary.tsx,19,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/errors/SuspenseBoundary.tsx,28,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/errors/SuspenseBoundary.tsx,40,23,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,98,24,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,111,110,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,138,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,139,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,150,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,151,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,152,90,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,159,57,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,160,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,181,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/AutoSyncPanel.tsx,280,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/BranchesSection.tsx,46,53,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/BranchesSection.tsx,62,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CacheIndicator.tsx,60,53,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CacheIndicator.tsx,68,53,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CacheIndicator.tsx,78,53,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CacheIndicator.tsx,89,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CommitFilters.tsx,131,98,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CommitsTable.tsx,88,73,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CommitsTable.tsx,103,75,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CommitsTable.tsx,110,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/CommitsTable.tsx,112,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/ContributorsChart.tsx,65,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/FileSelectionModal.tsx,150,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,131,45,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,131,33,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/github/GitHubDashboardCharts.tsx,148,28,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,154,28,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,180,45,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,180,33,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/github/GitHubDashboardCharts.tsx,213,45,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,213,33,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/github/GitHubDashboardCharts.tsx,250,45,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,250,33,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/github/GitHubDashboardCharts.tsx,265,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardCharts.tsx,273,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardSkeleton.tsx,149,21,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardSkeleton.tsx,177,30,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/GitHubDashboardSkeleton.tsx,193,29,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/KpiCard.tsx,30,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/LanguagesChart.tsx,84,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/ReleasesSection.tsx,55,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/ReleasesSection.tsx,66,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/SyncHistoryPanel.tsx,37,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/SyncHistoryPanel.tsx,75,69,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/SyncHistoryPanel.tsx,81,43,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/github/SyncHistoryPanel.tsx,85,74,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,159,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,169,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,179,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,208,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,258,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/CreateJamModal.tsx,262,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAISuggestions.tsx,153,77,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAISuggestions.tsx,177,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAISuggestions.tsx,215,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,131,102,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,184,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,209,50,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,216,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,242,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamAddTrackModal.tsx,250,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamHeader.tsx,59,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamHeader.tsx,68,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamHeader.tsx,69,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamInviteModal.tsx,72,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamInviteModal.tsx,105,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamInviteModal.tsx,127,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamInviteModal.tsx,130,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamNicknameModal.tsx,57,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamNicknameModal.tsx,79,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamParticipantsList.tsx,69,33,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,55,64,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,62,29,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,72,68,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,95,58,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,126,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,134,60,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamPlayer.tsx,137,33,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,72,66,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,85,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,94,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,98,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,105,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,114,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,136,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,147,49,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,148,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/jam/JamQueue.tsx,151,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/kiosk/KioskRemoteControl.tsx,155,43,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/kiosk/KioskRemoteControl.tsx,155,31,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/kiosk/KioskRemoteControl.tsx,306,72,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AIConfigSection.tsx,346,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AIConfigSection.tsx,367,76,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AddCustomCommandModal.tsx,81,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AddCustomCommandModal.tsx,123,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AddCustomCommandModal.tsx,176,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,186,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,186,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,257,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,257,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,295,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,327,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,327,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,364,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,396,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,396,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,437,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,472,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,472,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,498,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,530,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,530,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,556,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,588,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,588,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,615,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,649,57,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,649,45,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/AlertConfigSection.tsx,700,43,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/AlertConfigSection.tsx,703,55,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,186,32,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,207,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,211,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,217,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,223,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,260,100,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,276,110,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CodeScanSection.tsx,282,112,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CreateDeployKeyModal.tsx,334,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CreateDeployKeyModal.tsx,342,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/CreateDeployKeyModal.tsx,402,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubExportSection.tsx,72,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubExportSection.tsx,84,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubExportSection.tsx,89,36,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubExportSection.tsx,97,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubExportSection.tsx,134,59,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,99,67,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,149,74,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,178,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,182,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,186,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,190,31,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/GitHubSyncStatus.tsx,207,33,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,270,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,273,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,303,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,306,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,335,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,348,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/KeysManagementSection.tsx,359,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ManusAutomationSection.tsx,26,33,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ManusAutomationSection.tsx,65,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ManusAutomationSection.tsx,210,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ManusAutomationSection.tsx,210,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/ManusAutomationSection.tsx,311,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ManusAutomationSection.tsx,367,68,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,125,97,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,146,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,162,58,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,170,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,209,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,516,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,576,83,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,636,49,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,696,83,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ScriptRefactorSection.tsx,733,87,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/StorjSection.tsx,124,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/StorjSection.tsx,124,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/StorjSection.tsx,458,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/StorjSection.tsx,458,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/ThemeSelector.tsx,146,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ThemeSelector.tsx,146,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/ThemeSelector.tsx,209,43,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ThemeSelector.tsx,209,31,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/ThemeSelector.tsx,275,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/ThemeSelector.tsx,275,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/VoiceAnalyticsCharts.tsx,19,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,78,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,91,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,99,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,107,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,115,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,126,36,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,165,59,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,200,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,267,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceCommandHistory.tsx,274,36,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,89,45,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,89,33,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/VoiceControlSection.tsx,128,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,137,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,158,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,173,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,182,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,183,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,199,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,208,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,223,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,243,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,257,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,282,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,294,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,311,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,367,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,410,49,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,436,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,449,69,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,462,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceControlSection.tsx,479,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,125,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,160,43,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,212,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,219,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,229,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,293,51,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VoiceTrainingMode.tsx,357,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,40,43,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,40,31,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/settings/VolumeNormalizationSection.tsx,65,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,88,56,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,101,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,127,101,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,138,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,143,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,147,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/VolumeNormalizationSection.tsx,156,60,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,123,29,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,133,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,141,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,149,41,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,162,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,180,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,207,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,210,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,218,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,221,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,228,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,231,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,260,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,263,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,271,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,323,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,338,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,404,60,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/settings/YouTubeMusicSetupWizard.tsx,412,35,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/spicetify/ThemePreviewCard.tsx,169,68,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,66,64,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,68,65,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,96,46,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,106,32,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,111,34,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,112,39,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,118,40,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,123,38,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,165,36,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,172,55,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,191,32,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,282,85,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,295,50,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,325,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,325,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/components/system/TraceViewer.tsx,356,77,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,365,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,369,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,373,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/system/TraceViewer.tsx,377,44,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/Admin.tsx,132,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/Admin.tsx,132,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/admin/AdminFeedback.tsx,23,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminFeedback.tsx,23,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/admin/AdminFeedback.tsx,52,36,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminFeedback.tsx,57,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminLibrary.tsx,107,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminLibrary.tsx,107,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/admin/AdminLibrary.tsx,110,85,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminLogs.tsx,36,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/admin/AdminLogs.tsx,36,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,232,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,232,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,251,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,251,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,272,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,272,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,324,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,324,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,420,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,420,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,488,53,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,488,41,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,546,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,546,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,594,53,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,594,41,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,679,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,679,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/BrandGuidelines.tsx,808,51,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/BrandGuidelines.tsx,808,39,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/brand/LogoGitHubPreview.tsx,68,68,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/LogoGitHubPreview.tsx,73,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/LogoGitHubPreview.tsx,92,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/LogoGitHubPreview.tsx,113,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/brand/LogoGitHubPreview.tsx,168,58,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,168,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,187,81,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,209,57,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,246,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,247,49,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/settings/SpicetifyThemeGallery.tsx,250,37,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/social/JamSession.tsx,133,23,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/ScreenshotService.tsx,138,27,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/ScreenshotService.tsx,153,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/ScreenshotService.tsx,153,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/tools/ScreenshotService.tsx,179,47,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/ScreenshotService.tsx,179,35,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/tools/ScreenshotService.tsx,208,47,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/ScreenshotService.tsx,241,65,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,106,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,167,29,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,185,49,text-muted,text-muted,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,185,37,text-muted-var,text-[var(--text-muted)],ALTA,Não,Variável CSS --text-muted pode ter baixo contraste,Verificar valor de --text-muted no tema
+src/pages/tools/VersionComparison.tsx,193,54,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,226,45,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,241,81,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,461,52,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,475,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,482,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,496,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,503,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,510,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,519,48,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,526,42,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/pages/tools/VersionComparison.tsx,530,80,text-muted,text-muted-foreground,ALTA,Não,Classe text-muted pode ter baixo contraste,Verificar se --muted-foreground tem ratio >= 4.5:1
+src/components/GlobalSearchModal.tsx,138,76,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/GlobalSearchModal.tsx,149,76,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/settings/VoiceAnalyticsCharts.tsx,20,76,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/settings/VoiceCommandHistory.tsx,79,54,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/tools/ComponentsShowcase.tsx,407,68,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicBrowser.tsx,186,62,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicLibrary.tsx,137,62,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicLibrary.tsx,182,62,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicLibrary.tsx,220,61,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicLibrary.tsx,255,62,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicPlaylist.tsx,200,56,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/pages/youtube/YouTubeMusicSearch.tsx,115,57,opacity-30,opacity-30,CRÍTICA,Não,Opacidade 30% causa contraste muito baixo,Remover ou usar cor visível
+src/components/audit/AuditLogViewer.tsx,295,56,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/github/SyncHistoryPanel.tsx,38,58,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/index-page/IndexHeader.tsx,92,28,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/jam/JamReactions.tsx,86,38,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/ClientsManagementSection.tsx,449,58,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/LocalMusicSection.tsx,269,62,opacity-60,opacity-60,MÉDIA,Não,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/MusicIntegrationsSection.tsx,101,31,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/MusicIntegrationsSection.tsx,164,74,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/NtpConfigSection.tsx,244,185,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/ScriptRefactorSection.tsx,577,53,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/ScriptRefactorSection.tsx,697,55,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/ScriptRefactorSection.tsx,734,57,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SettingsDashboard.tsx,337,74,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SettingsFAQ.tsx,430,57,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SettingsSection.tsx,67,123,opacity-60,opacity-60,MÉDIA,Não,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SpotifySetupWizard.tsx,649,83,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SpotifySetupWizard.tsx,658,83,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/StorjSection.tsx,286,66,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/StorjSection.tsx,397,84,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/SystemUrlsSection.tsx,216,145,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/settings/VolumeNormalizationSection.tsx,62,44,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/spotify/SpotifyPanel.tsx,380,65,opacity-60,opacity-60,MÉDIA,Não,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/components/spotify/SpotifyPanel.tsx,475,82,opacity-60,opacity-60,MÉDIA,Não,Opacidade 60% reduz contraste significativamente,Usar cor com contraste adequado em vez de opacidade
+src/components/system/TraceViewer.tsx,357,49,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/wiki/WikiNavigation.tsx,373,74,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/components/wiki/WikiNavigation.tsx,526,67,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/brand/BrandGuidelines.tsx,385,45,text-slate-400,text-slate-400,MÉDIA,Não,Slate 400 pode ter baixo contraste,Verificar contraste no tema atual
+src/pages/tools/LyricsTest.tsx,280,63,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/tools/VersionComparison.tsx,242,57,opacity-50,opacity-50,MÉDIA,Não,Opacidade 50% reduz contraste pela metade,Usar cor com contraste adequado em vez de opacidade
+src/pages/tools/WcagExceptions.tsx,286,113,text-gray-400,text-gray-400,MÉDIA,Não,Cinza 400 (#9ca3af) tem contraste ~3.5:1 em fundo escuro,Usar text-gray-300 ou mais claro

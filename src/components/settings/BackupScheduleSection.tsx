@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Clock, Save, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { SettingsSection } from './SettingsSection';
 import { toast } from 'sonner';
 import { api } from '@/lib/api/client';
 import { useTranslation } from '@/hooks';
+import { Button, Input, Toggle } from "@/components/ui/themed"
 
 interface BackupSchedule {
   enabled: boolean;

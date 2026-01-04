@@ -6,11 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
   Music,
@@ -30,6 +27,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface SpotifySetupWizardProps {
   isOpen: boolean;
@@ -192,15 +190,15 @@ export function SpotifySetupWizard({
               <div className="grid gap-3">
                 {[
                   {
-                    icon: <Check className="w-4 h-4 text-[#1DB954]" />,
+                    icon: <Check aria-hidden="true" className="w-4 h-4 text-[#1DB954]" />,
                     text: 'Conta Spotify (Premium recomendado para controle total)',
                   },
                   {
-                    icon: <Check className="w-4 h-4 text-[#1DB954]" />,
+                    icon: <Check aria-hidden="true" className="w-4 h-4 text-[#1DB954]" />,
                     text: 'Acesso ao Spotify Developer Dashboard',
                   },
                   {
-                    icon: <Check className="w-4 h-4 text-[#1DB954]" />,
+                    icon: <Check aria-hidden="true" className="w-4 h-4 text-[#1DB954]" />,
                     text: 'Criar um aplicativo no painel de desenvolvedor',
                   },
                 ].map((item, i) => (
@@ -246,7 +244,7 @@ export function SpotifySetupWizard({
               >
                 <Globe className="w-5 h-5 mr-2" />
                 Abrir Spotify Developer Dashboard
-                <ExternalLink className="w-4 h-4 ml-2" />
+                <ExternalLink aria-hidden="true" className="w-4 h-4 ml-2" />
               </Button>
 
               <div className="p-4 rounded-lg bg-kiosk-surface/50 border border-kiosk-border space-y-3">
@@ -398,12 +396,11 @@ export function SpotifySetupWizard({
                       {redirectUri}
                     </code>
                     <Button
-                      size="icon"
+                      size="xs"
                       variant="outline"
                       onClick={() => handleCopyUri(redirectUri)}
-                      className="border-kiosk-border hover:bg-kiosk-surface"
-                    >
-                      <Copy className="w-4 h-4" />
+                      className="border-kiosk-border hover:bg-kiosk-surface" aria-label="Copiar">
+                      <Copy aria-hidden="true" className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
@@ -417,12 +414,11 @@ export function SpotifySetupWizard({
                       {productionUri}
                     </code>
                     <Button
-                      size="icon"
+                      size="xs"
                       variant="outline"
                       onClick={() => handleCopyUri(productionUri)}
-                      className="border-kiosk-border hover:bg-kiosk-surface"
-                    >
-                      <Copy className="w-4 h-4" />
+                      className="border-kiosk-border hover:bg-kiosk-surface" aria-label="Copiar">
+                      <Copy aria-hidden="true" className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
@@ -510,10 +506,9 @@ export function SpotifySetupWizard({
                   <Button
                     type="button"
                     variant="ghost"
-                    size="icon"
+                    size="xs"
                     className="absolute right-0 top-0 h-full px-3 text-nav-neon-white hover:text-kiosk-text"
-                    onClick={() => setShowClientSecret(!showClientSecret)}
-                  >
+                    onClick={() => setShowClientSecret(!showClientSecret)} aria-label="Ocultar">
                     {showClientSecret ? (
                       <EyeOff className="w-4 h-4" />
                     ) : (
@@ -591,7 +586,7 @@ export function SpotifySetupWizard({
                   }`}
                 >
                   {index < currentStep ? (
-                    <Check className="w-3 h-3" />
+                    <Check aria-hidden="true" className="w-3 h-3" />
                   ) : (
                     step.icon
                   )}
@@ -673,7 +668,7 @@ export function SpotifySetupWizard({
                   </>
                 ) : (
                   <>
-                    <Check className="w-4 h-4 mr-2" />
+                    <Check aria-hidden="true" className="w-4 h-4 mr-2" />
                     Finalizar Configuração
                   </>
                 )}

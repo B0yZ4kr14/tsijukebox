@@ -12,12 +12,10 @@ import {
   Wand2,
   Calendar as CalendarIcon,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
   Accordion,
@@ -25,6 +23,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+
+import { Badge, Button } from "@/components/ui/themed"
 import type {
   NotificationFilters,
   NotificationType,
@@ -119,7 +119,7 @@ export function NotificationFiltersPopover({
           className="h-7 text-xs relative"
           data-testid="notifications-filters-button"
         >
-          <Filter className="h-3 w-3 mr-1" />
+          <Filter aria-hidden="true" className="h-3 w-3 mr-1" />
           Filtros
           {activeFiltersCount > 0 && (
             <Badge
@@ -140,7 +140,7 @@ export function NotificationFiltersPopover({
           <h4 className="font-semibold text-sm">Filtros</h4>
           {activeFiltersCount > 0 && (
             <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={handleClear}>
-              <X className="h-3 w-3 mr-1" />
+              <X aria-hidden="true" className="h-3 w-3 mr-1" />
               Limpar
             </Button>
           )}
@@ -243,7 +243,7 @@ export function NotificationFiltersPopover({
                         className="w-full h-8 text-xs justify-start"
                         data-testid="filter-date-start"
                       >
-                        <CalendarIcon className="h-3 w-3 mr-2" />
+                        <CalendarIcon aria-hidden="true" className="h-3 w-3 mr-2" />
                         {localFilters.dateRange?.start
                           ? format(localFilters.dateRange.start, 'dd/MM/yyyy', { locale: ptBR })
                           : 'Selecionar'}
@@ -270,7 +270,7 @@ export function NotificationFiltersPopover({
                         className="w-full h-8 text-xs justify-start"
                         data-testid="filter-date-end"
                       >
-                        <CalendarIcon className="h-3 w-3 mr-2" />
+                        <CalendarIcon aria-hidden="true" className="h-3 w-3 mr-2" />
                         {localFilters.dateRange?.end
                           ? format(localFilters.dateRange.end, 'dd/MM/yyyy', { locale: ptBR })
                           : 'Selecionar'}

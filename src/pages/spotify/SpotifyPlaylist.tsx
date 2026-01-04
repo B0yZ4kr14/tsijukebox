@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Play, Shuffle, Clock, MoreHorizontal, Loader2, Music, Heart } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { TrackItem } from '@/components/spotify/TrackItem';
 import { AddToPlaylistModal } from '@/components/spotify/AddToPlaylistModal';
 import { useSpotifyPlaylist, useSpotifyPlayer, useSpotifyLibrary } from '@/hooks';
@@ -66,7 +66,7 @@ export default function SpotifyPlaylistPage() {
 
           <div className="relative p-6">
             <Link to="/spotify">
-              <Button variant="ghost" size="icon" className="text-kiosk-text mb-4" aria-label="Voltar ao Spotify">
+              <Button variant="ghost" size="xs" className="text-kiosk-text mb-4" aria-label="Voltar ao Spotify">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </Link>
@@ -106,13 +106,13 @@ export default function SpotifyPlaylistPage() {
               >
                 <Play className="w-6 h-6 text-black fill-black ml-1" />
               </button>
-              <Button variant="ghost" size="icon" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Ativar modo aleatório">
+              <Button variant="ghost" size="xs" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Ativar modo aleatório">
                 <Shuffle className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Adicionar aos favoritos">
+              <Button variant="ghost" size="xs" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Adicionar aos favoritos">
                 <Heart className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Mais opções">
+              <Button variant="ghost" size="xs" className="w-10 h-10 text-kiosk-text/85 hover:text-kiosk-text" aria-label="Mais opções">
                 <MoreHorizontal className="w-5 h-5" />
               </Button>
             </div>

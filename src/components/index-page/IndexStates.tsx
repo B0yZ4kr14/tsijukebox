@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { KioskLayout } from '@/components/layout/KioskLayout';
 import { LogoBrand } from '@/components/ui/LogoBrand';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Music, Settings } from 'lucide-react';
 
 interface IndexLoadingStateProps {
@@ -26,7 +26,7 @@ export function IndexLoadingState({ message }: IndexLoadingStateProps) {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-kiosk-surface/50 flex items-center justify-center mx-auto mb-4" aria-hidden="true">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -74,7 +74,7 @@ export function IndexErrorState({
           </p>
           <Link to="/settings">
             <Button className="mt-4 bg-kiosk-primary hover:bg-kiosk-primary/90">
-              <Settings className="w-4 h-4 mr-2" />
+              <Settings aria-hidden="true" className="w-4 h-4 mr-2" />
               {settingsText}
             </Button>
           </Link>

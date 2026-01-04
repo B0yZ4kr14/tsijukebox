@@ -18,10 +18,8 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface KeyEvent {
   key: string;
@@ -49,12 +47,12 @@ interface InteractiveTestModeProps {
 const VALID_KEYS: Record<string, { action: string; icon: React.ReactNode }> = {
   ' ': { action: 'Play/Pause', icon: <Play className="w-4 h-4" /> },
   'Space': { action: 'Play/Pause', icon: <Play className="w-4 h-4" /> },
-  'ArrowUp': { action: 'Volume +5%', icon: <Volume2 className="w-4 h-4" /> },
-  'ArrowDown': { action: 'Volume -5%', icon: <Volume2 className="w-4 h-4" /> },
-  'ArrowLeft': { action: 'Música Anterior', icon: <SkipBack className="w-4 h-4" /> },
-  'ArrowRight': { action: 'Próxima Música', icon: <SkipForward className="w-4 h-4" /> },
-  '+': { action: 'Volume +5%', icon: <Volume2 className="w-4 h-4" /> },
-  '-': { action: 'Volume -5%', icon: <Volume2 className="w-4 h-4" /> },
+  'ArrowUp': { action: 'Volume +5%', icon: <Volume2 aria-hidden="true" className="w-4 h-4" /> },
+  'ArrowDown': { action: 'Volume -5%', icon: <Volume2 aria-hidden="true" className="w-4 h-4" /> },
+  'ArrowLeft': { action: 'Música Anterior', icon: <SkipBack aria-hidden="true" className="w-4 h-4" /> },
+  'ArrowRight': { action: 'Próxima Música', icon: <SkipForward aria-hidden="true" className="w-4 h-4" /> },
+  '+': { action: 'Volume +5%', icon: <Volume2 aria-hidden="true" className="w-4 h-4" /> },
+  '-': { action: 'Volume -5%', icon: <Volume2 aria-hidden="true" className="w-4 h-4" /> },
 };
 
 const GESTURE_THRESHOLD = 50;
@@ -183,23 +181,22 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <Card className="w-full max-w-3xl max-h-[90vh] overflow-hidden card-extreme-3d bg-kiosk-surface">
-        <CardHeader className="border-b border-border">
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-3 text-gold-neon">
+        <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               {mode === 'keyboard' ? (
                 <Keyboard className="w-6 h-6 icon-neon-blue" />
               ) : (
                 <Hand className="w-6 h-6 icon-neon-blue" />
               )}
               {mode === 'keyboard' ? 'Teste de Atalhos de Teclado' : 'Teste de Gestos de Toque'}
-            </CardTitle>
+            </h3>
             <Button variant="ghost" size="sm" onClick={onClose}>
               Fechar
             </Button>
           </div>
-        </CardHeader>
         
-        <CardContent className="p-6 space-y-6">
+        
+        <div className="mt-4">
           {mode === 'keyboard' ? (
             <>
               {/* Keyboard Visual */}
@@ -271,13 +268,13 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center" role="presentation">
                   <div className="text-center space-y-2">
                     {/* WCAG Exception: Decorative gesture demo icons at /40, not critical for comprehension */}
                     <div className="flex items-center justify-center gap-4 text-kiosk-text/40">
-                      <ChevronLeft className="w-8 h-8 animate-pulse" />
+                      <ChevronLeft aria-hidden="true" className="w-8 h-8 animate-pulse" />
                       <Hand className="w-12 h-12" />
-                      <ChevronRight className="w-8 h-8 animate-pulse" />
+                      <ChevronRight aria-hidden="true" className="w-8 h-8 animate-pulse" />
                     </div>
                     <p className="text-nav-neon-white">Deslize horizontalmente para testar</p>
                     <p className="text-xs text-description-visible">Mínimo: {GESTURE_THRESHOLD}px</p>
@@ -432,7 +429,7 @@ export function InteractiveTestMode({ mode, onClose }: InteractiveTestModeProps)
               </div>
             </ScrollArea>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

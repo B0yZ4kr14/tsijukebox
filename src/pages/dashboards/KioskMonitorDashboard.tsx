@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -23,6 +20,7 @@ import {
 import { useKioskMonitor, type KioskConnection } from '@/hooks/system/useKioskMonitor';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuditLogViewer } from '@/components/audit/AuditLogViewer';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 export default function KioskMonitorDashboard() {
   const { 
@@ -44,19 +42,18 @@ export default function KioskMonitorDashboard() {
     return (
       <div className="container mx-auto p-6">
         <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <AlertTriangle className="h-5 w-5" />
               Erro ao Carregar Kiosks
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          
+          <div className="mt-4">
             <p className="text-muted-foreground">{error}</p>
             <Button onClick={refetch} className="mt-4">
               <RefreshCw className="mr-2 h-4 w-4" />
               Tentar Novamente
             </Button>
-          </CardContent>
+          </div>
         </Card>
       </div>
     );
@@ -139,16 +136,15 @@ export default function KioskMonitorDashboard() {
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Activity className="h-5 w-5" />
                     Kiosks Conectados
-                  </CardTitle>
-                  <CardDescription>
+                  </h3>
+                  <p className="text-sm text-[var(--text-muted)]">
                     Clique em um kiosk para ver detalhes
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
+                  </p>
+                
+                <div className="mt-4">
                   {isLoading ? (
                     <div className="flex items-center justify-center py-8">
                       <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -186,20 +182,19 @@ export default function KioskMonitorDashboard() {
                       </div>
                     </ScrollArea>
                   )}
-                </CardContent>
+                </div>
               </Card>
             </div>
 
             {/* Detalhes do Kiosk Selecionado */}
             <div>
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <HardDrive className="h-5 w-5" />
                     Detalhes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   {selectedKiosk ? (
                     <KioskDetails 
                       kiosk={selectedKiosk} 
@@ -212,7 +207,7 @@ export default function KioskMonitorDashboard() {
                       <p className="text-sm">Selecione um kiosk para ver detalhes</p>
                     </div>
                   )}
-                </CardContent>
+                </div>
               </Card>
             </div>
           </div>
@@ -240,7 +235,7 @@ function MetricCard({
 }) {
   return (
     <Card>
-      <CardContent className="pt-4">
+      <div className="mt-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-muted-foreground">{title}</p>
@@ -248,7 +243,7 @@ function MetricCard({
           </div>
           <div className={`${color} opacity-80`}>{icon}</div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

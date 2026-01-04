@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSiJUKEBOX - Showcase de Temas e Ícones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           CSS VARIABLES - TEMA PADRÃO (Stage Neon Metallic)
+           ═══════════════════════════════════════════════════════════════════════════ */
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #1a0a2e;
+            --bg-tertiary: #2a1040;
+            --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #2a1040 100%);
+            --accent-primary: #00FFFF;
+            --accent-secondary: #FF00D4;
+            --accent-tertiary: #FFD700;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-muted: #808080;
+            --glow-primary: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+            --glow-secondary: 0 0 20px rgba(255, 0, 212, 0.6), 0 0 40px rgba(255, 0, 212, 0.3);
+            --success: #00FF44;
+            --warning: #FFD700;
+            --error: #FF4444;
+            --info: #00FFFF;
+            --metallic-light: #C0C0C0;
+            --metallic-dark: #71797E;
+            --transition-speed: 0.3s;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           RESET E BASE
+           ═══════════════════════════════════════════════════════════════════════════ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: all var(--transition-speed) ease;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════════════ */
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-gradient);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--glow-primary);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           SELETOR DE TEMAS
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .theme-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .theme-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .theme-btn-icon {
+            font-size: 1.25rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MAIN CONTENT
+           ═══════════════════════════════════════════════════════════════════════════ */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title-icon {
+            font-size: 2rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           GRID DE TEMAS
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .theme-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .theme-card.active {
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .theme-preview {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-preview-bg {
+            position: absolute;
+            inset: 0;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .theme-preview-content {
+            position: absolute;
+            inset: 0;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .theme-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .theme-preview-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme-preview-player {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-preview-album {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .theme-preview-info {
+            flex: 1;
+        }
+
+        .theme-preview-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .theme-preview-artist {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .theme-preview-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .theme-preview-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .theme-info {
+            padding: 1.5rem;
+        }
+
+        .theme-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .theme-name-icon {
+            font-size: 1.5rem;
+        }
+
+        .theme-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .theme-colors {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+
+        .color-swatch::after {
+            content: attr(data-color);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.625rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        .color-swatch:hover::after {
+            opacity: 1;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           SEÇÃO DE ÍCONES
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .icons-section {
+            margin-top: 4rem;
+        }
+
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .icon-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+        }
+
+        .icon-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--glow-primary);
+        }
+
+        .icon-display {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+        }
+
+        .icon-display svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--accent-primary);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .icon-card:hover .icon-display svg {
+            fill: var(--accent-secondary);
+            transform: scale(1.1);
+        }
+
+        .icon-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           SEÇÃO DE COMPONENTES
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .components-section {
+            margin-top: 4rem;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .component-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+        }
+
+        .component-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        /* Botões */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--accent-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: var(--glow-secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Badges */
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .badge-secondary {
+            background: var(--accent-secondary);
+            color: var(--text-primary);
+        }
+
+        .badge-success {
+            background: var(--success);
+            color: var(--bg-primary);
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: var(--bg-primary);
+        }
+
+        .badge-error {
+            background: var(--error);
+            color: var(--text-primary);
+        }
+
+        /* Inputs */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input {
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.875rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Progress */
+        .progress-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .progress-fill.primary {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            box-shadow: var(--glow-primary);
+        }
+
+        .progress-fill.success {
+            background: var(--success);
+        }
+
+        .progress-fill.warning {
+            background: var(--warning);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════════ */
+        footer {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .footer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-tertiary);
+        }
+
+        .footer-author-name {
+            color: var(--accent-tertiary);
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           ANIMAÇÕES
+           ═══════════════════════════════════════════════════════════════════════════ */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: var(--glow-primary); }
+            50% { box-shadow: var(--glow-secondary); }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .animate-glow {
+            animation: glow 3s infinite;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .theme-selector {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .theme-btn span {
+                display: none;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎵</div>
+                <div>
+                    <div class="logo-text">TSiJUKEBOX</div>
+                    <div class="logo-subtitle">Theme Showcase</div>
+                </div>
+            </div>
+            
+            <div class="theme-selector">
+                <button class="theme-btn active" data-theme="stage-neon-metallic" onclick="setTheme('stage-neon-metallic')">
+                    <span class="theme-btn-icon">✨</span>
+                    <span>Stage Neon</span>
+                </button>
+                <button class="theme-btn" data-theme="cosmic-player" onclick="setTheme('cosmic-player')">
+                    <span class="theme-btn-icon">🌌</span>
+                    <span>Cosmic</span>
+                </button>
+                <button class="theme-btn" data-theme="karaoke-stage" onclick="setTheme('karaoke-stage')">
+                    <span class="theme-btn-icon">🎤</span>
+                    <span>Karaoke</span>
+                </button>
+                <button class="theme-btn" data-theme="dashboard-home" onclick="setTheme('dashboard-home')">
+                    <span class="theme-btn-icon">🏠</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="theme-btn" data-theme="spotify-integration" onclick="setTheme('spotify-integration')">
+                    <span class="theme-btn-icon">🟢</span>
+                    <span>Spotify</span>
+                </button>
+                <button class="theme-btn" data-theme="settings-dark" onclick="setTheme('settings-dark')">
+                    <span class="theme-btn-icon">⚙️</span>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         MAIN CONTENT
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <main>
+        <!-- Seção de Temas -->
+        <section class="themes-section">
+            <h2 class="section-title">
+                <span class="section-title-icon">🎨</span>
+                Temas Disponíveis
+            </h2>
+            <p class="section-subtitle">Clique em um tema para visualizar e aplicar. Cada tema possui sua própria paleta de cores e estilo visual.</p>
+            
+            <div class="themes-grid" id="themesGrid">
+                <!-- Temas serão inseridos via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção de Ícones -->
+        <section class="icons-section">
+            <h2 class="section-title">
+                <span class="section-title-icon">🎯</span>
+                Ícones do Sistema
+            </h2>
+            <p class="section-subtitle">Ícones modernos adaptados a cada tema, usando SVG para máxima qualidade.</p>
+            
+            <div class="icons-grid" id="iconsGrid">
+                <!-- Ícones serão inseridos via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção de Componentes -->
+        <section class="components-section">
+            <h2 class="section-title">
+                <span class="section-title-icon">🧩</span>
+                Componentes UI
+            </h2>
+            <p class="section-subtitle">Exemplos de componentes estilizados com o tema atual.</p>
+            
+            <div class="components-grid">
+                <!-- Botões -->
+                <div class="component-card">
+                    <h3 class="component-title">Botões</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            Play
+                        </button>
+                        <button class="btn btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            Conectar
+                        </button>
+                        <button class="btn btn-outline">Outline</button>
+                        <button class="btn btn-ghost">Ghost</button>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="component-card">
+                    <h3 class="component-title">Badges</h3>
+                    <div class="badge-group">
+                        <span class="badge badge-primary">Premium</span>
+                        <span class="badge badge-secondary">Novo</span>
+                        <span class="badge badge-success">Online</span>
+                        <span class="badge badge-warning">Pendente</span>
+                        <span class="badge badge-error">Erro</span>
+                    </div>
+                </div>
+
+                <!-- Inputs -->
+                <div class="component-card">
+                    <h3 class="component-title">Inputs</h3>
+                    <div class="input-group">
+                        <input type="text" class="input" placeholder="Buscar músicas...">
+                        <input type="text" class="input" placeholder="Nome da playlist">
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="component-card">
+                    <h3 class="component-title">Progress Bars</h3>
+                    <div class="progress-group">
+                        <div class="progress-bar">
+                            <div class="progress-fill primary" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill success" style="width: 100%"></div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">TSiJUKEBOX</div>
+            <p class="footer-text">Sistema de Jukebox Inteligente • https://midiaserver.local/jukebox</p>
+            <div class="footer-author">
+                <img src="assets/B0.y_Z4kr14-avatar.png" alt="B0.y_Z4kr14" class="footer-avatar" onerror="this.style.display='none'">
+                <span class="footer-author-name">B0.y_Z4kr14</span>
+                <span style="color: var(--text-muted)">• Don't Tread On Me 🐍</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         JAVASCRIPT
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        // DEFINIÇÃO DOS 6 TEMAS
+        // ═══════════════════════════════════════════════════════════════════════════
+        const themes = {
+            'stage-neon-metallic': {
+                id: 'stage-neon-metallic',
+                name: 'Stage Neon Metallic',
+                description: 'Interface metálica com efeitos neon cyan e magenta. Tema principal do TSiJUKEBOX.',
+                icon: '✨',
+                colors: {
+                    bgPrimary: '#0a0a1a',
+                    bgSecondary: '#1a0a2e',
+                    bgTertiary: '#2a1040',
+                    bgGradient: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #2a1040 100%)',
+                    accentPrimary: '#00FFFF',
+                    accentSecondary: '#FF00D4',
+                    accentTertiary: '#FFD700',
+                    textPrimary: '#FFFFFF',
+                    textSecondary: '#B0B0B0',
+                    textMuted: '#808080',
+                    glowPrimary: '0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3)',
+                    glowSecondary: '0 0 20px rgba(255, 0, 212, 0.6), 0 0 40px rgba(255, 0, 212, 0.3)',
+                    success: '#00FF44',
+                    warning: '#FFD700',
+                    error: '#FF4444',
+                    info: '#00FFFF',
+                    metallicLight: '#C0C0C0',
+                    metallicDark: '#71797E',
+                }
+            },
+            'cosmic-player': {
+                id: 'cosmic-player',
+                name: 'Cosmic Player',
+                description: 'Tema padrão com estética espacial e cores vibrantes para o player de música.',
+                icon: '🌌',
+                colors: {
+                    bgPrimary: '#09090B',
+                    bgSecondary: '#1a1a2e',
+                    bgTertiary: '#2a1a3e',
+                    bgGradient: 'linear-gradient(135deg, #09090B 0%, #1a1a2e 50%, #2a1a3e 100%)',
+                    accentPrimary: '#00D4FF',
+                    accentSecondary: '#FF00D4',
+                    accentTertiary: '#8A2BE2',
+                    textPrimary: '#FFFFFF',
+                    textSecondary: '#B0B0B0',
+                    textMuted: '#808080',
+                    glowPrimary: '0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.3)',
+                    glowSecondary: '0 0 20px rgba(255, 0, 212, 0.6), 0 0 40px rgba(255, 0, 212, 0.3)',
+                    success: '#22C55E',
+                    warning: '#FFD700',
+                    error: '#EF4444',
+                    info: '#00D4FF',
+                    metallicLight: '#E8E8E8',
+                    metallicDark: '#4A4A4A',
+                }
+            },
+            'karaoke-stage': {
+                id: 'karaoke-stage',
+                name: 'Karaoke Stage',
+                description: 'Tema otimizado para o modo karaoke com luzes de palco vibrantes.',
+                icon: '🎤',
+                colors: {
+                    bgPrimary: '#1a0a2e',
+                    bgSecondary: '#2a1040',
+                    bgTertiary: '#3a1050',
+                    bgGradient: 'linear-gradient(135deg, #1a0a2e 0%, #2a1040 50%, #3a1050 100%)',
+                    accentPrimary: '#FF00D4',
+                    accentSecondary: '#FF1493',
+                    accentTertiary: '#8A2BE2',
+                    textPrimary: '#FFFFFF',
+                    textSecondary: '#D4A5FF',
+                    textMuted: '#9966CC',
+                    glowPrimary: '0 0 30px rgba(255, 0, 212, 0.8), 0 0 60px rgba(255, 0, 212, 0.4)',
+                    glowSecondary: '0 0 30px rgba(138, 43, 226, 0.8), 0 0 60px rgba(138, 43, 226, 0.4)',
+                    success: '#00FF44',
+                    warning: '#FFD700',
+                    error: '#FF4444',
+                    info: '#FF00D4',
+                    metallicLight: '#D4A5FF',
+                    metallicDark: '#3a1050',
+                }
+            },
+            'dashboard-home': {
+                id: 'dashboard-home',
+                name: 'Dashboard Home',
+                description: 'Tema clean para visualização de estatísticas e métricas do sistema.',
+                icon: '🏠',
+                colors: {
+                    bgPrimary: '#0f172a',
+                    bgSecondary: '#1e293b',
+                    bgTertiary: '#334155',
+                    bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+                    accentPrimary: '#FFD700',
+                    accentSecondary: '#FBB724',
+                    accentTertiary: '#F59E0B',
+                    textPrimary: '#FAFAFA',
+                    textSecondary: '#94A3B8',
+                    textMuted: '#64748B',
+                    glowPrimary: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3)',
+                    glowSecondary: '0 0 20px rgba(251, 183, 36, 0.6), 0 0 40px rgba(251, 183, 36, 0.3)',
+                    success: '#22C55E',
+                    warning: '#F59E0B',
+                    error: '#EF4444',
+                    info: '#3B82F6',
+                    metallicLight: '#E2E8F0',
+                    metallicDark: '#475569',
+                }
+            },
+            'spotify-integration': {
+                id: 'spotify-integration',
+                name: 'Spotify Integration',
+                description: 'Tema inspirado na interface do Spotify para integração perfeita.',
+                icon: '🟢',
+                colors: {
+                    bgPrimary: '#121212',
+                    bgSecondary: '#1a1a1a',
+                    bgTertiary: '#282828',
+                    bgGradient: 'linear-gradient(135deg, #121212 0%, #1a1a1a 50%, #282828 100%)',
+                    accentPrimary: '#1DB954',
+                    accentSecondary: '#1ED760',
+                    accentTertiary: '#169C46',
+                    textPrimary: '#FFFFFF',
+                    textSecondary: '#B3B3B3',
+                    textMuted: '#727272',
+                    glowPrimary: '0 0 20px rgba(29, 185, 84, 0.6), 0 0 40px rgba(29, 185, 84, 0.3)',
+                    glowSecondary: '0 0 20px rgba(30, 215, 96, 0.6), 0 0 40px rgba(30, 215, 96, 0.3)',
+                    success: '#1DB954',
+                    warning: '#F59E0B',
+                    error: '#E91429',
+                    info: '#509BF5',
+                    metallicLight: '#B3B3B3',
+                    metallicDark: '#404040',
+                }
+            },
+            'settings-dark': {
+                id: 'settings-dark',
+                name: 'Settings Dark',
+                description: 'Tema escuro para configurações do sistema com tons de roxo.',
+                icon: '⚙️',
+                colors: {
+                    bgPrimary: '#18181B',
+                    bgSecondary: '#27272A',
+                    bgTertiary: '#3F3F46',
+                    bgGradient: 'linear-gradient(135deg, #18181B 0%, #27272A 50%, #3F3F46 100%)',
+                    accentPrimary: '#8B5CF6',
+                    accentSecondary: '#A78BFA',
+                    accentTertiary: '#7C3AED',
+                    textPrimary: '#FAFAFA',
+                    textSecondary: '#A1A1AA',
+                    textMuted: '#71717A',
+                    glowPrimary: '0 0 20px rgba(139, 92, 246, 0.6), 0 0 40px rgba(139, 92, 246, 0.3)',
+                    glowSecondary: '0 0 20px rgba(167, 139, 250, 0.6), 0 0 40px rgba(167, 139, 250, 0.3)',
+                    success: '#22C55E',
+                    warning: '#F59E0B',
+                    error: '#EF4444',
+                    info: '#8B5CF6',
+                    metallicLight: '#D4D4D8',
+                    metallicDark: '#52525B',
+                }
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // ÍCONES SVG DO SISTEMA
+        // ═══════════════════════════════════════════════════════════════════════════
+        const icons = [
+            { name: 'Play', svg: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' },
+            { name: 'Pause', svg: '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>' },
+            { name: 'Stop', svg: '<svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>' },
+            { name: 'Next', svg: '<svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>' },
+            { name: 'Previous', svg: '<svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>' },
+            { name: 'Volume', svg: '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>' },
+            { name: 'Mute', svg: '<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>' },
+            { name: 'Shuffle', svg: '<svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>' },
+            { name: 'Repeat', svg: '<svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>' },
+            { name: 'Queue', svg: '<svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg>' },
+            { name: 'Playlist', svg: '<svg viewBox="0 0 24 24"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6l5-3z"/></svg>' },
+            { name: 'Heart', svg: '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>' },
+            { name: 'Search', svg: '<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>' },
+            { name: 'Settings', svg: '<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>' },
+            { name: 'User', svg: '<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>' },
+            { name: 'Database', svg: '<svg viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.59 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm6 12c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-4c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V13z"/></svg>' },
+            { name: 'Backup', svg: '<svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>' },
+            { name: 'GitHub', svg: '<svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>' },
+            { name: 'Spotify', svg: '<svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>' },
+            { name: 'YouTube', svg: '<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>' },
+            { name: 'Karaoke', svg: '<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>' },
+            { name: 'Equalizer', svg: '<svg viewBox="0 0 24 24"><path d="M10 20h4V4h-4v16zm-6 0h4v-8H4v8zM16 9v11h4V9h-4z"/></svg>' },
+            { name: 'Folder', svg: '<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>' },
+            { name: 'Cloud', svg: '<svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>' },
+            { name: 'Key', svg: '<svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>' },
+            { name: 'Lock', svg: '<svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>' },
+            { name: 'Download', svg: '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>' },
+            { name: 'Upload', svg: '<svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>' },
+        ];
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // FUNÇÕES
+        // ═══════════════════════════════════════════════════════════════════════════
+        
+        let currentTheme = 'stage-neon-metallic';
+
+        function setTheme(themeId) {
+            const theme = themes[themeId];
+            if (!theme) return;
+
+            currentTheme = themeId;
+            const root = document.documentElement;
+            const { colors } = theme;
+
+            // Aplica CSS Variables
+            root.style.setProperty('--bg-primary', colors.bgPrimary);
+            root.style.setProperty('--bg-secondary', colors.bgSecondary);
+            root.style.setProperty('--bg-tertiary', colors.bgTertiary);
+            root.style.setProperty('--bg-gradient', colors.bgGradient);
+            root.style.setProperty('--accent-primary', colors.accentPrimary);
+            root.style.setProperty('--accent-secondary', colors.accentSecondary);
+            root.style.setProperty('--accent-tertiary', colors.accentTertiary);
+            root.style.setProperty('--text-primary', colors.textPrimary);
+            root.style.setProperty('--text-secondary', colors.textSecondary);
+            root.style.setProperty('--text-muted', colors.textMuted);
+            root.style.setProperty('--glow-primary', colors.glowPrimary);
+            root.style.setProperty('--glow-secondary', colors.glowSecondary);
+            root.style.setProperty('--success', colors.success);
+            root.style.setProperty('--warning', colors.warning);
+            root.style.setProperty('--error', colors.error);
+            root.style.setProperty('--info', colors.info);
+            root.style.setProperty('--metallic-light', colors.metallicLight);
+            root.style.setProperty('--metallic-dark', colors.metallicDark);
+
+            // Atualiza botões do seletor
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === themeId);
+            });
+
+            // Atualiza cards de tema
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.theme === themeId);
+            });
+        }
+
+        function renderThemes() {
+            const grid = document.getElementById('themesGrid');
+            grid.innerHTML = '';
+
+            Object.values(themes).forEach(theme => {
+                const card = document.createElement('div');
+                card.className = `theme-card ${theme.id === currentTheme ? 'active' : ''}`;
+                card.dataset.theme = theme.id;
+                card.onclick = () => setTheme(theme.id);
+
+                const colors = theme.colors;
+                card.innerHTML = `
+                    <div class="theme-preview">
+                        <div class="theme-preview-bg" style="background: ${colors.bgGradient}"></div>
+                        <div class="theme-preview-content">
+                            <div class="theme-preview-header">
+                                <span class="theme-preview-badge" style="background: ${colors.accentPrimary}; color: ${colors.bgPrimary}">${theme.icon} ${theme.name}</span>
+                            </div>
+                            <div class="theme-preview-player" style="border: 1px solid ${colors.accentPrimary}40">
+                                <div class="theme-preview-album" style="background: ${colors.bgTertiary}; border: 2px solid ${colors.accentSecondary}">🎵</div>
+                                <div class="theme-preview-info">
+                                    <div class="theme-preview-title" style="color: ${colors.textPrimary}">Bohemian Rhapsody</div>
+                                    <div class="theme-preview-artist" style="color: ${colors.textSecondary}">Queen</div>
+                                </div>
+                                <div class="theme-preview-controls">
+                                    <button class="theme-preview-btn" style="background: ${colors.accentPrimary}; color: ${colors.bgPrimary}">▶</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="theme-info">
+                        <h3 class="theme-name">
+                            <span class="theme-name-icon">${theme.icon}</span>
+                            ${theme.name}
+                        </h3>
+                        <p class="theme-description">${theme.description}</p>
+                        <div class="theme-colors">
+                            <div class="color-swatch" style="background: ${colors.accentPrimary}" data-color="${colors.accentPrimary}" title="Accent Primary"></div>
+                            <div class="color-swatch" style="background: ${colors.accentSecondary}" data-color="${colors.accentSecondary}" title="Accent Secondary"></div>
+                            <div class="color-swatch" style="background: ${colors.accentTertiary}" data-color="${colors.accentTertiary}" title="Accent Tertiary"></div>
+                            <div class="color-swatch" style="background: ${colors.bgPrimary}" data-color="${colors.bgPrimary}" title="Background Primary"></div>
+                            <div class="color-swatch" style="background: ${colors.bgSecondary}" data-color="${colors.bgSecondary}" title="Background Secondary"></div>
+                            <div class="color-swatch" style="background: ${colors.success}" data-color="${colors.success}" title="Success"></div>
+                            <div class="color-swatch" style="background: ${colors.warning}" data-color="${colors.warning}" title="Warning"></div>
+                            <div class="color-swatch" style="background: ${colors.error}" data-color="${colors.error}" title="Error"></div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderIcons() {
+            const grid = document.getElementById('iconsGrid');
+            grid.innerHTML = '';
+
+            icons.forEach(icon => {
+                const card = document.createElement('div');
+                card.className = 'icon-card';
+                card.innerHTML = `
+                    <div class="icon-display">${icon.svg}</div>
+                    <div class="icon-name">${icon.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            renderThemes();
+            renderIcons();
+        });
+    </script>
+</body>
+</html>

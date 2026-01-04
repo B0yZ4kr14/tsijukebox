@@ -115,7 +115,7 @@ export function FAQSection() {
                 >
                   <AccordionTrigger className="hover:no-underline py-4 gap-4">
                     <div className="flex items-center gap-4 text-left">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                         <faq.icon className="w-5 h-5 text-primary" />
                       </div>
                       <span className="font-semibold">{faq.question}</span>

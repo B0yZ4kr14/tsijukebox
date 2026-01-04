@@ -8,8 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Users, Lock, Globe, Music, QrCode, Copy, Check, Sparkles } from 'lucide-react';
@@ -17,6 +15,7 @@ import { toast } from 'sonner';
 import { DEFAULT_PLAYLISTS } from '@/lib/constants/defaultPlaylists';
 import { cn } from '@/lib/utils';
 import { useJamSession } from '@/hooks/jam';
+import { Button, Input } from "@/components/ui/themed"
 
 interface CreateJamModalProps {
   open: boolean;
@@ -104,7 +103,7 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
       <DialogContent className="sm:max-w-md bg-card/95 backdrop-blur-xl border-border/50">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-zinc-300 to-zinc-500 text-zinc-900">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-zinc-300 to-zinc-500 text-zinc-300">
               <Users className="w-5 h-5" />
             </div>
             <span className="logo-tsi-silver-neon">Criar Sessão JAM</span>
@@ -198,7 +197,7 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center" aria-hidden="true">
                       <Music className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
@@ -218,7 +217,7 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
               <Button
                 onClick={handleCreateJam}
                 disabled={isCreating || isCreatingSession}
-                className="w-full button-jam-silver-neon text-zinc-900 font-bold py-6"
+                className="w-full button-jam-silver-neon text-zinc-300 font-bold py-6"
               >
                 {isCreating || isCreatingSession ? (
                   <>
@@ -251,7 +250,7 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
                 transition={{ type: "spring", delay: 0.1 }}
                 className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-zinc-300 to-zinc-500 flex items-center justify-center"
               >
-                <Check className="w-10 h-10 text-zinc-900" />
+                <Check aria-hidden="true" className="w-10 h-10 text-zinc-300" />
               </motion.div>
 
               <div>
@@ -267,11 +266,10 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
                   </span>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="xs"
                     onClick={handleCopyCode}
-                    className="h-8 w-8"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                    className="h-8 w-8" aria-label="Confirmar">
+                    {copied ? <Check aria-hidden="true" className="w-4 h-4 text-green-500" /> : <Copy aria-hidden="true" className="w-4 h-4" />}
                   </Button>
                 </div>
               </div>
@@ -279,7 +277,7 @@ export function CreateJamModal({ open, onOpenChange }: CreateJamModalProps) {
               <div className="flex gap-2">
                 <Button
                   onClick={handleGoToSession}
-                  className="flex-1 button-jam-silver-neon text-zinc-900 font-bold"
+                  className="flex-1 button-jam-silver-neon text-zinc-300 font-bold"
                 >
                   Entrar na Sessão
                 </Button>

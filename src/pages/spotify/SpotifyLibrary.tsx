@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Heart, Disc3, User, Loader2 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrackItem } from '@/components/spotify/TrackItem';
 import { AlbumCard } from '@/components/spotify/AlbumCard';
@@ -57,7 +57,7 @@ export default function SpotifyLibraryPage() {
         <header className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border">
           <div className="flex items-center gap-4 p-4">
             <Link to="/spotify">
-              <Button variant="ghost" size="icon" className="text-kiosk-text" aria-label="Voltar ao Spotify">
+              <Button variant="ghost" size="xs" className="text-kiosk-text" aria-label="Voltar ao Spotify">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </Link>
@@ -91,7 +91,7 @@ export default function SpotifyLibraryPage() {
               <TabsContent value="liked">
                 {/* Liked songs header */}
                 <div className="flex items-center gap-4 mb-6 p-4 bg-gradient-to-r from-purple-600/30 to-purple-800/30 rounded-lg">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg" aria-hidden="true">
                     <Heart className="w-8 h-8 text-white fill-white" />
                   </div>
                   <div>

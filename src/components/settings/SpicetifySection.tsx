@@ -4,16 +4,12 @@ import {
   Code, ShoppingBag, Puzzle, Play, Trash2, Plus, Search, 
   ExternalLink, Zap, Eye, FileCode, Terminal
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSpicetifyIntegration, useTranslation } from '@/hooks';
 import { toast } from 'sonner';
+import { Badge, Button, Card, Input, Toggle } from "@/components/ui/themed"
 
 export function SpicetifySection() {
   const { t } = useTranslation();
@@ -78,17 +74,16 @@ export function SpicetifySection() {
   return (
     <div className="space-y-6">
       <Card className="card-dark-neon-border">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-gold-neon font-bold">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Palette className="w-5 h-5 icon-neon-blue" />
             {t('spicetify.title')} - {t('spicetify.subtitle')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-7 gap-1 h-auto bg-kiosk-surface/50 p-1">
               <TabsTrigger value="status" className="text-xs py-2 data-[state=active]:bg-primary/20">
-                <Settings className="w-3 h-3 mr-1" />
+                <Settings aria-hidden="true" className="w-3 h-3 mr-1" />
                 {t('spicetify.status')}
               </TabsTrigger>
               <TabsTrigger value="themes" className="text-xs py-2 data-[state=active]:bg-primary/20">
@@ -123,13 +118,13 @@ export function SpicetifySection() {
                 <div className="flex items-center justify-between p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <span className="text-label-yellow font-semibold">{t('spicetify.status')}</span>
                   {isInstalled ? (
-                    <Badge variant="default" className="bg-green-600 text-white font-bold">
-                      <Check className="w-3 h-3 mr-1" />
+                    <Badge variant="primary" className="bg-green-600 text-white font-bold">
+                      <Check aria-hidden="true" className="w-3 h-3 mr-1" />
                       {t('spicetify.installed')} v{status?.version}
                     </Badge>
                   ) : (
-                    <Badge variant="destructive" className="font-bold">
-                      <X className="w-3 h-3 mr-1" />
+                    <Badge variant="danger" className="font-bold">
+                      <X aria-hidden="true" className="w-3 h-3 mr-1" />
                       {t('spicetify.notDetected')}
                     </Badge>
                   )}
@@ -186,7 +181,7 @@ export function SpicetifySection() {
 
                     <div className="flex gap-2 flex-wrap pt-2">
                       <Button variant="kiosk-outline" size="sm" onClick={refresh} disabled={isLoading} className="button-control-extreme-3d">
-                        <RefreshCw className="w-4 h-4 mr-1" />
+                        <RefreshCw aria-hidden="true" className="w-4 h-4 mr-1" />
                         {t('spicetify.refresh')}
                       </Button>
                       <Button variant="kiosk-outline" size="sm" onClick={backup} disabled={isLoading} className="button-control-extreme-3d">
@@ -194,7 +189,7 @@ export function SpicetifySection() {
                         {t('spicetify.backup')}
                       </Button>
                       <Button variant="kiosk-outline" size="sm" onClick={restore} disabled={isLoading} className="button-control-extreme-3d">
-                        <Download className="w-4 h-4 mr-1" />
+                        <Download aria-hidden="true" className="w-4 h-4 mr-1" />
                         {t('spicetify.restore')}
                       </Button>
                     </div>
@@ -226,7 +221,7 @@ export function SpicetifySection() {
                         }`}
                         onClick={() => applyTheme(theme.name)}
                       >
-                        <CardContent className="p-4">
+                        <div className="mt-4">
                           {theme.preview && (
                             <img src={theme.preview} alt={theme.name} className="w-full h-20 object-cover rounded mb-2" />
                           )}
@@ -236,10 +231,10 @@ export function SpicetifySection() {
                           )}
                           {theme.isActive && (
                             <Badge className="mt-2 bg-primary/20 text-primary">
-                              <Check className="w-3 h-3 mr-1" /> {t('spicetify.active')}
+                              <Check aria-hidden="true" className="w-3 h-3 mr-1" /> {t('spicetify.active')}
                             </Badge>
                           )}
-                        </CardContent>
+                        </div>
                       </Card>
                     ))}
                   </div>
@@ -270,10 +265,9 @@ export function SpicetifySection() {
                         <div className="flex items-center gap-3">
                           <Button 
                             variant="ghost" 
-                            size="icon"
+                            size="xs"
                             onClick={() => uninstallItem('extension', ext.name)}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                          >
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10" aria-label="Excluir">
                             <Trash2 className="w-4 h-4" />
                           </Button>
                           <Switch
@@ -297,13 +291,12 @@ export function SpicetifySection() {
                 <>
                   {/* Add new snippet */}
                   <Card className="border-cyan-500/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm text-label-yellow flex items-center gap-2">
-                        <Plus className="w-4 h-4" />
+                    <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+                        <Plus aria-hidden="true" className="w-4 h-4" />
                         {t('spicetify.addSnippet')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
+                      </h3>
+                    
+                    <div className="mt-4">
                       <Input
                         placeholder={t('spicetify.snippetName')}
                         value={newSnippetName}
@@ -318,10 +311,10 @@ export function SpicetifySection() {
                         className="bg-kiosk-surface/50 border-cyan-500/20 font-mono text-sm"
                       />
                       <Button onClick={handleAddSnippet} disabled={isLoading} className="w-full">
-                        <Plus className="w-4 h-4 mr-1" />
+                        <Plus aria-hidden="true" className="w-4 h-4 mr-1" />
                         {t('spicetify.addSnippetButton')}
                       </Button>
-                    </CardContent>
+                    </div>
                   </Card>
 
                   {/* Existing snippets */}
@@ -337,10 +330,9 @@ export function SpicetifySection() {
                             <div className="flex items-center gap-2">
                               <Button 
                                 variant="ghost" 
-                                size="icon"
+                                size="xs"
                                 onClick={() => removeSnippet(snippet.name)}
-                                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                              >
+                                className="text-red-400 hover:text-red-300 hover:bg-red-500/10" aria-label="Excluir">
                                 <Trash2 className="w-4 h-4" />
                               </Button>
                               <Switch
@@ -409,7 +401,7 @@ export function SpicetifySection() {
                   {/* Search and filters */}
                   <div className="flex gap-3">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
+                      <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-visible" />
                       <Input
                         placeholder={t('spicetify.searchMarketplace')}
                         value={marketplaceSearch}
@@ -442,7 +434,7 @@ export function SpicetifySection() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {filteredMarketplace.map((item) => (
                         <Card key={item.name} className="border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
-                          <CardContent className="p-4">
+                          <div className="mt-4">
                             {item.preview && (
                               <img src={item.preview} alt={item.name} className="w-full h-24 object-cover rounded mb-3" />
                             )}
@@ -481,12 +473,12 @@ export function SpicetifySection() {
                                   onClick={() => installFromMarketplace(marketplaceCategory === 'themes' ? 'theme' : 'extension', item.name)}
                                   disabled={isLoading}
                                 >
-                                  <Download className="w-3 h-3 mr-1" />
+                                  <Download aria-hidden="true" className="w-3 h-3 mr-1" />
                                   {t('spicetify.install')}
                                 </Button>
                               )}
                             </div>
-                          </CardContent>
+                          </div>
                         </Card>
                       ))}
                       {filteredMarketplace.length === 0 && (
@@ -500,7 +492,7 @@ export function SpicetifySection() {
                   <div className="flex justify-center">
                     <Button variant="outline" asChild>
                       <a href="https://spicetify.app/docs/development/spicetify-marketplace" target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="w-4 h-4 mr-2" />
+                        <ExternalLink aria-hidden="true" className="w-4 h-4 mr-2" />
                         {t('spicetify.visitMarketplace')}
                       </a>
                     </Button>
@@ -532,7 +524,7 @@ export function SpicetifySection() {
                       disabled={isLoading}
                       className="h-auto py-4 flex-col gap-2"
                     >
-                      <RefreshCw className="w-5 h-5 icon-neon-blue" />
+                      <RefreshCw aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
                       <span className="font-bold">Update</span>
                       <span className="text-xs text-secondary-visible">{t('spicetify.update')}</span>
                     </Button>
@@ -543,7 +535,7 @@ export function SpicetifySection() {
                       disabled={isLoading}
                       className="h-auto py-4 flex-col gap-2"
                     >
-                      <Check className="w-5 h-5 text-green-400" />
+                      <Check aria-hidden="true" className="w-5 h-5 text-green-400" />
                       <span className="font-bold">Apply</span>
                       <span className="text-xs text-secondary-visible">{t('spicetify.apply')}</span>
                     </Button>
@@ -565,7 +557,7 @@ export function SpicetifySection() {
                       disabled={isLoading}
                       className="h-auto py-4 flex-col gap-2"
                     >
-                      <Download className="w-5 h-5 icon-neon-blue" />
+                      <Download aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
                       <span className="font-bold">Restore</span>
                       <span className="text-xs text-secondary-visible">{t('spicetify.restoreBackup')}</span>
                     </Button>
@@ -584,35 +576,35 @@ export function SpicetifySection() {
 
                   {/* Documentation links */}
                   <Card className="border-cyan-500/20">
-                    <CardContent className="p-4 space-y-2">
+                    <div className="mt-4">
                       <p className="text-label-yellow text-sm font-bold">{t('spicetify.documentation')}</p>
                       <div className="flex flex-wrap gap-2">
                         <Button variant="ghost" size="sm" asChild>
                           <a href="https://spicetify.app/docs/getting-started" target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-3 h-3 mr-1" />
+                            <ExternalLink aria-hidden="true" className="w-3 h-3 mr-1" />
                             Getting Started
                           </a>
                         </Button>
                         <Button variant="ghost" size="sm" asChild>
                           <a href="https://spicetify.app/docs/advanced-usage" target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-3 h-3 mr-1" />
+                            <ExternalLink aria-hidden="true" className="w-3 h-3 mr-1" />
                             Advanced Usage
                           </a>
                         </Button>
                         <Button variant="ghost" size="sm" asChild>
                           <a href="https://spicetify.app/docs/development" target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-3 h-3 mr-1" />
+                            <ExternalLink aria-hidden="true" className="w-3 h-3 mr-1" />
                             Development
                           </a>
                         </Button>
                       </div>
-                    </CardContent>
+                    </div>
                   </Card>
                 </div>
               )}
             </TabsContent>
           </Tabs>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

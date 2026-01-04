@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Music, ThumbsUp, Trash2, Play } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { JamQueueItem } from '@/hooks/jam/useJamQueue';
 import { cn } from '@/lib/utils';
 
@@ -81,7 +81,7 @@ export function JamQueue({
                   className="w-10 h-10 rounded object-cover"
                 />
               ) : (
-                <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
+                <div className="w-10 h-10 rounded bg-muted flex items-center justify-center" aria-hidden="true">
                   <Music className="w-4 h-4 text-muted-foreground" />
                 </div>
               )}
@@ -123,19 +123,17 @@ export function JamQueue({
                   {isHost && index === 0 && (
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="xs"
                       onClick={() => onPlay(item)}
-                      className="w-8 h-8 text-primary hover:text-primary"
-                    >
+                      className="w-8 h-8 text-primary hover:text-primary" aria-label="Reproduzir">
                       <Play className="w-4 h-4" />
                     </Button>
                   )}
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="xs"
                     onClick={() => onRemove(item.id)}
-                    className="w-8 h-8 text-muted-foreground hover:text-destructive"
-                  >
+                    className="w-8 h-8 text-muted-foreground hover:text-destructive" aria-label="Excluir">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/themed";
 import { BrandText } from "@/components/ui/BrandText";
 import { ScreenshotCarousel } from "@/components/landing/ScreenshotCarousel";
 import { ThemeComparison } from "@/components/landing/ThemeComparison";

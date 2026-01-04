@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.2.1] - 2025-12-25
+
+### Added
+- Script master-fix.py para correção consolidada
+- Documentação completa do Wiki
+- Relatório de prontidão para produção
+
+### Fixed
+- Correções de acessibilidade (aria-labels, contraste)
+- Correções de tipos TypeScript
+- Vulnerabilidade de segurança no esbuild
+
+### Changed
+- README.md atualizado com design moderno
+- Documentação de instalação aprimorada
+
 All notable changes to TSiJUKEBOX are documented in this file.
 
 For the complete, detailed changelog with upgrade notes, see:

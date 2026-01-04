@@ -48,9 +48,9 @@ export function CodePreview({
       <div className="flex items-center justify-between px-3 py-2 border-b bg-muted/50">
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-destructive/70" />
-            <div className="w-3 h-3 rounded-full bg-amber-500/70" />
-            <div className="w-3 h-3 rounded-full bg-success/70" />
+            <div className="w-3 h-3 rounded-full bg-destructive/70" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-amber-500/70" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-success/70" aria-hidden="true" />
           </div>
           {fileName && (
             <span className="text-xs text-muted-foreground font-mono ml-2">
@@ -65,26 +65,24 @@ export function CodePreview({
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="h-7 w-7"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
+            onClick={() => setIsExpanded(!isExpanded)} aria-label="Minimizar">
             {isExpanded ? (
-              <Minimize2 className="h-3.5 w-3.5" />
+              <Minimize2 aria-hidden="true" className="h-3.5 w-3.5" />
             ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
+              <Maximize2 aria-hidden="true" className="h-3.5 w-3.5" />
             )}
           </Button>
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="h-7 w-7"
-            onClick={handleCopy}
-          >
+            onClick={handleCopy} aria-label="Confirmar">
             {copied ? (
-              <Check className="h-3.5 w-3.5 text-success" />
+              <Check aria-hidden="true" className="h-3.5 w-3.5 text-success" />
             ) : (
-              <Copy className="h-3.5 w-3.5" />
+              <Copy aria-hidden="true" className="h-3.5 w-3.5" />
             )}
           </Button>
         </div>

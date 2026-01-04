@@ -1,8 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Search, User, Calendar, Tag, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -22,6 +19,7 @@ import { GitHubCommit, GitHubContributor } from '@/hooks/system/useGitHubStats';
 import { COMMIT_TYPES, parseCommitType, CommitType } from '@/lib/constants/commitTypes';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface CommitFiltersProps {
   commits: GitHubCommit[];
@@ -130,7 +128,7 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
       <div className="flex flex-wrap gap-2">
         {/* Busca */}
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar mensagem ou SHA..."
             value={filters.search}
@@ -145,7 +143,7 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
           onValueChange={value => setFilters(prev => ({ ...prev, author: value === 'all' ? null : value }))}
         >
           <SelectTrigger className="w-[180px] h-9">
-            <User className="h-4 w-4 mr-2" />
+            <User aria-hidden="true" className="h-4 w-4 mr-2" />
             <SelectValue placeholder="Autor" />
           </SelectTrigger>
           <SelectContent>
@@ -255,7 +253,7 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
         {/* Limpar filtros */}
         {activeFilterCount > 0 && (
           <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9">
-            <X className="h-4 w-4 mr-1" />
+            <X aria-hidden="true" className="h-4 w-4 mr-1" />
             Limpar ({activeFilterCount})
           </Button>
         )}
@@ -266,10 +264,10 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
         <div className="flex flex-wrap gap-2">
           {filters.author && (
             <Badge variant="secondary" className="gap-1">
-              <User className="h-3 w-3" />
+              <User aria-hidden="true" className="h-3 w-3" />
               {filters.author}
-              <button onClick={() => setFilters(prev => ({ ...prev, author: null }))}>
-                <X className="h-3 w-3" />
+              <button aria-label="Aplicar filtro" type="button" onClick={() => setFilters(prev => ({ ...prev, author: null }))}>
+                <X aria-hidden="true" className="h-3 w-3" />
               </button>
             </Badge>
           )}
@@ -277,8 +275,8 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
             <Badge key={type} variant="secondary" className="gap-1">
               <span className={`w-2 h-2 rounded-full ${COMMIT_TYPES[type].color}`} />
               {COMMIT_TYPES[type].label}
-              <button onClick={() => toggleType(type)}>
-                <X className="h-3 w-3" />
+              <button aria-label="PREENCHER" type="button" onClick={() => toggleType(type)}>
+                <X aria-hidden="true" className="h-3 w-3" />
               </button>
             </Badge>
           ))}
@@ -288,11 +286,11 @@ export function CommitFilters({ commits, contributors, onFilter }: CommitFilters
               {filters.dateRange.start ? format(filters.dateRange.start, 'dd/MM') : '...'} 
               {' - '}
               {filters.dateRange.end ? format(filters.dateRange.end, 'dd/MM') : '...'}
-              <button onClick={() => setFilters(prev => ({
+              <button aria-label="Aplicar filtro" type="button" onClick={() => setFilters(prev => ({
                 ...prev,
                 dateRange: { start: null, end: null },
               }))}>
-                <X className="h-3 w-3" />
+                <X aria-hidden="true" className="h-3 w-3" />
               </button>
             </Badge>
           )}

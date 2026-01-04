@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 import { UserRole } from '@/types/user';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogIn, LogOut, Shield, UserCircle, Baby } from 'lucide-react';
+import { Badge, Button } from "@/components/ui/themed"
 
 const roleConfig: Record<UserRole, { label: string; icon: React.ReactNode; color: string }> = {
   admin: {

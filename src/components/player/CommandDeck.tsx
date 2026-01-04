@@ -268,7 +268,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         >
           <div className="flex flex-col items-center gap-1 py-2 px-1">
-            <Menu className={`w-4 h-4 text-cyan-300 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
+            <Menu aria-hidden="true" className={`w-4 h-4 text-cyan-300 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
             <span className="text-[7px] text-cyan-300/80 uppercase tracking-wider font-medium writing-mode-vertical">
               {isExpanded ? '×' : '≡'}
             </span>
@@ -317,7 +317,7 @@ export function CommandDeck({ disabled = false }: CommandDeckProps) {
                 {/* Action Button */}
                 <motion.div variants={buttonVariants}>
                   <DeckButton
-                    icon={<RefreshCw className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />}
+                    icon={<RefreshCw aria-hidden="true" className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />}
                     label={t('commandDeck.reload')}
                     tooltip={t('commandDeck.tooltips.reload')}
                     onClick={handleReload}

@@ -1,8 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
+import { Button, Card } from "@/components/ui/themed"
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
@@ -83,17 +81,16 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
           <Card className="max-w-lg w-full">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                 <AlertTriangle className="w-8 h-8 text-destructive" />
               </div>
-              <CardTitle className="text-xl">Ops! Algo deu errado</CardTitle>
-              <CardDescription>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Ops! Algo deu errado</h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 Ocorreu um erro inesperado. Tente recarregar a página ou voltar ao início.
-              </CardDescription>
-            </CardHeader>
+              </p>
             
-            <CardContent>
+            
+            <div className="mt-4">
               {showDetails && error && (
                 <div className="bg-muted/50 rounded-lg p-4 space-y-2">
                   <div className="flex items-center gap-2 text-sm font-medium text-destructive">
@@ -107,21 +104,21 @@ export class ErrorBoundary extends Component<Props, State> {
                   )}
                 </div>
               )}
-            </CardContent>
+            </div>
 
-            <CardFooter className="flex gap-2 justify-center">
+            <div className="mt-4 flex justify-end gap-2">
               <Button variant="outline" onClick={this.resetError}>
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw aria-hidden="true" className="w-4 h-4 mr-2" />
                 Tentar novamente
               </Button>
               <Button variant="outline" onClick={this.handleGoHome}>
-                <Home className="w-4 h-4 mr-2" />
+                <Home aria-hidden="true" className="w-4 h-4 mr-2" />
                 Ir ao início
               </Button>
-              <Button variant="destructive" onClick={this.handleReload}>
+              <Button variant="danger" onClick={this.handleReload}>
                 Recarregar página
               </Button>
-            </CardFooter>
+            </div>
           </Card>
         </div>
       );

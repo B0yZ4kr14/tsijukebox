@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import type { Json } from '@/integrations/supabase/types';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useLogAudit } from '@/hooks/useAuditLogs';
@@ -29,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import type { KioskConnection } from '@/hooks/system/useKioskMonitor';
+import { Badge, Button, Card, Input } from "@/components/ui/themed"
 
 export interface KioskRemoteControlProps {
   kiosk: KioskConnection;
@@ -51,7 +48,7 @@ const REMOTE_ACTIONS: RemoteAction[] = [
     id: 'chromium_restart',
     label: 'Reiniciar Chromium',
     description: 'Reinicia o navegador Chromium no modo kiosk',
-    icon: <RefreshCw className="h-4 w-4" />,
+    icon: <RefreshCw aria-hidden="true" className="h-4 w-4" />,
     variant: 'outline',
     requiresConfirmation: false,
   },
@@ -67,7 +64,7 @@ const REMOTE_ACTIONS: RemoteAction[] = [
     id: 'container_update',
     label: 'Atualizar Container',
     description: 'Baixa a última versão e reinicia o container',
-    icon: <Download className="h-4 w-4" />,
+    icon: <Download aria-hidden="true" className="h-4 w-4" />,
     variant: 'secondary',
     requiresConfirmation: true,
   },
@@ -151,16 +148,15 @@ export function KioskRemoteControl({ kiosk, onActionComplete }: KioskRemoteContr
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+      <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
           <Power className="h-5 w-5" />
           Controle Remoto
-        </CardTitle>
-        <CardDescription>
+        </h3>
+        <p className="text-sm text-[var(--text-muted)]">
           Enviar comandos para {kiosk.hostname}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </p>
+      
+      <div className="mt-4">
         {!isKioskOnline && (
           <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive">
             <AlertTriangle className="h-4 w-4" />
@@ -252,7 +248,7 @@ export function KioskRemoteControl({ kiosk, onActionComplete }: KioskRemoteContr
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button 
-                      variant="destructive" 
+                      variant="danger" 
                       size="sm"
                       disabled={!customCommand.trim() || isLoading !== null}
                     >
@@ -313,7 +309,7 @@ export function KioskRemoteControl({ kiosk, onActionComplete }: KioskRemoteContr
             {kiosk.status}
           </Badge>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

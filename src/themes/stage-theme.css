@@ -1,0 +1,564 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * TSiJUKEBOX - STAGE THEME CSS
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Estilos CSS para o tema Stage inspirado no modo Karaoke.
+ * Aplicável a todos os modos do sistema.
+ * 
+ * @author B0.y_Z4kr14 + Manus AI
+ * @version 1.0.0
+ * 
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CSS VARIABLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root[data-theme="stage"],
+.theme-stage {
+  /* Background Colors */
+  --stage-bg-primary: #0a0a1a;
+  --stage-bg-secondary: #1a0a2e;
+  --stage-bg-tertiary: #2a1040;
+  --stage-bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #2a1040 100%);
+  --stage-bg-spotlight: radial-gradient(ellipse at top, rgba(255, 0, 212, 0.3) 0%, transparent 50%);
+  --stage-bg-stage: radial-gradient(ellipse at bottom, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
+  
+  /* Accent Colors - Neon */
+  --stage-accent-cyan: #00ffff;
+  --stage-accent-magenta: #ff00d4;
+  --stage-accent-purple: #8a2be2;
+  --stage-accent-pink: #ff1493;
+  --stage-accent-gold: #ffd700;
+  --stage-accent-lime: #00ff44;
+  
+  /* Metallic Colors */
+  --stage-metallic-silver: #c0c0c0;
+  --stage-metallic-chrome: #e8e8e8;
+  --stage-metallic-steel: #71797E;
+  --stage-metallic-brushed: linear-gradient(180deg, #e8e8e8 0%, #a0a0a0 50%, #c0c0c0 100%);
+  --stage-metallic-dark: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 50%, #3a3a3a 100%);
+  
+  /* Text Colors */
+  --stage-text-primary: #ffffff;
+  --stage-text-secondary: #b0b0b0;
+  --stage-text-tertiary: #808080;
+  --stage-text-highlight: #00ffff;
+  --stage-text-lyrics: #00ffff;
+  --stage-text-lyrics-pending: #666666;
+  
+  /* State Colors */
+  --stage-state-success: #00ff44;
+  --stage-state-warning: #ffd700;
+  --stage-state-error: #ff4444;
+  --stage-state-info: #00ffff;
+  --stage-state-recording: #ff0000;
+  
+  /* Glow Effects */
+  --stage-glow-cyan: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+  --stage-glow-magenta: 0 0 20px rgba(255, 0, 212, 0.6), 0 0 40px rgba(255, 0, 212, 0.3);
+  --stage-glow-purple: 0 0 20px rgba(138, 43, 226, 0.6), 0 0 40px rgba(138, 43, 226, 0.3);
+  --stage-glow-gold: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
+  --stage-glow-white: 0 0 10px rgba(255, 255, 255, 0.5);
+  
+  /* Typography */
+  --stage-font-display: "Bebas Neue", "Impact", sans-serif;
+  --stage-font-body: "Inter", "Roboto", sans-serif;
+  --stage-font-mono: "Fira Code", monospace;
+  --stage-font-lyrics: "Poppins", "Arial Black", sans-serif;
+  
+  /* Borders */
+  --stage-border-default: #4a4a4a;
+  --stage-border-metallic: #808080;
+  --stage-border-glow: #00ffff;
+  
+  /* Radius */
+  --stage-radius-sm: 4px;
+  --stage-radius-md: 8px;
+  --stage-radius-lg: 12px;
+  --stage-radius-xl: 16px;
+  --stage-radius-full: 9999px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage {
+  background: var(--stage-bg-gradient);
+  color: var(--stage-text-primary);
+  font-family: var(--stage-font-body);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Spotlight overlay */
+.theme-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--stage-bg-spotlight);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Stage reflection */
+.theme-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: var(--stage-bg-stage);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.theme-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-title {
+  font-family: var(--stage-font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, var(--stage-accent-cyan) 0%, var(--stage-accent-magenta) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+}
+
+.theme-stage .stage-subtitle {
+  font-family: var(--stage-font-body);
+  font-size: 1.25rem;
+  color: var(--stage-text-secondary);
+}
+
+.theme-stage .stage-highlight {
+  color: var(--stage-accent-cyan);
+  text-shadow: var(--stage-glow-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-card {
+  background: rgba(26, 10, 46, 0.8);
+  border: 2px solid var(--stage-border-default);
+  border-radius: var(--stage-radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+}
+
+.theme-stage .stage-card:hover {
+  border-color: var(--stage-accent-purple);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(138, 43, 226, 0.3);
+}
+
+.theme-stage .stage-card-metallic {
+  background: var(--stage-metallic-dark);
+  border: 2px solid var(--stage-border-metallic);
+  border-radius: var(--stage-radius-lg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--stage-radius-md);
+  font-family: var(--stage-font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-stage .stage-btn-primary {
+  background: linear-gradient(180deg, #00ffff 0%, #00cccc 100%);
+  color: #000000;
+  border: 2px solid var(--stage-accent-cyan);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.theme-stage .stage-btn-primary:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.theme-stage .stage-btn-secondary {
+  background: linear-gradient(180deg, #ff00d4 0%, #cc00aa 100%);
+  color: #ffffff;
+  border: 2px solid var(--stage-accent-magenta);
+  box-shadow: 0 0 15px rgba(255, 0, 212, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.theme-stage .stage-btn-secondary:hover {
+  box-shadow: 0 0 25px rgba(255, 0, 212, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.theme-stage .stage-btn-metallic {
+  background: var(--stage-metallic-brushed);
+  color: #1a1a1a;
+  border: 2px solid var(--stage-border-metallic);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.theme-stage .stage-btn-metallic:hover {
+  background: linear-gradient(180deg, #f0f0f0 0%, #b0b0b0 50%, #d0d0d0 100%);
+  transform: translateY(-1px);
+}
+
+.theme-stage .stage-btn-danger {
+  background: linear-gradient(180deg, #ff4444 0%, #cc0000 100%);
+  color: #ffffff;
+  border: 2px solid #ff4444;
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SLIDERS / PROGRESS BARS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-slider {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border: 1px solid var(--stage-border-default);
+  border-radius: var(--stage-radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-stage .stage-slider-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--stage-accent-magenta) 0%, var(--stage-accent-cyan) 100%);
+  box-shadow: 0 0 10px rgba(255, 0, 212, 0.5);
+  border-radius: var(--stage-radius-sm);
+  transition: width 0.1s ease;
+}
+
+.theme-stage .stage-slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: var(--stage-metallic-brushed);
+  border: 2px solid #606060;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Progress bar (horizontal) */
+.theme-stage .stage-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--stage-radius-full);
+  overflow: hidden;
+}
+
+.theme-stage .stage-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--stage-accent-magenta) 0%, var(--stage-accent-cyan) 100%);
+  border-radius: var(--stage-radius-full);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOGGLE SWITCH
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-toggle {
+  position: relative;
+  width: 56px;
+  height: 28px;
+  background: var(--stage-metallic-dark);
+  border: 2px solid var(--stage-border-default);
+  border-radius: var(--stage-radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-stage .stage-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: var(--stage-metallic-brushed);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.theme-stage .stage-toggle.active {
+  background: linear-gradient(180deg, #00ffff 0%, #00cccc 100%);
+  border-color: var(--stage-accent-cyan);
+  box-shadow: var(--stage-glow-cyan);
+}
+
+.theme-stage .stage-toggle.active::after {
+  transform: translateX(28px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCORE DISPLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg, #1a1a2e 0%, #0a0a1a 100%);
+  border: 3px solid var(--stage-border-default);
+  border-radius: var(--stage-radius-lg);
+}
+
+.theme-stage .stage-score-value {
+  font-family: var(--stage-font-display);
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--stage-accent-cyan);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  line-height: 1;
+}
+
+.theme-stage .stage-score-stars {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.theme-stage .stage-score-star {
+  width: 24px;
+  height: 24px;
+  color: var(--stage-accent-gold);
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+.theme-stage .stage-score-star.empty {
+  color: var(--stage-text-tertiary);
+  filter: none;
+}
+
+/* REC Indicator */
+.theme-stage .stage-rec {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--stage-state-recording);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.theme-stage .stage-rec::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--stage-state-recording);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  animation: pulse 1s infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LYRICS DISPLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-lyrics {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--stage-border-default);
+  border-radius: var(--stage-radius-lg);
+}
+
+.theme-stage .stage-lyrics-line {
+  font-family: var(--stage-font-lyrics);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--stage-text-lyrics-pending);
+  margin: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.theme-stage .stage-lyrics-line.active {
+  font-size: 1.75rem;
+  color: var(--stage-text-lyrics);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.4);
+}
+
+.theme-stage .stage-lyrics-line.upcoming {
+  color: var(--stage-text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AUDIO VISUALIZER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-visualizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 60px;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--stage-radius-md);
+}
+
+.theme-stage .stage-visualizer-bar {
+  width: 4px;
+  background: linear-gradient(180deg, var(--stage-accent-cyan) 0%, var(--stage-accent-magenta) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  animation: visualizerPulse 0.5s ease infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONTROL PANEL (Metallic)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-stage .stage-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--stage-metallic-dark);
+  border: 2px solid var(--stage-border-metallic);
+  border-radius: var(--stage-radius-lg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.theme-stage .stage-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.theme-stage .stage-control-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--stage-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
+  50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); }
+}
+
+@keyframes visualizerPulse {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes spotlightSweep {
+  0% { transform: translateX(-100%) rotate(-15deg); }
+  100% { transform: translateX(200%) rotate(15deg); }
+}
+
+@keyframes lyricsHighlight {
+  0% { 
+    color: var(--stage-text-lyrics-pending); 
+    text-shadow: none; 
+  }
+  100% { 
+    color: var(--stage-text-lyrics); 
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8); 
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODE-SPECIFIC OVERRIDES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Player Mode */
+.theme-stage[data-mode="player"] {
+  --stage-accent-primary: var(--stage-accent-cyan);
+  --stage-accent-secondary: var(--stage-accent-magenta);
+}
+
+/* Dashboard Mode */
+.theme-stage[data-mode="dashboard"] .stage-card {
+  border-color: var(--stage-accent-purple);
+}
+
+/* Kiosk Mode - Larger elements */
+.theme-stage[data-mode="kiosk"] {
+  --stage-font-size-title: 5rem;
+  --stage-font-size-body: 1.5rem;
+}
+
+.theme-stage[data-mode="kiosk"] .stage-title {
+  font-size: 5rem;
+}
+
+/* Spotify Mode */
+.theme-stage[data-mode="spotify"] {
+  --stage-accent-primary: #1DB954;
+}
+
+.theme-stage[data-mode="spotify"] .stage-btn-primary {
+  background: linear-gradient(180deg, #1DB954 0%, #169c46 100%);
+  border-color: #1DB954;
+  box-shadow: 0 0 15px rgba(29, 185, 84, 0.5);
+}
+
+/* YouTube Mode */
+.theme-stage[data-mode="youtube"] {
+  --stage-accent-primary: #FF0000;
+}
+
+.theme-stage[data-mode="youtube"] .stage-btn-primary {
+  background: linear-gradient(180deg, #FF0000 0%, #cc0000 100%);
+  border-color: #FF0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Karaoke Mode */
+.theme-stage[data-mode="karaoke"] .stage-lyrics-line.active {
+  animation: lyricsHighlight 0.3s ease forwards;
+}

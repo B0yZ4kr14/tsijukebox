@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, FileCode, ChevronUp, ChevronDown, CloudUpload, Check, AlertCircle, Loader2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Badge, Button } from "@/components/ui/themed"
 
 interface DetectedFile {
   path: string;
@@ -109,7 +108,7 @@ export function DevFileChangeMonitor({
       return <Loader2 className="h-4 w-4 animate-spin" />;
     }
     if (localStatus === 'success') {
-      return <Check className="h-4 w-4" />;
+      return <Check aria-hidden="true" className="h-4 w-4" />;
     }
     if (localStatus === 'error') {
       return <AlertCircle className="h-4 w-4" />;
@@ -175,9 +174,9 @@ export function DevFileChangeMonitor({
         </span>
         
         {isExpanded ? (
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown aria-hidden="true" className="h-4 w-4" />
         ) : (
-          <ChevronUp className="h-4 w-4" />
+          <ChevronUp aria-hidden="true" className="h-4 w-4" />
         )}
       </button>
 
@@ -243,7 +242,7 @@ export function DevFileChangeMonitor({
                   </>
                 ) : localStatus === 'success' ? (
                   <>
-                    <Check className="h-4 w-4" />
+                    <Check aria-hidden="true" className="h-4 w-4" />
                     Sync Completo!
                   </>
                 ) : localStatus === 'error' ? (

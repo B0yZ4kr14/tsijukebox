@@ -24,18 +24,15 @@ import {
   Youtube,
   Disc
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { BrandText } from '@/components/ui/BrandText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { STORAGE_KEYS } from '@/lib/constants';
 import { toast } from 'sonner';
 import { SettingsIllustration } from '@/components/settings/SettingsIllustration';
+import { Button, Input, Slider, Toggle } from "@/components/ui/themed"
 
 type ThemeColor = 'blue' | 'green' | 'purple';
 

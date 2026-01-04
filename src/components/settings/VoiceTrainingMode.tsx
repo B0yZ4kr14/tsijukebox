@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { 
@@ -14,6 +11,7 @@ import { useVoiceTraining } from '@/hooks/player/useVoiceTraining';
 import { useVoiceControl, CustomVoiceCommand } from '@/hooks/player/useVoiceControl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface VoiceTrainingModeProps {
   isOpen: boolean;
@@ -300,26 +298,24 @@ export function VoiceTrainingMode({ isOpen, onClose, onCommandCreated }: VoiceTr
                           {!sample.reviewed && (
                             <div className="flex gap-1">
                               <Button
-                                size="icon"
+                                size="xs"
                                 variant="ghost"
                                 className="h-8 w-8"
                                 onClick={() => {
                                   setEditingSampleId(sample.id);
                                   setEditedTranscript(sample.transcript);
-                                }}
-                              >
+                                }} aria-label="Editar">
                                 <Edit3 className="h-4 w-4" />
                               </Button>
                               <Button
-                                size="icon"
+                                size="xs"
                                 variant="ghost"
                                 className="h-8 w-8 text-green-500 hover:text-green-600 hover:bg-green-500/10"
-                                onClick={() => handleReviewSample(sample.id, true)}
-                              >
+                                onClick={() => handleReviewSample(sample.id, true)} aria-label="Confirmar">
                                 <CheckCircle2 className="h-4 w-4" />
                               </Button>
                               <Button
-                                size="icon"
+                                size="xs"
                                 variant="ghost"
                                 className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-500/10"
                                 onClick={() => handleReviewSample(sample.id, false)}

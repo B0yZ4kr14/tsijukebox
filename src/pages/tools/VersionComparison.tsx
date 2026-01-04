@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -40,6 +37,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { useVersionMetrics, VersionMetrics } from "@/hooks/system/useVersionMetrics";
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 const COLORS = [
   "hsl(195, 100%, 50%)",   // Cyan
@@ -180,16 +178,15 @@ export default function VersionComparison() {
         <div className="grid gap-6 lg:grid-cols-4">
           {/* Version Selector */}
           <Card className="lg:col-span-1 card-dark-neon-border">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <BarChart3 className="h-5 w-5 text-primary" />
                 Versões
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 Selecione até 4 versões para comparar
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            
+            <div className="mt-4">
               <ScrollArea className="h-[400px]">
                 <div className="space-y-2 pr-4">
                   {versions.length === 0 ? (
@@ -232,15 +229,14 @@ export default function VersionComparison() {
                   </div>
                 </>
               )}
-            </CardContent>
+            </div>
           </Card>
 
           {/* Charts */}
           <Card className="lg:col-span-3 card-dark-neon-border">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Análise Comparativa</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Análise Comparativa</h3>
+            
+            <div className="mt-4">
               {selectedVersions.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                   <GitCompare className="h-12 w-12 mb-4 opacity-50" />
@@ -448,17 +444,16 @@ export default function VersionComparison() {
                   </TabsContent>
                 </Tabs>
               )}
-            </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* Detailed Comparison Table */}
         {selectedVersions.length > 0 && (
           <Card className="card-dark-neon-border">
-            <CardHeader>
-              <CardTitle className="text-base">Comparação Detalhada</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Comparação Detalhada</h3>
+            
+            <div className="mt-4">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -541,7 +536,7 @@ export default function VersionComparison() {
                   </tbody>
                 </table>
               </div>
-            </CardContent>
+            </div>
           </Card>
         )}
       </div>

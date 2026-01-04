@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import {
   AreaChart,
   Area,
@@ -127,11 +127,10 @@ export function GitHubDashboardCharts({
     <div className="grid gap-6 md:grid-cols-2">
       {/* Commits Activity Chart */}
       <Card className="col-span-full">
-        <CardHeader>
-          <CardTitle>Atividade de Commits</CardTitle>
-          <CardDescription>Commits nos últimos 30 dias</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Atividade de Commits</h3>
+          <p className="text-sm text-[var(--text-muted)]">Commits nos últimos 30 dias</p>
+        
+        <div className="mt-4">
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={commitsByDay}>
               <defs>
@@ -172,16 +171,15 @@ export function GitHubDashboardCharts({
               />
             </AreaChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Top Contributors Chart */}
       <Card>
-        <CardHeader>
-          <CardTitle>Top Contribuidores</CardTitle>
-          <CardDescription>Por número de commits</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Top Contribuidores</h3>
+          <p className="text-sm text-[var(--text-muted)]">Por número de commits</p>
+        
+        <div className="mt-4">
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={topContributors} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -206,16 +204,15 @@ export function GitHubDashboardCharts({
               />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Languages Pie Chart */}
       <Card>
-        <CardHeader>
-          <CardTitle>Linguagens</CardTitle>
-          <CardDescription>Distribuição no repositório</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Linguagens</h3>
+          <p className="text-sm text-[var(--text-muted)]">Distribuição no repositório</p>
+        
+        <div className="mt-4">
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -244,16 +241,15 @@ export function GitHubDashboardCharts({
               <Legend />
             </PieChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Releases Timeline */}
       <Card className="col-span-full">
-        <CardHeader>
-          <CardTitle>Timeline de Releases</CardTitle>
-          <CardDescription>Últimas {releaseTimeline.length} releases</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Timeline de Releases</h3>
+          <p className="text-sm text-[var(--text-muted)]">Últimas {releaseTimeline.length} releases</p>
+        
+        <div className="mt-4">
           {releaseTimeline.length > 0 ? (
             <div className="flex flex-wrap gap-3">
               {releaseTimeline.map((release, index) => (
@@ -278,7 +274,7 @@ export function GitHubDashboardCharts({
               Nenhuma release encontrada
             </p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

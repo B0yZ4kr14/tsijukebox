@@ -2,11 +2,10 @@ import { motion } from 'framer-motion';
 import { Tag } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { GitHubRelease } from '@/hooks/system/useGitHubStats';
+import { Badge, Card } from "@/components/ui/themed"
 
 interface ReleasesSectionProps {
   releases: GitHubRelease[];
@@ -21,13 +20,12 @@ export function ReleasesSection({ releases, isLoading }: ReleasesSectionProps) {
       transition={{ delay: 0.5 }}
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Tag className="h-5 w-5 text-primary" />
             Releases
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
@@ -67,7 +65,7 @@ export function ReleasesSection({ releases, isLoading }: ReleasesSectionProps) {
           ) : (
             <p className="text-muted-foreground text-center py-10">Sem releases publicadas</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

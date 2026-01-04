@@ -7,7 +7,7 @@
 ## 🚀 O Comando Mágico
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
 ```
 
 **✅ Compatível com:**
@@ -19,6 +19,20 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ---
 
+## 🆕 Novidades v6.0.0
+
+| Feature | Descrição |
+|---------|-----------|
+| 🔍 **Análise de Hardware** | Detecta CPU/RAM/GPU e sugere modo de instalação |
+| 🔒 **SSL/HTTPS** | Certificados self-signed ou Let's Encrypt |
+| 📡 **Avahi/mDNS** | Acesse via `midiaserver.local` sem configurar DNS |
+| 🐙 **GitHub CLI** | `gh` instalado para gerenciamento Git |
+| 💎 **Storj CLI** | Backup descentralizado completo |
+| 🔐 **Autologin Inteligente** | Detecta SDDM/GDM/LightDM/Ly/greetd automaticamente |
+| 📋 **26 Fases** | Instalação completa e modular |
+
+---
+
 ## 🎮 Modos de Instalação
 
 | Modo | Comando | Ideal Para |
@@ -26,38 +40,58 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 | 🎵 **Completo** | `sudo python3 install.py` | Uso doméstico com tudo |
 | 🖥️ **Kiosk** | `sudo python3 install.py --mode kiosk` | Bares, eventos, karaokês |
 | 🖧 **Server** | `sudo python3 install.py --mode server` | Servidor headless |
+| 🔧 **Minimal** | `sudo python3 install.py --mode minimal` | Apenas o essencial |
 
 ### Modo Completo (Padrão)
 Instalação full com todas as features:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
 ```
 
 ### Modo Kiosk
 Otimizado para uso público em estabelecimentos:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3 - --mode kiosk
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode kiosk
 ```
 
 ### Modo Server
 Apenas backend, sem interface gráfica:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3 - --mode server
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3 - --mode server
 ```
 
 ---
 
-## 📦 O Que é Instalado
+## 📦 O Que é Instalado (26 Fases)
 
-| Componente | Descrição |
-|------------|-----------|
-| 🎵 **Spotify** | Cliente Spotify oficial |
-| 🎨 **Spicetify** | Customização de temas |
-| 📊 **Grafana** | Dashboards de monitoramento |
-| 📈 **Prometheus** | Coleta de métricas |
-| 🌐 **Nginx** | Servidor web e proxy reverso |
-| 💾 **SQLite** | Banco de dados local |
-| ⚙️ **Systemd Services** | Autostart e gerenciamento |
+| Fase | Componente | Descrição |
+|------|------------|-----------|
+| 0 | 🔍 **Hardware Analysis** | Detecta CPU, RAM, GPU, disco |
+| 1 | ✓ **System Check** | Verifica distro e dependências |
+| 2 | 🐳 **Docker** | Containerização da aplicação |
+| 3 | 🔥 **UFW** | Firewall configurado |
+| 4 | ⏰ **NTP** | Sincronização de tempo |
+| 5 | 🔤 **Fontes** | Noto, DejaVu, Liberation |
+| 6 | 🔊 **Áudio** | PipeWire/PulseAudio |
+| 7 | 💾 **Database** | SQLite/MariaDB/Postgres |
+| 8 | 🌐 **Nginx** | Proxy reverso com HTTPS |
+| 9 | 📊 **Monitoramento** | Grafana + Prometheus |
+| 10 | ☁️ **Cloud Backup** | rclone + Storj |
+| 11 | 🎵 **Spotify** | Cliente Spotify oficial |
+| 12 | 🎨 **Spicetify** | Customização de temas |
+| 13 | 🎹 **Spotify CLI** | Controle via terminal |
+| 14 | 🖥️ **Kiosk** | Chromium + Openbox |
+| 15 | 🎤 **Voice Control** | Vosk + wake word |
+| 16 | 🛠️ **Dev Tools** | Node.js, Python, etc. |
+| 17 | 🔐 **Autologin** | Detecta login manager |
+| 18 | 🚀 **Deploy** | Docker Compose |
+| 19 | ⚙️ **Systemd** | Serviços e autostart |
+| 20 | 🔒 **SSL Setup** | Self-signed ou Let's Encrypt |
+| 21 | 📡 **Avahi/mDNS** | midiaserver.local |
+| 22 | 🐙 **GitHub CLI** | gh instalado |
+| 23 | 💎 **Storj CLI** | uplink configurado |
+| 24 | 📋 **Hardware Report** | JSON com specs |
+| 25 | ✅ **Verify** | Testes finais |
 
 ---
 
@@ -67,19 +101,42 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/i
 
 ```bash
 # Instalação automática (sem prompts)
-sudo python3 install.py --auto
+sudo python3 unified-installer.py --auto
 
 # Instalação verbosa
-sudo python3 install.py --verbose
+sudo python3 unified-installer.py --verbose
 
 # Especificar diretório de instalação
-sudo python3 install.py --install-dir /opt/tsijukebox
+sudo python3 unified-installer.py --install-dir /opt/tsijukebox
 
 # Pular instalação do Spotify
-sudo python3 install.py --skip-spotify
+sudo python3 unified-installer.py --skip-spotify
 
 # Pular instalação do Grafana/Prometheus
-sudo python3 install.py --skip-monitoring
+sudo python3 unified-installer.py --skip-monitoring
+```
+
+### Opções SSL (NOVO v6.0.0)
+
+```bash
+# Usar Let's Encrypt (produção)
+sudo python3 unified-installer.py --ssl-mode letsencrypt --ssl-domain meusite.com --ssl-email admin@meusite.com
+
+# Usar certificado self-signed (padrão)
+sudo python3 unified-installer.py --ssl-mode self-signed
+
+# Sem SSL
+sudo python3 unified-installer.py --no-ssl
+```
+
+### Opções Avahi/mDNS (NOVO v6.0.0)
+
+```bash
+# Hostname customizado
+sudo python3 unified-installer.py --avahi-hostname myjukebox
+
+# Sem Avahi
+sudo python3 unified-installer.py --no-avahi
 ```
 
 ### Variáveis de Ambiente
@@ -92,7 +149,7 @@ export TSIJUKEBOX_PORT=8080
 export TSIJUKEBOX_USER=jukebox
 
 # Executar instalação
-sudo -E python3 install.py
+sudo -E python3 unified-installer.py
 ```
 
 ---
@@ -122,13 +179,30 @@ Após a instalação, verifique se tudo está funcionando:
 systemctl status tsijukebox
 systemctl status nginx
 systemctl status grafana-server
+systemctl status avahi-daemon
 
 # Verificar portas
-ss -tlnp | grep -E '(80|3000|9090)'
+ss -tlnp | grep -E '(80|443|3000|9090)'
+
+# Verificar SSL
+curl -k https://midiaserver.local
 
 # Acessar interface web
-xdg-open http://localhost:5173
+xdg-open https://midiaserver.local
 ```
+
+---
+
+## 🌐 Acessando o Sistema
+
+Após a instalação, o sistema estará disponível em:
+
+| Interface | URL |
+|-----------|-----|
+| 🎵 **TSiJUKEBOX** | https://midiaserver.local |
+| 📊 **Grafana** | https://midiaserver.local:3000 |
+| 📈 **Prometheus** | https://midiaserver.local:9090 |
+| 🔧 **SSH** | ssh user@midiaserver.local |
 
 ---
 
@@ -141,12 +215,28 @@ sudo pacman -S python
 
 ### Erro: "Permission denied"
 ```bash
-sudo python3 install.py
+sudo python3 unified-installer.py
 ```
 
 ### Erro: "Network unreachable"
 ```bash
 ping -c 3 github.com
+```
+
+### Erro: "midiaserver.local não resolve"
+```bash
+# Verificar Avahi
+systemctl status avahi-daemon
+
+# Reiniciar
+sudo systemctl restart avahi-daemon
+```
+
+### Erro: "Certificado SSL inválido"
+```bash
+# Para self-signed, adicione exceção no browser
+# Ou regenere:
+sudo tsijukebox --regenerate-ssl
 ```
 
 ### Logs de Instalação
@@ -161,6 +251,7 @@ cat /var/log/tsijukebox-install.log
 1. [Primeira Configuração](Tutorial-First-Setup.md)
 2. [Integração Spotify](Tutorial-Spotify-Integration.md)
 3. [Configurar Modo Kiosk](Tutorial-Kiosk-Mode.md)
+4. [Referência Completa v6.0.0](Installer-v6-Reference.md)
 
 ---
 
@@ -173,4 +264,4 @@ cat /var/log/tsijukebox-install.log
 
 ---
 
-*TSiJUKEBOX v4.2.0 - Dedicated to the Public Domain*
+*TSiJUKEBOX v6.0.0 - Dedicated to the Public Domain*

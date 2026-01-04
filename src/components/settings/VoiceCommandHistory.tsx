@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,6 +10,7 @@ import { useVoiceCommandHistory, VoiceCommandHistoryEntry } from '@/hooks/player
 import { VoiceAnalyticsCharts } from './VoiceAnalyticsCharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { Badge, Button } from "@/components/ui/themed"
 
 export function VoiceCommandHistory() {
   const { history, stats, analytics, clearHistory, exportAsJSON, exportAsCSV, getFilteredHistory } = useVoiceCommandHistory();
@@ -77,7 +76,7 @@ export function VoiceCommandHistory() {
   if (history.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+        <BarChart3 aria-hidden="true" className="h-12 w-12 mx-auto mb-3 opacity-30" />
         <p className="text-sm">Nenhum comando registrado ainda</p>
         <p className="text-xs mt-1">Os comandos de voz serão registrados aqui</p>
       </div>
@@ -148,13 +147,13 @@ export function VoiceCommandHistory() {
           </TabsList>
 
           <div className="flex gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleExportJSON} title="Exportar JSON">
+            <Button variant="ghost" size="xs" className="h-8 w-8" onClick={handleExportJSON} title="Exportar JSON">
               <FileJson className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleExportCSV} title="Exportar CSV">
+            <Button variant="ghost" size="xs" className="h-8 w-8" onClick={handleExportCSV} title="Exportar CSV">
               <FileSpreadsheet className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={handleClearHistory} title="Limpar histórico">
+            <Button variant="ghost" size="xs" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={handleClearHistory} title="Limpar histórico" aria-label="Excluir">
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
@@ -163,7 +162,7 @@ export function VoiceCommandHistory() {
         <TabsContent value="list" className="mt-4">
           {/* Filters */}
           <div className="flex items-center gap-2 mb-3">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Filter aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
             <Select value={filterAction} onValueChange={setFilterAction}>
               <SelectTrigger className="w-32 h-8 text-xs bg-kiosk-background border-kiosk-border">
                 <SelectValue placeholder="Ação" />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, X, Check, Music, FileAudio } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks';
@@ -155,7 +155,7 @@ export function AudioWaveformPreview({ file, isOpen, onClose, onConfirm }: Audio
         <div className="space-y-6 py-4">
           {/* File Info */}
           <div className="flex items-center gap-4 p-4 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center" aria-hidden="true">
               <Music className="w-7 h-7 text-cyan-400" />
             </div>
             <div className="flex-1 min-w-0">
@@ -175,13 +175,13 @@ export function AudioWaveformPreview({ file, isOpen, onClose, onConfirm }: Audio
               onClick={handleSeek}
             >
               {isAnalyzing ? (
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center" role="presentation">
                   <div className="w-8 h-8 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin" />
                 </div>
               ) : (
                 <>
                   {/* Waveform Bars */}
-                  <div className="absolute inset-0 flex items-center gap-[2px] px-2">
+                  <div className="absolute inset-0 flex items-center gap-[2px] px-2" role="presentation">
                     {waveformData.map((height, index) => {
                       const barProgress = (index / waveformData.length) * 100;
                       const isPlayed = barProgress <= progress;
@@ -238,11 +238,11 @@ export function AudioWaveformPreview({ file, isOpen, onClose, onConfirm }: Audio
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={handleClose}>
-            <X className="w-4 h-4 mr-2" />
+            <X aria-hidden="true" className="w-4 h-4 mr-2" />
             {t('common.cancel')}
           </Button>
           <Button onClick={handleConfirm} disabled={isAnalyzing}>
-            <Check className="w-4 h-4 mr-2" />
+            <Check aria-hidden="true" className="w-4 h-4 mr-2" />
             {t('upload.confirmUpload')}
           </Button>
         </DialogFooter>

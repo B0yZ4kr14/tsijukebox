@@ -1,6 +1,6 @@
 import { Clock, Check, X, RefreshCw } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
 import type { BackupHistoryItem } from './types';
 
@@ -10,10 +10,10 @@ interface BackupHistoryProps {
 }
 
 const statusIcons = {
-  completed: <Check className="w-3 h-3 text-green-400" />,
-  failed: <X className="w-3 h-3 text-red-400" />,
+  completed: <Check aria-hidden="true" className="w-3 h-3 text-green-400" />,
+  failed: <X aria-hidden="true" className="w-3 h-3 text-red-400" />,
   pending: <Clock className="w-3 h-3 text-yellow-400" />,
-  syncing: <RefreshCw className="w-3 h-3 text-cyan-400 animate-spin" />,
+  syncing: <RefreshCw aria-hidden="true" className="w-3 h-3 text-cyan-400 animate-spin" />,
 };
 
 export function BackupHistory({ items, maxItems = 10 }: BackupHistoryProps) {

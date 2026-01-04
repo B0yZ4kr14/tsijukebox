@@ -1,0 +1,696 @@
+# =============================================================================
+# TSiJUKEBOX - CI/CD Pipeline Completo
+# =============================================================================
+# Pipeline de Integração Contínua e Entrega Contínua
+# Inclui: Testes de Unidade, Integração, E2E, Cobertura e Deploy
+#
+# Autor: Manus AI
+# Versão: 1.0.0
+# Data: 24 de Dezembro de 2024
+# =============================================================================
+
+name: CI/CD Pipeline
+
+on:
+  # Trigger em push para branches principais
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'release/**'
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+
+  # Trigger em Pull Requests
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+  # Permite execução manual
+  workflow_dispatch:
+    inputs:
+      skip_e2e:
+        description: 'Pular testes E2E'
+        required: false
+        default: 'false'
+        type: boolean
+      deploy_preview:
+        description: 'Deploy de preview'
+        required: false
+        default: 'false'
+        type: boolean
+
+# Variáveis de ambiente globais
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
+# Concorrência - cancela execuções anteriores do mesmo workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# =============================================================================
+# JOBS
+# =============================================================================
+
+jobs:
+  # ===========================================================================
+  # JOB 1: LINT E VERIFICAÇÃO DE CÓDIGO
+  # ===========================================================================
+  lint:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 ESLint
+        run: pnpm lint
+        continue-on-error: false
+
+      - name: 📝 TypeScript Type Check
+        run: pnpm type-check
+
+      - name: 🎨 Prettier Check
+        run: pnpm format:check
+
+  # ===========================================================================
+  # JOB 2: TESTES DE UNIDADE
+  # ===========================================================================
+  unit-tests:
+    name: 🧪 Testes de Unidade
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🧪 Executar testes de unidade (Shard ${{ matrix.shard }}/4)
+        run: |
+          pnpm test -- \
+            --coverage \
+            --reporter=verbose \
+            --shard=${{ matrix.shard }}/4 \
+            --exclude='**/*.integration.test.ts' \
+            --exclude='**/*.e2e.test.ts'
+        env:
+          CI: true
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: 📊 Upload cobertura parcial
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-unit-shard-${{ matrix.shard }}
+          path: coverage/
+          retention-days: 1
+
+  # ===========================================================================
+  # JOB 3: TESTES DE INTEGRAÇÃO
+  # ===========================================================================
+  integration-tests:
+    name: 🔗 Testes de Integração
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint
+
+    services:
+      # Supabase local para testes
+      supabase-db:
+        image: supabase/postgres:15.1.0.117
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔧 Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: 🚀 Iniciar Supabase local
+        run: |
+          supabase init --with-intellij-settings=false || true
+          supabase start
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: 📦 Aplicar migrações
+        run: supabase db push
+
+      - name: 🔗 Executar testes de integração
+        run: |
+          pnpm test -- \
+            --coverage \
+            --reporter=verbose \
+            --include='**/*.integration.test.ts'
+        env:
+          CI: true
+          VITE_SUPABASE_URL: http://localhost:54321
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY_LOCAL }}
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+
+      - name: 📊 Upload cobertura de integração
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage/
+          retention-days: 1
+
+      - name: 🛑 Parar Supabase
+        if: always()
+        run: supabase stop
+
+  # ===========================================================================
+  # JOB 4: TESTES DE EDGE FUNCTIONS
+  # ===========================================================================
+  edge-function-tests:
+    name: ⚡ Testes de Edge Functions
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🦕 Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔧 Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: ⚡ Executar testes de Edge Functions
+        run: |
+          # Testar cada Edge Function
+          for func in supabase/functions/*/; do
+            func_name=$(basename "$func")
+            echo "🧪 Testando: $func_name"
+            
+            if [ -f "$func/index.test.ts" ]; then
+              deno test --allow-all "$func/index.test.ts"
+            fi
+          done
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: 🔗 Testes de integração de Edge Functions
+        run: |
+          pnpm test -- \
+            --reporter=verbose \
+            --include='src/test/edge-functions/**/*.test.ts'
+        env:
+          CI: true
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+  # ===========================================================================
+  # JOB 5: TESTES E2E (END-TO-END)
+  # ===========================================================================
+  e2e-tests:
+    name: 🎭 Testes E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [unit-tests, integration-tests]
+    if: ${{ github.event.inputs.skip_e2e != 'true' }}
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🎭 Instalar Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox
+
+      - name: 🏗️ Build da aplicação
+        run: pnpm build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: 🚀 Iniciar servidor de preview
+        run: |
+          pnpm preview &
+          sleep 5
+        env:
+          PORT: 4173
+
+      - name: 🎭 Executar testes E2E
+        run: pnpm test:e2e
+        env:
+          CI: true
+          BASE_URL: http://localhost:4173
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: 📸 Upload screenshots de falha
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-screenshots
+          path: test-results/
+          retention-days: 7
+
+      - name: 📊 Upload relatório Playwright
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ===========================================================================
+  # JOB 6: MERGE DE COBERTURA E RELATÓRIO
+  # ===========================================================================
+  coverage-report:
+    name: 📊 Relatório de Cobertura
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [unit-tests, integration-tests]
+    if: always()
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download cobertura de unidade (Shard 1)
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit-shard-1
+          path: coverage-unit-1/
+        continue-on-error: true
+
+      - name: 📥 Download cobertura de unidade (Shard 2)
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit-shard-2
+          path: coverage-unit-2/
+        continue-on-error: true
+
+      - name: 📥 Download cobertura de unidade (Shard 3)
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit-shard-3
+          path: coverage-unit-3/
+        continue-on-error: true
+
+      - name: 📥 Download cobertura de unidade (Shard 4)
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit-shard-4
+          path: coverage-unit-4/
+        continue-on-error: true
+
+      - name: 📥 Download cobertura de integração
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage-integration/
+        continue-on-error: true
+
+      - name: 🔀 Merge de coberturas
+        run: |
+          mkdir -p coverage-merged
+          
+          # Instalar nyc para merge
+          pnpm add -D nyc
+          
+          # Merge de todos os relatórios
+          npx nyc merge coverage-unit-1 coverage-merged/unit-1.json || true
+          npx nyc merge coverage-unit-2 coverage-merged/unit-2.json || true
+          npx nyc merge coverage-unit-3 coverage-merged/unit-3.json || true
+          npx nyc merge coverage-unit-4 coverage-merged/unit-4.json || true
+          npx nyc merge coverage-integration coverage-merged/integration.json || true
+          
+          # Gerar relatório final
+          npx nyc report \
+            --reporter=lcov \
+            --reporter=text \
+            --reporter=html \
+            --temp-dir=coverage-merged \
+            --report-dir=coverage-final
+
+      - name: 📤 Upload para Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage-final/lcov.info
+          flags: unittests,integration
+          name: tsijukebox-coverage
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: 📊 Verificar threshold de cobertura
+        run: |
+          # Extrair porcentagem de cobertura
+          COVERAGE=$(cat coverage-final/lcov.info | grep -E "^LF:" | awk -F: '{sum+=$2} END {print sum}')
+          COVERED=$(cat coverage-final/lcov.info | grep -E "^LH:" | awk -F: '{sum+=$2} END {print sum}')
+          
+          if [ "$COVERAGE" -gt 0 ]; then
+            PERCENT=$((COVERED * 100 / COVERAGE))
+            echo "📊 Cobertura total: ${PERCENT}%"
+            
+            if [ "$PERCENT" -lt 80 ]; then
+              echo "❌ Cobertura abaixo do threshold (80%)"
+              exit 1
+            else
+              echo "✅ Cobertura acima do threshold"
+            fi
+          fi
+
+      - name: 📊 Upload relatório de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-final/
+          retention-days: 30
+
+      - name: 💬 Comentar PR com cobertura
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          header: coverage
+          message: |
+            ## 📊 Relatório de Cobertura de Testes
+            
+            | Métrica | Valor |
+            |---------|-------|
+            | Linhas | Ver relatório completo |
+            | Branches | Ver relatório completo |
+            | Funções | Ver relatório completo |
+            
+            📁 [Download do relatório completo](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+  # ===========================================================================
+  # JOB 7: BUILD E VALIDAÇÃO
+  # ===========================================================================
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [unit-tests, integration-tests]
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📥 Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build de produção
+        run: pnpm build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: 📦 Verificar tamanho do bundle
+        run: |
+          echo "📦 Tamanho do bundle:"
+          du -sh dist/
+          
+          # Verificar se não excede 10MB
+          SIZE=$(du -s dist/ | cut -f1)
+          if [ "$SIZE" -gt 10240 ]; then
+            echo "⚠️ Bundle muito grande: ${SIZE}KB"
+          fi
+
+      - name: 📤 Upload artefato de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+          retention-days: 7
+
+  # ===========================================================================
+  # JOB 8: DEPLOY DE PREVIEW (OPCIONAL)
+  # ===========================================================================
+  deploy-preview:
+    name: 🚀 Deploy Preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build, e2e-tests]
+    if: |
+      github.event_name == 'pull_request' || 
+      github.event.inputs.deploy_preview == 'true'
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📥 Download artefato de build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+
+      - name: 🚀 Deploy para Vercel (Preview)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      - name: 💬 Comentar PR com URL de preview
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          header: preview
+          message: |
+            ## 🚀 Deploy de Preview
+            
+            ✅ Deploy concluído com sucesso!
+            
+            🔗 **URL de Preview:** [Clique aqui para acessar](${{ steps.deploy.outputs.preview-url }})
+
+  # ===========================================================================
+  # JOB 9: DEPLOY DE PRODUÇÃO
+  # ===========================================================================
+  deploy-production:
+    name: 🚀 Deploy Produção
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [build, e2e-tests, coverage-report]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://tsijukebox.com
+
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: 📥 Download artefato de build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+
+      - name: 🔧 Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: 🚀 Deploy Edge Functions
+        run: |
+          supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: 📦 Aplicar migrações de produção
+        run: |
+          supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: 🚀 Deploy para Vercel (Produção)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
+      - name: 📢 Notificar sucesso
+        uses: slackapi/slack-github-action@v1.24.0
+        if: success()
+        with:
+          payload: |
+            {
+              "text": "✅ TSiJUKEBOX deployed to production!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "✅ *TSiJUKEBOX* deployed to production!\n\n*Commit:* ${{ github.sha }}\n*Branch:* ${{ github.ref_name }}\n*Author:* ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ===========================================================================
+  # JOB 10: NOTIFICAÇÃO DE FALHA
+  # ===========================================================================
+  notify-failure:
+    name: 📢 Notificar Falha
+    runs-on: ubuntu-latest
+    needs: [lint, unit-tests, integration-tests, e2e-tests, build]
+    if: failure()
+
+    steps:
+      - name: 📢 Notificar falha no Slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "❌ CI/CD Pipeline falhou!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❌ *CI/CD Pipeline falhou!*\n\n*Repositório:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Ver detalhes>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

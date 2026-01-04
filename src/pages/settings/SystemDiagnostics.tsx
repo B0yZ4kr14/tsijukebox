@@ -23,15 +23,13 @@ import {
   Settings,
   ExternalLink
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { api } from '@/lib/api/client';
 import { supabase } from '@/integrations/supabase/client';
 import { useSettings } from '@/contexts/SettingsContext';
 import { toast } from 'sonner';
 import { LogoBrand } from '@/components/ui/LogoBrand';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface DiagnosticResult {
   status: 'pending' | 'running' | 'success' | 'warning' | 'error' | 'skipped';
@@ -482,10 +480,9 @@ export default function SystemDiagnostics() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/settings')}
-              className="text-kiosk-text/90 hover:text-kiosk-text"
-            >
+              className="text-kiosk-text/90 hover:text-kiosk-text" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Volume2, SkipForward, Play, Pause } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useVoiceControl } from '@/hooks/player/useVoiceControl';
 import { useSoundEffects } from '@/hooks/common/useSoundEffects';
@@ -16,10 +16,10 @@ interface VoiceControlButtonProps {
 const commandIcons: Record<string, React.ReactNode> = {
   play: <Play className="h-4 w-4" />,
   pause: <Pause className="h-4 w-4" />,
-  next: <SkipForward className="h-4 w-4" />,
-  previous: <SkipForward className="h-4 w-4 rotate-180" />,
-  volumeUp: <Volume2 className="h-4 w-4" />,
-  volumeDown: <Volume2 className="h-4 w-4" />,
+  next: <SkipForward aria-hidden="true" className="h-4 w-4" />,
+  previous: <SkipForward aria-hidden="true" className="h-4 w-4 rotate-180" />,
+  volumeUp: <Volume2 aria-hidden="true" className="h-4 w-4" />,
+  volumeDown: <Volume2 aria-hidden="true" className="h-4 w-4" />,
 };
 
 const commandLabels: Record<string, string> = {
@@ -84,7 +84,37 @@ export function VoiceControlButton({
     prevErrorRef.current = error;
   }, [error, playSound]);
 
-  if (!isSupported || !settings.enabled) {
+  // Fallback visual quando não suportado
+  if (!isSupported) {
+    return (
+      <div className={cn('relative', className)} data-testid="voice-control-container">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                data-testid="voice-control-button"
+                variant="ghost"
+                size="xs"
+                disabled
+                aria-label="Controle por voz não suportado"
+                className={cn(
+                  sizeClasses[size],
+                  'rounded-full opacity-50 cursor-not-allowed bg-kiosk-surface/30 text-kiosk-text/50'
+                )}
+              >
+                <MicOff className={iconSizes[size]} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p className="text-sm">Controle por voz não suportado neste navegador</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    );
+  }
+
+  if (!settings.enabled) {
     return null;
   }
 
@@ -109,7 +139,7 @@ export function VoiceControlButton({
               data-testid="voice-control-button"
               data-listening={isListening}
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={toggleListening}
               aria-label={isListening ? 'Parar de ouvir' : 'Ativar controle por voz'}
               className={cn(

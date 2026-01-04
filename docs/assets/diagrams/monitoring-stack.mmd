@@ -1,0 +1,53 @@
+graph TB
+    subgraph "Application"
+        A1[TSiJukebox]
+        A2[Supabase Edge Functions]
+    end
+
+    subgraph "Metrics Collection"
+        M1[Prometheus Exporter]
+        M2[Node Exporter]
+        M3[Custom Metrics]
+    end
+
+    subgraph "Storage"
+        S1[Prometheus TSDB]
+        S2[Retention: 30 days]
+    end
+
+    subgraph "Visualization"
+        V1[Grafana]
+        V2[Dashboard: System]
+        V3[Dashboard: Application]
+        V4[Dashboard: Business]
+    end
+
+    subgraph "Alerting"
+        AL1[Alert Rules]
+        AL2[Alertmanager]
+        AL3[Slack Webhook]
+        AL4[Discord Webhook]
+    end
+
+    A1 --> M1
+    A2 --> M1
+    A1 --> M2
+    A1 --> M3
+
+    M1 --> S1
+    M2 --> S1
+    M3 --> S1
+
+    S1 --> V1
+    V1 --> V2
+    V1 --> V3
+    V1 --> V4
+
+    S1 --> AL1
+    AL1 --> AL2
+    AL2 --> AL3
+    AL2 --> AL4
+
+    style A1 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000
+    style S1 fill:#ff4400,stroke:#cc3300,stroke-width:2px,color:#fff
+    style V1 fill:#ffd400,stroke:#cc9900,stroke-width:2px,color:#000

@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Database, HardDrive, RefreshCw, Shield, BarChart3, Wrench, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { SettingsSection } from './SettingsSection';
 import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface DatabaseSectionProps {
   isDemoMode: boolean;

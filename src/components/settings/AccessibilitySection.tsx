@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Eye, Type, Zap, Monitor, Check, X, Volume2, VolumeX, Sparkles, Bug, Download } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useContrastDebug } from '@/hooks';
+import { Button, Slider, Toggle } from "@/components/ui/themed"
 
 interface AccessibilitySettings {
   highContrast: boolean;
@@ -157,11 +155,11 @@ export function AccessibilitySection() {
           {hasChanges && (
             <div className="flex gap-2 pt-2">
               <Button onClick={applyChanges} className="flex-1 button-primary-glow-3d">
-                <Check className="w-4 h-4 mr-2" />
+                <Check aria-hidden="true" className="w-4 h-4 mr-2" />
                 Aplicar Mudanças
               </Button>
               <Button onClick={cancelChanges} variant="kiosk-outline">
-                <X className="w-4 h-4 mr-2" />
+                <X aria-hidden="true" className="w-4 h-4 mr-2" />
                 Cancelar
               </Button>
             </div>
@@ -242,10 +240,10 @@ export function AccessibilitySection() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {soundEnabled ? (
-                <Volume2 className="w-5 h-5 icon-neon-blue" />
+                <Volume2 aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
               ) : (
                 /* WCAG Exception: Disabled state icon at /80 for visual distinction */
-                <VolumeX className="w-5 h-5 text-kiosk-text/80" />
+                <VolumeX aria-hidden="true" className="w-5 h-5 text-kiosk-text/80" />
               )}
               <div>
                 <Label className="text-label-yellow font-medium">Sons de Feedback</Label>
@@ -334,7 +332,7 @@ export function AccessibilitySection() {
             }}
             className="w-full"
           >
-            <Download className="w-4 h-4 mr-2" />
+            <Download aria-hidden="true" className="w-4 h-4 mr-2" />
             Exportar Relatório de Acessibilidade
           </Button>
         )}

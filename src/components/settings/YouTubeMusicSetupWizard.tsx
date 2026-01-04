@@ -6,8 +6,6 @@ import {
   DialogTitle, 
   DialogDescription 
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
@@ -25,6 +23,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button, Input } from "@/components/ui/themed"
 
 interface YouTubeMusicSetupWizardProps {
   isOpen: boolean;
@@ -43,7 +42,7 @@ const steps: WizardStep[] = [
   { title: 'Google Cloud Console', description: 'Acessar o Console do Google', icon: <Globe className="w-5 h-5" /> },
   { title: 'Criar Projeto', description: 'Configurar projeto OAuth', icon: <Shield className="w-5 h-5" /> },
   { title: 'Configurar OAuth', description: 'Adicionar URI de redirecionamento', icon: <Key className="w-5 h-5" /> },
-  { title: 'Credenciais', description: 'Copiar Client ID e Secret', icon: <Check className="w-5 h-5" /> },
+  { title: 'Credenciais', description: 'Copiar Client ID e Secret', icon: <Check aria-hidden="true" className="w-5 h-5" /> },
 ];
 
 export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTubeMusicSetupWizardProps) {
@@ -128,7 +127,7 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
 
             <div className="space-y-3">
               <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                <Check className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+                <Check aria-hidden="true" className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                 <div>
                   <p className="font-medium text-sm">Conta Google</p>
                   <p className="text-xs text-muted-foreground">Você precisará de uma conta Google ativa</p>
@@ -164,14 +163,14 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
                   Clique no botão abaixo para abrir o Console de APIs do Google em uma nova aba.
                 </p>
                 <Button
-                  variant="default"
+                  variant="primary"
                   className="w-full bg-red-600 hover:bg-red-700"
                   onClick={() => {
                     window.open('https://console.cloud.google.com/apis/credentials', '_blank');
                     setWizardData(prev => ({ ...prev, consoleOpened: true }));
                   }}
                 >
-                  <ExternalLink className="w-4 h-4 mr-2" />
+                  <ExternalLink aria-hidden="true" className="w-4 h-4 mr-2" />
                   Abrir Google Cloud Console
                 </Button>
               </div>
@@ -281,14 +280,13 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
                   />
                   <Button
                     variant="outline"
-                    size="icon"
+                    size="xs"
                     onClick={handleCopyUri}
-                    className="shrink-0"
-                  >
+                    className="shrink-0" aria-label="Confirmar">
                     {copiedUri ? (
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check aria-hidden="true" className="w-4 h-4 text-green-500" />
                     ) : (
-                      <Copy className="w-4 h-4" />
+                      <Copy aria-hidden="true" className="w-4 h-4" />
                     )}
                   </Button>
                 </div>
@@ -369,7 +367,7 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
             {wizardData.clientId && wizardData.clientSecret && (
               <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
                 <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                  <Check className="w-4 h-4" />
+                  <Check aria-hidden="true" className="w-4 h-4" />
                   <span className="text-sm font-medium">Credenciais preenchidas! Clique em Finalizar.</span>
                 </div>
               </div>
@@ -413,7 +411,7 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
                       ? 'bg-primary/20 border-2 border-primary text-primary'
                       : 'bg-muted text-muted-foreground'
                 }`}>
-                  {index < currentStep ? <Check className="w-4 h-4" /> : index + 1}
+                  {index < currentStep ? <Check aria-hidden="true" className="w-4 h-4" /> : index + 1}
                 </div>
               </div>
             ))}
@@ -448,7 +446,7 @@ export function YouTubeMusicSetupWizard({ isOpen, onClose, onComplete }: YouTube
           >
             {currentStep === steps.length - 1 ? (
               <>
-                <Check className="w-4 h-4 mr-2" />
+                <Check aria-hidden="true" className="w-4 h-4 mr-2" />
                 Finalizar
               </>
             ) : (

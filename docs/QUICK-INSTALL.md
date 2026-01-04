@@ -4,7 +4,7 @@
 
 **Guia de instalação amigável para iniciantes**
 
-![Version](https://img.shields.io/badge/version-5.0.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-6.0.0-blue?style=flat-square)
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=arch-linux&logoColor=white)
 ![CachyOS](https://img.shields.io/badge/CachyOS-00ADD8?style=flat-square)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
@@ -21,17 +21,25 @@ Abra o terminal e cole este comando:
 curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
 ```
 
-**Pronto!** O instalador unificado fará todo o trabalho automaticamente, incluindo:
+**Pronto!** O instalador unificado v6.0.0 fará todo o trabalho automaticamente, incluindo:
 
-- ✅ Docker + Docker Compose
-- ✅ UFW Firewall configurado
-- ✅ NTP (sincronização de tempo)
-- ✅ Nginx (proxy reverso)
-- ✅ Grafana + Prometheus (monitoramento)
-- ✅ Spotify + Spicetify (player customizado)
-- ✅ spotify-cli-linux (controle via terminal)
-- ✅ Autologin configurado
-- ✅ Serviços systemd
+### ✅ Novidades v6.0.0
+- 🔍 **Análise de Hardware** - Detecta CPU, RAM, GPU automaticamente
+- 🔒 **SSL/HTTPS** - Certificados self-signed ou Let's Encrypt
+- 📡 **Avahi/mDNS** - Acesse via `midiaserver.local`
+- 🐙 **GitHub CLI** - `gh` instalado e configurado
+- 💎 **Storj CLI** - Backup descentralizado completo
+- 🔐 **Autologin Inteligente** - Detecta SDDM/GDM/LightDM automaticamente
+
+### ✅ Componentes Base
+- 🐳 Docker + Docker Compose
+- 🔥 UFW Firewall configurado
+- ⏰ NTP (sincronização de tempo)
+- 🌐 Nginx (proxy reverso com HTTPS)
+- 📊 Grafana + Prometheus (monitoramento)
+- 🎵 Spotify + Spicetify (player customizado)
+- 🎹 spotify-cli-linux (controle via terminal)
+- ⚙️ Serviços systemd
 
 ---
 
@@ -41,60 +49,50 @@ Durante a instalação, o progresso é exibido em tempo real:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║  🚀 TSiJUKEBOX Enterprise - Unified Installer v5.0.0                          ║
-║  Instalador unificado com Docker + todas as integrações                       ║
+║  🚀 TSiJUKEBOX Enterprise - Unified Installer v6.0.0                          ║
+║  Instalador unificado com 26 fases de instalação                             ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-[1/13] Verificando sistema...
+[0/26] Analisando hardware...
+✓  CPU: AMD Ryzen 7 5800X (16 threads)
+✓  RAM: 32 GB
+✓  GPU: NVIDIA RTX 3080
+✓  Disco: 500 GB NVMe
+✓  Recomendação: Modo full com todas as features
+
+[1/26] Verificando sistema...
 ✓  Usuário: joao
 ✓  Distro: CachyOS Linux (cachyos)
 ✓  AUR helper: paru
-✓  RAM: 16.0 GB
-✓  Disco livre: 120.5 GB
 ✓  Login manager: sddm
 
-[2/13] Configurando Docker...
+[2/26] Configurando Docker...
 ✓  Docker configurado
 
-[3/13] Configurando firewall UFW...
-✓  UFW configurado (deny incoming, allow outgoing)
-✓  Regras: SSH, HTTP, HTTPS, TSiJUKEBOX, Grafana
+...
 
-[4/13] Configurando sincronização de tempo...
-✓  NTP configurado via systemd-timesyncd
+[20/26] Configurando SSL...
+✓  Certificado self-signed gerado para midiaserver.local
 
-[5/13] Configurando Nginx...
-✓  Nginx configurado como proxy reverso
+[21/26] Configurando Avahi/mDNS...
+✓  Hostname: midiaserver.local
+✓  Serviços: HTTP, Grafana, Prometheus, SSH
 
-[6/13] Configurando Grafana + Prometheus...
-✓  Monitoramento configurado
+[22/26] Instalando GitHub CLI...
+✓  gh instalado
 
-[7/13] Instalando Spotify...
-✓  Spotify instalado via spotify-launcher
+[23/26] Instalando Storj CLI...
+✓  uplink configurado
 
-[8/13] Configurando Spicetify...
-✓  Spicetify configurado com tema Dribbblish
+[24/26] Gerando relatório de hardware...
+✓  Relatório salvo em /var/log/tsijukebox/hardware.json
 
-[9/13] Instalando spotify-cli-linux...
-✓  spotify-cli instalado (sp-play, sp-next, sp-pause...)
-
-[10/13] Configurando autologin...
-✓  Autologin configurado via SDDM
-
-[11/13] Fazendo deploy da aplicação...
-✓  Aplicação deployada via Docker
-
-[12/13] Criando serviços systemd...
-✓  Serviço tsijukebox habilitado
-
-[13/13] Verificando instalação...
-✓  Docker: OK
-✓  Nginx: ativo
-✓  Grafana: ativo
-✓  Prometheus: ativo
+[25/26] Verificando instalação...
+✓  Todos os serviços: OK
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  🎉 INSTALAÇÃO CONCLUÍDA COM SUCESSO!                                        ║
+║  Acesse: https://midiaserver.local                                            ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -110,7 +108,7 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/u
 ```
 **Ideal para:** Uso doméstico com todas as funcionalidades
 
-**Inclui:** Docker, UFW, NTP, Nginx, Grafana, Prometheus, Spotify, Spicetify, spotify-cli, Autologin
+**Inclui:** Docker, UFW, NTP, Nginx, SSL, Avahi, Grafana, Prometheus, Spotify, Spicetify, GitHub CLI, Storj, Autologin
 
 ---
 
@@ -124,7 +122,8 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/u
 - ✅ Interface touchscreen otimizada
 - ✅ Proteção contra saída do app
 - ✅ Reinício automático em caso de falha
-- ✅ Login automático no boot
+- ✅ Login automático no boot (Chromium --kiosk)
+- ✅ HTTPS via `https://midiaserver.local/jukebox`
 
 ---
 
@@ -164,6 +163,29 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/u
 | `--verbose`, `-v` | Output detalhado | - |
 | `--quiet`, `-q` | Modo silencioso | - |
 
+### Opções SSL (NOVO v6.0.0)
+
+| Flag | Descrição | Valor Padrão |
+|------|-----------|--------------|
+| `--ssl-mode` | Modo: `self-signed` ou `letsencrypt` | `self-signed` |
+| `--ssl-domain` | Domínio para certificado | `midiaserver.local` |
+| `--ssl-email` | Email para Let's Encrypt | - |
+| `--no-ssl` | Não configurar SSL | (configura) |
+
+### Opções Avahi/mDNS (NOVO v6.0.0)
+
+| Flag | Descrição | Valor Padrão |
+|------|-----------|--------------|
+| `--avahi-hostname` | Hostname mDNS | `midiaserver` |
+| `--no-avahi` | Não configurar Avahi | (configura) |
+
+### Opções DevTools (NOVO v6.0.0)
+
+| Flag | Descrição | Valor Padrão |
+|------|-----------|--------------|
+| `--no-github-cli` | Não instalar GitHub CLI | (instala) |
+| `--no-storj` | Não instalar Storj CLI | (instala) |
+
 ### Componentes (usar `--no-COMPONENTE` para desativar)
 
 | Flag | Descrição | Padrão |
@@ -184,10 +206,12 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/u
 
 ### Instalação Personalizada
 ```bash
-# Modo kiosk com timezone específico
+# Modo kiosk com Let's Encrypt
 curl -fsSL .../unified-installer.py | sudo python3 - \
   --mode kiosk \
-  --timezone America/New_York
+  --ssl-mode letsencrypt \
+  --ssl-domain meudominio.com \
+  --ssl-email admin@meudominio.com
 ```
 
 ### Instalação Mínima
@@ -196,7 +220,8 @@ curl -fsSL .../unified-installer.py | sudo python3 - \
 curl -fsSL .../unified-installer.py | sudo python3 - \
   --no-spotify \
   --no-monitoring \
-  --no-autologin
+  --no-autologin \
+  --no-ssl
 ```
 
 ### Simular Instalação
@@ -211,6 +236,13 @@ curl -fsSL .../unified-installer.py | sudo python3 - --dry-run --verbose
 curl -fsSL .../unified-installer.py | sudo python3 - --auto
 ```
 
+### Hostname Customizado
+```bash
+# Usar hostname diferente
+curl -fsSL .../unified-installer.py | sudo python3 - \
+  --avahi-hostname myjukebox
+```
+
 ---
 
 ## 📦 O Que é Instalado
@@ -222,21 +254,26 @@ curl -fsSL .../unified-installer.py | sudo python3 - --auto
 | 🐳 **Docker** | Containerização da aplicação | ~500MB |
 | 🔥 **UFW** | Firewall com regras pré-configuradas | ~5MB |
 | ⏰ **NTP** | Sincronização de tempo via timesyncd/chrony | ~2MB |
-| 🌐 **Nginx** | Proxy reverso e servidor web | ~10MB |
+| 🌐 **Nginx** | Proxy reverso com HTTPS | ~10MB |
+| 🔒 **SSL** | Certificados self-signed ou Let's Encrypt | ~1MB |
+| 📡 **Avahi** | mDNS para midiaserver.local | ~5MB |
 | 🎵 **Spotify + Spicetify** | Player com temas customizados | ~500MB |
 | 🎹 **spotify-cli-linux** | Controle do Spotify via terminal | ~5MB |
 | 📊 **Grafana** | Dashboards de monitoramento | ~200MB |
 | 📈 **Prometheus** | Coleta de métricas | ~100MB |
+| 🐙 **GitHub CLI** | Gerenciamento Git | ~50MB |
+| 💎 **Storj CLI** | Backup descentralizado | ~30MB |
 
 ### Regras UFW Configuradas
 
 | Porta | Serviço | Acesso |
 |-------|---------|--------|
 | 22 | SSH | Qualquer |
-| 80 | HTTP | Qualquer |
+| 80 | HTTP (redirect) | Qualquer |
 | 443 | HTTPS | Qualquer |
 | 5173 | TSiJUKEBOX | Qualquer |
 | 3000 | Grafana | Qualquer |
+| 5353/udp | mDNS | Qualquer |
 | 9090 | Prometheus | Local |
 | 9100 | Node Exporter | Local |
 
@@ -268,23 +305,27 @@ Após a instalação, execute este comando para verificar se tudo está funciona
 tsijukebox --verify
 
 # Ou verificar manualmente:
-systemctl status tsijukebox docker nginx grafana prometheus
+systemctl status tsijukebox docker nginx grafana prometheus avahi-daemon
 ```
 
 ### Saída Esperada:
 ```
-✅ TSiJUKEBOX v5.0.0 - Verificação de Instalação
+✅ TSiJUKEBOX v6.0.0 - Verificação de Instalação
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ Docker: ativo
 ✅ Nginx: ativo
+✅ SSL: válido (midiaserver.local)
+✅ Avahi: ativo
 ✅ Grafana: ativo
 ✅ Prometheus: ativo
-✅ UFW: ativo (6 regras)
+✅ UFW: ativo (8 regras)
 ✅ NTP: sincronizado
 ✅ Spotify: instalado
 ✅ Spicetify: aplicado
-✅ Interface web: http://localhost:5173
+✅ GitHub CLI: instalado
+✅ Storj CLI: instalado
+✅ Interface web: https://midiaserver.local
 
 🎉 Instalação verificada com sucesso!
 ```
@@ -297,9 +338,10 @@ Após a instalação:
 
 | Interface | URL | Porta |
 |-----------|-----|-------|
-| 🎵 **Player Principal** | http://localhost:5173 | 5173 |
-| 📊 **Grafana** | http://localhost:3000 | 3000 |
-| 📈 **Prometheus** | http://localhost:9090 | 9090 |
+| 🎵 **Player Principal** | https://midiaserver.local | 443 |
+| 📊 **Grafana** | https://midiaserver.local:3000 | 3000 |
+| 📈 **Prometheus** | https://midiaserver.local:9090 | 9090 |
+| 🔧 **SSH** | ssh user@midiaserver.local | 22 |
 
 **Credenciais padrão:**
 - **Grafana:** admin / admin (alterar no primeiro login)
@@ -328,6 +370,22 @@ journalctl -u docker -f
 
 # Reiniciar serviço
 sudo systemctl restart docker
+```
+
+### "Certificado SSL inválido no browser"
+```bash
+# Para certificados self-signed, adicione exceção no browser
+# Ou regenere o certificado:
+sudo tsijukebox --regenerate-ssl
+```
+
+### "midiaserver.local não resolve"
+```bash
+# Verificar Avahi
+systemctl status avahi-daemon
+
+# Reiniciar serviço
+sudo systemctl restart avahi-daemon
 ```
 
 ### "UFW bloqueando conexões"
@@ -364,13 +422,13 @@ curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/u
 Ou manualmente:
 ```bash
 # Parar serviços
-sudo systemctl stop tsijukebox grafana prometheus nginx
+sudo systemctl stop tsijukebox grafana prometheus nginx avahi-daemon
 
 # Remover containers Docker
 sudo docker-compose -f /opt/tsijukebox/docker-compose.yml down
 
 # Remover pacotes
-sudo pacman -Rns spotify spicetify-cli grafana prometheus
+sudo pacman -Rns spotify spicetify-cli grafana prometheus avahi github-cli
 
 # Remover dados
 sudo rm -rf /opt/tsijukebox /etc/tsijukebox /var/lib/tsijukebox /var/log/tsijukebox
@@ -386,6 +444,7 @@ sudo rm -rf /opt/tsijukebox /etc/tsijukebox /var/lib/tsijukebox /var/log/tsijuke
 - 🎨 [Customização de Temas](THEMES.md)
 - 📊 [Monitoramento Avançado](MONITORING.md)
 - 🔌 [Sistema de Plugins](PLUGINS.md)
+- 📋 [Referência Completa v6.0.0](wiki/Installer-v6-Reference.md)
 
 ---
 
@@ -399,6 +458,6 @@ sudo rm -rf /opt/tsijukebox /etc/tsijukebox /var/lib/tsijukebox /var/log/tsijuke
 
 ---
 
-*TSiJUKEBOX Enterprise v5.0.0 — A música, amplificada.* 🎵
+*TSiJUKEBOX Enterprise v6.0.0 — A música, amplificada.* 🎵
 
 </div>

@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { 
   GripVertical, Cloud, Hand, Bookmark, Sparkles, 
   Copy, Check, Eye, EyeOff,
@@ -14,6 +11,7 @@ import { PageTitle } from '@/components/ui/PageTitle';
 import { WcagExceptionComment } from '@/components/ui/WcagExceptionComment';
 import { BackButton } from '@/components/ui/BackButton';
 import { toast } from 'sonner';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 interface WcagException {
   id: string;
@@ -222,15 +220,14 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-gold-neon text-sm">{exception.file}</CardTitle>
+      <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">{exception.file}</h3>
           <Badge variant="outline" className="text-cyan-400 border-cyan-500/30">
             {exception.opacity}
           </Badge>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      
+      <div className="mt-4">
         <div className="flex items-center gap-4">
           {/* Normal State */}
           <div className="flex flex-col items-center p-4 bg-kiosk-bg/50 rounded-lg flex-1">
@@ -269,15 +266,14 @@ const ExceptionDemo = ({ exception }: { exception: WcagException }) => {
             {commentCode}
           </div>
           <Button 
-            size="icon" 
+            size="xs" 
             variant="ghost" 
             className="absolute right-1 top-1 h-6 w-6"
-            onClick={handleCopy}
-          >
+            onClick={handleCopy} aria-label="Confirmar">
             {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
@@ -310,10 +306,9 @@ export default function WcagExceptions() {
         
         {/* Criteria Card */}
         <Card className="card-neon-border bg-kiosk-surface/30 my-8">
-          <CardHeader>
-            <CardTitle className="text-gold-neon">Critérios para Exceções Válidas</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Critérios para Exceções Válidas</h3>
+          
+          <div className="mt-4">
             {Object.entries(categories).map(([key, { label, description, color }]) => (
               <div key={key} className="flex items-start gap-3 p-3 bg-kiosk-bg/30 rounded-lg">
                 <Badge variant="outline" className={`${color} border-current/30`}>
@@ -325,7 +320,7 @@ export default function WcagExceptions() {
                 </div>
               </div>
             ))}
-          </CardContent>
+          </div>
         </Card>
         
         {/* Tabs */}
@@ -381,10 +376,9 @@ export default function WcagExceptions() {
               <WcagExceptionComment />
               
               <Card className="card-neon-border bg-kiosk-surface/30">
-                <CardHeader>
-                  <CardTitle className="text-gold-neon">Instruções de Uso</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Instruções de Uso</h3>
+                
+                <div className="mt-4">
                   <div className="space-y-2">
                     <h4 className="text-nav-neon-white font-medium">1. Preencha os campos</h4>
                     <p className="text-sm text-description-visible">
@@ -422,7 +416,7 @@ export default function WcagExceptions() {
                       para verificar se a exceção está corretamente documentada.
                     </p>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </div>
           </TabsContent>
@@ -430,7 +424,7 @@ export default function WcagExceptions() {
         
         {/* Footer info */}
         <Card className="card-neon-border bg-kiosk-surface/30 mt-8">
-          <CardContent className="p-4">
+          <div className="mt-4">
             <h3 className="text-gold-neon font-medium mb-2">Como Documentar uma Nova Exceção</h3>
             <ol className="text-sm text-description-visible space-y-2 list-decimal list-inside">
               <li>Adicione um comentário WCAG na linha anterior ao elemento</li>
@@ -438,7 +432,7 @@ export default function WcagExceptions() {
               <li>Execute <code className="bg-kiosk-bg px-1 rounded text-cyan-400">npm run wcag:validate</code> para verificar</li>
               <li>Atualize esta página com a nova exceção se necessário</li>
             </ol>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

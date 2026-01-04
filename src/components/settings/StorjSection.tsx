@@ -16,15 +16,10 @@ import {
   ChevronRight,
   RotateCcw
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
 import { 
   Table, 
   TableBody, 
@@ -44,6 +39,7 @@ import {
 } from '@/components/ui/dialog';
 import { useStorjClient, useTranslation } from '@/hooks';
 import { InfoTooltip } from '@/components/ui/InfoTooltip';
+import { Badge, Button, Card, Input, Toggle } from "@/components/ui/themed"
 
 export function StorjSection() {
   const { t } = useTranslation();
@@ -121,26 +117,25 @@ export function StorjSection() {
         {/* Connection Tab */}
         <TabsContent value="connection" className="space-y-4">
           <Card className="card-dark-neon-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gold-neon">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <Satellite className="w-5 h-5 icon-neon-blue" />
                 {t('storj.connection')} Storj DCS
-              </CardTitle>
-              <CardDescription className="text-kiosk-text/85">
+              </h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 {t('storj.subtitle')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </p>
+            
+            <div className="mt-4">
               <div className="flex items-center justify-between">
                 <span className="text-label-yellow font-semibold">{t('storj.status')}</span>
                 {isConnected ? (
                   <Badge className="bg-green-600 text-white font-bold">
-                    <Check className="w-3 h-3 mr-1" />
+                    <Check aria-hidden="true" className="w-3 h-3 mr-1" />
                     {t('storj.connected')}
                   </Badge>
                 ) : (
-                  <Badge variant="destructive" className="font-bold">
-                    <X className="w-3 h-3 mr-1" />
+                  <Badge variant="danger" className="font-bold">
+                    <X aria-hidden="true" className="w-3 h-3 mr-1" />
                     {t('storj.disconnected')}
                   </Badge>
                 )}
@@ -169,9 +164,9 @@ export function StorjSection() {
                 className="w-full button-control-extreme-3d"
               >
                 {isLoading ? (
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  <RefreshCw aria-hidden="true" className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
-                  <Check className="w-4 h-4 mr-2" />
+                  <Check aria-hidden="true" className="w-4 h-4 mr-2" />
                 )}
                 {t('storj.testConnection')}
               </Button>
@@ -192,17 +187,16 @@ export function StorjSection() {
                   </div>
                 </div>
               )}
-            </CardContent>
+            </div>
           </Card>
 
           {/* Help Card */}
           <Card className="card-dark-neon-border">
-            <CardHeader>
-              <CardTitle className="text-label-yellow text-sm font-bold">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 {t('storj.howToConfigure')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-kiosk-text/85">
+              </h3>
+            
+            <div className="mt-4">
               <div className="flex gap-2">
                 <span className="text-cyan-400 font-bold">1.</span>
                 <span>{t('storj.step1')}</span>
@@ -219,17 +213,16 @@ export function StorjSection() {
                 <span className="text-cyan-400 font-bold">4.</span>
                 <span>{t('storj.step4')}</span>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
 
         {/* Buckets Tab */}
         <TabsContent value="buckets" className="space-y-4">
           <Card className="card-dark-neon-border">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-label-yellow text-sm font-bold">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 {t('storj.buckets').toUpperCase()} ({buckets.length})
-              </CardTitle>
+              </h3>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -238,12 +231,12 @@ export function StorjSection() {
                   disabled={isLoading}
                   className="button-control-extreme-3d"
                 >
-                  <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw aria-hidden="true" className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                 </Button>
                 <Dialog open={showCreateBucket} onOpenChange={setShowCreateBucket}>
                   <DialogTrigger asChild>
                     <Button size="sm" className="button-control-extreme-3d">
-                      <Plus className="w-4 h-4 mr-1" />
+                      <Plus aria-hidden="true" className="w-4 h-4 mr-1" />
                       {t('storj.newBucket')}
                     </Button>
                   </DialogTrigger>
@@ -285,8 +278,8 @@ export function StorjSection() {
                   </DialogContent>
                 </Dialog>
               </div>
-            </CardHeader>
-            <CardContent>
+            
+            <div className="mt-4">
               <ScrollArea className="h-[300px]">
                 {buckets.length === 0 ? (
                   <div className="text-center py-8 text-kiosk-text/85">
@@ -328,13 +321,12 @@ export function StorjSection() {
                             )}
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="xs"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 deleteBucket(bucket.name);
                               }}
-                              className="text-red-400 hover:text-red-300"
-                            >
+                              className="text-red-400 hover:text-red-300" aria-label="Excluir">
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
@@ -344,19 +336,18 @@ export function StorjSection() {
                   </div>
                 )}
               </ScrollArea>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
 
         {/* Files Tab */}
         <TabsContent value="files" className="space-y-4">
           <Card className="card-dark-neon-border">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-label-yellow text-sm font-bold flex items-center gap-2">
+            <div>
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <FolderOpen className="w-4 h-4 icon-neon-blue" />
                   {currentBucket}
-                </CardTitle>
+                </h3>
                 {currentPath && (
                   <div className="flex items-center gap-1 text-xs text-kiosk-text/85 mt-1">
                     <span className="cursor-pointer hover:text-cyan-400" onClick={() => setCurrentPath('')}>
@@ -364,7 +355,7 @@ export function StorjSection() {
                     </span>
                     {currentPath.split('/').map((part, i) => (
                       <span key={i} className="flex items-center">
-                        <ChevronRight className="w-3 h-3" />
+                        <ChevronRight aria-hidden="true" className="w-3 h-3" />
                         <span className="cursor-pointer hover:text-cyan-400">{part}</span>
                       </span>
                     ))}
@@ -384,12 +375,12 @@ export function StorjSection() {
                   disabled={isLoading}
                   className="button-control-extreme-3d"
                 >
-                  <Upload className="w-4 h-4 mr-1" />
+                  <Upload aria-hidden="true" className="w-4 h-4 mr-1" />
                   {t('storj.upload')}
                 </Button>
               </div>
-            </CardHeader>
-            <CardContent>
+            
+            <div className="mt-4">
               {uploadProgress && (
                 <div className="mb-4 p-3 rounded-lg bg-kiosk-surface/50 border border-cyan-500/20">
                   <div className="flex justify-between mb-2 text-sm">
@@ -403,7 +394,7 @@ export function StorjSection() {
               <ScrollArea className="h-[350px]">
                 {objects.length === 0 ? (
                   <div className="text-center py-8 text-kiosk-text/85">
-                    <FileIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <FileIcon aria-hidden="true" className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>{t('storj.noFiles')}</p>
                   </div>
                 ) : (
@@ -421,7 +412,7 @@ export function StorjSection() {
                         <TableRow key={obj.key} className="border-cyan-500/10">
                           <TableCell className="font-medium text-kiosk-text">
                             <div className="flex items-center gap-2">
-                              <FileIcon className="w-4 h-4 text-cyan-500" />
+                              <FileIcon aria-hidden="true" className="w-4 h-4 text-cyan-500" />
                               {obj.key.split('/').pop()}
                             </div>
                           </TableCell>
@@ -435,16 +426,14 @@ export function StorjSection() {
                             <div className="flex justify-end gap-1">
                               <Button
                                 variant="ghost"
-                                size="icon"
-                                onClick={() => currentBucket && downloadFile(currentBucket, obj.key)}
-                              >
-                                <Download className="w-4 h-4 text-cyan-400" />
+                                size="xs"
+                                onClick={() => currentBucket && downloadFile(currentBucket, obj.key)} aria-label="Baixar">
+                                <Download aria-hidden="true" className="w-4 h-4 text-cyan-400" />
                               </Button>
                               <Button
                                 variant="ghost"
-                                size="icon"
-                                onClick={() => currentBucket && deleteFile(currentBucket, obj.key)}
-                              >
+                                size="xs"
+                                onClick={() => currentBucket && deleteFile(currentBucket, obj.key)} aria-label="Excluir">
                                 <Trash2 className="w-4 h-4 text-red-400" />
                               </Button>
                             </div>
@@ -455,23 +444,22 @@ export function StorjSection() {
                   </Table>
                 )}
               </ScrollArea>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
 
         {/* Backup Tab */}
         <TabsContent value="backup" className="space-y-4">
           <Card className="card-dark-neon-border">
-            <CardHeader>
-              <CardTitle className="text-label-yellow text-sm font-bold flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                 <RotateCcw className="w-4 h-4 icon-neon-blue" />
                 BACKUP DO BANCO DE DADOS
-              </CardTitle>
-              <CardDescription className="text-kiosk-text/85">
+              </h3>
+              <p className="text-sm text-[var(--text-muted)]">
                 Faça backup do SQLite para o Storj
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </p>
+            
+            <div className="mt-4">
               <div className="space-y-2">
                 <Label className="text-label-yellow">Bucket de Destino</Label>
                 <select
@@ -491,7 +479,7 @@ export function StorjSection() {
                 disabled={isLoading || !currentBucket}
                 className="w-full button-control-extreme-3d"
               >
-                <Upload className="w-4 h-4 mr-2" />
+                <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
                 Criar Backup Agora
               </Button>
 
@@ -501,7 +489,7 @@ export function StorjSection() {
                   Backups são armazenados com versionamento automático quando disponível.
                 </p>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
       </Tabs>

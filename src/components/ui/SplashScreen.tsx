@@ -130,7 +130,7 @@ export function SplashScreen({
             transition={{ delay: 0.5, duration: 0.4 }}
           >
             {/* Progress Bar */}
-            <div className="relative h-1 w-full overflow-hidden rounded-full bg-kiosk-surface/50">
+            <div className="relative h-1 w-full overflow-hidden rounded-full bg-kiosk-surface/50" aria-hidden="true">
               <motion.div
                 className="h-full bg-gradient-to-r from-cyan-500 via-cyan-400 to-yellow-400"
                 style={{ width: `${progress}%` }}

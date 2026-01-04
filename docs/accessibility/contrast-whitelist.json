@@ -1,0 +1,98 @@
+{
+  "version": "1.0",
+  "generated": "2025-12-25T03:39:21.287284",
+  "description": "Whitelist de cores intencionais que não devem ser alteradas pelo analisador de contraste",
+  "categories": {
+    "brand_colors": {
+      "description": "Cores de marca do TSiJUKEBOX",
+      "patterns": [
+        {
+          "pattern": "text-gold-neon",
+          "reason": "Cor primária de títulos"
+        },
+        {
+          "pattern": "text-title-white-neon",
+          "reason": "Cor de destaque máximo"
+        },
+        {
+          "pattern": "text-artist-neon-blue",
+          "reason": "Cor de artistas"
+        },
+        {
+          "pattern": "text-label-yellow",
+          "reason": "Labels obrigatórios"
+        },
+        {
+          "pattern": "text-label-neon",
+          "reason": "Labels de status"
+        },
+        {
+          "pattern": "text-neon-action-label",
+          "reason": "Labels de ações"
+        }
+      ]
+    },
+    "kiosk_colors": {
+      "description": "Cores do sistema Kiosk",
+      "patterns": [
+        {
+          "pattern": "text-kiosk-*",
+          "reason": "Sistema de cores Kiosk"
+        },
+        {
+          "pattern": "bg-kiosk-*",
+          "reason": "Backgrounds Kiosk"
+        },
+        {
+          "pattern": "border-kiosk-*",
+          "reason": "Bordas Kiosk"
+        }
+      ]
+    },
+    "service_colors": {
+      "description": "Cores de serviços integrados",
+      "patterns": [
+        {
+          "pattern": "text-spotify-green",
+          "reason": "Cor oficial Spotify"
+        },
+        {
+          "pattern": "text-youtube-red",
+          "reason": "Cor oficial YouTube"
+        }
+      ]
+    },
+    "theme_previews": {
+      "description": "Previews de tema (decorativos)",
+      "files": [
+        "src/pages/settings/SpicetifyThemeGallery.tsx",
+        "src/components/spicetify/ThemePreviewCard.tsx"
+      ],
+      "reason": "Elementos decorativos que mostram cores de temas"
+    },
+    "color_swatches": {
+      "description": "Swatches de cor (decorativos)",
+      "files": [
+        "src/pages/brand/BrandGuidelines.tsx",
+        "src/pages/public/DesignSystem.tsx"
+      ],
+      "reason": "Amostras de cor para documentação visual"
+    }
+  },
+  "excluded_ratios": {
+    "description": "Ratios de contraste que são falsos positivos",
+    "patterns": [
+      {
+        "ratio": "1.00:1",
+        "reason": "Mesma cor texto/fundo (falso positivo)"
+      },
+      {
+        "ratio_range": [
+          0.99,
+          1.01
+        ],
+        "reason": "Cores praticamente idênticas"
+      }
+    ]
+  }
+}

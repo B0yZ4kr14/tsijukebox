@@ -18,7 +18,7 @@ export function CreateJamButton({ className }: CreateJamButtonProps) {
         className={cn(
           "relative px-6 py-3 rounded-xl font-bold text-lg uppercase tracking-wider",
           "button-jam-silver-neon",
-          "text-zinc-900",
+          "text-zinc-300",
           "transition-all duration-300",
           "flex items-center gap-2",
           className

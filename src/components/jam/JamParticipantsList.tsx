@@ -16,7 +16,7 @@ export function JamParticipantsList({ participants, currentParticipantId }: JamP
       className="bg-card/60 backdrop-blur-xl rounded-2xl border border-border/50 p-4"
     >
       <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-        <User className="w-4 h-4" />
+        <User aria-hidden="true" className="w-4 h-4" />
         Participantes ({participants.length})
       </h3>
 
@@ -60,7 +60,7 @@ export function JamParticipantsList({ participants, currentParticipantId }: JamP
               </div>
 
               {/* Status indicator */}
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true" />
             </motion.div>
           ))}
         </AnimatePresence>

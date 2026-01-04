@@ -2,7 +2,7 @@ import { Palette, Download, Upload, Eye, Sliders } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
 import { useSettings, ThemeColor } from '@/contexts/SettingsContext';
 import { useTranslation } from '@/hooks';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { ThemeCustomizer } from './ThemeCustomizer';
@@ -204,7 +204,7 @@ export function ThemeSection() {
               onClick={exportSettings}
               className="ripple-effect"
             >
-              <Download className="w-4 h-4 mr-2" />
+              <Download aria-hidden="true" className="w-4 h-4 mr-2" />
               Exportar
             </Button>
             <Button
@@ -212,7 +212,7 @@ export function ThemeSection() {
               onClick={importSettings}
               className="ripple-effect"
             >
-              <Upload className="w-4 h-4 mr-2" />
+              <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
               Importar
             </Button>
           </div>

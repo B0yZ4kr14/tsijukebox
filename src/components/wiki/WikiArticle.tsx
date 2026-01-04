@@ -19,9 +19,8 @@ import {
   CloudOff
 } from 'lucide-react';
 import { WikiArticle as WikiArticleType, findArticleById, getArticlePath } from './wikiData';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { formatBrandName } from '@/lib/utils';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface WikiArticleProps {
   article: WikiArticleType;
@@ -49,14 +48,14 @@ function PlayerIllustration() {
         </div>
       </div>
       <div className="flex items-center justify-center gap-4 mt-6">
-        <div className="w-12 h-12 rounded-full bg-kiosk-surface flex items-center justify-center">
-          <SkipBack className="w-5 h-5 text-kiosk-text/90" />
+        <div className="w-12 h-12 rounded-full bg-kiosk-surface flex items-center justify-center" aria-hidden="true">
+          <SkipBack aria-hidden="true" className="w-5 h-5 text-kiosk-text/90" />
         </div>
-        <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center" aria-hidden="true">
           <Play className="w-8 h-8 text-primary-foreground ml-1" />
         </div>
-        <div className="w-12 h-12 rounded-full bg-kiosk-surface flex items-center justify-center">
-          <SkipForward className="w-5 h-5 text-kiosk-text/90" />
+        <div className="w-12 h-12 rounded-full bg-kiosk-surface flex items-center justify-center" aria-hidden="true">
+          <SkipForward aria-hidden="true" className="w-5 h-5 text-kiosk-text/90" />
         </div>
       </div>
     </div>
@@ -77,14 +76,14 @@ function KeyboardIllustration() {
             </div>
           ))}
         </div>
-        <div className="w-32 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono text-sm">
+        <div className="w-32 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono text-sm" aria-hidden="true">
           Espaço
         </div>
         <div className="flex gap-2">
-          <div className="w-10 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono">
+          <div className="w-10 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono" aria-hidden="true">
             +
           </div>
-          <div className="w-10 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono">
+          <div className="w-10 h-10 rounded-lg bg-kiosk-surface border border-border flex items-center justify-center text-kiosk-text font-mono" aria-hidden="true">
             -
           </div>
         </div>
@@ -98,7 +97,7 @@ function GestureIllustration() {
     <div className="bg-kiosk-bg rounded-xl p-6 border border-border">
       <div className="flex items-center justify-center gap-8">
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full bg-kiosk-surface flex items-center justify-center mb-2">
+          <div className="w-16 h-16 rounded-full bg-kiosk-surface flex items-center justify-center mb-2" aria-hidden="true">
             <Hand className="w-8 h-8 text-primary" />
           </div>
           <span className="text-xs text-kiosk-text/90">Toque</span>
@@ -109,8 +108,8 @@ function GestureIllustration() {
           <span>→</span>
         </div>
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full bg-kiosk-surface flex items-center justify-center mb-2">
-            <ChevronRight className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-full bg-kiosk-surface flex items-center justify-center mb-2" aria-hidden="true">
+            <ChevronRight aria-hidden="true" className="w-8 h-8 text-primary" />
           </div>
           <span className="text-xs text-kiosk-text/90">Deslizar</span>
         </div>
@@ -123,8 +122,8 @@ function SettingsIllustration() {
   return (
     <div className="bg-kiosk-bg rounded-xl p-6 border border-border">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
-          <Settings className="w-6 h-6 text-primary" />
+        <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center" aria-hidden="true">
+          <Settings aria-hidden="true" className="w-6 h-6 text-primary" />
         </div>
         <div className="flex-1 space-y-2">
           <div className="h-3 w-24 bg-kiosk-surface rounded" />
@@ -142,7 +141,7 @@ function VolumeIllustration() {
   return (
     <div className="bg-kiosk-bg rounded-xl p-6 border border-border">
       <div className="flex items-center gap-4">
-        <Volume2 className="w-6 h-6 text-primary" />
+        <Volume2 aria-hidden="true" className="w-6 h-6 text-primary" />
         <div className="flex-1 h-2 bg-kiosk-surface rounded-full overflow-hidden">
           <div className="h-full w-3/4 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
         </div>
@@ -202,11 +201,11 @@ export function WikiArticleView({
       {path && (
         <div className="flex items-center gap-2 text-xs text-kiosk-text/85">
           <span>Wiki</span>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight aria-hidden="true" className="w-3 h-3" />
           <span>{path.category.title}</span>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight aria-hidden="true" className="w-3 h-3" />
           <span>{path.subSection.title}</span>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight aria-hidden="true" className="w-3 h-3" />
           <span className="text-primary">{article.title}</span>
         </div>
       )}
@@ -223,7 +222,7 @@ export function WikiArticleView({
               </Badge>
             )}
             {isOfflineMode && !isSavedOffline && (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="danger" className="text-xs">
                 Sem cache
               </Badge>
             )}
@@ -235,15 +234,14 @@ export function WikiArticleView({
           {(onSaveOffline || onRemoveOffline) && (
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={handleOfflineToggle}
               className={`${isSavedOffline ? 'text-green-500 hover:text-green-400' : 'text-secondary-visible hover:text-green-500'}`}
-              title={isSavedOffline ? 'Remover do offline' : 'Salvar para offline'}
-            >
+              title={isSavedOffline ? 'Remover do offline' : 'Salvar para offline'} aria-label="Confirmar">
               {isSavedOffline ? (
-                <Check className="w-5 h-5" />
+                <Check aria-hidden="true" className="w-5 h-5" />
               ) : (
-                <Download className="w-5 h-5" />
+                <Download aria-hidden="true" className="w-5 h-5" />
               )}
             </Button>
           )}
@@ -251,10 +249,9 @@ export function WikiArticleView({
           {onToggleBookmark && (
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={onToggleBookmark}
-              className={`${isBookmarked ? 'text-yellow-500' : 'text-secondary-visible hover:text-yellow-500'}`}
-            >
+              className={`${isBookmarked ? 'text-yellow-500' : 'text-secondary-visible hover:text-yellow-500'}`} aria-label="Salvar">
               <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-yellow-500' : ''}`} />
             </Button>
           )}

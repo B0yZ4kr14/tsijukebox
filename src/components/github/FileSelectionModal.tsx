@@ -9,11 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { FILE_CATEGORIES, SAFE_SYNC_FILES } from '@/hooks/system/github/types';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface FileSelectionModalProps {
   isOpen: boolean;
@@ -96,7 +95,7 @@ export function FileSelectionModal({
         <div className="flex items-center justify-between py-2 border-b">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="gap-1">
-              <Check className="h-3 w-3" />
+              <Check aria-hidden="true" className="h-3 w-3" />
               {selectedFiles.size} selecionados
             </Badge>
             <Badge variant="secondary" className="text-xs">
@@ -161,7 +160,7 @@ export function FileSelectionModal({
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            <X className="h-4 w-4 mr-2" />
+            <X aria-hidden="true" className="h-4 w-4 mr-2" />
             Cancelar
           </Button>
           <Button 
@@ -173,7 +172,7 @@ export function FileSelectionModal({
               <>Sincronizando...</>
             ) : (
               <>
-                <Check className="h-4 w-4 mr-2" />
+                <Check aria-hidden="true" className="h-4 w-4 mr-2" />
                 Sincronizar {selectedFiles.size} Arquivos
               </>
             )}

@@ -13,12 +13,11 @@ import {
   TrendingUp,
   PieChart as PieChartIcon
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useStatus, useTranslation } from '@/hooks';
 import { ComponentBoundary } from '@/components/errors/SuspenseBoundary';
+import { Button, Card } from "@/components/ui/themed"
 
 // Generate mock data for charts
 function generateSystemData() {
@@ -116,10 +115,9 @@ export default function Dashboard() {
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             onClick={() => navigate('/')}
-            className="button-3d"
-          >
+            className="button-3d" aria-label="Voltar">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
@@ -159,13 +157,12 @@ export default function Dashboard() {
             transition={{ delay: 0.1 }}
           >
             <Card className="card-admin-extreme-3d h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Activity className="w-5 h-5 icon-neon-blue" />
                   {t('dashboard.systemUsage')} - {t('dashboard.last24h')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={systemData}>
@@ -194,19 +191,19 @@ export default function Dashboard() {
                 </div>
                 <div className="flex justify-center gap-6 mt-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-cyan-400" />
+                    <div className="w-3 h-3 rounded-full bg-cyan-400" aria-hidden="true" />
                     <span className="text-xs text-kiosk-text/90">CPU</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-purple-400" />
+                    <div className="w-3 h-3 rounded-full bg-purple-400" aria-hidden="true" />
                     <span className="text-xs text-kiosk-text/90">Memória</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-orange-400" />
+                    <div className="w-3 h-3 rounded-full bg-orange-400" aria-hidden="true" />
                     <span className="text-xs text-kiosk-text/90">Temperatura</span>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </ComponentBoundary>
@@ -220,13 +217,12 @@ export default function Dashboard() {
             transition={{ delay: 0.2 }}
           >
             <Card className="card-admin-extreme-3d h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <PieChartIcon className="w-5 h-5 icon-neon-blue" />
                   {t('dashboard.genres')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -250,12 +246,12 @@ export default function Dashboard() {
                 <div className="flex flex-wrap justify-center gap-3 mt-2">
                   {genreData.map((genre) => (
                     <div key={genre.name} className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full" style={{ background: genre.color }} />
+                      <div className="w-2 h-2 rounded-full" style={{ background: genre.color }} aria-hidden="true" />
                       <span className="text-xs text-kiosk-text/90">{genre.name}</span>
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </ComponentBoundary>
@@ -269,13 +265,12 @@ export default function Dashboard() {
             transition={{ delay: 0.3 }}
           >
             <Card className="card-admin-extreme-3d h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Music2 className="w-5 h-5 icon-neon-blue" />
                   {t('dashboard.playbackStats')} - {t('dashboard.last7days')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={playbackData}>
@@ -286,7 +281,7 @@ export default function Dashboard() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </ComponentBoundary>
@@ -300,13 +295,12 @@ export default function Dashboard() {
             transition={{ delay: 0.4 }}
           >
             <Card className="card-admin-extreme-3d h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Clock className="w-5 h-5 icon-neon-blue" />
                   {t('dashboard.activity')} por Hora
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={hourlyActivity}>
@@ -324,7 +318,7 @@ export default function Dashboard() {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </ComponentBoundary>
@@ -338,13 +332,12 @@ export default function Dashboard() {
             transition={{ delay: 0.5 }}
           >
             <Card className="card-admin-extreme-3d">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2 text-gold-neon">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <TrendingUp className="w-5 h-5 icon-neon-blue" />
                   {t('dashboard.topTracks')} - {t('dashboard.thisMonth')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-4 gap-4">
                   {topTracks.map((track, index) => (
                     <motion.div
@@ -368,7 +361,7 @@ export default function Dashboard() {
                     </motion.div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </ComponentBoundary>

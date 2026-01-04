@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Search, Plus, Heart, Clock, Disc, Library, RefreshCw } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Skeleton } from '@/components/ui/skeleton';
 import { YouTubeMusicPlaylistCard, YouTubeMusicUserBadge } from '@/components/youtube';
 import { useYouTubeMusicLibrary } from '@/hooks';
@@ -78,15 +78,14 @@ export default function YouTubeMusicBrowser() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/')}
-              className="w-10 h-10 rounded-full"
-            >
+              className="w-10 h-10 rounded-full" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
               {/* YouTube Music Logo */}
-              <div className="w-10 h-10 rounded-lg bg-[#FF0000] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-[#FF0000] flex items-center justify-center" aria-hidden="true">
                 <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
                 </svg>
@@ -109,11 +108,10 @@ export default function YouTubeMusicBrowser() {
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={fetchAll}
               disabled={isLoading}
-              className="w-10 h-10"
-            >
+              className="w-10 h-10" aria-label="Atualizar">
               <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
@@ -185,7 +183,7 @@ export default function YouTubeMusicBrowser() {
               ) : playlists.length === 0 ? (
                 <div className="text-center py-12 text-kiosk-text/85">
                   {/* WCAG Exception: Decorative icon at /30 opacity, not critical content */}
-                  <Library className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                  <Library aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
                   <p>Nenhuma playlist encontrada</p>
                   <p className="text-sm">Crie sua primeira playlist no YouTube Music</p>
                 </div>

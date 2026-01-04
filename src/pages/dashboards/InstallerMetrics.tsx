@@ -16,13 +16,11 @@ import {
   Loader2
 } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useInstallerMetrics, MetricsPeriod } from '@/hooks/system/useInstallerMetrics';
-import { 
+import { Badge, Button, Card } from "@/components/ui/themed"
+import {
   BarChart, 
   Bar, 
   XAxis, 
@@ -96,9 +94,8 @@ export default function InstallerMetrics() {
             <Link to="/settings">
               <Button
                 variant="ghost"
-                size="icon"
-                className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d"
-              >
+                size="xs"
+                className="w-12 h-12 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d" aria-label="Voltar">
                 <ArrowLeft className="w-6 h-6 text-kiosk-text" />
               </Button>
             </Link>
@@ -152,9 +149,9 @@ export default function InstallerMetrics() {
             transition={{ delay: 0.1 }}
           >
             <Card className="card-neon-border bg-kiosk-surface/80">
-              <CardContent className="p-4">
+              <div className="mt-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center" aria-hidden="true">
                     <Download className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div>
@@ -162,13 +159,13 @@ export default function InstallerMetrics() {
                     <p className="text-2xl font-bold text-kiosk-text">{data.totalInstalls.toLocaleString()}</p>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-neon-border bg-kiosk-surface/80">
-              <CardContent className="p-4">
+              <div className="mt-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center" aria-hidden="true">
                     <CheckCircle2 className="w-5 h-5 text-green-400" />
                   </div>
                   <div>
@@ -176,13 +173,13 @@ export default function InstallerMetrics() {
                     <p className="text-2xl font-bold text-green-400">{data.successRate}%</p>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-neon-border bg-kiosk-surface/80">
-              <CardContent className="p-4">
+              <div className="mt-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center" aria-hidden="true">
                     <Clock className="w-5 h-5 text-amber-400" />
                   </div>
                   <div>
@@ -190,13 +187,13 @@ export default function InstallerMetrics() {
                     <p className="text-2xl font-bold text-kiosk-text">{data.avgTimeMinutes} min</p>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             <Card className="card-neon-border bg-kiosk-surface/80">
-              <CardContent className="p-4">
+              <div className="mt-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center" aria-hidden="true">
                     <TrendingUp className="w-5 h-5 text-purple-400" />
                   </div>
                   <div>
@@ -204,7 +201,7 @@ export default function InstallerMetrics() {
                     <p className="text-2xl font-bold text-purple-400">+{data.weeklyGrowth}%</p>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
 
@@ -217,13 +214,12 @@ export default function InstallerMetrics() {
               transition={{ delay: 0.2 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-base flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <BarChart3 className="w-4 h-4 icon-neon-blue" />
                     Instalações por Dia
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={data.installsByDay}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -240,7 +236,7 @@ export default function InstallerMetrics() {
                       <Bar dataKey="failed" stackId="a" fill="hsl(0, 80%, 50%)" name="Falha" />
                     </BarChart>
                   </ResponsiveContainer>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
 
@@ -251,13 +247,12 @@ export default function InstallerMetrics() {
               transition={{ delay: 0.25 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-base flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Clock className="w-4 h-4 icon-neon-blue" />
                     Tempo Médio de Instalação
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <ResponsiveContainer width="100%" height={250}>
                     <AreaChart data={data.installTimeHistory}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -280,7 +275,7 @@ export default function InstallerMetrics() {
                       />
                     </AreaChart>
                   </ResponsiveContainer>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
           </div>
@@ -294,13 +289,12 @@ export default function InstallerMetrics() {
               transition={{ delay: 0.3 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-base flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <HardDrive className="w-4 h-4 icon-neon-blue" />
                     Por Distribuição
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
@@ -337,7 +331,7 @@ export default function InstallerMetrics() {
                       </Badge>
                     ))}
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
 
@@ -348,13 +342,12 @@ export default function InstallerMetrics() {
               transition={{ delay: 0.35 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-base flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Database className="w-4 h-4 icon-neon-blue" />
                     Por Banco de Dados
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
                       <Pie
@@ -391,7 +384,7 @@ export default function InstallerMetrics() {
                       </Badge>
                     ))}
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
 
@@ -402,13 +395,12 @@ export default function InstallerMetrics() {
               transition={{ delay: 0.4 }}
             >
               <Card className="card-neon-border bg-kiosk-surface/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-gold-neon text-base flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <XCircle className="w-4 h-4 icon-neon-blue" />
                     Tipos de Erros
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                
+                <div className="mt-4">
                   <div className="space-y-3">
                     {data.errorTypes.map((error) => (
                       <div key={error.name} className="space-y-1">
@@ -427,7 +419,7 @@ export default function InstallerMetrics() {
                       </div>
                     ))}
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
           </div>
@@ -439,13 +431,13 @@ export default function InstallerMetrics() {
             transition={{ delay: 0.5 }}
           >
             <Card className="bg-kiosk-surface/50 border-cyan-500/20">
-              <CardContent className="p-4">
+              <div className="mt-4">
                 <p className="text-sm text-kiosk-text/70 text-center">
                   📊 Dados coletados anonimamente pelo módulo analytics.py do instalador. 
                   Nenhuma informação pessoal é armazenada. 
                   Ative com <code className="text-cyan-400">--analytics</code> durante a instalação.
                 </p>
-              </CardContent>
+              </div>
             </Card>
           </motion.div>
         </div>

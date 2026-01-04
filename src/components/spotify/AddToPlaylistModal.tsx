@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { X, Search, Loader2, Check, Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SpotifyTrack, SpotifyPlaylist } from '@/lib/api/spotify';
 import { useSpotifyPlaylists } from '@/hooks';
+import { Button, Input } from "@/components/ui/themed"
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -66,7 +65,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                   onClick={handleClose}
                   className="text-kiosk-text/85 hover:text-kiosk-text"
                 >
-                  <X className="w-5 h-5" />
+                  <X aria-hidden="true" className="w-5 h-5" />
                 </button>
               </div>
 
@@ -79,7 +78,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                     className="w-12 h-12 rounded"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded bg-kiosk-surface flex items-center justify-center">
+                  <div className="w-12 h-12 rounded bg-kiosk-surface flex items-center justify-center" aria-hidden="true">
                     <Music className="w-6 h-6 text-kiosk-text/90" />
                   </div>
                 )}
@@ -93,7 +92,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
             {/* Search */}
             <div className="p-4 border-b border-kiosk-border">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
+                <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -133,7 +132,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                           className="w-10 h-10 rounded"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center">
+                        <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center" aria-hidden="true">
                           <Music className="w-5 h-5 text-kiosk-text/90" />
                         </div>
                       )}
@@ -142,7 +141,7 @@ export function AddToPlaylistModal({ isOpen, onClose, track, onAdd, isAdding }: 
                         <p className="text-xs text-kiosk-text/90">{playlist.tracksTotal} faixas</p>
                       </div>
                       {selectedId === playlist.id && (
-                        <Check className="w-5 h-5 text-[#1DB954]" />
+                        <Check aria-hidden="true" className="w-5 h-5 text-[#1DB954]" />
                       )}
                     </button>
                   ))}

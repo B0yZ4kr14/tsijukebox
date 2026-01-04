@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant User as 👤 Usuário
+    participant TSI as TSiJukebox<br/>(Frontend)
+    participant Supa as Supabase<br/>(Backend)
+    participant Spot as Spotify<br/>(Authorization Server)
+    participant SpotAPI as Spotify API<br/>(Resource Server)
+
+    Note over User,SpotAPI: Fluxo de Autorização OAuth 2.0 - Authorization Code Grant
+
+    User->>TSI: 1. Clica em "Conectar Spotify"
+    TSI->>TSI: 2. Gera state (CSRF token)
+    TSI->>TSI: 3. Armazena state no localStorage
+    
+    TSI->>Spot: 4. Redireciona para /authorize<br/>?client_id=xxx<br/>&response_type=code<br/>&redirect_uri=xxx<br/>&scope=user-read-playback-state...<br/>&state=xxx
+    
+    Spot->>User: 5. Exibe tela de consentimento<br/>"TSiJukebox quer acessar:"<br/>- Controlar reprodução<br/>- Ler biblioteca<br/>- Modificar playlists
+    
+    User->>Spot: 6. Autoriza permissões
+    
+    Spot->>TSI: 7. Redireciona para callback<br/>?code=AUTH_CODE<br/>&state=xxx
+    
+    TSI->>TSI: 8. Valida state (CSRF protection)
+    
+    TSI->>Supa: 9. POST /api/spotify/callback<br/>{code: AUTH_CODE}
+    
+    Supa->>Spot: 10. POST /api/token<br/>grant_type=authorization_code<br/>code=AUTH_CODE<br/>redirect_uri=xxx<br/>client_id=xxx<br/>client_secret=xxx
+    
+    Spot->>Supa: 11. Retorna tokens<br/>{<br/>  access_token: "BQD...",<br/>  token_type: "Bearer",<br/>  expires_in: 3600,<br/>  refresh_token: "AQD...",<br/>  scope: "user-read-playback-state..."<br/>}
+    
+    Supa->>Supa: 12. Armazena tokens<br/>criptografados no DB<br/>(tabela: spotify_tokens)
+    
+    Supa->>TSI: 13. Retorna sucesso<br/>{status: "connected"}
+    
+    TSI->>User: 14. Exibe confirmação<br/>"✅ Spotify conectado!"
+    
+    Note over User,SpotAPI: Uso da API com Access Token
+
+    User->>TSI: 15. Solicita playlists
+    TSI->>Supa: 16. GET /api/spotify/playlists
+    Supa->>Supa: 17. Recupera access_token do DB
+    Supa->>SpotAPI: 18. GET /v1/me/playlists<br/>Authorization: Bearer BQD...
+    SpotAPI->>Supa: 19. Retorna playlists JSON
+    Supa->>TSI: 20. Retorna playlists
+    TSI->>User: 21. Exibe playlists na UI
+
+    Note over User,SpotAPI: Renovação Automática de Token (quando expira)
+
+    User->>TSI: 22. Tenta reproduzir música
+    TSI->>Supa: 23. POST /api/spotify/play
+    Supa->>SpotAPI: 24. POST /v1/me/player/play<br/>Authorization: Bearer BQD...
+    SpotAPI->>Supa: 25. ❌ 401 Unauthorized<br/>(token expirado)
+    
+    Supa->>Spot: 26. POST /api/token<br/>grant_type=refresh_token<br/>refresh_token=AQD...<br/>client_id=xxx<br/>client_secret=xxx
+    
+    Spot->>Supa: 27. Retorna novo access_token<br/>{<br/>  access_token: "BQE...",<br/>  expires_in: 3600<br/>}
+    
+    Supa->>Supa: 28. Atualiza token no DB
+    
+    Supa->>SpotAPI: 29. POST /v1/me/player/play<br/>Authorization: Bearer BQE...<br/>(retry com novo token)
+    
+    SpotAPI->>Supa: 30. ✅ 204 No Content
+    Supa->>TSI: 31. Retorna sucesso
+    TSI->>User: 32. ▶️ Música tocando
+
+    rect rgb(29, 185, 84, 0.1)
+        Note over Spot,SpotAPI: Spotify Green Zone
+    end

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useJam } from '@/contexts/JamContext';
 import { useJamReactions, REACTION_EMOJIS, ReactionEmoji } from '@/hooks/jam/useJamReactions';

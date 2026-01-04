@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Cpu, FileCode, Shield, FileText, Settings2, Play, Check, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SettingsSection } from './SettingsSection';
 import { useClaudeOpusRefactor, type RefactorAction, type TargetDistro } from '@/hooks/system/useClaudeOpusRefactor';
+import { Badge, Button } from "@/components/ui/themed"
 
 const ACTION_OPTIONS: { value: RefactorAction; label: string; icon: React.ReactNode }[] = [
   { value: 'refactor-python', label: 'Refatorar Python', icon: <FileCode className="w-4 h-4" /> },
@@ -146,7 +145,7 @@ export function FullstackRefactorPanel() {
             <AccordionItem value="result" className="border-kiosk-border">
               <AccordionTrigger className="text-kiosk-text hover:no-underline">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-500" />
+                  <Check aria-hidden="true" className="w-4 h-4 text-green-500" />
                   Resultado da Refatoração
                 </div>
               </AccordionTrigger>

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Check, Eye, Download, Palette, User } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { Badge, Button, Card } from "@/components/ui/themed"
 
 export interface SpicetifyThemeColors {
   main?: string;
@@ -72,18 +70,18 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
         `}
       >
         {/* Mock Spotify Player */}
-        <div className="aspect-video relative overflow-hidden rounded-t-lg">
-          <div className="absolute inset-0 flex">
+        <div className="aspect-video relative overflow-hidden rounded-t-lg" role="presentation">
+          <div className="absolute inset-0 flex" role="presentation">
             {/* Sidebar mock */}
             <div 
               className="w-1/4 h-full p-2 flex flex-col gap-2"
               style={{ backgroundColor: colors.sidebar }}
             >
-              <div className="w-6 h-6 rounded bg-white/10" />
+              <div className="w-6 h-6 rounded bg-white/10" aria-hidden="true" />
               <div className="space-y-1.5 mt-2">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded bg-white/20" />
+                    <div className="w-3 h-3 rounded bg-white/20" aria-hidden="true" />
                     <div className="flex-1 h-2 rounded bg-white/15" />
                   </div>
                 ))}
@@ -108,24 +106,24 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
                 className="h-14 flex items-center px-3 gap-3"
                 style={{ backgroundColor: colors.player }}
               >
-                <div className="w-10 h-10 rounded bg-white/20 flex-shrink-0" />
+                <div className="w-10 h-10 rounded bg-white/20 flex-shrink-0" aria-hidden="true" />
                 <div className="flex-1 space-y-1">
-                  <div className="w-20 h-2 rounded" style={{ backgroundColor: colors.text + '40' }} />
-                  <div className="w-14 h-1.5 rounded" style={{ backgroundColor: colors.text + '20' }} />
+                  <div className="w-20 h-2 rounded" style={{ backgroundColor: colors.text + '40' }} aria-hidden="true" />
+                  <div className="w-14 h-1.5 rounded" style={{ backgroundColor: colors.text + '20' }} aria-hidden="true" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} />
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} aria-hidden="true" />
                   <div 
                     className="w-5 h-5 rounded-full flex items-center justify-center"
                     style={{ backgroundColor: colors.accent }}
                   >
                     <div className="w-0 h-0 border-l-[6px] border-l-white border-y-[4px] border-y-transparent ml-0.5" />
                   </div>
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} />
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.text + '30' }} aria-hidden="true" />
                 </div>
                 <div className="w-24 space-y-0.5">
-                  <div className="h-1 rounded-full bg-white/20 overflow-hidden">
-                    <div className="h-full w-1/3 rounded-full" style={{ backgroundColor: colors.accent }} />
+                  <div className="h-1 rounded-full bg-white/20 overflow-hidden" aria-hidden="true">
+                    <div className="h-full w-1/3 rounded-full" style={{ backgroundColor: colors.accent }} aria-hidden="true" />
                   </div>
                 </div>
               </div>
@@ -144,7 +142,7 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
               Preview
             </Button>
             <Button size="sm" onClick={(e) => { e.stopPropagation(); handleApply(); }} disabled={isApplying || isActive} className="gap-1">
-              <Download className="w-4 h-4" />
+              <Download aria-hidden="true" className="w-4 h-4" />
               {isActive ? 'Ativo' : 'Aplicar'}
             </Button>
           </motion.div>
@@ -153,7 +151,7 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
           {isActive && (
             <div className="absolute top-2 right-2">
               <Badge className="bg-primary text-primary-foreground gap-1">
-                <Check className="w-3 h-3" />
+                <Check aria-hidden="true" className="w-3 h-3" />
                 Ativo
               </Badge>
             </div>
@@ -161,7 +159,7 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
         </div>
         
         {/* Theme Info */}
-        <CardContent className="p-3">
+        <div className="mt-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
@@ -169,7 +167,7 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
                 <h3 className="font-semibold text-sm truncate">{theme.name}</h3>
               </div>
               <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-                <User className="w-3 h-3" />
+                <User aria-hidden="true" className="w-3 h-3" />
                 <span className="truncate">{theme.author}</span>
               </div>
             </div>
@@ -191,7 +189,7 @@ export function ThemePreviewCard({ theme, isActive, onApply, onPreview }: ThemeP
               />
             ))}
           </div>
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

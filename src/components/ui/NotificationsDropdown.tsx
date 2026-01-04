@@ -13,16 +13,15 @@ import {
   X,
   ExternalLink,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { useNotifications, Notification } from '@/hooks/common/useNotifications';
 import { NotificationFiltersPopover } from './NotificationFiltersPopover';
+import { Badge, Button } from "@/components/ui/themed"
 
 function NotificationIcon({ severity }: { severity: string }) {
   switch (severity) {
@@ -61,7 +60,7 @@ function NotificationItem({
       data-testid={`notification-item-${notification.id}`}
     >
       <div className="flex items-start gap-2">
-        <NotificationIcon severity={notification.severity} />
+        <NotificationIcon aria-hidden="true" severity={notification.severity} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <p className={`text-sm font-medium truncate ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
@@ -87,33 +86,31 @@ function NotificationItem({
           {!notification.read && (
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               className="h-6 w-6"
               onClick={() => onMarkAsRead(notification.id)}
-              data-testid={`mark-read-${notification.id}`}
-            >
-              <Check className="h-3 w-3" />
+              data-testid={`mark-read-${notification.id}`} aria-label="Confirmar">
+              <Check aria-hidden="true" className="h-3 w-3" />
             </Button>
           )}
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="h-6 w-6 text-muted-foreground hover:text-destructive"
             onClick={() => onDelete(notification.id)}
-            data-testid={`delete-notification-${notification.id}`}
-          >
-            <X className="h-3 w-3" />
+            data-testid={`delete-notification-${notification.id}`} aria-label="Fechar">
+            <X aria-hidden="true" className="h-3 w-3" />
           </Button>
         </div>
       </div>
       {notification.metadata?.taskUrl && notification.metadata.taskUrl !== '#' && (
         <Button
-          variant="link"
+          variant="ghost"
           size="sm"
           className="h-auto p-0 mt-1 text-xs"
           onClick={() => window.open(notification.metadata?.taskUrl as string, '_blank')}
         >
-          <ExternalLink className="h-3 w-3 mr-1" />
+          <ExternalLink aria-hidden="true" className="h-3 w-3 mr-1" />
           Ver tarefa
         </Button>
       )}
@@ -142,11 +139,10 @@ export function NotificationsDropdown() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="relative"
-          data-testid="notifications-button"
-        >
-          <Bell className="h-5 w-5" />
+          data-testid="notifications-button" aria-label="Notificações">
+          <Bell aria-hidden="true" className="h-5 w-5" />
           {unreadCount > 0 && (
             <motion.span
               initial={{ scale: 0 }}
@@ -226,7 +222,7 @@ export function NotificationsDropdown() {
             </div>
           ) : filteredNotifications.length === 0 ? (
             <div className="p-8 text-center">
-              <Bell className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
+              <Bell aria-hidden="true" className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
               <p className="text-sm text-muted-foreground">
                 {activeFiltersCount > 0
                   ? 'Nenhuma notificação encontrada com os filtros aplicados'

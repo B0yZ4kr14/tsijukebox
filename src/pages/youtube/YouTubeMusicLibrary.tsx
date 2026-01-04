@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Clock, Disc, Music, RefreshCw } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { YouTubeMusicTrackItem, YouTubeMusicAlbumCard, YouTubeMusicPlaylistCard, AddToPlaylistModal } from '@/components/youtube';
@@ -68,10 +68,9 @@ export default function YouTubeMusicLibrary() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={() => navigate('/youtube-music')}
-              className="w-10 h-10 rounded-full"
-            >
+              className="w-10 h-10 rounded-full" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
@@ -82,11 +81,10 @@ export default function YouTubeMusicLibrary() {
 
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             onClick={fetchAll}
             disabled={isLoading}
-            className="w-10 h-10"
-          >
+            className="w-10 h-10" aria-label="Atualizar">
             <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
         </motion.header>
@@ -119,7 +117,7 @@ export default function YouTubeMusicLibrary() {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center" aria-hidden="true">
                     <Heart className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -136,7 +134,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                 ) : likedSongs.length === 0 ? (
                   <div className="text-center py-12 text-kiosk-text/85">
-                    <Heart className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                    <Heart aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma música curtida</p>
                   </div>
                 ) : (
@@ -164,7 +162,7 @@ export default function YouTubeMusicLibrary() {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center" aria-hidden="true">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -181,7 +179,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                 ) : recentlyPlayed.length === 0 ? (
                   <div className="text-center py-12 text-kiosk-text/85">
-                    <Clock className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                    <Clock aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma música tocada recentemente</p>
                   </div>
                 ) : (
@@ -219,7 +217,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                 ) : albums.length === 0 ? (
                   <div className="text-center py-12 text-kiosk-text/85">
-                    <Disc className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                    <Disc aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhum álbum salvo</p>
                   </div>
                 ) : (
@@ -254,7 +252,7 @@ export default function YouTubeMusicLibrary() {
                   </div>
                 ) : playlists.length === 0 ? (
                   <div className="text-center py-12 text-kiosk-text/85">
-                    <Music className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                    <Music aria-hidden="true" className="w-16 h-16 mx-auto mb-4 opacity-30" />
                     <p>Nenhuma playlist encontrada</p>
                   </div>
                 ) : (

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Code } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { Skeleton } from '@/components/ui/skeleton';
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -42,13 +42,12 @@ export function LanguagesChart({ languages, isLoading }: LanguagesChartProps) {
       transition={{ delay: 0.2 }}
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm h-full">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Code className="h-5 w-5 text-primary" />
             Linguagens
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           {isLoading ? (
             <div className="h-[250px] flex items-center justify-center">
               <Skeleton className="h-40 w-40 rounded-full" />
@@ -84,7 +83,7 @@ export function LanguagesChart({ languages, isLoading }: LanguagesChartProps) {
           ) : (
             <p className="text-muted-foreground text-center py-10">Sem dados de linguagens</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

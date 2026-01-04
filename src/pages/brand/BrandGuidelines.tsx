@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Palette, Type, Shield, Download, Info, Music, Play, RotateCcw, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -58,7 +55,7 @@ function ColorSwatch({ color, showCopy = true }: { color: typeof neonColors[0] |
         className="h-20 w-full" 
         style={{ backgroundColor: `hsl(${color.hsl})` }}
       />
-      <CardContent className="p-3 space-y-2">
+      <div className="mt-4">
         <h4 className="font-semibold text-kiosk-text">{color.name}</h4>
         {'usage' in color && (
           <p className="text-xs text-kiosk-text/60">{color.usage}</p>
@@ -94,7 +91,7 @@ function ColorSwatch({ color, showCopy = true }: { color: typeof neonColors[0] |
             </button>
           </div>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -175,7 +172,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
       {/* Header */}
       <header className="border-b border-kiosk-border/30 bg-kiosk-surface/30 backdrop-blur sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="xs" asChild aria-label="Copiar link">
             <Link to="/help">
               <ArrowLeft className="w-5 h-5 icon-neon-blue" />
             </Link>
@@ -228,58 +225,55 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
           <TabsContent value="colors" className="space-y-8">
             {/* Neon Colors */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Palette className="w-5 h-5 icon-neon-blue" />
                   Paleta Neon
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Cores vibrantes para acentos, ícones e elementos interativos
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                   {neonColors.map((color) => (
                     <ColorSwatch key={color.name} color={color} />
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Base Colors */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Palette className="w-5 h-5 icon-neon-blue" />
                   Cores Base (Dark Theme)
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Cores fundamentais do tema escuro do TSiJUKEBOX
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                   {baseColors.map((color) => (
                     <ColorSwatch key={color.name} color={color} />
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
 
           {/* Typography Tab */}
           <TabsContent value="typography" className="space-y-8">
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Type className="w-5 h-5 icon-neon-blue" />
                   Classes de Texto
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Classes CSS para tipografia com efeitos neon
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </p>
+              
+              <div className="mt-4">
                 {typographyClasses.map((item) => (
                   <div 
                     key={item.class} 
@@ -294,15 +288,14 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     </div>
                   </div>
                 ))}
-              </CardContent>
+              </div>
             </Card>
 
             {/* Font Weights */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon">Pesos de Fonte</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Pesos de Fonte</h3>
+              
+              <div className="mt-4">
                 <div className="flex items-center justify-between p-3 bg-kiosk-bg/30 rounded">
                   <span className="text-kiosk-text/70">Regular (400)</span>
                   <span className="font-normal text-kiosk-text text-lg">TSiJUKEBOX</span>
@@ -319,21 +312,20 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <span className="text-kiosk-text/70">Bold (700)</span>
                   <span className="font-bold text-kiosk-text text-lg">TSiJUKEBOX</span>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* BrandText Component */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Type className="w-5 h-5 icon-neon-blue" />
                   Componente BrandText
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Componente React para renderizar "TSiJUKEBOX" com cores da logo e shimmer metálico
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+                </p>
+              
+              <div className="mt-4">
                 {/* Tamanhos */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-kiosk-text/70">Tamanhos Disponíveis</h4>
@@ -380,7 +372,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     </div>
                     <p className="text-sm text-kiosk-text/60 mt-1">Player de música</p>
                     <code className="text-xs text-cyan-400 mt-2 block">
-                      {`<CardTitle><BrandText size="md" /></CardTitle>`}
+                      {`<h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2"><BrandText size="md" /></h3>`}
                     </code>
                   </div>
                 </div>
@@ -416,21 +408,20 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-kiosk-text/70 mt-2">{`// Sem shimmer (acessibilidade)`}</p>
                   <p className="text-green-400">{`<BrandText noShimmer />`}</p>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* BrandTagline Component */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Type className="w-5 h-5 icon-neon-blue" />
                   Componente BrandTagline
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Tagline estilizada para uso junto com BrandText em headers e footers
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+                </p>
+              
+              <div className="mt-4">
                 {/* Variantes de Tagline */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-kiosk-text/70">Variantes</h4>
@@ -481,7 +472,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-kiosk-text/70 mt-2">{`// Combo BrandText + Tagline`}</p>
                   <p className="text-green-400">{`<BrandWithTagline brandSize="xl" taglineVariant="subtle" />`}</p>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
 
@@ -489,15 +480,14 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
           <TabsContent value="animations" className="space-y-8">
             {/* BrandLogo Animations */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-gold-neon flex items-center gap-2">
+              <div>
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Play className="w-5 h-5 icon-neon-blue" />
                     Animações do BrandLogo
-                  </CardTitle>
-                  <CardDescription className="text-kiosk-text/60">
+                  </h3>
+                  <p className="text-sm text-[var(--text-muted)]">
                     Animações de entrada para splash screens e loading states
-                  </CardDescription>
+                  </p>
                 </div>
                 <Button
                   variant="outline"
@@ -508,8 +498,8 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <RotateCcw className="w-4 h-4" />
                   Replay
                 </Button>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              
+              <div className="mt-4">
                 {/* Animation Types Demo */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-kiosk-text/70">Tipos de Animação</h4>
@@ -544,21 +534,20 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     />
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* SplashScreen Component Demo */}
             <Card className="bg-kiosk-surface/30 border-purple-500/30">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Sparkles className="w-5 h-5 text-purple-400" />
                   Componente SplashScreen
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Tela de splash completa com progress bar e transição
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+                </p>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {(['default', 'minimal', 'cyberpunk', 'elegant'] as SplashVariant[]).map((variant) => (
                     <Dialog key={variant}>
@@ -592,20 +581,19 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-kiosk-text/70 mt-2">{`// SplashScreen cyberpunk com glitch`}</p>
                   <p className="text-green-400">{`<SplashScreen variant="cyberpunk" logoAnimation="glitch" />`}</p>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* BrandWithTagline Animations */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-gold-neon flex items-center gap-2">
+              <div>
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Type className="w-5 h-5 icon-neon-blue" />
                     Animações do BrandWithTagline
-                  </CardTitle>
-                  <CardDescription className="text-kiosk-text/60">
+                  </h3>
+                  <p className="text-sm text-[var(--text-muted)]">
                     Versão texto com animações para headers e loading states
-                  </CardDescription>
+                  </p>
                 </div>
                 <Button
                   variant="outline"
@@ -616,8 +604,8 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <RotateCcw className="w-4 h-4" />
                   Replay
                 </Button>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                   {(['fade', 'slide-up', 'slide-down', 'scale', 'cascade'] as BrandAnimationType[]).map((anim) => (
                     <div key={anim} className="p-6 bg-kiosk-bg/50 rounded-lg text-center min-h-[100px] flex flex-col items-center justify-center">
@@ -632,17 +620,17 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Code Examples */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon">Exemplos de Código</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Exemplos de Código</h3>
+              
+              <div className="mt-4">
                 <div className="p-4 bg-kiosk-bg/80 rounded-lg font-mono text-sm space-y-2">
                   <p className="text-cyan-400">{`import { BrandLogo, BrandWithTagline, SplashScreen } from '@/components/ui';`}</p>
+import { Badge, Button, Card } from "@/components/ui/themed"
                   <Separator className="bg-kiosk-border/30 my-3" />
                   <p className="text-kiosk-text/70">{`// Splash Screen com animação elegante`}</p>
                   <p className="text-green-400">{`<BrandLogo size="xl" variant="metal" animate="splash" />`}</p>
@@ -653,7 +641,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-kiosk-text/70 mt-2">{`// Header com cascade`}</p>
                   <p className="text-green-400">{`<BrandLogo animate="cascade" animationDelay={0.2} />`}</p>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
 
@@ -661,13 +649,12 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
           <TabsContent value="logo-usage" className="space-y-8">
             {/* Logo Variations */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Shield className="w-5 h-5 icon-neon-blue" />
                   Variações da Logo
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              
+              <div className="mt-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                   {(['default', 'metal', 'silver', 'mirror', 'hologram'] as const).map((variant) => (
                     <div key={variant} className="text-center space-y-3">
@@ -680,21 +667,20 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Hologram Variant Highlight */}
             <Card className="bg-kiosk-surface/30 border-purple-500/30">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Sparkles className="w-5 h-5 text-purple-400" />
                   Variante Hologram
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Efeito 3D futurista com flutuação, reflexos e hue shift
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+                </p>
+              
+              <div className="mt-4">
                 <div className="p-12 bg-gradient-to-b from-kiosk-bg via-purple-950/20 to-kiosk-bg rounded-lg flex items-center justify-center">
                   <LogoBrand size="xl" variant="hologram" showTagline animate />
                 </div>
@@ -726,20 +712,19 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                   <p className="text-kiosk-text/70 mt-2">{`// Hologram em header`}</p>
                   <p className="text-purple-400">{`<LogoBrand variant="hologram" size="md" animate />`}</p>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Usage Rules */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Do's */}
               <Card className="bg-kiosk-surface/30 border-green-500/30">
-                <CardHeader>
-                  <CardTitle className="text-green-400 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Check className="w-5 h-5" />
                     Uso Correto
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
+                  </h3>
+                
+                <div className="mt-4">
                   <div className="flex items-start gap-3 p-3 bg-kiosk-bg/30 rounded">
                     <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                     <span className="text-kiosk-text/80 text-sm">Usar sobre fundos escuros (#1a1a2e ou similar)</span>
@@ -756,18 +741,17 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                     <span className="text-kiosk-text/80 text-sm">Tamanho mínimo: 40px de altura</span>
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               {/* Don'ts */}
               <Card className="bg-kiosk-surface/30 border-red-500/30">
-                <CardHeader>
-                  <CardTitle className="text-red-400 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                     <Info className="w-5 h-5" />
                     Uso Incorreto
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
+                  </h3>
+                
+                <div className="mt-4">
                   <div className="flex items-start gap-3 p-3 bg-kiosk-bg/30 rounded">
                     <span className="text-red-400 font-bold shrink-0">✕</span>
                     <span className="text-kiosk-text/80 text-sm">Não usar sobre fundos brancos ou claros</span>
@@ -784,16 +768,15 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     <span className="text-red-400 font-bold shrink-0">✕</span>
                     <span className="text-kiosk-text/80 text-sm">Não alterar as cores da paleta neon</span>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </div>
 
             {/* Minimum Sizes */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon">Tamanhos Recomendados</CardTitle>
-              </CardHeader>
-              <CardContent>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Tamanhos Recomendados</h3>
+              
+              <div className="mt-4">
                 <div className="flex flex-wrap items-end gap-8 justify-center py-4">
                   <div className="text-center">
                     <LogoBrand size="sm" centered />
@@ -808,7 +791,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     <p className="mt-2 text-xs text-kiosk-text/60">Large (LG)</p>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
 
@@ -818,16 +801,15 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
             
             {/* Export Palette */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
                   <Palette className="w-5 h-5 icon-neon-blue" />
                   Exportar Paleta de Cores
-                </CardTitle>
-                <CardDescription className="text-kiosk-text/60">
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">
                   Baixe a paleta completa para usar em seus projetos
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid md:grid-cols-2 gap-4">
+                </p>
+              
+              <div className="mt-4">
                 <Button 
                   variant="outline" 
                   className="w-full justify-start gap-3 h-auto py-4"
@@ -850,15 +832,14 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     <div className="text-xs text-kiosk-text/60">Variáveis CSS prontas para usar</div>
                   </div>
                 </Button>
-              </CardContent>
+              </div>
             </Card>
             
             {/* Additional Resources */}
             <Card className="bg-kiosk-surface/30 border-cyan-500/20">
-              <CardHeader>
-                <CardTitle className="text-gold-neon">Recursos Adicionais</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Recursos Adicionais</h3>
+              
+              <div className="mt-4">
                 <Button variant="outline" className="w-full justify-start gap-3" asChild>
                   <Link to="/help">
                     <Info className="w-4 h-4 icon-neon-blue" />
@@ -871,7 +852,7 @@ ${baseColors.map(c => `  ${c.cssVar}: ${c.hsl};`).join('\n')}
                     Documentação Wiki
                   </Link>
                 </Button>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>

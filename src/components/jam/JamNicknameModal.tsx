@@ -7,10 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { User, Loader2, Users } from 'lucide-react';
+import { Button, Input } from "@/components/ui/themed"
 
 interface JamNicknameModalProps {
   open: boolean;
@@ -42,7 +41,7 @@ export function JamNicknameModal({
       <DialogContent className="sm:max-w-md bg-card/95 backdrop-blur-xl border-border/50">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-zinc-300 to-zinc-500 text-zinc-900">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-zinc-300 to-zinc-500 text-zinc-300">
               <Users className="w-5 h-5" />
             </div>
             <span>Entrar na Sessão JAM</span>
@@ -64,7 +63,7 @@ export function JamNicknameModal({
           {/* Nickname Input */}
           <div className="space-y-2">
             <Label htmlFor="nickname" className="flex items-center gap-2">
-              <User className="w-4 h-4" />
+              <User aria-hidden="true" className="w-4 h-4" />
               Seu Nome
             </Label>
             <Input
@@ -86,7 +85,7 @@ export function JamNicknameModal({
           <Button
             onClick={handleJoin}
             disabled={!nickname.trim() || isLoading}
-            className="w-full button-jam-silver-neon text-zinc-900 font-bold py-6"
+            className="w-full button-jam-silver-neon text-zinc-300 font-bold py-6"
           >
             {isLoading ? (
               <>

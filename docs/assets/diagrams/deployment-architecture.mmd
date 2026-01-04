@@ -1,0 +1,57 @@
+graph TB
+    subgraph "Edge"
+        E1[Cloudflare CDN]
+        E2[DDoS Protection]
+        E3[SSL/TLS]
+    end
+
+    subgraph "Load Balancer"
+        LB[Nginx]
+    end
+
+    subgraph "Application Servers"
+        AS1[Node.js Instance 1]
+        AS2[Node.js Instance 2]
+        AS3[Node.js Instance 3]
+    end
+
+    subgraph "Database"
+        DB1[Primary PostgreSQL]
+        DB2[Read Replica 1]
+        DB3[Read Replica 2]
+    end
+
+    subgraph "Cache"
+        C1[Redis Cluster]
+    end
+
+    subgraph "Storage"
+        ST1[Supabase Storage]
+        ST2[S3 Bucket]
+    end
+
+    E1 --> E2
+    E2 --> E3
+    E3 --> LB
+
+    LB --> AS1
+    LB --> AS2
+    LB --> AS3
+
+    AS1 --> DB1
+    AS2 --> DB2
+    AS3 --> DB3
+
+    AS1 --> C1
+    AS2 --> C1
+    AS3 --> C1
+
+    AS1 --> ST1
+    AS2 --> ST1
+    AS3 --> ST1
+
+    ST1 --> ST2
+
+    style E1 fill:#ffd400,stroke:#cc9900,stroke-width:2px,color:#000
+    style LB fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000
+    style DB1 fill:#d400ff,stroke:#9900cc,stroke-width:2px,color:#fff

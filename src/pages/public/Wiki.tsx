@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Book, FileText, Printer, Star, Trash2, Search, Download, Code, HelpCircle, Music, Keyboard, Palette, Plug, Shield, Terminal, WifiOff, CloudOff, FileCode } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { Home } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LogoBrand } from '@/components/ui/LogoBrand';
@@ -19,6 +17,7 @@ import { useWikiOffline } from '@/hooks/common/useWikiOffline';
 import { downloadMarkdown, downloadHTML, printDocument } from '@/lib/documentExporter';
 import { toast } from 'sonner';
 import { formatBrandName } from '@/lib/utils';
+import { Badge, Button } from "@/components/ui/themed"
 
 export default function Wiki() {
   const { navigate } = useBackNavigation();
@@ -119,7 +118,7 @@ export default function Wiki() {
               {/* Offline Status Badges */}
               <div className="flex items-center gap-2">
                 {isOffline && (
-                  <Badge variant="destructive" className="flex items-center gap-1">
+                  <Badge variant="danger" className="flex items-center gap-1">
                     <WifiOff className="w-3 h-3" />
                     Offline
                   </Badge>
@@ -477,7 +476,7 @@ function WelcomeScreen({
               className="p-6 rounded-xl bg-kiosk-surface/50 border border-border hover:border-primary/30 transition-all text-left group"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center" aria-hidden="true">
                   {getCategoryIcon(category.id)}
                 </div>
                 <div>

@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Plus, X, Play, Pause, SkipForward, Shuffle, Repeat, Volume2, VolumeX, Search, Settings } from 'lucide-react';
 import type { CustomVoiceCommand } from '@/hooks/player/useVoiceControl';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface AddCustomCommandModalProps {
   isOpen: boolean;
@@ -117,10 +115,9 @@ export function AddCustomCommandModal({ isOpen, onClose, onAdd }: AddCustomComma
                 type="button" 
                 onClick={handleAddPattern}
                 variant="outline"
-                size="icon"
-                className="border-kiosk-border"
-              >
-                <Plus className="h-4 w-4" />
+                size="xs"
+                className="border-kiosk-border" aria-label="Adicionar">
+                <Plus aria-hidden="true" className="h-4 w-4" />
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">

@@ -161,7 +161,7 @@ export function YouTubeMusicPlaylistCard({ playlist, onClick, onPlay, className,
 
         {/* Privacy badge */}
         {privacyIcon && (
-          <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center">
+          <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center" aria-hidden="true">
             {privacyIcon === Lock ? (
               <Lock className="w-3 h-3 text-white" />
             ) : (

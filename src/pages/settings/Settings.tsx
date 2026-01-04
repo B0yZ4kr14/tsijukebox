@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Monitor, TestTube, Music, ExternalLink, LogOut, Check, AlertCircle, Eye, EyeOff, Download, Sparkles } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LogoBrand } from '@/components/ui/LogoBrand';
 import { LogoDownload } from '@/components/ui/LogoDownload';
@@ -40,14 +36,17 @@ import {
   FullstackRefactorPanel,
   ScriptRefactorSection,
   ManusAutomationSection,
-  SpotifySetupWizard
+  SpotifySetupWizard,
+  AIConfigSection
 } from '@/components/settings';
 import { VolumeNormalizationSection } from '@/components/settings/VolumeNormalizationSection';
 import { VoiceControlSection } from '@/components/settings/VoiceControlSection';
 import { BackupManager } from '@/components/settings/backup';
 import { SettingsSidebar } from '@/components/settings/SettingsSidebar';
+import { SectionIconsShowcase } from '@/components/ui/SectionIconsShowcase';
 import { SettingsDashboard } from '@/components/settings/SettingsDashboard';
 import { SettingsBreadcrumb } from '@/components/settings/SettingsBreadcrumb';
+import { Badge, Button, Input, Toggle } from "@/components/ui/themed"
 
 export default function Settings() {
   const { activeCategory, setActiveCategory, categoryTitles } = useSettingsNavigation();
@@ -214,6 +213,15 @@ export default function Settings() {
                 </div>
                 <LogoDownload compact showPreview={false} />
               </div>
+
+              {/* Section Icons Showcase */}
+              <div className="mt-6 pt-6 border-t border-kiosk-border">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-accent-cyan" />
+                  <Label className="text-kiosk-text">Ícones das Seções</Label>
+                </div>
+                <SectionIconsShowcase variant="grid" />
+              </div>
             </SettingsSection>
           </>
         );
@@ -237,6 +245,7 @@ export default function Settings() {
             <AuthProviderSection />
             <GitHubSyncStatus />
             <CodeScanSection />
+            <AIConfigSection />
             <ScriptRefactorSection />
             <ManusAutomationSection />
           </>
@@ -276,7 +285,7 @@ export default function Settings() {
                           className="w-12 h-12 rounded-full"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-[#1DB954]/20 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-[#1DB954]/20 flex items-center justify-center" aria-hidden="true">
                           <Music className="w-6 h-6 text-[#1DB954]" />
                         </div>
                       )}
@@ -346,10 +355,9 @@ export default function Settings() {
                       <Button
                         type="button"
                         variant="ghost"
-                        size="icon"
+                        size="xs"
                         className="absolute right-0 top-0 h-full px-3 text-nav-neon-white hover:text-kiosk-text"
-                        onClick={() => setShowClientSecret(!showClientSecret)}
-                      >
+                        onClick={() => setShowClientSecret(!showClientSecret)} aria-label="Ocultar">
                         {showClientSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     </div>
@@ -501,9 +509,8 @@ export default function Settings() {
             <Link to="/">
               <Button
                 variant="ghost"
-                size="icon"
-                className="w-10 h-10 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d"
-              >
+                size="xs"
+                className="w-10 h-10 rounded-full bg-kiosk-surface hover:bg-kiosk-surface/80 button-3d" aria-label="Voltar">
                 <ArrowLeft className="w-5 h-5 text-kiosk-text" />
               </Button>
             </Link>

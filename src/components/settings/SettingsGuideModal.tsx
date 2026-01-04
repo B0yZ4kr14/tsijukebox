@@ -1,10 +1,9 @@
 import { LucideIcon, ArrowRight, Lightbulb, CheckCircle2, BookOpen, ImageIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
 import { SettingsIllustration, IllustrationType } from './SettingsIllustration';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface GuideSection {
   name: string;

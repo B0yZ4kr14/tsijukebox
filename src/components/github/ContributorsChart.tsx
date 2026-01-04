@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { Skeleton } from '@/components/ui/skeleton';
 import { GitHubContributor } from '@/hooks/system/useGitHubStats';
 
@@ -24,13 +24,12 @@ export function ContributorsChart({ contributors, isLoading }: ContributorsChart
       transition={{ delay: 0.3 }}
     >
       <Card className="border-border/50 bg-card/80 backdrop-blur-sm h-full">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Users className="h-5 w-5 text-primary" />
             Top Contribuidores
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(5)].map((_, i) => (
@@ -65,7 +64,7 @@ export function ContributorsChart({ contributors, isLoading }: ContributorsChart
           ) : (
             <p className="text-muted-foreground text-center py-10">Sem dados de contribuidores</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </motion.div>
   );

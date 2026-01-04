@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/themed";
 import { Label } from '@/components/ui/label';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';

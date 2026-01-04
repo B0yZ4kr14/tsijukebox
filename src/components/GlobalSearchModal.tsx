@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, BookOpen, HelpCircle, Filter, ChevronRight } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Toggle } from '@/components/ui/toggle';
 import { UnifiedSearchResult } from '@/lib/globalSearch';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -82,7 +80,7 @@ export function GlobalSearchModal({
       <DialogContent className="sm:max-w-[600px] p-0 gap-0 bg-kiosk-bg border-kiosk-border">
         <DialogHeader className="p-4 border-b border-kiosk-border">
           <DialogTitle className="flex items-center gap-2 text-kiosk-text">
-            <Search className="w-5 h-5 icon-neon-blue" />
+            <Search aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
             Busca Global
           </DialogTitle>
         </DialogHeader>
@@ -90,7 +88,7 @@ export function GlobalSearchModal({
         {/* Search Input */}
         <div className="p-4 border-b border-kiosk-border">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/85" />
+            <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/85" />
             <Input
               ref={inputRef}
               value={query}
@@ -101,18 +99,17 @@ export function GlobalSearchModal({
             {query && (
               <Button
                 variant="ghost"
-                size="icon"
+                size="xs"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                onClick={() => setQuery('')}
-              >
-                <X className="w-4 h-4" />
+                onClick={() => setQuery('')} aria-label="Fechar">
+                <X aria-hidden="true" className="w-4 h-4" />
               </Button>
             )}
           </div>
 
           {/* Source Filters */}
           <div className="flex items-center gap-2 mt-3">
-            <Filter className="w-4 h-4 text-kiosk-text/85" />
+            <Filter aria-hidden="true" className="w-4 h-4 text-kiosk-text/85" />
             <Toggle
               pressed={filters.sources.includes('help')}
               onPressedChange={() => toggleSource('help')}
@@ -138,7 +135,7 @@ export function GlobalSearchModal({
         <ScrollArea className="max-h-[400px]">
           {query.length < 2 ? (
             <div className="p-8 text-center text-kiosk-text/85">
-              <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
+              <Search aria-hidden="true" className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Digite pelo menos 2 caracteres para pesquisar</p>
               <p className="text-sm mt-2">
                 <kbd className="px-2 py-1 bg-kiosk-surface rounded text-xs">Ctrl+K</kbd>
@@ -149,7 +146,7 @@ export function GlobalSearchModal({
             </div>
           ) : results.length === 0 ? (
             <div className="p-8 text-center text-kiosk-text/85">
-              <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
+              <Search aria-hidden="true" className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Nenhum resultado encontrado para "{query}"</p>
               <p className="text-sm mt-2">Tente outros termos ou ajuste os filtros</p>
             </div>
@@ -185,7 +182,7 @@ export function GlobalSearchModal({
                           <span className="font-medium text-kiosk-text truncate">
                             {highlightMatch(result.title, query)}
                           </span>
-                          <ChevronRight className="w-4 h-4 text-kiosk-text/85 group-hover:text-primary transition-colors" />
+                          <ChevronRight aria-hidden="true" className="w-4 h-4 text-kiosk-text/85 group-hover:text-primary transition-colors" />
                         </div>
                         <p className="text-sm text-kiosk-text/80 line-clamp-2 mt-1">
                           {highlightMatch(result.description, query)}

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { LineChart, Activity, ExternalLink, Save } from 'lucide-react';
+import { LineChart, Activity, ExternalLink, Save, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { SettingsSection } from './SettingsSection';
 import { useTranslation } from '@/hooks';
 import { toast } from 'sonner';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface SystemUrls {
   dashboardUrl: string;
@@ -17,25 +16,60 @@ const DEFAULT_URLS: SystemUrls = {
   datasourceUrl: 'http://localhost:9090',
 };
 
+/**
+ * SystemUrlsSection Component
+ * 
+ * Gerencia URLs de sistema (Dashboard e Datasource) com validação em tempo real.
+ * Refatorado para usar design tokens do Design System.
+ * 
+ * @component
+ */
 export function SystemUrlsSection() {
   const { t } = useTranslation();
   const [urls, setUrls] = useState<SystemUrls>(DEFAULT_URLS);
   const [hasChanges, setHasChanges] = useState(false);
+  const [validationStatus, setValidationStatus] = useState<{
+    dashboard: boolean;
+    datasource: boolean;
+  }>({
+    dashboard: true,
+    datasource: true,
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem('system_urls');
     if (saved) {
       try {
-        setUrls(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        setUrls(parsed);
+        validateUrls(parsed);
       } catch {
         // Use defaults
       }
     }
   }, []);
 
+  const validateUrls = (urlsToValidate: SystemUrls) => {
+    try {
+      new URL(urlsToValidate.dashboardUrl);
+      setValidationStatus(prev => ({ ...prev, dashboard: true }));
+    } catch {
+      setValidationStatus(prev => ({ ...prev, dashboard: false }));
+    }
+
+    try {
+      new URL(urlsToValidate.datasourceUrl);
+      setValidationStatus(prev => ({ ...prev, datasource: true }));
+    } catch {
+      setValidationStatus(prev => ({ ...prev, datasource: false }));
+    }
+  };
+
   const handleChange = (key: keyof SystemUrls, value: string) => {
-    setUrls(prev => ({ ...prev, [key]: value }));
+    const newUrls = { ...urls, [key]: value };
+    setUrls(newUrls);
     setHasChanges(true);
+    validateUrls(newUrls);
   };
 
   const handleSave = () => {
@@ -63,7 +97,7 @@ export function SystemUrlsSection() {
 
   return (
     <SettingsSection
-      icon={<LineChart className="w-5 h-5 icon-neon-blue" />}
+      icon={<LineChart className="w-5 h-5 text-accent-cyan drop-shadow-glow-cyan" />}
       title={t('systemUrls.title')}
       description={t('systemUrls.description')}
       delay={0.15}
@@ -81,14 +115,29 @@ export function SystemUrlsSection() {
         ]
       }}
     >
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Dashboard URL */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <LineChart className="w-4 h-4 icon-neon-blue" />
-            <Label htmlFor="dashboardUrl" className="text-label-yellow">
-              {t('systemUrls.dashboardUrl')}
-            </Label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <LineChart className="w-4 h-4 text-accent-cyan drop-shadow-glow-cyan" />
+              <Label htmlFor="dashboardUrl" className="text-text-primary font-medium">
+                {t('systemUrls.dashboardUrl')}
+              </Label>
+            </div>
+            <Badge variant={validationStatus.dashboard ? "success" : "error"} size="sm">
+              {validationStatus.dashboard ? (
+                <>
+                  <CheckCircle2 className="w-3 h-3" />
+                  Válida
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="w-3 h-3" />
+                  Inválida
+                </>
+              )}
+            </Badge>
           </div>
           <div className="flex gap-2">
             <Input
@@ -97,30 +146,44 @@ export function SystemUrlsSection() {
               value={urls.dashboardUrl}
               onChange={(e) => handleChange('dashboardUrl', e.target.value)}
               placeholder="http://localhost:3000"
-              className="input-3d bg-kiosk-bg border-kiosk-surface text-kiosk-text font-mono text-sm flex-1"
+              className="flex-1 bg-bg-secondary/80 backdrop-blur-sm border-border-primary text-text-primary font-mono text-sm transition-all duration-normal focus:border-accent-cyan focus:shadow-glow-cyan"
             />
             <Button
-              variant="kiosk-outline"
-              size="icon"
+              variant="outline"
+              size="xs"
               onClick={() => handleTestUrl(urls.dashboardUrl, 'Dashboard')}
-              className="card-neon-border text-cyan-400 hover:bg-cyan-500/10"
-              title={t('systemUrls.testUrl')}
-            >
-              <ExternalLink className="w-4 h-4" />
+              className="border-accent-cyan text-accent-cyan hover:bg-accent-cyan/10 hover:shadow-glow-cyan transition-all duration-normal"
+              title={t('systemUrls.testUrl')} aria-label="Abrir em nova aba">
+              <ExternalLink aria-hidden="true" className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-settings-hint">
+          <p className="text-xs text-text-secondary">
             {t('systemUrls.dashboardHint')}
           </p>
         </div>
 
         {/* Datasource URL */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 icon-neon-blue" />
-            <Label htmlFor="datasourceUrl" className="text-label-yellow">
-              {t('systemUrls.datasourceUrl')}
-            </Label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity className="w-4 h-4 text-accent-cyan drop-shadow-glow-cyan" />
+              <Label htmlFor="datasourceUrl" className="text-text-primary font-medium">
+                {t('systemUrls.datasourceUrl')}
+              </Label>
+            </div>
+            <Badge variant={validationStatus.datasource ? "success" : "error"} size="sm">
+              {validationStatus.datasource ? (
+                <>
+                  <CheckCircle2 className="w-3 h-3" />
+                  Válida
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="w-3 h-3" />
+                  Inválida
+                </>
+              )}
+            </Badge>
           </div>
           <div className="flex gap-2">
             <Input
@@ -129,19 +192,18 @@ export function SystemUrlsSection() {
               value={urls.datasourceUrl}
               onChange={(e) => handleChange('datasourceUrl', e.target.value)}
               placeholder="http://localhost:9090"
-              className="input-3d bg-kiosk-bg border-kiosk-surface text-kiosk-text font-mono text-sm flex-1"
+              className="flex-1 bg-bg-secondary/80 backdrop-blur-sm border-border-primary text-text-primary font-mono text-sm transition-all duration-normal focus:border-accent-cyan focus:shadow-glow-cyan"
             />
             <Button
-              variant="kiosk-outline"
-              size="icon"
+              variant="outline"
+              size="xs"
               onClick={() => handleTestUrl(urls.datasourceUrl, 'Datasource')}
-              className="card-neon-border text-cyan-400 hover:bg-cyan-500/10"
-              title={t('systemUrls.testUrl')}
-            >
-              <ExternalLink className="w-4 h-4" />
+              className="border-accent-cyan text-accent-cyan hover:bg-accent-cyan/10 hover:shadow-glow-cyan transition-all duration-normal"
+              title={t('systemUrls.testUrl')} aria-label="Abrir em nova aba">
+              <ExternalLink aria-hidden="true" className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-settings-hint">
+          <p className="text-xs text-text-secondary">
             {t('systemUrls.datasourceHint')}
           </p>
         </div>
@@ -150,7 +212,8 @@ export function SystemUrlsSection() {
         {hasChanges && (
           <Button
             onClick={handleSave}
-            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
+            disabled={!validationStatus.dashboard || !validationStatus.datasource}
+            className="w-full bg-accent-cyan hover:bg-accent-cyan/90 text-text-primary shadow-glow-cyan transition-all duration-normal disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4 mr-2" />
             {t('systemUrls.saveUrls')}

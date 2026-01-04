@@ -1,0 +1,68 @@
+sequenceDiagram
+    participant User as 👤 Usuário
+    participant TSI as TSiJukebox<br/>(Frontend)
+    participant Supa as Supabase<br/>(Backend)
+    participant Google as Google OAuth<br/>(Authorization Server)
+    participant YTAPI as YouTube Music API<br/>(Resource Server)
+
+    Note over User,YTAPI: Fluxo de Autorização OAuth 2.0 - Authorization Code Grant
+
+    User->>TSI: 1. Clica em "Conectar YouTube Music"
+    TSI->>TSI: 2. Gera state + nonce (PKCE)
+    TSI->>TSI: 3. Gera code_verifier<br/>code_challenge = SHA256(verifier)
+    TSI->>TSI: 4. Armazena state e verifier
+    
+    TSI->>Google: 5. Redireciona para /o/oauth2/v2/auth<br/>?client_id=xxx<br/>&response_type=code<br/>&redirect_uri=xxx<br/>&scope=https://www.googleapis.com/auth/youtube<br/>&state=xxx<br/>&code_challenge=xxx<br/>&code_challenge_method=S256
+    
+    Google->>User: 6. Exibe tela de consentimento<br/>"TSiJukebox quer acessar:"<br/>- Ver e gerenciar vídeos do YouTube<br/>- Ver playlists<br/>- Gerenciar biblioteca
+    
+    User->>Google: 7. Seleciona conta Google<br/>e autoriza permissões
+    
+    Google->>TSI: 8. Redireciona para callback<br/>?code=AUTH_CODE<br/>&state=xxx
+    
+    TSI->>TSI: 9. Valida state (CSRF protection)
+    
+    TSI->>Supa: 10. POST /api/youtube/callback<br/>{<br/>  code: AUTH_CODE,<br/>  code_verifier: xxx<br/>}
+    
+    Supa->>Google: 11. POST /token<br/>grant_type=authorization_code<br/>code=AUTH_CODE<br/>redirect_uri=xxx<br/>client_id=xxx<br/>client_secret=xxx<br/>code_verifier=xxx
+    
+    Google->>Supa: 12. Retorna tokens<br/>{<br/>  access_token: "ya29...",<br/>  token_type: "Bearer",<br/>  expires_in: 3600,<br/>  refresh_token: "1//...",<br/>  scope: "https://www.googleapis.com/auth/youtube"<br/>}
+    
+    Supa->>Supa: 13. Armazena tokens<br/>criptografados no DB<br/>(tabela: youtube_tokens)
+    
+    Supa->>TSI: 14. Retorna sucesso<br/>{status: "connected"}
+    
+    TSI->>User: 15. Exibe confirmação<br/>"✅ YouTube Music conectado!"
+    
+    Note over User,YTAPI: Uso da API com Access Token
+
+    User->>TSI: 16. Solicita playlists
+    TSI->>Supa: 17. GET /api/youtube/playlists
+    Supa->>Supa: 18. Recupera access_token do DB
+    Supa->>YTAPI: 19. GET /youtube/v3/playlists<br/>?part=snippet,contentDetails<br/>&mine=true<br/>Authorization: Bearer ya29...
+    YTAPI->>Supa: 20. Retorna playlists JSON
+    Supa->>TSI: 21. Retorna playlists
+    TSI->>User: 22. Exibe playlists na UI
+
+    Note over User,YTAPI: Renovação Automática de Token (quando expira)
+
+    User->>TSI: 23. Tenta reproduzir vídeo
+    TSI->>Supa: 24. POST /api/youtube/play
+    Supa->>YTAPI: 25. POST /youtube/v3/videos<br/>Authorization: Bearer ya29...
+    YTAPI->>Supa: 26. ❌ 401 Unauthorized<br/>{<br/>  error: {<br/>    code: 401,<br/>    message: "Invalid Credentials"<br/>  }<br/>}
+    
+    Supa->>Google: 27. POST /token<br/>grant_type=refresh_token<br/>refresh_token=1//...<br/>client_id=xxx<br/>client_secret=xxx
+    
+    Google->>Supa: 28. Retorna novo access_token<br/>{<br/>  access_token: "ya30...",<br/>  expires_in: 3600<br/>}
+    
+    Supa->>Supa: 29. Atualiza token no DB
+    
+    Supa->>YTAPI: 30. POST /youtube/v3/videos<br/>Authorization: Bearer ya30...<br/>(retry com novo token)
+    
+    YTAPI->>Supa: 31. ✅ 200 OK
+    Supa->>TSI: 32. Retorna sucesso
+    TSI->>User: 33. ▶️ Vídeo tocando
+
+    rect rgb(255, 0, 0, 0.1)
+        Note over Google,YTAPI: Google/YouTube Red Zone
+    end

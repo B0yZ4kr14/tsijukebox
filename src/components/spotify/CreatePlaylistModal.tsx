@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { X, Music, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Button, Input, Toggle } from "@/components/ui/themed"
 
 interface CreatePlaylistModalProps {
   isOpen: boolean;
@@ -62,12 +60,12 @@ export function CreatePlaylistModal({ isOpen, onClose, onCreate, isCreating }: C
               onClick={handleClose}
               className="absolute top-4 right-4 text-kiosk-text/85 hover:text-kiosk-text"
             >
-              <X className="w-5 h-5" />
+              <X aria-hidden="true" className="w-5 h-5" />
             </button>
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-[#1DB954]/20 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-[#1DB954]/20 flex items-center justify-center" aria-hidden="true">
                 <Music className="w-6 h-6 text-[#1DB954]" />
               </div>
               <div>

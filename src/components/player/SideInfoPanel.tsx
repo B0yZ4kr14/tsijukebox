@@ -4,13 +4,12 @@ import {
   X, ListMusic, Mic2, Info, Music, Disc3, User2, 
   Calendar, Clock, Tag
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/hooks';
 import { LyricsDisplay } from './LyricsDisplay';
 import { QueueItem, PlaybackQueue } from '@/lib/api/types';
+import { Badge, Button } from "@/components/ui/themed"
 
 interface SideInfoPanelProps {
   isOpen: boolean;
@@ -69,11 +68,10 @@ export function SideInfoPanel({
             </h2>
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               onClick={onClose}
-              className="w-8 h-8 text-kiosk-text/80 hover:text-kiosk-text"
-            >
-              <X className="w-5 h-5" />
+              className="w-8 h-8 text-kiosk-text/80 hover:text-kiosk-text" aria-label="Fechar">
+              <X aria-hidden="true" className="w-5 h-5" />
             </Button>
           </div>
 
@@ -103,7 +101,7 @@ export function SideInfoPanel({
                     <div className="p-3 rounded-lg bg-[#1DB954]/10 border border-[#1DB954]/20">
                       <p className="text-xs text-description-visible uppercase tracking-wider mb-2 font-semibold">Tocando Agora</p>
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0" aria-hidden="true">
                           {currentTrack.cover ? (
                             <img src={currentTrack.cover} alt={currentTrack.album} className="w-full h-full object-cover" />
                           ) : (
@@ -138,7 +136,7 @@ export function SideInfoPanel({
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-kiosk-surface/50 transition-colors group"
                           >
                             <span className="w-5 text-center text-xs text-kiosk-text/80">{index + 1}</span>
-                            <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                            <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0" aria-hidden="true">
                               {item.cover ? (
                                 <img src={item.cover} alt={item.album} className="w-full h-full object-cover" />
                               ) : (
@@ -294,14 +292,13 @@ export function SideInfoPanelToggle({
   return (
     <Button
       variant="ghost"
-      size="icon"
+      size="xs"
       onClick={onClick}
       className={`w-10 h-10 rounded-full transition-all ${
         isOpen 
           ? 'bg-cyan-500/20 text-cyan-400' 
           : 'bg-kiosk-surface/50 text-description-visible hover:text-cyan-400'
-      }`}
-    >
+      }`} aria-label="Informações">
       <Info className="w-5 h-5" />
     </Button>
   );

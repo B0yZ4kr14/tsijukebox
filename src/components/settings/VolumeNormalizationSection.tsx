@@ -1,14 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Volume2, AudioWaveform, RotateCcw, Info } from 'lucide-react';
 import { useVolumeNormalization, NormalizationMode } from '@/hooks/player/useVolumeNormalization';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
+import { Badge, Button, Card, Slider, Toggle } from "@/components/ui/themed"
 
 const modeLabels: Record<NormalizationMode, { label: string; description: string }> = {
   soft: { label: 'Suave', description: 'Normalização leve, preserva dinâmica' },
@@ -34,20 +30,19 @@ export function VolumeNormalizationSection() {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Volume2 className="h-5 w-5 text-primary" />
-            <CardTitle>Normalização de Volume</CardTitle>
+            <Volume2 aria-hidden="true" className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Normalização de Volume</h3>
           </div>
           <Switch checked={settings.enabled} onCheckedChange={toggleEnabled} />
         </div>
-        <CardDescription>
+        <p className="text-sm text-[var(--text-muted)]">
           Evita variações bruscas de volume entre músicas diferentes
-        </CardDescription>
-      </CardHeader>
+        </p>
+      
 
-      <CardContent className="space-y-6">
+      <div className="mt-4">
         {/* Mode Selection */}
         <div className="space-y-3">
           <Label className="text-sm font-medium">Modo de Normalização</Label>
@@ -173,7 +168,7 @@ export function VolumeNormalizationSection() {
             Restaurar Padrões
           </Button>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

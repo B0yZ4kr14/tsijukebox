@@ -1,7 +1,58 @@
-// Generates content for documentation and version files ONLY
+// Main content generator - orchestrates all template generators
 // Critical config files like package.json are NEVER generated here
+// Supports 437 files across 55 categories
 
-const VERSION = '4.1.0';
+import { generateE2EFixtureContent } from './templates/e2eFixtureTemplates';
+import { generateE2ESpecContent } from './templates/e2eSpecTemplates';
+import { generateHookContent } from './templates/hookTemplates';
+import { generateComponentContent } from './templates/componentTemplates';
+import { generatePageContent } from './templates/pageTemplates';
+import { generateUtilsContent } from './templates/utilsTemplates';
+import { generateApiContent } from './templates/apiTemplates';
+import { generateAuthContent } from './templates/authTemplates';
+import { generateContextContent } from './templates/contextTemplates';
+import { generateTypesContent } from './templates/typesTemplates';
+import { generateStorageContent } from './templates/storageTemplates';
+import { generateValidationsContent } from './templates/validationsTemplates';
+import { generateConstantsContent } from './templates/constantsTemplates';
+import { generateI18nContent } from './templates/i18nTemplates';
+import { generateRoutesContent } from './templates/routesTemplates';
+import { generateLibIndexContent } from './templates/libIndexTemplate';
+import { generateUIComponentsContent } from './templates/uiComponentsTemplates';
+import { generatePlayerComponentsContent } from './templates/playerComponentsTemplates';
+import { generateGitHubComponentsContent } from './templates/githubComponentsTemplates';
+import { generateLayoutComponentsContent } from './templates/layoutComponentsTemplates';
+import { generateAuthComponentsContent } from './templates/authComponentsTemplates';
+import { generateSpotifyComponentsContent } from './templates/spotifyComponentsTemplates';
+import { generateYouTubeComponentsContent } from './templates/youtubeComponentsTemplates';
+import { generateJamComponentsContent } from './templates/jamComponentsTemplates';
+import { generateLandingComponentsContent } from './templates/landingComponentsTemplates';
+import { generateErrorsComponentsContent } from './templates/errorsComponentsTemplates';
+import { generateRootComponentsContent } from './templates/rootComponentsTemplates';
+import { generateHooksPlayerContent } from './templates/hooksPlayerTemplates';
+import { generateHooksSpotifyContent } from './templates/hooksSpotifyTemplates';
+import { generateHooksYouTubeContent } from './templates/hooksYouTubeTemplates';
+import { generateHooksJamContent } from './templates/hooksJamTemplates';
+import { generateSettingsComponentsContent } from './templates/settingsComponentsTemplates';
+import { generateHooksCommonContent } from './templates/hooksCommonTemplates';
+import { generateHooksSystemContent } from './templates/hooksSystemTemplates';
+import { generateLibApiContent } from './templates/libApiTemplates';
+import { generateComponentsWikiContent } from './templates/componentsWikiTemplates';
+import { generateComponentsUIExtendedContent } from './templates/componentsUIExtendedTemplates';
+import { generatePagesExtendedContent } from './templates/pagesTemplates';
+import { generateComponentsMiscContent } from './templates/componentsMiscTemplates';
+import { generateComponentsIndexPageContent } from './templates/componentsIndexPageTemplates';
+import { generateComponentsBackupContent } from './templates/componentsBackupTemplates';
+import { generatePagesSpotifyContent } from './templates/pagesSpotifyTemplates';
+import { generatePagesYouTubeContent } from './templates/pagesYouTubeTemplates';
+import { generatePagesSocialContent } from './templates/pagesSocialTemplates';
+import { generatePagesSettingsExtendedContent } from './templates/pagesSettingsExtendedTemplates';
+import { generateComponentsSpecializedContent } from './templates/componentsSpecializedTemplates';
+import { generateE2EMocksContent } from './templates/e2eMocksTemplates';
+import { generateHooksPagesContent } from './templates/hooksPagesTemplates';
+import { generatePagesRootContent } from './templates/pagesRootTemplates';
+
+const VERSION = '4.3.0';
 
 export function generateDocContent(path: string): string | null {
   const now = new Date().toISOString();
@@ -132,42 +183,91 @@ Updated: ${now}
 }
 
 // Generate content for Python scripts
+// CRITICAL: All Python scripts MUST start with #!/usr/bin/env python3
+// NEVER generate JS/TS placeholder content for .py files
 export function generateScriptContent(path: string): string | null {
   const now = new Date().toISOString();
   
   switch (path) {
     case 'scripts/install.py':
+      // install.py is a shim that downloads unified-installer.py
       return `#!/usr/bin/env python3
-# TSiJUKEBOX Installer
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-TSiJUKEBOX Installation Script
+TSiJUKEBOX Installer Shim v${VERSION}
+================================
+Lightweight shim that downloads and executes the unified installer.
 
-This script handles the installation of TSiJUKEBOX on Linux systems.
+This file is safe to run via: curl -fsSL .../install.py | sudo python3
+
+USO:
+    curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
+    
+    # Ou use diretamente o instalador unificado:
+    curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
+
+Autor: B0.y_Z4kr14
+Licença: Domínio Público
+Last updated: ${now}
 """
 
 import os
 import sys
+import tempfile
+import urllib.request
+import ssl
 import subprocess
-import logging
+from pathlib import Path
 
 VERSION = "${VERSION}"
-REPO_URL = "https://github.com/B0yZ4kr14/TSiJUKEBOX"
+REPO_BASE = "https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main"
+UNIFIED_INSTALLER = f"{REPO_BASE}/scripts/unified-installer.py"
+
+class Colors:
+    RED = '\\033[91m'
+    GREEN = '\\033[92m'
+    YELLOW = '\\033[93m'
+    BLUE = '\\033[94m'
+    CYAN = '\\033[96m'
+    RESET = '\\033[0m'
+    BOLD = '\\033[1m'
+
+def log_info(msg): print(f"{Colors.BLUE}ℹ{Colors.RESET}  {msg}")
+def log_success(msg): print(f"{Colors.GREEN}✓{Colors.RESET}  {msg}")
+def log_error(msg): print(f"{Colors.RED}✗{Colors.RESET}  {msg}")
+
+def download_script(url, dest):
+    log_info(f"Baixando: {url}")
+    try:
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(url, context=ctx, timeout=30) as r:
+            content = r.read()
+            # Validate it's Python, not JS placeholder
+            if content.decode('utf-8', errors='ignore').startswith('//'):
+                log_error("Script corrompido no repositório")
+                return False
+            dest.write_bytes(content)
+            return True
+    except Exception as e:
+        log_error(f"Erro: {e}")
+        return False
 
 def main():
-    """Main installation entry point."""
-    print(f"TSiJUKEBOX Installer v{VERSION}")
-    print("=" * 40)
+    print(f"\\n{Colors.CYAN}TSiJUKEBOX Installer Shim v{VERSION}{Colors.RESET}\\n")
     
-    # Check Python version
-    if sys.version_info < (3, 8):
-        print("Error: Python 3.8+ required")
-        sys.exit(1)
+    if os.geteuid() != 0:
+        log_error("Execute com sudo: sudo python3 install.py")
+        return 1
     
-    print("Installation complete!")
-    return 0
+    with tempfile.TemporaryDirectory() as tmpdir:
+        installer = Path(tmpdir) / "unified-installer.py"
+        if download_script(UNIFIED_INSTALLER, installer):
+            log_success("Instalador baixado")
+            return subprocess.run([sys.executable, str(installer)] + sys.argv[1:]).returncode
+        
+        log_error("Falha ao baixar instalador. Tente:")
+        log_info("  git clone https://github.com/B0yZ4kr14/TSiJUKEBOX.git")
+        log_info("  cd TSiJUKEBOX && sudo python3 scripts/unified-installer.py")
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())
@@ -175,52 +275,73 @@ if __name__ == "__main__":
 
     case 'scripts/diagnose-service.py':
       return `#!/usr/bin/env python3
-# TSiJUKEBOX Service Diagnostics
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-Service Diagnostics Tool
+TSiJUKEBOX Service Diagnostics v${VERSION}
+=====================================
+Comprehensive service health checker with auto-fix capabilities.
 
-Checks the health of TSiJUKEBOX services and provides auto-fix capabilities.
+USO:
+    sudo python3 diagnose-service.py
+    sudo python3 diagnose-service.py --auto-fix
+    sudo python3 diagnose-service.py --verbose
+
+Last updated: ${now}
 """
 
 import os
 import sys
 import subprocess
+import json
+from pathlib import Path
+from datetime import datetime
 
 VERSION = "${VERSION}"
 
-def check_service_status(service_name: str) -> dict:
-    """Check if a systemd service is running."""
+class Colors:
+    RED, GREEN, YELLOW, BLUE, CYAN = '\\033[91m', '\\033[92m', '\\033[93m', '\\033[94m', '\\033[96m'
+    RESET, BOLD = '\\033[0m', '\\033[1m'
+
+def log_ok(msg): print(f"{Colors.GREEN}✓{Colors.RESET} {msg}")
+def log_err(msg): print(f"{Colors.RED}✗{Colors.RESET} {msg}")
+def log_warn(msg): print(f"{Colors.YELLOW}⚠{Colors.RESET} {msg}")
+
+def check_service(name):
     try:
-        result = subprocess.run(
-            ["systemctl", "is-active", service_name],
-            capture_output=True,
-            text=True
-        )
-        return {
-            "service": service_name,
-            "status": result.stdout.strip(),
-            "running": result.returncode == 0
-        }
-    except Exception as e:
-        return {"service": service_name, "status": "error", "error": str(e)}
+        r = subprocess.run(["systemctl", "is-active", name], capture_output=True, text=True)
+        return {"name": name, "active": r.returncode == 0, "status": r.stdout.strip()}
+    except: return {"name": name, "active": False, "status": "error"}
+
+def check_port(port):
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        result = s.connect_ex(("127.0.0.1", port))
+        s.close()
+        return result == 0
+    except: return False
 
 def main():
-    """Main diagnostic entry point."""
-    print(f"TSiJUKEBOX Service Diagnostics v{VERSION}")
+    print(f"\\n{Colors.CYAN}TSiJUKEBOX Diagnostics v{VERSION}{Colors.RESET}")
     print("=" * 50)
     
-    services = [
-        "tsijukebox",
-        "tsijukebox-kiosk",
-    ]
+    # Check services
+    for svc in ["tsijukebox", "tsijukebox-kiosk", "nginx", "avahi-daemon"]:
+        s = check_service(svc)
+        (log_ok if s["active"] else log_warn)(f"{svc}: {s['status']}")
     
-    for service in services:
-        status = check_service_status(service)
-        icon = "✅" if status.get("running") else "❌"
-        print(f"{icon} {service}: {status.get('status', 'unknown')}")
+    print()
+    # Check ports
+    for port, name in [(5173, "Dev Server"), (80, "HTTP"), (443, "HTTPS")]:
+        (log_ok if check_port(port) else log_warn)(f"Porta {port} ({name})")
+    
+    print()
+    # Check Node/npm
+    for cmd in ["node --version", "npm --version"]:
+        try:
+            r = subprocess.run(cmd.split(), capture_output=True, text=True)
+            log_ok(f"{cmd.split()[0]}: {r.stdout.strip()}")
+        except: log_err(f"{cmd.split()[0]}: não encontrado")
     
     return 0
 
@@ -250,46 +371,62 @@ echo "System Uptime: $(uptime -p)"
 
     case 'scripts/systemd-notify-wrapper.py':
       return `#!/usr/bin/env python3
-# systemd-notify wrapper for TSiJUKEBOX
-# Version: ${VERSION}
-# Last updated: ${now}
-
 """
-Wrapper script for systemd-notify integration.
-Allows the application to communicate with systemd.
+TSiJUKEBOX systemd-notify Wrapper v${VERSION}
+========================================
+Wrapper for systemd service lifecycle integration.
+
+USO:
+    python3 systemd-notify-wrapper.py ready
+    python3 systemd-notify-wrapper.py watchdog
+    python3 systemd-notify-wrapper.py status "Message"
+
+Last updated: ${now}
 """
 
 import os
+import sys
 import socket
 
-def notify(state: str) -> bool:
-    """Send notification to systemd."""
-    notify_socket = os.environ.get("NOTIFY_SOCKET")
-    if not notify_socket:
-        return False
-    
+VERSION = "${VERSION}"
+
+def notify(state):
+    sock_path = os.environ.get("NOTIFY_SOCKET")
+    if not sock_path: return False
     try:
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        if notify_socket.startswith("@"):
-            notify_socket = "\\0" + notify_socket[1:]
-        sock.connect(notify_socket)
+        if sock_path.startswith("@"): sock_path = "\\0" + sock_path[1:]
+        sock.connect(sock_path)
         sock.sendall(state.encode())
         sock.close()
         return True
-    except Exception:
-        return False
+    except: return False
 
-def ready():
-    """Notify systemd that service is ready."""
-    return notify("READY=1")
+def ready(): return notify("READY=1")
+def watchdog(): return notify("WATCHDOG=1")
+def stopping(): return notify("STOPPING=1")
+def status(msg): return notify(f"STATUS={msg}")
 
-def watchdog():
-    """Send watchdog ping to systemd."""
-    return notify("WATCHDOG=1")
+def main():
+    if len(sys.argv) < 2:
+        print(f"systemd-notify-wrapper v{VERSION}")
+        print("Usage: systemd-notify-wrapper.py <ready|watchdog|stopping|status 'msg'>")
+        return 0
+    
+    cmd = sys.argv[1].lower()
+    if cmd == "ready": success = ready()
+    elif cmd == "watchdog": success = watchdog()
+    elif cmd == "stopping": success = stopping()
+    elif cmd == "status" and len(sys.argv) > 2: success = status(sys.argv[2])
+    else:
+        print(f"Unknown command: {cmd}")
+        return 1
+    
+    print(f"Notified: {cmd.upper()}" if success else "Failed (no NOTIFY_SOCKET)")
+    return 0 if success else 1
 
 if __name__ == "__main__":
-    ready()
-    print("Systemd notified: READY")
+    sys.exit(main())
 `;
 
     case 'scripts/tsijukebox-doctor':
@@ -348,14 +485,349 @@ echo "Doctor check complete!"
 }
 
 // Main content generator - returns null for unknown files to prevent overwrites
+// Supports 256 files across 34 categories
+// CRITICAL: Never generate content for these protected files
+const NEVER_SYNC_FILES = [
+  'package.json',
+  'package-lock.json',
+  'bun.lockb',
+  'vite.config.ts',
+  'vite.config.js',
+  'tsconfig.json',
+  'tsconfig.node.json',
+  'tsconfig.e2e.json',
+  '.env',
+  '.env.local',
+  '.gitignore',
+  'components.json',
+  'postcss.config.js',
+  'tailwind.config.ts',
+  'tailwind.config.js',
+  'src/integrations/supabase/client.ts',
+  'src/integrations/supabase/types.ts',
+];
+
 export function generateFileContent(path: string): string | null {
-  // Try docs first
+  // === GUARDRAIL: Block protected files ===
+  if (NEVER_SYNC_FILES.includes(path)) {
+    console.warn(`[generateFileContent] ⚠️ Protected file blocked: ${path}`);
+    return null;
+  }
+
+  // === DOCS (5 files) ===
   const docContent = generateDocContent(path);
   if (docContent !== null) return docContent;
   
-  // Try scripts
+  // === SCRIPTS (5 files) ===
   const scriptContent = generateScriptContent(path);
-  if (scriptContent !== null) return scriptContent;
+  if (scriptContent !== null) {
+    // Validate Python content - NEVER return JS placeholder
+    if (path.endsWith('.py') && scriptContent.trimStart().startsWith('//')) {
+      console.error(`[generateFileContent] ❌ Invalid Python content for: ${path} (starts with //)`);
+      return null;
+    }
+    return scriptContent;
+  }
+  
+  // === E2E FIXTURES (9 files) ===
+  if (path.startsWith('e2e/fixtures/')) {
+    const fixtureContent = generateE2EFixtureContent(path);
+    if (fixtureContent !== null) return fixtureContent;
+  }
+  
+  // === E2E SPECS (29 files) ===
+  if (path.startsWith('e2e/specs/')) {
+    const specContent = generateE2ESpecContent(path);
+    if (specContent !== null) return specContent;
+  }
+  
+  // === HOOKS (10 files) ===
+  if (path.startsWith('src/hooks/system/') && path.endsWith('.ts') && !path.includes('/github/')) {
+    const hookContent = generateHookContent(path);
+    if (hookContent !== null) return hookContent;
+  }
+  
+  // === COMPONENTS SETTINGS (17 files) ===
+  if (path.startsWith('src/components/settings/')) {
+    const settingsContent = generateSettingsComponentsContent(path);
+    if (settingsContent !== null) return settingsContent;
+  }
+  
+  // === HOOKS PLAYER (13 files) ===
+  if (path.startsWith('src/hooks/player/')) {
+    const hooksPlayerContent = generateHooksPlayerContent(path);
+    if (hooksPlayerContent !== null) return hooksPlayerContent;
+  }
+  
+  // === HOOKS SPOTIFY (7 files) ===
+  if (path.startsWith('src/hooks/spotify/')) {
+    const hooksSpotifyContent = generateHooksSpotifyContent(path);
+    if (hooksSpotifyContent !== null) return hooksSpotifyContent;
+  }
+  
+  // === HOOKS YOUTUBE (7 files) ===
+  if (path.startsWith('src/hooks/youtube/')) {
+    const hooksYouTubeContent = generateHooksYouTubeContent(path);
+    if (hooksYouTubeContent !== null) return hooksYouTubeContent;
+  }
+  
+  // === HOOKS JAM (6 files) ===
+  if (path.startsWith('src/hooks/jam/')) {
+    const hooksJamContent = generateHooksJamContent(path);
+    if (hooksJamContent !== null) return hooksJamContent;
+  }
+  
+  // === HOOKS COMMON (22 files) ===
+  if (path.startsWith('src/hooks/common/')) {
+    const hooksCommonContent = generateHooksCommonContent(path);
+    if (hooksCommonContent !== null) return hooksCommonContent;
+  }
+  
+  // === HOOKS SYSTEM (18 files) ===
+  if (path.startsWith('src/hooks/system/') && !path.includes('/github/')) {
+    const hooksSystemContent = generateHooksSystemContent(path);
+    if (hooksSystemContent !== null) return hooksSystemContent;
+  }
+  
+  // === LIB API (12 files) ===
+  if (path.startsWith('src/lib/api/')) {
+    const libApiContent = generateLibApiContent(path);
+    if (libApiContent !== null) return libApiContent;
+  }
+  
+  // === COMPONENTS WIKI (4 files) ===
+  if (path.startsWith('src/components/wiki/')) {
+    const wikiContent = generateComponentsWikiContent(path);
+    if (wikiContent !== null) return wikiContent;
+  }
+  
+  // === COMPONENTS MISC (5 files) ===
+  if (path.startsWith('src/components/tour/') ||
+      path.startsWith('src/components/debug/') ||
+      path.startsWith('src/components/help/') ||
+      path.startsWith('src/components/system/') ||
+      path.startsWith('src/components/upload/')) {
+    const miscContent = generateComponentsMiscContent(path);
+    if (miscContent !== null) return miscContent;
+  }
+  
+  // === PAGES EXTENDED (29 files) ===
+  if (path.startsWith('src/pages/tools/') ||
+      path.startsWith('src/pages/admin/') ||
+      path.startsWith('src/pages/public/') ||
+      path.startsWith('src/pages/brand/')) {
+    const pagesExtContent = generatePagesExtendedContent(path);
+    if (pagesExtContent !== null) return pagesExtContent;
+  }
+  
+  // === COMPONENTS INDEX-PAGE (5 files) ===
+  if (path.startsWith('src/components/index-page/')) {
+    const indexPageContent = generateComponentsIndexPageContent(path);
+    if (indexPageContent !== null) return indexPageContent;
+  }
+  
+  // === COMPONENTS BACKUP (8 files) ===
+  if (path.startsWith('src/components/settings/backup/')) {
+    const backupContent = generateComponentsBackupContent(path);
+    if (backupContent !== null) return backupContent;
+  }
+  
+  // === PAGES SPOTIFY (5 files) ===
+  if (path.startsWith('src/pages/spotify/')) {
+    const spotifyContent = generatePagesSpotifyContent(path);
+    if (spotifyContent !== null) return spotifyContent;
+  }
+  
+  // === PAGES YOUTUBE (5 files) ===
+  if (path.startsWith('src/pages/youtube/')) {
+    const ytContent = generatePagesYouTubeContent(path);
+    if (ytContent !== null) return ytContent;
+  }
+  
+  // === PAGES SOCIAL (2 files) ===
+  if (path.startsWith('src/pages/social/')) {
+    const socialContent = generatePagesSocialContent(path);
+    if (socialContent !== null) return socialContent;
+  }
+  
+  // === PAGES SETTINGS EXTENDED (4 files) ===
+  if (path.startsWith('src/pages/settings/') && path !== 'src/pages/settings/Settings.tsx') {
+    const settingsExtContent = generatePagesSettingsExtendedContent(path);
+    if (settingsExtContent !== null) return settingsExtContent;
+  }
+  
+  // === COMPONENTS SPECIALIZED (6 files) ===
+  if (path.startsWith('src/components/dev/') ||
+      path.startsWith('src/components/audit/') ||
+      path.startsWith('src/components/weather/') ||
+      path.startsWith('src/components/spicetify/') ||
+      path.startsWith('src/components/docs/')) {
+    const specializedContent = generateComponentsSpecializedContent(path);
+    if (specializedContent !== null) return specializedContent;
+  }
+  
+  // === E2E MOCKS (2 files) ===
+  if (path.startsWith('e2e/mocks/')) {
+    const mocksContent = generateE2EMocksContent(path);
+    if (mocksContent !== null) return mocksContent;
+  }
+  
+  // === HOOKS PAGES (2 files) ===
+  if (path.startsWith('src/hooks/pages/')) {
+    const hooksPagesContent = generateHooksPagesContent(path);
+    if (hooksPagesContent !== null) return hooksPagesContent;
+  }
+  
+  // === PAGES ROOT (1 file) ===
+  if (path === 'src/pages/index.ts') {
+    const pagesRootContent = generatePagesRootContent(path);
+    if (pagesRootContent !== null) return pagesRootContent;
+  }
+  
+  // === COMPONENTS UI EXTENDED (40 files) ===
+  if (path.startsWith('src/components/ui/')) {
+    const uiExtContent = generateComponentsUIExtendedContent(path);
+    if (uiExtContent !== null) return uiExtContent;
+  }
+  
+  // === COMPONENTS UI (15 files) ===
+  if (path.startsWith('src/components/ui/')) {
+    const uiContent = generateUIComponentsContent(path);
+    if (uiContent !== null) return uiContent;
+  }
+  
+  // === COMPONENTS PLAYER (10 files) ===
+  if (path.startsWith('src/components/player/')) {
+    const playerContent = generatePlayerComponentsContent(path);
+    if (playerContent !== null) return playerContent;
+  }
+  
+  // === COMPONENTS GITHUB (8 files) ===
+  if (path.startsWith('src/components/github/')) {
+    const githubContent = generateGitHubComponentsContent(path);
+    if (githubContent !== null) return githubContent;
+  }
+  
+  // === COMPONENTS LAYOUT (2 files) ===
+  if (path.startsWith('src/components/layout/')) {
+    const layoutContent = generateLayoutComponentsContent(path);
+    if (layoutContent !== null) return layoutContent;
+  }
+  
+  // === COMPONENTS AUTH (7 files) ===
+  if (path.startsWith('src/components/auth/')) {
+    const authCompContent = generateAuthComponentsContent(path);
+    if (authCompContent !== null) return authCompContent;
+  }
+  
+  // === COMPONENTS SPOTIFY (9 files) ===
+  if (path.startsWith('src/components/spotify/')) {
+    const spotifyContent = generateSpotifyComponentsContent(path);
+    if (spotifyContent !== null) return spotifyContent;
+  }
+  
+  // === COMPONENTS YOUTUBE (6 files) ===
+  if (path.startsWith('src/components/youtube/')) {
+    const youtubeContent = generateYouTubeComponentsContent(path);
+    if (youtubeContent !== null) return youtubeContent;
+  }
+  
+  // === COMPONENTS JAM (10 files) ===
+  if (path.startsWith('src/components/jam/')) {
+    const jamContent = generateJamComponentsContent(path);
+    if (jamContent !== null) return jamContent;
+  }
+  
+  // === COMPONENTS LANDING (6 files) ===
+  if (path.startsWith('src/components/landing/')) {
+    const landingContent = generateLandingComponentsContent(path);
+    if (landingContent !== null) return landingContent;
+  }
+  
+  // === COMPONENTS ERRORS (3 files) ===
+  if (path.startsWith('src/components/errors/')) {
+    const errorsContent = generateErrorsComponentsContent(path);
+    if (errorsContent !== null) return errorsContent;
+  }
+  
+  // === COMPONENTS ROOT (3 files) ===
+  if (path === 'src/components/GlobalSearchModal.tsx' || 
+      path === 'src/components/NavLink.tsx' ||
+      path.startsWith('src/components/kiosk/')) {
+    const rootContent = generateRootComponentsContent(path);
+    if (rootContent !== null) return rootContent;
+  }
+  
+  // === PAGES (5 files) ===
+  if (path.startsWith('src/pages/')) {
+    const pageContent = generatePageContent(path);
+    if (pageContent !== null) return pageContent;
+  }
+  
+  // === STORAGE (2 files) ===
+  if (path.startsWith('src/lib/storage/')) {
+    const storageContent = generateStorageContent(path);
+    if (storageContent !== null) return storageContent;
+  }
+  
+  // === VALIDATIONS (2 files) ===
+  if (path.startsWith('src/lib/validations/')) {
+    const validationsContent = generateValidationsContent(path);
+    if (validationsContent !== null) return validationsContent;
+  }
+  
+  // === CONSTANTS (4 files) ===
+  if (path.startsWith('src/lib/constants/')) {
+    const constantsContent = generateConstantsContent(path);
+    if (constantsContent !== null) return constantsContent;
+  }
+  
+  // === LIB INDEX (1 file) ===
+  if (path === 'src/lib/index.ts') {
+    return generateLibIndexContent();
+  }
+  
+  // === UTILS (12 files) - after storage/validations/constants ===
+  if (path.startsWith('src/lib/') && !path.startsWith('src/lib/api/') && !path.startsWith('src/lib/auth/')) {
+    const utilsContent = generateUtilsContent(path);
+    if (utilsContent !== null) return utilsContent;
+  }
+  
+  // === API (9 files) ===
+  if (path.startsWith('src/lib/api/')) {
+    const apiContent = generateApiContent(path);
+    if (apiContent !== null) return apiContent;
+  }
+  
+  // === AUTH (3 files) ===
+  if (path.startsWith('src/lib/auth/')) {
+    const authContent = generateAuthContent(path);
+    if (authContent !== null) return authContent;
+  }
+  
+  // === CONTEXTS (8 files) ===
+  if (path.startsWith('src/contexts/')) {
+    const contextContent = generateContextContent(path);
+    if (contextContent !== null) return contextContent;
+  }
+  
+  // === TYPES (10 files) ===
+  if (path.startsWith('src/types/')) {
+    const typesContent = generateTypesContent(path);
+    if (typesContent !== null) return typesContent;
+  }
+  
+  // === I18N (4 files) ===
+  if (path.startsWith('src/i18n/')) {
+    const i18nContent = generateI18nContent(path);
+    if (i18nContent !== null) return i18nContent;
+  }
+  
+  // === ROUTES (1 file) ===
+  if (path.startsWith('src/routes/')) {
+    const routesContent = generateRoutesContent(path);
+    if (routesContent !== null) return routesContent;
+  }
   
   // Unknown file - return null to prevent overwrite
   console.warn(`[generateFileContent] Unknown file: ${path} - skipping to prevent overwrite`);

@@ -1,12 +1,6 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Slider } from '@/components/ui/slider';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   Mic, MicOff, Volume2, SkipForward, Play, Pause, RotateCcw, AlertCircle, CheckCircle2,
@@ -18,6 +12,7 @@ import { AddCustomCommandModal } from './AddCustomCommandModal';
 import { VoiceCommandHistory } from './VoiceCommandHistory';
 import { VoiceTrainingMode } from './VoiceTrainingMode';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Badge, Button, Card, Input, Slider, Toggle } from "@/components/ui/themed"
 
 const languageOptions: { value: VoiceLanguage; label: string; flag: string }[] = [
   { value: 'pt-BR', label: 'Português (Brasil)', flag: '🇧🇷' },
@@ -73,13 +68,12 @@ export function VoiceControlSection() {
   return (
     <>
       <Card className="bg-kiosk-surface border-kiosk-border">
-        <CardHeader>
-          <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Mic className="h-5 w-5 text-kiosk-primary" />
-              <CardTitle className="text-kiosk-text">Controle por Voz</CardTitle>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Controle por Voz</h3>
               {!isSupported && (
-                <Badge variant="destructive" className="text-xs">
+                <Badge variant="danger" className="text-xs">
                   Não Suportado
                 </Badge>
               )}
@@ -92,13 +86,13 @@ export function VoiceControlSection() {
               className="data-[state=checked]:bg-kiosk-primary"
             />
           </div>
-          <CardDescription className="text-muted-foreground">
+          <p className="text-sm text-[var(--text-muted)]">
             Controle a reprodução usando comandos de voz
-          </CardDescription>
-        </CardHeader>
+          </p>
+        
 
         {settings.enabled && isSupported && (
-          <CardContent className="space-y-6">
+          <div className="mt-4">
             {/* Language Selection */}
             <div className="space-y-2">
               <Label className="text-kiosk-text">Idioma</Label>
@@ -241,7 +235,7 @@ export function VoiceControlSection() {
             {/* Voice Search */}
             <div className="space-y-4 pt-4 border-t border-kiosk-border">
               <div className="flex items-center gap-2">
-                <Search className="h-4 w-4 text-kiosk-primary" />
+                <Search aria-hidden="true" className="h-4 w-4 text-kiosk-primary" />
                 <Label className="text-kiosk-text font-medium">Busca por Voz</Label>
               </div>
               
@@ -270,7 +264,7 @@ export function VoiceControlSection() {
             <div className="space-y-4 pt-4 border-t border-kiosk-border">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Settings className="h-4 w-4 text-kiosk-primary" />
+                  <Settings aria-hidden="true" className="h-4 w-4 text-kiosk-primary" />
                   <Label className="text-kiosk-text font-medium">Comandos Personalizados</Label>
                 </div>
                 <Button
@@ -279,7 +273,7 @@ export function VoiceControlSection() {
                   onClick={() => setShowAddCommand(true)}
                   className="border-kiosk-border"
                 >
-                  <Plus className="h-4 w-4 mr-1" />
+                  <Plus aria-hidden="true" className="h-4 w-4 mr-1" />
                   Adicionar
                 </Button>
               </div>
@@ -312,10 +306,9 @@ export function VoiceControlSection() {
                         />
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="xs"
                           onClick={() => removeCustomCommand(cmd.id)}
-                          className="h-8 w-8 text-muted-foreground hover:text-red-500"
-                        >
+                          className="h-8 w-8 text-muted-foreground hover:text-red-500" aria-label="Excluir">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -453,7 +446,7 @@ export function VoiceControlSection() {
                   <Label className="text-kiosk-text font-medium cursor-pointer">Histórico de Comandos</Label>
                   <Badge variant="secondary" className="text-xs">{history.length}</Badge>
                 </div>
-                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${historyOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown aria-hidden="true" className={`h-4 w-4 text-muted-foreground transition-transform ${historyOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-3">
                 <VoiceCommandHistory />
@@ -472,11 +465,11 @@ export function VoiceControlSection() {
                 Restaurar Padrões
               </Button>
             </div>
-          </CardContent>
+          </div>
         )}
 
         {!isSupported && (
-          <CardContent>
+          <div className="mt-4">
             <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
               <MicOff className="h-5 w-5 text-red-500 flex-shrink-0" />
               <div>
@@ -488,7 +481,7 @@ export function VoiceControlSection() {
                 </p>
               </div>
             </div>
-          </CardContent>
+          </div>
         )}
       </Card>
 

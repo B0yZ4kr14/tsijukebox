@@ -24,7 +24,7 @@ export function SpotifyUserBadge({ user, isConnected, className }: SpotifyUserBa
         >
           <Disc3 className="w-4 h-4" />
           <span className="text-sm">Conectar Spotify</span>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight aria-hidden="true" className="w-4 h-4" />
         </motion.div>
       </Link>
     );
@@ -50,7 +50,7 @@ export function SpotifyUserBadge({ user, isConnected, className }: SpotifyUserBa
           <Disc3 className="w-4 h-4" />
         )}
         <span className="text-sm font-medium max-w-[120px] truncate">{user.displayName}</span>
-        <ChevronRight className="w-4 h-4" />
+        <ChevronRight aria-hidden="true" className="w-4 h-4" />
       </motion.div>
     </Link>
   );

@@ -12,11 +12,9 @@ import {
 } from 'lucide-react';
 import { wikiCategories, WikiCategory, WikiSubSection } from './wikiData';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Toggle } from '@/components/ui/toggle';
-import { Input } from '@/components/ui/input';
 import { cn, formatBrandName } from '@/lib/utils';
+import { Badge, Button, Input } from "@/components/ui/themed"
 
 interface WikiNavigationProps {
   selectedArticle: string | null;
@@ -274,7 +272,7 @@ export function WikiNavigation({
     <div ref={navRef} tabIndex={0} className="outline-none">
       {/* Search Bar */}
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400/60" />
+        <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400/60" />
         <Input
           ref={searchInputRef}
           value={searchQuery}
@@ -285,11 +283,10 @@ export function WikiNavigation({
         {(searchQuery || categoryFilter) && (
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-red-500/20"
-            onClick={clearSearch}
-          >
-            <X className="w-3 h-3 text-red-400" />
+            onClick={clearSearch} aria-label="Fechar">
+            <X aria-hidden="true" className="w-3 h-3 text-red-400" />
           </Button>
         )}
       </div>
@@ -307,7 +304,7 @@ export function WikiNavigation({
               : "bg-transparent border-kiosk-border text-kiosk-text/85 hover:border-cyan-500/30"
           )}
         >
-          <Filter className="w-3 h-3 mr-1" />
+          <Filter aria-hidden="true" className="w-3 h-3 mr-1" />
           Todas
         </Button>
         {wikiCategories.map(cat => (
@@ -356,7 +353,7 @@ export function WikiNavigation({
               size="sm"
               className="h-7 text-xs data-[state=on]:bg-primary/20"
             >
-              <Minus className="w-3 h-3 mr-1" />
+              <Minus aria-hidden="true" className="w-3 h-3 mr-1" />
               Linhas
             </Toggle>
           </div>
@@ -373,7 +370,7 @@ export function WikiNavigation({
         <nav className="space-y-1 pr-4">
           {filteredCategories.length === 0 ? (
             <div className="text-center py-8 text-description-visible">
-              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <Search aria-hidden="true" className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">Nenhum artigo encontrado</p>
               <p className="text-xs mt-1">Tente outros termos de busca</p>
             </div>
@@ -399,9 +396,9 @@ export function WikiNavigation({
                   )}
                 >
                   {expandedCategories.has(category.id) ? (
-                    <ChevronDown className="w-4 h-4 shrink-0 text-primary" />
+                    <ChevronDown aria-hidden="true" className="w-4 h-4 shrink-0 text-primary" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 shrink-0" />
+                    <ChevronRight aria-hidden="true" className="w-4 h-4 shrink-0" />
                   )}
                   <span className="icon-neon-blue">{iconMap[category.icon]}</span>
                   <span className="text-sm font-medium truncate flex-1">
@@ -458,9 +455,9 @@ export function WikiNavigation({
                                 )}
                               >
                                 {expandedSubSections.has(subSection.id) ? (
-                                  <ChevronDown className="w-3 h-3 shrink-0 text-primary/70" />
+                                  <ChevronDown aria-hidden="true" className="w-3 h-3 shrink-0 text-primary/70" />
                                 ) : (
-                                  <ChevronRight className="w-3 h-3 shrink-0" />
+                                  <ChevronRight aria-hidden="true" className="w-3 h-3 shrink-0" />
                                 )}
                                 <span className="text-xs font-medium truncate flex-1">
                                   {highlightMatch(subSection.title, searchQuery)}

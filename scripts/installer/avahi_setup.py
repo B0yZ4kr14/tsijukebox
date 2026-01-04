@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-TSiJUKEBOX Installer - Avahi/mDNS Setup
-Configura descoberta automática de rede via mDNS (tsijukebox.local).
+TSiJUKEBOX Installer - Avahi/mDNS Setup v6.0.0
+Configura descoberta automática de rede via mDNS (midiaserver.local).
+
+Novidades v6.0.0:
+- Hostname padrão: midiaserver
+- Suporte HTTPS (porta 443)
+- Serviço Prometheus
+- Integração com SSL Setup
 """
 
 import os
@@ -15,17 +21,22 @@ from .config import Colors, config
 
 @dataclass
 class AvahiConfig:
-    """Configuração do Avahi"""
-    hostname: str = 'tsijukebox'
+    """Configuração do Avahi v6.0.0"""
+    hostname: str = 'midiaserver'  # Alterado em v6.0.0
     domain: str = 'local'
-    http_port: int = 80
+    http_port: int = 443  # HTTPS por padrão em v6.0.0
+    https_enabled: bool = True
     enable_ssh: bool = True
     enable_grafana: bool = True
     grafana_port: int = 3000
+    enable_prometheus: bool = True  # NOVO em v6.0.0
+    prometheus_port: int = 9090  # NOVO em v6.0.0
 
 
 class AvahiSetup:
-    """Gerencia a configuração do Avahi/mDNS"""
+    """Gerencia a configuração do Avahi/mDNS v6.0.0"""
+    
+    VERSION = "6.0.0"
     
     def __init__(self, avahi_config: Optional[AvahiConfig] = None, analytics=None):
         self.config = avahi_config or AvahiConfig()
@@ -132,10 +143,14 @@ class AvahiSetup:
             return False
     
     def create_http_service(self) -> bool:
-        """Cria arquivo de serviço HTTP do TSiJUKEBOX"""
+        """Cria arquivo de serviço HTTP/HTTPS do TSiJUKEBOX"""
         self._log("📝 Criando serviço mDNS do TSiJUKEBOX...", Colors.CYAN)
         
         self.services_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Determinar tipo de serviço baseado em HTTPS
+        service_type = "_https._tcp" if self.config.https_enabled else "_http._tcp"
+        protocol = "https" if self.config.https_enabled else "http"
         
         service_content = f"""<?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
@@ -143,17 +158,19 @@ class AvahiSetup:
   <name replace-wildcards="yes">TSiJUKEBOX on %h</name>
   
   <service>
-    <type>_http._tcp</type>
+    <type>{service_type}</type>
     <port>{self.config.http_port}</port>
     <txt-record>path=/</txt-record>
-    <txt-record>version=4.1.0</txt-record>
-    <txt-record>product=TSiJUKEBOX</txt-record>
+    <txt-record>version={self.VERSION}</txt-record>
+    <txt-record>product=TSiJUKEBOX Enterprise</txt-record>
+    <txt-record>protocol={protocol}</txt-record>
   </service>
   
   <service>
     <type>_jukebox._tcp</type>
     <port>{self.config.http_port}</port>
     <txt-record>type=music-player</txt-record>
+    <txt-record>ssl={str(self.config.https_enabled).lower()}</txt-record>
   </service>
   
 </service-group>
@@ -162,7 +179,7 @@ class AvahiSetup:
         service_path = self.services_dir / 'tsijukebox.service'
         service_path.write_text(service_content)
         
-        self._log(f"✅ Serviço HTTP criado em {service_path}", Colors.GREEN)
+        self._log(f"✅ Serviço HTTP/HTTPS criado em {service_path}", Colors.GREEN)
         return True
     
     def create_grafana_service(self) -> bool:
@@ -182,6 +199,7 @@ class AvahiSetup:
     <port>{self.config.grafana_port}</port>
     <txt-record>path=/</txt-record>
     <txt-record>product=Grafana</txt-record>
+    <txt-record>version=10.x</txt-record>
   </service>
   
 </service-group>
@@ -191,6 +209,42 @@ class AvahiSetup:
         service_path.write_text(service_content)
         
         self._log(f"✅ Serviço Grafana criado", Colors.GREEN)
+        return True
+    
+    def create_prometheus_service(self) -> bool:
+        """Cria arquivo de serviço para Prometheus (NOVO em v6.0.0)"""
+        if not self.config.enable_prometheus:
+            return True
+        
+        self._log("📝 Criando serviço mDNS do Prometheus...", Colors.CYAN)
+        
+        service_content = f"""<?xml version="1.0" standalone='no'?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">Prometheus on %h</name>
+  
+  <service>
+    <type>_http._tcp</type>
+    <port>{self.config.prometheus_port}</port>
+    <txt-record>path=/</txt-record>
+    <txt-record>product=Prometheus</txt-record>
+    <txt-record>version=2.x</txt-record>
+    <txt-record>metrics=true</txt-record>
+  </service>
+  
+  <service>
+    <type>_prometheus._tcp</type>
+    <port>{self.config.prometheus_port}</port>
+    <txt-record>scrape=true</txt-record>
+  </service>
+  
+</service-group>
+"""
+        
+        service_path = self.services_dir / 'prometheus.service'
+        service_path.write_text(service_content)
+        
+        self._log(f"✅ Serviço Prometheus criado", Colors.GREEN)
         return True
     
     def create_ssh_service(self) -> bool:
@@ -234,6 +288,11 @@ class AvahiSetup:
             # Permitir mDNS (porta 5353 UDP)
             self._run_command(['ufw', 'allow', '5353/udp'], check=False)
             
+            # Permitir HTTPS se habilitado
+            if self.config.https_enabled:
+                self._run_command(['ufw', 'allow', '443/tcp'], check=False)
+                self._log("✅ Porta HTTPS (443/tcp) liberada", Colors.GREEN)
+            
             self._log("✅ Porta mDNS (5353/udp) liberada", Colors.GREEN)
             return True
             
@@ -275,9 +334,13 @@ class AvahiSetup:
                 return False
             
             # Listar serviços publicados
+            protocol = "https" if self.config.https_enabled else "http"
             self._log(f"\n📡 O sistema estará acessível em:", Colors.CYAN)
-            self._log(f"   http://{self.config.hostname}.{self.config.domain}", Colors.GREEN)
-            self._log(f"   http://{self.config.hostname}.{self.config.domain}:{self.config.grafana_port} (Grafana)", Colors.GREEN)
+            self._log(f"   {protocol}://{self.config.hostname}.{self.config.domain}", Colors.GREEN)
+            self._log(f"   {protocol}://{self.config.hostname}.{self.config.domain}:{self.config.grafana_port} (Grafana)", Colors.GREEN)
+            
+            if self.config.enable_prometheus:
+                self._log(f"   {protocol}://{self.config.hostname}.{self.config.domain}:{self.config.prometheus_port} (Prometheus)", Colors.GREEN)
             
             return True
             
@@ -286,15 +349,16 @@ class AvahiSetup:
             return True  # Não falhar por causa da verificação
     
     def setup_full(self) -> bool:
-        """Executa configuração completa do Avahi"""
-        self._log("📡 Iniciando configuração do Avahi/mDNS...", Colors.BOLD + Colors.CYAN)
+        """Executa configuração completa do Avahi v6.0.0"""
+        self._log(f"📡 Iniciando configuração do Avahi/mDNS v{self.VERSION}...", Colors.BOLD + Colors.CYAN)
         
         steps = [
             ('Instalando pacotes', self.install_packages),
             ('Configurando nsswitch', self.configure_nsswitch),
             ('Definindo hostname', self.set_hostname),
-            ('Criando serviço HTTP', self.create_http_service),
+            ('Criando serviço HTTP/HTTPS', self.create_http_service),
             ('Criando serviço Grafana', self.create_grafana_service),
+            ('Criando serviço Prometheus', self.create_prometheus_service),  # NOVO
             ('Criando serviço SSH', self.create_ssh_service),
             ('Configurando firewall', self.configure_firewall),
             ('Iniciando Avahi', self.enable_and_start),
@@ -308,12 +372,18 @@ class AvahiSetup:
                 self._log(f"❌ Falha em: {step_name}", Colors.RED)
                 return False
         
-        self._log("\n✅ Avahi/mDNS configurado com sucesso!", Colors.BOLD + Colors.GREEN)
+        self._log(f"\n✅ Avahi/mDNS v{self.VERSION} configurado com sucesso!", Colors.BOLD + Colors.GREEN)
         self._log(f"   Hostname: {self.config.hostname}.{self.config.domain}", Colors.GREEN)
+        
+        if self.config.https_enabled:
+            self._log(f"   HTTPS: Habilitado (porta {self.config.http_port})", Colors.GREEN)
         
         if self.analytics:
             self.analytics.track_event('avahi_setup_complete', {
                 'hostname': self.config.hostname,
+                'https_enabled': self.config.https_enabled,
+                'prometheus_enabled': self.config.enable_prometheus,
+                'version': self.VERSION,
             })
         
         return True
@@ -323,7 +393,8 @@ def main():
     """Função principal para teste"""
     print(f"{Colors.BOLD}{Colors.CYAN}")
     print("=" * 60)
-    print("  TSiJUKEBOX - Avahi/mDNS Setup Module")
+    print("  TSiJUKEBOX - Avahi/mDNS Setup Module v6.0.0")
+    print("  Hostname: midiaserver.local")
     print("=" * 60)
     print(f"{Colors.RESET}")
     

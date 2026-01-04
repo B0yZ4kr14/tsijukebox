@@ -5,11 +5,7 @@ import {
   Settings, CheckSquare, Square, RotateCcw, Upload, Shield
 } from 'lucide-react';
 import { SettingsSection } from './SettingsSection';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -22,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Badge, Button, Input, Toggle } from "@/components/ui/themed"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -254,7 +251,7 @@ export function ClientsManagementSection() {
   const statusIcons = {
     online: <Wifi className="w-3 h-3" />,
     offline: <WifiOff className="w-3 h-3" />,
-    unknown: <RefreshCw className="w-3 h-3" />,
+    unknown: <RefreshCw aria-hidden="true" className="w-3 h-3" />,
   };
 
   const ClientForm = () => (
@@ -386,10 +383,9 @@ export function ClientsManagementSection() {
             <Button
               type="button"
               variant="ghost"
-              size="icon"
+              size="xs"
               className="absolute right-0 top-0 h-full px-3"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+              onClick={() => setShowPassword(!showPassword)} aria-label="Bloquear">
               {showPassword ? <Lock className="w-4 h-4" /> : <Key className="w-4 h-4" />}
             </Button>
           </div>
@@ -423,7 +419,7 @@ export function ClientsManagementSection() {
             }}
             className="button-primary-glow-3d"
           >
-            <Plus className="w-4 h-4 mr-1" />
+            <Plus aria-hidden="true" className="w-4 h-4 mr-1" />
             Adicionar Cliente
           </Button>
           
@@ -512,31 +508,28 @@ export function ClientsManagementSection() {
 
                   <div className="flex gap-1 shrink-0">
                     <Button
-                      size="icon"
+                      size="xs"
                       variant="ghost"
                       className="h-8 w-8 text-cyan-400 hover:bg-cyan-500/10"
                       onClick={() => handleTestConnection(client)}
-                      disabled={isSyncing === client.id}
-                    >
-                      <RefreshCw className={cn("w-4 h-4", isSyncing === client.id && "animate-spin")} />
+                      disabled={isSyncing === client.id} aria-label="Atualizar">
+                      <RefreshCw aria-hidden="true" className={cn("w-4 h-4", isSyncing === client.id && "animate-spin")} />
                     </Button>
                     <Button
-                      size="icon"
+                      size="xs"
                       variant="ghost"
                       className="h-8 w-8 text-amber-400 hover:bg-amber-500/10"
-                      onClick={() => openEditDialog(client)}
-                    >
+                      onClick={() => openEditDialog(client)} aria-label="Editar">
                       <Edit2 className="w-4 h-4" />
                     </Button>
                     <Button
-                      size="icon"
+                      size="xs"
                       variant="ghost"
                       className="h-8 w-8 text-red-400 hover:bg-red-500/10"
                       onClick={() => {
                         setClientToDelete(client);
                         setShowDeleteDialog(true);
-                      }}
-                    >
+                      }} aria-label="Excluir">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -558,7 +551,7 @@ export function ClientsManagementSection() {
                 size="sm"
                 onClick={() => setShowReplicateDialog(true)}
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy aria-hidden="true" className="w-4 h-4 mr-2" />
                 Aplicar Configurações
               </Button>
               <Button
@@ -574,7 +567,7 @@ export function ClientsManagementSection() {
                 size="sm"
                 onClick={handleUpdateVersion}
               >
-                <Upload className="w-4 h-4 mr-2" />
+                <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
                 Atualizar Versão
               </Button>
               <Button
@@ -608,7 +601,7 @@ export function ClientsManagementSection() {
               Cancelar
             </Button>
             <Button onClick={handleAddClient} className="button-primary-glow-3d">
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
               Adicionar Cliente
             </Button>
           </DialogFooter>
@@ -633,7 +626,7 @@ export function ClientsManagementSection() {
               Cancelar
             </Button>
             <Button onClick={handleEditClient} className="button-primary-glow-3d">
-              <Check className="w-4 h-4 mr-2" />
+              <Check aria-hidden="true" className="w-4 h-4 mr-2" />
               Salvar Alterações
             </Button>
           </DialogFooter>
@@ -645,7 +638,7 @@ export function ClientsManagementSection() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Copy className="w-5 h-5 icon-neon-blue" />
+              <Copy aria-hidden="true" className="w-5 h-5 icon-neon-blue" />
               Replicar Configurações
             </DialogTitle>
             <DialogDescription>
@@ -684,7 +677,7 @@ export function ClientsManagementSection() {
               Cancelar
             </Button>
             <Button onClick={handleReplicateToSelected} className="button-primary-glow-3d">
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy aria-hidden="true" className="w-4 h-4 mr-2" />
               Aplicar em {selectedClients.length} Cliente(s)
             </Button>
           </DialogFooter>

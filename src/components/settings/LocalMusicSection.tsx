@@ -6,11 +6,6 @@ import {
   HardDrive, List, Grid, Play, MoreVertical, Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -20,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useLocalMusic, useTranslation } from '@/hooks';
 import { toast } from 'sonner';
 import { AudioWaveformPreview } from '@/components/upload/AudioWaveformPreview';
+import { Badge, Button, Card, Input, Toggle } from "@/components/ui/themed"
 
 export function LocalMusicSection() {
   const { t } = useTranslation();
@@ -181,7 +177,7 @@ export function LocalMusicSection() {
     switch (status) {
       case 'completed': return <CheckCircle className="w-4 h-4 text-green-400" />;
       case 'error': return <XCircle className="w-4 h-4 text-red-400" />;
-      case 'syncing': return <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin" />;
+      case 'syncing': return <RefreshCw aria-hidden="true" className="w-4 h-4 text-cyan-400 animate-spin" />;
       default: return <Clock className="w-4 h-4 text-amber-400" />;
     }
   };
@@ -189,13 +185,12 @@ export function LocalMusicSection() {
   return (
     <div className="space-y-6">
       <Card className="card-dark-neon-border">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-gold-neon font-bold">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Music className="w-5 h-5 icon-neon-blue" />
             {t('localMusic.title')} - {t('localMusic.subtitle')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-6 gap-1 h-auto bg-kiosk-surface/50 p-1">
               <TabsTrigger value="library" className="text-xs py-2 data-[state=active]:bg-primary/20">
@@ -203,7 +198,7 @@ export function LocalMusicSection() {
                 {t('localMusic.library')}
               </TabsTrigger>
               <TabsTrigger value="upload" className="text-xs py-2 data-[state=active]:bg-primary/20">
-                <Upload className="w-3 h-3 mr-1" />
+                <Upload aria-hidden="true" className="w-3 h-3 mr-1" />
                 {t('localMusic.upload')}
               </TabsTrigger>
               <TabsTrigger value="playlists" className="text-xs py-2 data-[state=active]:bg-primary/20">
@@ -219,7 +214,7 @@ export function LocalMusicSection() {
                 {t('localMusic.instances')}
               </TabsTrigger>
               <TabsTrigger value="config" className="text-xs py-2 data-[state=active]:bg-primary/20">
-                <Settings className="w-3 h-3 mr-1" />
+                <Settings aria-hidden="true" className="w-3 h-3 mr-1" />
                 {t('localMusic.config')}
               </TabsTrigger>
             </TabsList>
@@ -229,7 +224,7 @@ export function LocalMusicSection() {
               {/* Toolbar */}
               <div className="flex items-center gap-3 flex-wrap">
                 <div className="relative flex-1 min-w-[200px]">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-description-visible" />
+                  <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-description-visible" />
                   <Input
                     placeholder={t('localMusic.searchMusic')}
                     value={searchQuery}
@@ -239,10 +234,10 @@ export function LocalMusicSection() {
                 </div>
                 
                 <div className="flex gap-1">
-                  <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="icon" onClick={() => setViewMode('list')}>
+                  <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="xs" onClick={() => setViewMode('list')} aria-label="Visualização em lista">
                     <List className="w-4 h-4" />
                   </Button>
-                  <Button variant={viewMode === 'grid' ? 'default' : 'outline'} size="icon" onClick={() => setViewMode('grid')}>
+                  <Button variant={viewMode === 'grid' ? 'default' : 'outline'} size="xs" onClick={() => setViewMode('grid')} aria-label="Visualização em grade">
                     <Grid className="w-4 h-4" />
                   </Button>
                 </div>
@@ -251,7 +246,7 @@ export function LocalMusicSection() {
                   <div className="flex gap-2">
                     <Badge variant="secondary">{selectedFiles.size} {t('localMusic.selected')}</Badge>
                     <Button variant="outline" size="sm" onClick={clearSelection}>{t('localMusic.clear')}</Button>
-                    <Button variant="destructive" size="sm" onClick={bulkDelete} disabled={isLoading}>
+                    <Button variant="danger" size="sm" onClick={bulkDelete} disabled={isLoading}>
                       <Trash2 className="w-3 h-3 mr-1" />
                       {t('localMusic.delete')}
                     </Button>
@@ -263,7 +258,7 @@ export function LocalMusicSection() {
                 </Button>
                 
                 <Button variant="outline" size="sm" onClick={refreshFiles} disabled={isLoading}>
-                  <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw aria-hidden="true" className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                 </Button>
               </div>
 
@@ -274,7 +269,7 @@ export function LocalMusicSection() {
                     <Music className="w-12 h-12 mx-auto mb-3 opacity-60" />
                     <p>{t('localMusic.noMusic')}</p>
                     <Button variant="outline" className="mt-4" onClick={() => setActiveTab('upload')}>
-                      <Upload className="w-4 h-4 mr-2" />
+                      <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
                       {t('localMusic.uploadFiles')}
                     </Button>
                   </div>
@@ -296,7 +291,7 @@ export function LocalMusicSection() {
                         {file.coverUrl ? (
                           <img src={file.coverUrl} alt={file.album} className="w-10 h-10 rounded object-cover" />
                         ) : (
-                          <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center">
+                          <div className="w-10 h-10 rounded bg-kiosk-surface flex items-center justify-center" aria-hidden="true">
                             <Music className="w-5 h-5 text-description-visible" />
                           </div>
                         )}
@@ -310,7 +305,7 @@ export function LocalMusicSection() {
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="xs" aria-label="Mais opções">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -334,7 +329,7 @@ export function LocalMusicSection() {
                         }`}
                         onClick={() => toggleSelect(file.id)}
                       >
-                        <CardContent className="p-3">
+                        <div className="mt-4">
                           {file.coverUrl ? (
                             <img src={file.coverUrl} alt={file.album} className="w-full aspect-square rounded object-cover mb-2" />
                           ) : (
@@ -344,7 +339,7 @@ export function LocalMusicSection() {
                           )}
                           <p className="font-bold text-sm text-kiosk-text/95 truncate">{file.title}</p>
                           <p className="text-xs text-kiosk-text/85 truncate">{file.artist}</p>
-                        </CardContent>
+                        </div>
                       </Card>
                     ))}
                   </div>
@@ -398,7 +393,7 @@ export function LocalMusicSection() {
                         repeat: Infinity 
                       }}
                     >
-                      <Upload className="w-16 h-16 text-cyan-400" />
+                      <Upload aria-hidden="true" className="w-16 h-16 text-cyan-400" />
                     </motion.div>
                     <p className="text-xl font-bold text-cyan-400 mt-4">
                       {t('localMusic.dropFilesHere')}
@@ -409,7 +404,7 @@ export function LocalMusicSection() {
                   </motion.div>
                 ) : (
                   <>
-                    <Upload className="w-12 h-12 mx-auto mb-4 icon-neon-blue" />
+                    <Upload aria-hidden="true" className="w-12 h-12 mx-auto mb-4 icon-neon-blue" />
                     <p className="text-lg font-bold text-kiosk-text/95 mb-2">
                       {t('localMusic.dragAndDrop')}
                     </p>
@@ -417,7 +412,7 @@ export function LocalMusicSection() {
                       {t('localMusic.clickToSelect')}
                     </p>
                     <Button variant="outline" disabled={isUploading}>
-                      <Upload className="w-4 h-4 mr-2" />
+                      <Upload aria-hidden="true" className="w-4 h-4 mr-2" />
                       {t('localMusic.selectFilesButton')}
                     </Button>
                   </>
@@ -426,13 +421,13 @@ export function LocalMusicSection() {
 
               {isUploading && uploadProgress && (
                 <Card className="border-cyan-500/20">
-                  <CardContent className="p-4">
+                  <div className="mt-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-kiosk-text/90">{uploadProgress.file}</span>
                       <span className="text-sm text-description-visible">{uploadProgress.percentage}%</span>
                     </div>
                     <Progress value={uploadProgress.percentage} />
-                  </CardContent>
+                  </div>
                 </Card>
               )}
 
@@ -454,7 +449,7 @@ export function LocalMusicSection() {
                 <Dialog open={showPlaylistDialog} onOpenChange={setShowPlaylistDialog}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
                       {t('localMusic.newPlaylist')}
                     </Button>
                   </DialogTrigger>
@@ -489,10 +484,10 @@ export function LocalMusicSection() {
                         <p className="text-sm text-secondary-visible">{playlist.trackIds.length} {t('localMusic.tracks')}</p>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="xs" aria-label="Reproduzir">
                           <Play className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => deletePlaylist(playlist.id)}>
+                        <Button variant="ghost" size="xs" onClick={() => deletePlaylist(playlist.id)} aria-label="Excluir">
                           <Trash2 className="w-4 h-4 text-red-400" />
                         </Button>
                       </div>
@@ -547,7 +542,7 @@ export function LocalMusicSection() {
                         onClick={() => syncToUser(user.userId)}
                         disabled={isLoading || user.syncStatus === 'syncing'}
                       >
-                        <RefreshCw className={`w-3 h-3 ${user.syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+                        <RefreshCw aria-hidden="true" className={`w-3 h-3 ${user.syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
                       </Button>
                     </div>
                   ))}
@@ -565,7 +560,7 @@ export function LocalMusicSection() {
                 <Dialog open={showInstanceDialog} onOpenChange={setShowInstanceDialog}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Plus className="w-4 h-4 mr-2" />
+                      <Plus aria-hidden="true" className="w-4 h-4 mr-2" />
                       Registrar Instância
                     </Button>
                   </DialogTrigger>
@@ -622,9 +617,8 @@ export function LocalMusicSection() {
                         </Button>
                         <Button 
                           variant="ghost" 
-                          size="icon"
-                          onClick={() => removeInstance(instance.id)}
-                        >
+                          size="xs"
+                          onClick={() => removeInstance(instance.id)} aria-label="Excluir">
                           <Trash2 className="w-4 h-4 text-red-400" />
                         </Button>
                       </div>
@@ -674,13 +668,13 @@ export function LocalMusicSection() {
                 </div>
 
                 <Button onClick={replicateConfigToAll} variant="outline" className="w-full">
-                  <Settings className="w-4 h-4 mr-2" />
+                  <Settings aria-hidden="true" className="w-4 h-4 mr-2" />
                   Replicar Configurações para Todas as Instâncias
                 </Button>
               </div>
             </TabsContent>
           </Tabs>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Audio Preview Modal */}

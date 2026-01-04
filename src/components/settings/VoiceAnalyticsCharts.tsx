@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, 
   LineChart, Line, XAxis, YAxis, Tooltip, 
@@ -17,7 +17,7 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
   if (!hasData) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        <PieChartIcon className="h-12 w-12 mx-auto mb-3 opacity-30" />
+        <PieChartIcon aria-hidden="true" className="h-12 w-12 mx-auto mb-3 opacity-30" />
         <p className="text-sm">Dados insuficientes para análise</p>
         <p className="text-xs mt-1">Use mais comandos de voz para gerar gráficos</p>
       </div>
@@ -28,13 +28,12 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
     <div className="space-y-4">
       {/* Commands by Hour - Area Chart */}
       <Card className="bg-kiosk-background/50 border-kiosk-border">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2 text-kiosk-text">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <Clock className="h-4 w-4 text-kiosk-primary" />
             Comandos por Hora (24h)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={analytics.commandsByHour}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -80,18 +79,17 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
               />
             </AreaChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Success Rate Over Time - Line Chart */}
       <Card className="bg-kiosk-background/50 border-kiosk-border">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2 text-kiosk-text">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
             <TrendingUp className="h-4 w-4 text-kiosk-primary" />
             Taxa de Sucesso (7 dias)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        
+        <div className="mt-4">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={analytics.successRateOverTime}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -129,19 +127,18 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
               />
             </LineChart>
           </ResponsiveContainer>
-        </CardContent>
+        </div>
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Confidence Distribution - Horizontal Bar Chart */}
         <Card className="bg-kiosk-background/50 border-kiosk-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2 text-kiosk-text">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
               <Target className="h-4 w-4 text-kiosk-primary" />
               Distribuição de Confiança
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          
+          <div className="mt-4">
             <ResponsiveContainer width="100%" height={160}>
               <BarChart data={analytics.confidenceDistribution} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -179,18 +176,17 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
                 />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Command Distribution - Pie Chart */}
         <Card className="bg-kiosk-background/50 border-kiosk-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2 text-kiosk-text">
-              <PieChartIcon className="h-4 w-4 text-kiosk-primary" />
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+              <PieChartIcon aria-hidden="true" className="h-4 w-4 text-kiosk-primary" />
               Comandos por Tipo
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          
+          <div className="mt-4">
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie
@@ -222,7 +218,7 @@ export function VoiceAnalyticsCharts({ analytics }: VoiceAnalyticsChartsProps) {
                 />
               </PieChart>
             </ResponsiveContainer>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

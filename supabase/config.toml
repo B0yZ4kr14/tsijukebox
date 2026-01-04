@@ -21,6 +21,9 @@ verify_jwt = false
 [functions.fullstack-refactor]
 verify_jwt = false
 
+[functions.claude-refactor-opus]
+verify_jwt = false
+
 [functions.installer-metrics]
 verify_jwt = false
 
@@ -64,4 +67,19 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.auto-sync-trigger]
+verify_jwt = false
+
+[functions.save-api-key]
+verify_jwt = false
+
+[functions.check-api-key]
+verify_jwt = false
+
+[functions.test-api-key]
+verify_jwt = false
+
+[functions.ai-gateway]
+verify_jwt = false
+
+[functions.read-project-files]
 verify_jwt = false

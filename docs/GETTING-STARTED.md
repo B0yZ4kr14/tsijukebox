@@ -38,20 +38,45 @@ git clone https://github.com/yourusername/tsijukebox.git
 cd tsijukebox
 ```
 
-### Step 4: Run the Installer
+### Step 4: Run the Installer (One Command)
+
+**Option A: Quick Install (Recommended)**
 
 ```bash
-sudo python3 scripts/installer/main.py
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py | sudo python3
+```
+
+**Option B: Download and Review First**
+
+```bash
+# Download
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/unified-installer.py -o installer.py
+
+# Review (optional)
+less installer.py
+
+# Execute
+sudo python3 installer.py
+```
+
+**Option C: Using shim (auto-downloads unified installer)**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/B0yZ4kr14/TSiJUKEBOX/main/scripts/install.py | sudo python3
 ```
 
 You'll be asked for your password - type it and press Enter. (The password won't show as you type - that's normal!)
 
 ### Step 5: Follow the Wizard
 
+![Setup Wizard](assets/mockups/setup-wizard-screen.png)
+
+*Assistente de configuração inicial - Etapa 2: Escolha seus provedores de música*
+
 The installer will open a visual wizard in your web browser. Simply:
 
 1. Review the system information
-2. Choose your preferred options
+2. Choose your preferred options (Spotify, YouTube Music, Local Files)
 3. Click **Install**
 
 That's it! ☕ Grab a coffee while the installation completes.
@@ -59,6 +84,10 @@ That's it! ☕ Grab a coffee while the installation completes.
 ---
 
 ## 🎯 First Launch
+
+![Dashboard](assets/mockups/dashboard-screen.png)
+
+*Tela inicial do TSiJUKEBOX com suas músicas, playlists e recomendações*
 
 After installation, you can access TSiJUKEBOX in two ways:
 

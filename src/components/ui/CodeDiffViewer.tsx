@@ -143,14 +143,13 @@ export function CodeDiffViewer({
             <span className="text-xs text-muted-foreground">{oldTitle}</span>
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               className="h-6 w-6"
-              onClick={() => handleCopy(oldCode, 'old')}
-            >
+              onClick={() => handleCopy(oldCode, 'old')} aria-label="Confirmar">
               {copied === 'old' ? (
-                <Check className="h-3 w-3 text-success" />
+                <Check aria-hidden="true" className="h-3 w-3 text-success" />
               ) : (
-                <Copy className="h-3 w-3" />
+                <Copy aria-hidden="true" className="h-3 w-3" />
               )}
             </Button>
           </div>
@@ -158,14 +157,13 @@ export function CodeDiffViewer({
             <span className="text-xs text-muted-foreground">{newTitle}</span>
             <Button
               variant="ghost"
-              size="icon"
+              size="xs"
               className="h-6 w-6"
-              onClick={() => handleCopy(newCode, 'new')}
-            >
+              onClick={() => handleCopy(newCode, 'new')} aria-label="Confirmar">
               {copied === 'new' ? (
-                <Check className="h-3 w-3 text-success" />
+                <Check aria-hidden="true" className="h-3 w-3 text-success" />
               ) : (
-                <Copy className="h-3 w-3" />
+                <Copy aria-hidden="true" className="h-3 w-3" />
               )}
             </Button>
           </div>

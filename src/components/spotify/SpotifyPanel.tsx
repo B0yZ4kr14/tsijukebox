@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ListMusic, Heart, Clock, Sparkles, Music2, Play, Plus, X, Disc3, Star, TrendingUp } from 'lucide-react';
 import { AudioVisualizer } from '@/components/player/AudioVisualizer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSpotifyPlaylists, useSpotifyLibrary, useSpotifySearch, useSpotifyRecommendations, useSpotifyBrowse } from '@/hooks';
@@ -13,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRipple, useSoundEffects } from '@/hooks';
 import { RippleContainer } from '@/components/ui/RippleContainer';
+import { Button, Input } from "@/components/ui/themed"
 
 interface SpotifyPanelProps {
   isOpen: boolean;
@@ -72,13 +71,13 @@ function TrackRow({ track, onPlay, onAddToQueue }: {
       </div>
       <Button
         variant="ghost"
-        size="icon"
+        size="xs"
         className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity button-3d relative overflow-hidden"
         onClick={handleQueue}
         aria-label="Adicionar à fila"
       >
         <RippleContainer ripples={queueRipple.ripples} color="spotify" />
-        <Plus className="w-4 h-4 relative z-10" />
+        <Plus aria-hidden="true" className="w-4 h-4 relative z-10" />
       </Button>
     </div>
   );
@@ -107,7 +106,7 @@ function AlbumCard({ album, onPlay, isPlaying }: { album: SpotifyAlbum; onPlay: 
             <AudioVisualizer isPlaying={true} barCount={8} variant="compact" className="opacity-90" />
           </div>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity" role="presentation">
             <Play className="w-8 h-8 text-white fill-white" />
           </div>
         )}
@@ -143,7 +142,7 @@ function PlaylistCard({ playlist, onPlay, isPlaying }: { playlist: SpotifyPlayli
             <AudioVisualizer isPlaying={true} barCount={8} variant="compact" className="opacity-90" />
           </div>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity" role="presentation">
             <Play className="w-8 h-8 text-white fill-white" />
           </div>
         )}
@@ -229,7 +228,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
   const LoadingSkeleton = () => (
     <div className="space-y-2">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" />
+        <div key={i} className="h-14 bg-kiosk-surface/50 rounded animate-pulse" aria-hidden="true" />
       ))}
     </div>
   );
@@ -248,15 +247,15 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
           <Music2 className="w-5 h-5 text-[#1DB954]" />
           Spotify
         </h2>
-        <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 button-3d" aria-label="Fechar painel">
-          <X className="w-4 h-4" />
+        <Button variant="ghost" size="xs" onClick={onClose} className="h-8 w-8 button-3d" aria-label="Fechar painel">
+          <X aria-hidden="true" className="w-4 h-4" />
         </Button>
       </div>
 
       {/* Search */}
       <form onSubmit={handleSearch} className="p-4 border-b border-kiosk-surface">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
+          <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-kiosk-text/90" />
           <Input
             type="text"
             placeholder="Buscar músicas, artistas..."
@@ -274,7 +273,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
             <ListMusic className="w-4 h-4" />
           </TabsTrigger>
           <TabsTrigger value="liked" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Curtidas">
-            <Heart className="w-4 h-4" />
+            <Heart aria-hidden="true" className="w-4 h-4" />
           </TabsTrigger>
           <TabsTrigger value="recent" className="text-xs p-1 data-[state=active]:bg-[#1DB954] data-[state=active]:text-white" title="Recentes">
             <Clock className="w-4 h-4" />
@@ -318,7 +317,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
                           {playlist.imageUrl ? (
                             <img src={playlist.imageUrl} alt={playlist.name} className="w-10 h-10 object-cover rounded shadow-lg" />
                           ) : (
-                            <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center">
+                            <div className="w-10 h-10 bg-kiosk-surface rounded flex items-center justify-center" aria-hidden="true">
                               <ListMusic className="w-4 h-4 text-kiosk-text/90" />
                             </div>
                           )}
@@ -473,7 +472,7 @@ export function SpotifyPanel({ isOpen, onClose, currentTrackId, currentAlbumId, 
                     </div>
                   ) : (
                     <div className="text-center py-8 text-description-visible">
-                      <Search className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                      <Search aria-hidden="true" className="w-8 h-8 mx-auto mb-2 opacity-60" />
                       <p className="text-sm">Pesquise por músicas ou artistas</p>
                     </div>
                   )}
@@ -493,7 +492,7 @@ export function SpotifyPanelToggle({ onClick, isOpen, isConnected = true }: { on
     <Button
       onClick={onClick}
       variant="ghost"
-      size="icon"
+      size="xs"
       className={cn(
         "h-10 w-10 rounded-full transition-all button-3d",
         isConnected 
@@ -502,9 +501,8 @@ export function SpotifyPanelToggle({ onClick, isOpen, isConnected = true }: { on
             : "bg-kiosk-surface/50 text-[#1DB954] hover:bg-[#1DB954]/20"
           /* WCAG Exception: /40→/60 disconnected state with hover transition providing visual distinction */
           : "bg-kiosk-surface/30 text-kiosk-text/40 hover:bg-kiosk-surface/50 hover:text-kiosk-text/60"
-      )}
-    >
-      {isOpen ? <X className="w-5 h-5" /> : <Music2 className="w-5 h-5" />}
+      )} aria-label="Fechar">
+      {isOpen ? <X aria-hidden="true" className="w-5 h-5" /> : <Music2 className="w-5 h-5" />}
     </Button>
   );
 }

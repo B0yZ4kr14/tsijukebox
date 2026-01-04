@@ -1,0 +1,36 @@
+graph LR
+    subgraph "Entrada"
+        I1[Seleção de Música]
+        I2[Fila de Karaoke]
+    end
+
+    subgraph "Processamento"
+        P1[Buscar Letra<br/>Genius API]
+        P2[Sincronizar Letra<br/>com Áudio]
+        P3[Aplicar Efeitos<br/>Vocais]
+    end
+
+    subgraph "Exibição"
+        D1[Tela Principal<br/>Letra Sincronizada]
+        D2[Controles<br/>Pitch, Reverb]
+        D3[Pontuação<br/>Opcional]
+    end
+
+    subgraph "Saída"
+        O1[Gravação<br/>Opcional]
+        O2[Compartilhamento<br/>Social]
+    end
+
+    I1 --> I2
+    I2 --> P1
+    P1 --> P2
+    P2 --> P3
+    P3 --> D1
+    D1 --> D2
+    D2 --> D3
+    D3 --> O1
+    O1 --> O2
+
+    style I1 fill:#ff00d4,stroke:#cc0099,stroke-width:2px,color:#fff
+    style D1 fill:#00d4ff,stroke:#0099cc,stroke-width:2px,color:#000
+    style O2 fill:#00ff88,stroke:#00cc66,stroke-width:2px,color:#000

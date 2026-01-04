@@ -1,5 +1,5 @@
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from "@/components/ui/themed";
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
 import { MessageSquare, Star, Loader2 } from 'lucide-react';
@@ -19,13 +19,12 @@ export default function AdminFeedback() {
         </div>
 
         <Card className="card-admin-extreme-3d">
-          <CardHeader>
-            <CardTitle className="text-gold-neon">Avaliações Recebidas</CardTitle>
-            <CardDescription className="text-kiosk-text/90">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Avaliações Recebidas</h3>
+            <p className="text-sm text-[var(--text-muted)]">
               {feedbacks?.length ?? 0} feedbacks registrados
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          
+          <div className="mt-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-8 h-8 animate-spin icon-neon-blue" />
@@ -64,7 +63,7 @@ export default function AdminFeedback() {
                 ))}
               </div>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </AdminLayout>

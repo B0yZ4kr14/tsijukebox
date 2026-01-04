@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { extractDominantColors, type ExtractedColors } from '@/lib/colorExtractor';
 import { useLyrics } from '@/hooks/player';
 import { useTranslation } from '@/hooks/common';
@@ -198,21 +198,19 @@ export function FullscreenKaraoke({
         {/* Close Button */}
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="absolute top-6 right-6 z-10 text-white/80 hover:text-white hover:bg-white/10"
-          onClick={onClose}
-        >
-          <X className="w-6 h-6" />
+          onClick={onClose} aria-label="Fechar">
+          <X aria-hidden="true" className="w-6 h-6" />
         </Button>
 
         {/* Exit Fullscreen Button */}
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="absolute top-6 left-6 z-10 text-white/80 hover:text-white hover:bg-white/10"
-          onClick={onClose}
-        >
-          <Minimize2 className="w-6 h-6" />
+          onClick={onClose} aria-label="Minimizar">
+          <Minimize2 aria-hidden="true" className="w-6 h-6" />
         </Button>
 
         {/* Track Info */}

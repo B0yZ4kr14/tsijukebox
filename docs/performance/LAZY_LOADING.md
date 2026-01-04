@@ -1,0 +1,69 @@
+# Lazy Loading
+
+> **Última Atualização:** 24/12/2025  
+> **Versão:** 1.0.0  
+> **Status:** 📝 Em Desenvolvimento
+
+---
+
+## 📋 Visão Geral
+
+Guia para implementação de lazy loading no TSiJUKEBOX.
+
+---
+
+## 🎯 Objetivo
+
+Carregar recursos apenas quando necessário.
+
+---
+
+## 📊 Métricas Alvo
+
+| Métrica | Atual | Meta | Status |
+|---------|-------|------|--------|
+| LCP | - | < 2.5s | 📅 |
+| FID | - | < 100ms | 📅 |
+| CLS | - | < 0.1 | 📅 |
+| Bundle Size | - | < 500KB | 📅 |
+
+---
+
+## 🔧 Técnicas de Otimização
+
+### 1. React.lazy
+
+Carregue componentes sob demanda.
+
+```tsx
+const Settings = lazy(() => import('./pages/Settings'));
+```
+
+### 2. Intersection Observer
+
+Carregue imagens e conteúdo quando visíveis na viewport.
+
+---
+
+## 📈 Ferramentas de Análise
+
+- **Lighthouse:** Análise de performance
+- **Bundle Analyzer:** Análise de bundle
+- **React DevTools:** Profiling de componentes
+
+---
+
+## ✅ Checklist de Performance
+
+- [ ] Imagens otimizadas
+- [ ] Code splitting implementado
+- [ ] Lazy loading para rotas
+- [ ] Cache configurado
+- [ ] Compressão habilitada
+
+---
+
+## 🔗 Recursos Relacionados
+
+- [Otimização de Cards](../CARD_SYSTEM_OPTIMIZATIONS.md)
+- [Design System](../DESIGN-SYSTEM.md)

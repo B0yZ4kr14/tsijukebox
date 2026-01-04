@@ -1,6 +1,6 @@
 import { Play, Heart, Plus, ListPlus } from 'lucide-react';
 import { YouTubeMusicTrack } from '@/lib/api/youtubeMusic';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/themed";
 import { cn } from '@/lib/utils';
 
 interface YouTubeMusicTrackItemProps {
@@ -65,7 +65,7 @@ export function YouTubeMusicTrackItem({
 
       {/* Thumbnail */}
       {showImage && (
-        <div className="w-10 h-10 rounded overflow-hidden bg-kiosk-surface flex-shrink-0">
+        <div className="w-10 h-10 rounded overflow-hidden bg-kiosk-surface flex-shrink-0" aria-hidden="true">
           {track.thumbnailUrl ? (
             <img
               src={track.thumbnailUrl}
@@ -98,18 +98,17 @@ export function YouTubeMusicTrackItem({
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className={cn(
             "w-8 h-8",
             isLiked ? "text-[#FF0000]" : "text-kiosk-text/85 hover:text-kiosk-text"
           )}
-          onClick={onLike}
-        >
-          <Heart className={cn("w-4 h-4", isLiked && "fill-current")} />
+          onClick={onLike} aria-label="Favoritar">
+          <Heart aria-hidden="true" className={cn("w-4 h-4", isLiked && "fill-current")} />
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
           onClick={onAddToQueue}
           title="Adicionar à fila"
@@ -118,12 +117,11 @@ export function YouTubeMusicTrackItem({
         </Button>
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="w-8 h-8 text-kiosk-text/85 hover:text-kiosk-text"
           onClick={onAddToPlaylist}
-          title="Adicionar à playlist"
-        >
-          <Plus className="w-4 h-4" />
+          title="Adicionar à playlist" aria-label="Adicionar">
+          <Plus aria-hidden="true" className="w-4 h-4" />
         </Button>
       </div>
 

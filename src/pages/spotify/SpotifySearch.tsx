@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, X, Loader2, Music, Disc3, User, ListMusic } from 'lucide-react';
 import { KioskLayout } from '@/components/layout/KioskLayout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrackItem } from '@/components/spotify/TrackItem';
 import { AlbumCard } from '@/components/spotify/AlbumCard';
@@ -12,6 +10,7 @@ import { PlaylistCard } from '@/components/spotify/PlaylistCard';
 import { AddToPlaylistModal } from '@/components/spotify/AddToPlaylistModal';
 import { useSpotifySearch, useSpotifyPlayer, useSpotifyLibrary } from '@/hooks';
 import { SpotifyTrack } from '@/lib/api/spotify';
+import { Button, Input } from "@/components/ui/themed"
 
 export default function SpotifySearchPage() {
   const navigate = useNavigate();
@@ -52,7 +51,7 @@ export default function SpotifySearchPage() {
         <header className="sticky top-0 z-40 bg-kiosk-bg/95 backdrop-blur-md border-b border-kiosk-border p-4">
           <div className="flex items-center gap-4">
             <Link to="/spotify">
-              <Button variant="ghost" size="icon" className="text-kiosk-text" aria-label="Voltar ao Spotify">
+              <Button variant="ghost" size="xs" className="text-kiosk-text" aria-label="Voltar ao Spotify">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </Link>
