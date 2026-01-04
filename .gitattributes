@@ -1,0 +1,25 @@
+# Prevent auto-sync from modifying critical config files
+package.json merge=ours
+
+# Text files normalization
+* text=auto
+
+# TypeScript/JavaScript
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+
+# Lock files - binary (don't merge automatically)
+package-lock.json -merge
+pnpm-lock.yaml -merge
+bun.lockb binary
+
+# Scripts
+*.sh text eol=lf
+*.py text eol=lf
+
+# Documentation
+*.md text eol=lf
+docs/* linguist-documentation
